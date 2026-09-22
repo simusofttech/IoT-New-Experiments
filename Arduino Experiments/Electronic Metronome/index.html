@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Electronic Metronome</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px}
+.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:950px;margin:35px auto}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
+.section h3{color:#1e3a8a;margin-top:22px}.section p{margin-bottom:10px}
+ul,ol{padding-left:24px}li{margin-bottom:8px}.table-wrap{overflow-x:auto}
+table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
+.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:white;border-radius:8px 8px 0 0}
+.copy-button{border:0;padding:7px 12px;background:#2563eb;color:white;border-radius:5px;cursor:pointer;font-weight:bold}
+pre{margin:0;padding:20px;overflow-x:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font-family:Consolas,monospace;font-size:14px;line-height:1.7}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:box-shadow .2s,transform .2s}
+.component-card:hover{box-shadow:0 6px 15px rgba(0,0,0,.08);transform:translateY(-2px)}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
+.component-card p{color:#475569;font-size:14px;margin:0;line-height:1.5}
+.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}footer strong{color:white}
+@media(max-width:600px){.header{padding:35px 15px}.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}nav{gap:11px}}
+</style>
+</head>
+<body>
+
+<header class="header">
+<h1>Arduino Experiment</h1>
+<p>Electronic Metronome</p>
+</header>
+
+<nav>
+<a href="../index.html">← Arduino Experiments</a>
+<a href="#aim">Aim</a>
+<a href="#components">Components</a>
+<a href="#connections">Connections</a>
+<a href="#circuit">Circuit</a>
+<a href="#working">Working</a>
+<a href="#procedure">Procedure</a>
+<a href="#code">Code</a>
+<a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To create an electronic metronome using Arduino UNO, a 10 kΩ potentiometer, two push buttons and an active buzzer, with adjustable tempo from 40 to 200 BPM.</p>
+</section>
+
+<section class="section">
+<h2>About the Experiment</h2>
+<p>The potentiometer controls the metronome tempo between 40 and 200 BPM. Two push buttons are used to increase or decrease the BPM in steps of 5.</p>
+<p>Arduino calculates the interval between beats and activates the buzzer for a short beep at the selected tempo. The current BPM can also be viewed in the Serial Monitor.</p>
+</section>
+
+<section class="section" id="components">
+<h2>Components Required</h2>
+<div class="components-grid">
+<div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO R3"><h4>Arduino UNO R3 (×1)</h4><p>Main controller for tempo calculation and buzzer control.</p></div>
+<div class="component-card"><img src="Push Button.png" alt="Push Button"><h4>Push Buttons (×2)</h4><p>Used to increase and decrease the BPM.</p></div>
+<div class="component-card"><img src="10k Potentiometer.png" alt="10k Potentiometer"><h4>Potentiometer 10 kΩ (×1)</h4><p>Adjusts the metronome speed from 40 to 200 BPM.</p></div>
+<div class="component-card"><img src="Active Buzzer.png" alt="Active Buzzer"><h4>Active Buzzer (×1)</h4><p>Produces a short beep for each metronome beat.</p></div>
+<div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard (×1)</h4><p>Used for assembling the circuit.</p></div>
+<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Used for making circuit connections.</p></div>
+</div>
+</section>
+
+<section class="section" id="connections">
+<h2>Circuit Connections</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Component</th><th>Pin / Connection</th><th>Arduino UNO Pin</th><th>Other Connection</th></tr></thead>
+<tbody>
+<tr><td>Potentiometer</td><td>Left Pin</td><td>—</td><td>5V</td></tr>
+<tr><td>Potentiometer</td><td>Middle Pin (Wiper)</td><td>A0</td><td>—</td></tr>
+<tr><td>Potentiometer</td><td>Right Pin</td><td>—</td><td>GND</td></tr>
+<tr><td>Push Button – Increase</td><td>One Side</td><td>D2</td><td>—</td></tr>
+<tr><td>Push Button – Increase</td><td>Other Side</td><td>—</td><td>GND</td></tr>
+<tr><td>Push Button – Decrease</td><td>One Side</td><td>D3</td><td>—</td></tr>
+<tr><td>Push Button – Decrease</td><td>Other Side</td><td>—</td><td>GND</td></tr>
+<tr><td>Active Buzzer</td><td>+</td><td>D8</td><td>—</td></tr>
+<tr><td>Active Buzzer</td><td>−</td><td>—</td><td>GND</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note">The two push buttons use <strong>INPUT_PULLUP</strong>, so each button is connected between its Arduino pin and GND.</div>
+</section>
+
+<section class="section" id="circuit">
+<h2>Circuit Diagram</h2>
+<p>Connect the potentiometer wiper to A0, the increase button to D2, the decrease button to D3, and the active buzzer to D8.</p>
+<img class="circuit-img" src="Electronic_Metronome_Circuit.png" alt="Electronic Metronome Circuit Diagram">
+</section>
+
+<section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">
+Arduino Starts<br>↓<br>
+Potentiometer value is read from A0<br>↓<br>
+Value is mapped to 40–200 BPM<br>↓<br>
+D2 button can increase BPM by 5<br>↓<br>
+D3 button can decrease BPM by 5<br>↓<br>
+Arduino calculates beat interval<br>↓<br>
+Buzzer produces a short beep at each beat
+</div>
+</section>
+
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol>
+<li>Connect the potentiometer left pin to 5V.</li>
+<li>Connect the potentiometer middle pin (wiper) to A0.</li>
+<li>Connect the potentiometer right pin to GND.</li>
+<li>Connect the increase push button between D2 and GND.</li>
+<li>Connect the decrease push button between D3 and GND.</li>
+<li>Connect the active buzzer positive terminal to D8.</li>
+<li>Connect the buzzer negative terminal to GND.</li>
+<li>Connect Arduino UNO to the computer.</li>
+<li>Open Arduino IDE.</li>
+<li>Enter the code given below.</li>
+<li>Select Arduino UNO from Tools → Board.</li>
+<li>Select the correct COM port.</li>
+<li>Verify and upload the program.</li>
+<li>Open Serial Monitor at 9600 baud.</li>
+<li>Rotate the potentiometer or use the buttons to adjust the tempo.</li>
+</ol>
+</section>
+
+<section class="section" id="code">
+<h2>Arduino Code</h2>
+<div class="code-header">
+<span>Electronic_Metronome.ino</span>
+<button class="copy-button" onclick="copyCode()">Copy Code</button>
+</div>
+<pre><code id="arduinoCode">// ========================================
+// Electronic Metronome
+// Arduino UNO R3
+// ========================================
+
+const int buttonUp = 2;
+const int buttonDown = 3;
+
+const int potPin = A0;
+const int buzzer = 8;
+
+int bpm = 80;
+
+unsigned long lastBeat = 0;
+unsigned long lastButtonTime = 0;
+
+const unsigned long debounceTime = 200;
+
+void setup() {
+
+  pinMode(buttonUp, INPUT_PULLUP);
+  pinMode(buttonDown, INPUT_PULLUP);
+
+  pinMode(buzzer, OUTPUT);
+  digitalWrite(buzzer, LOW);
+
+  Serial.begin(9600);
+
+  Serial.println("Electronic Metronome");
+  Serial.print("BPM: ");
+  Serial.println(bpm);
+}
+
+void loop() {
+
+  // Potentiometer controls BPM
+  int potValue = analogRead(potPin);
+  bpm = map(potValue, 0, 1023, 40, 200);
+
+  // Increase BPM button
+  if (digitalRead(buttonUp) == LOW) {
+    if (millis() - lastButtonTime > debounceTime) {
+      bpm = bpm + 5;
+      if (bpm > 200) {
+        bpm = 200;
+      }
+
+      lastButtonTime = millis();
+
+      Serial.print("BPM: ");
+      Serial.println(bpm);
+    }
+  }
+
+  // Decrease BPM button
+  if (digitalRead(buttonDown) == LOW) {
+    if (millis() - lastButtonTime > debounceTime) {
+      bpm = bpm - 5;
+      if (bpm < 40) {
+        bpm = 40;
+      }
+
+      lastButtonTime = millis();
+
+      Serial.print("BPM: ");
+      Serial.println(bpm);
+    }
+  }
+
+  // Calculate beat interval
+  unsigned long interval = 60000UL / bpm;
+
+  // Generate metronome beat
+  if (millis() - lastBeat >= interval) {
+    lastBeat = millis();
+
+    digitalWrite(buzzer, HIGH);
+    delay(70);
+    digitalWrite(buzzer, LOW);
+  }
+}</code></pre>
+</section>
+
+<section class="section">
+<h2>Expected Output</h2>
+<p>The buzzer produces short, evenly spaced beeps according to the selected BPM. Rotating the potentiometer changes the tempo between 40 and 200 BPM.</p>
+<div class="note">
+<strong>Potentiometer:</strong> 40–200 BPM<br>
+<strong>D2 Button:</strong> Increase BPM by 5<br>
+<strong>D3 Button:</strong> Decrease BPM by 5<br>
+<strong>Serial Monitor:</strong> Displays current BPM
+</div>
+</section>
+
+<section class="section" id="result">
+<h2>Result</h2>
+<p>The Electronic Metronome experiment was implemented using Arduino UNO, two push buttons, a 10 kΩ potentiometer and an active buzzer. The buzzer produces beats according to the selected tempo.</p>
+</section>
+
+<section class="section">
+<h2>What You Learn</h2>
+<ul>
+<li>How to read a potentiometer using analogRead().</li>
+<li>How to map an analog value to a BPM range.</li>
+<li>How to use INPUT_PULLUP with push buttons.</li>
+<li>How to increase and decrease a value using buttons.</li>
+<li>How to calculate timing intervals from BPM.</li>
+<li>How to use millis() for timing.</li>
+<li>How to display values in the Serial Monitor.</li>
+</ul>
+</section>
+
+</main>
+
+<footer>
+<strong>Arduino Experiment</strong><br>
+Electronic Metronome
+</footer>
+
+<script>
+function copyCode(){
+  const code=document.getElementById("arduinoCode").innerText;
+  navigator.clipboard.writeText(code);
+  const button=document.querySelector(".copy-button");
+  button.innerText="Copied!";
+  setTimeout(function(){button.innerText="Copy Code";},1500);
+}
+</script>
+
+</body>
+</html>
