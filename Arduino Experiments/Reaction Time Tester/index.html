@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Reaction Time Tester</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+.container{
+    width:90%;
+    max-width:950px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+    margin-top:22px;
+}
+
+.section p{
+    margin-bottom:10px;
+}
+
+ul,ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+
+.code-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:#1e293b;
+    color:white;
+    border-radius:8px 8px 0 0;
+}
+
+.copy-button{
+    border:0;
+    padding:7px 12px;
+    background:#2563eb;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+pre{
+    margin:0;
+    padding:20px;
+    overflow-x:auto;
+    background:#020617;
+    color:#e2e8f0;
+    border-radius:0 0 8px 8px;
+    font-family:Consolas,monospace;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+    transition:box-shadow .2s,transform .2s;
+}
+
+.component-card:hover{
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    transform:translateY(-2px);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+    line-height:1.5;
+}
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:#fff;
+    padding:10px;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+@media(max-width:600px){
+    .header{padding:35px 15px}
+    .header h1{font-size:28px}
+    .container{width:92%}
+    .section{padding:21px 18px}
+    nav{gap:11px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Arduino Experiment</h1>
+    <p>Reaction Time Tester</p>
+</header>
+
+<nav>
+    <a href="../index.html">← Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To measure the user's reaction time using Arduino UNO, a push button,
+        LED, buzzer and a 4-digit 7-segment display.
+    </p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>
+        The system waits for a random time before giving a start signal using the LED and buzzer.
+        The user must press the push button as quickly as possible.
+    </p>
+    <p>
+        Arduino measures the elapsed time in milliseconds and displays the reaction time
+        on the 4-digit 7-segment display.
+    </p>
+</section>
+
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png" alt="Arduino UNO R3">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>Main controller for timing, input detection and display control.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Push Button.png" alt="Push Button">
+            <h4>Push Button (×1)</h4>
+            <p>Used by the user to stop the reaction timer.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="LED.png" alt="LED">
+            <h4>LED (×1)</h4>
+            <p>Provides the visual start signal.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="4 Digit 7 Segment Display.png" alt="4 Digit 7 Segment Display">
+            <h4>4-Digit 7-Segment Display (×1)</h4>
+            <p>Displays the measured reaction time in milliseconds.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Buzzer.png" alt="Buzzer">
+            <h4>Buzzer (×1)</h4>
+            <p>Provides start and result sound signals.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="220 ohm resistor.png" alt="220 Ohm Resistor">
+            <h4>220Ω Resistor (×1)</h4>
+            <p>Limits current through the LED.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Used for assembling the circuit.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used for electrical connections.</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Pin / Terminal</th>
+                    <th>Arduino UNO R3</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Push Button</td><td>One Terminal</td><td>D2</td><td>—</td></tr>
+                <tr><td>Push Button</td><td>Other Terminal</td><td>—</td><td>GND</td></tr>
+                <tr><td>LED</td><td>Anode (+)</td><td>D8</td><td>Through 220Ω resistor</td></tr>
+                <tr><td>LED</td><td>Cathode (−)</td><td>—</td><td>GND</td></tr>
+                <tr><td>Buzzer</td><td>Positive (+)</td><td>D9</td><td>—</td></tr>
+                <tr><td>Buzzer</td><td>Negative (−)</td><td>—</td><td>GND</td></tr>
+                <tr><td>4-Digit 7-Segment</td><td>VCC</td><td>—</td><td>5V</td></tr>
+                <tr><td>4-Digit 7-Segment</td><td>GND</td><td>—</td><td>GND</td></tr>
+                <tr><td>4-Digit 7-Segment</td><td>SDA</td><td>A4</td><td>SDA</td></tr>
+                <tr><td>4-Digit 7-Segment</td><td>SCL</td><td>A5</td><td>SCL</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        The display uses I2C communication with address <strong>0x70</strong>.
+    </div>
+</section>
+
+<section class="section" id="circuit">
+    <h2>Circuit Diagram</h2>
+
+    <p>
+        Connect the push button to D2, LED to D8 through a 220Ω resistor,
+        buzzer to D9, and the 4-digit display to 5V, GND, A4 (SDA) and A5 (SCL).
+    </p>
+
+    <img class="circuit-img" src="Reaction_Time_Tester_Circuit.png" alt="Reaction Time Tester Circuit Diagram">
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        Arduino Starts<br>
+        ↓<br>
+        System waits for a random time<br>
+        ↓<br>
+        LED turns ON and buzzer beeps<br>
+        ↓<br>
+        Reaction timer starts<br>
+        ↓<br>
+        User presses the push button<br>
+        ↓<br>
+        Arduino stops the timer<br>
+        ↓<br>
+        Reaction time is displayed in milliseconds<br>
+        ↓<br>
+        Buzzer confirms the result<br>
+        ↓<br>
+        System becomes ready for the next test
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Connect the push button between D2 and GND.</li>
+        <li>Connect the LED anode to D8 through a 220Ω resistor.</li>
+        <li>Connect the LED cathode to GND.</li>
+        <li>Connect the buzzer positive terminal to D9 and negative terminal to GND.</li>
+        <li>Connect the 4-digit display VCC to 5V and GND to GND.</li>
+        <li>Connect the display SDA pin to A4.</li>
+        <li>Connect the display SCL pin to A5.</li>
+        <li>Connect Arduino UNO to the computer using USB.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Enter the program given below.</li>
+        <li>Select Arduino UNO from Tools → Board.</li>
+        <li>Select the correct COM port.</li>
+        <li>Verify and upload the program.</li>
+        <li>Wait for the LED and buzzer start signal.</li>
+        <li>Press the button as quickly as possible.</li>
+        <li>Read the reaction time from the 4-digit display.</li>
+    </ol>
+</section>
+
+<section class="section" id="code">
+    <h2>Arduino Code</h2>
+
+    <div class="code-header">
+        <span>Reaction_Time_Tester.ino</span>
+        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    </div>
+
+<pre><code id="arduinoCode">#include &lt;Wire.h&gt;
+
+#define DISPLAY_ADDRESS 0x70
+
+const int buttonPin = 2;
+const int ledPin = 8;
+const int buzzerPin = 9;
+
+// Segment codes
+const byte digitCode[10] = {
+  0x3F, // 0
+  0x06, // 1
+  0x5B, // 2
+  0x4F, // 3
+  0x66, // 4
+  0x6D, // 5
+  0x7D, // 6
+  0x07, // 7
+  0x7F, // 8
+  0x6F  // 9
+};
+
+void setup() {
+
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  digitalWrite(ledPin, LOW);
+  digitalWrite(buzzerPin, LOW);
+
+  Wire.begin();
+
+  // HT16K33 oscillator ON
+  Wire.beginTransmission(DISPLAY_ADDRESS);
+  Wire.write(0x21);
+  Wire.endTransmission();
+
+  // Display ON, blinking OFF
+  Wire.beginTransmission(DISPLAY_ADDRESS);
+  Wire.write(0x81);
+  Wire.endTransmission();
+
+  // Maximum brightness
+  Wire.beginTransmission(DISPLAY_ADDRESS);
+  Wire.write(0xEF);
+  Wire.endTransmission();
+
+  clearDisplay();
+
+  randomSeed(analogRead(A3));
+}
+
+void loop() {
+
+  // Wait until button is released
+  while (digitalRead(buttonPin) == LOW) {
+    delay(10);
+  }
+
+  clearDisplay();
+
+  // Random waiting time
+  delay(random(2000, 5000));
+
+  // -----------------------------
+  // START SIGNAL
+  // -----------------------------
+  digitalWrite(ledPin, HIGH);
+  digitalWrite(buzzerPin, HIGH);
+
+  delay(100);
+
+  digitalWrite(buzzerPin, LOW);
+
+  unsigned long startTime = millis();
+
+  // Wait for button press
+  while (digitalRead(buttonPin) == HIGH) {
+
+    unsigned long currentTime = millis();
+
+    unsigned long time = currentTime - startTime;
+
+    if (time <= 9999) {
+      displayNumber(time);
+    }
+  }
+
+  // -----------------------------
+  // STOP
+  // -----------------------------
+  unsigned long reactionTime = millis() - startTime;
+
+  digitalWrite(ledPin, LOW);
+
+  displayNumber(reactionTime);
+
+  // Result beep
+  digitalWrite(buzzerPin, HIGH);
+
+  delay(200);
+
+  digitalWrite(buzzerPin, LOW);
+
+  // Keep result for 3 seconds
+  delay(3000);
+}
+
+// =================================
+// DISPLAY NUMBER
+// =================================
+void displayNumber(unsigned long number) {
+
+  if (number > 9999) {
+    number = 9999;
+  }
+
+  int d1 = number / 1000;
+  int d2 = (number / 100) % 10;
+  int d3 = (number / 10) % 10;
+  int d4 = number % 10;
+
+  byte buffer[16] = {0};
+
+  // HT16K33 4-digit backpack positions
+  buffer[0] = digitCode[d1];
+  buffer[2] = digitCode[d2];
+  buffer[6] = digitCode[d3];
+  buffer[8] = digitCode[d4];
+
+  // Send to display
+  Wire.beginTransmission(DISPLAY_ADDRESS);
+  Wire.write(0x00);
+
+  for (int i = 0; i < 16; i++) {
+    Wire.write(buffer[i]);
+  }
+
+  Wire.endTransmission();
+}
+
+// =================================
+// CLEAR DISPLAY
+// =================================
+void clearDisplay() {
+
+  byte buffer[16] = {0};
+
+  Wire.beginTransmission(DISPLAY_ADDRESS);
+  Wire.write(0x00);
+
+  for (int i = 0; i < 16; i++) {
+    Wire.write(buffer[i]);
+  }
+
+  Wire.endTransmission();
+}</code></pre>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+
+    <p>
+        After a random delay, the LED turns ON and the buzzer gives a short beep.
+        The user presses the button as quickly as possible.
+    </p>
+
+    <div class="note">
+        <strong>Start signal:</strong> LED ON + short beep<br>
+        <strong>Measurement:</strong> Reaction time in milliseconds<br>
+        <strong>Display range:</strong> Up to 9999 ms<br>
+        <strong>Result:</strong> Shown for 3 seconds
+    </div>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The Reaction Time Tester experiment was implemented using Arduino UNO,
+        a push button, LED, buzzer and a 4-digit 7-segment display.
+        The system measures and displays the user's reaction time in milliseconds.
+    </p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>How to measure elapsed time using millis().</li>
+        <li>How to generate a random waiting period.</li>
+        <li>How to use a push button with INPUT_PULLUP.</li>
+        <li>How to control an LED and buzzer.</li>
+        <li>How to communicate with an I2C display.</li>
+        <li>How to show a number on a 4-digit 7-segment display.</li>
+        <li>How to build a simple human reaction-time measurement system.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>Arduino Experiment</strong><br>
+    Reaction Time Tester
+</footer>
+
+<script>
+function copyCode(){
+    const code=document.getElementById("arduinoCode").innerText;
+    navigator.clipboard.writeText(code);
+
+    const button=document.querySelector(".copy-button");
+    button.innerText="Copied!";
+
+    setTimeout(function(){
+        button.innerText="Copy Code";
+    },1500);
+}
+</script>
+
+</body>
+</html>
