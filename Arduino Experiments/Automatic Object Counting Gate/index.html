@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Automatic Object Counting Gate</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+.container{
+    width:90%;
+    max-width:950px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+    margin-top:22px;
+}
+
+.section p{
+    margin-bottom:10px;
+}
+
+ul,ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+
+.code-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:#1e293b;
+    color:white;
+    border-radius:8px 8px 0 0;
+}
+
+.copy-button{
+    border:0;
+    padding:7px 12px;
+    background:#2563eb;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+pre{
+    margin:0;
+    padding:20px;
+    overflow-x:auto;
+    background:#020617;
+    color:#e2e8f0;
+    border-radius:0 0 8px 8px;
+    font-family:Consolas,monospace;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+    transition:box-shadow .2s,transform .2s;
+}
+
+.component-card:hover{
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    transform:translateY(-2px);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+    line-height:1.5;
+}
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:#fff;
+    padding:10px;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+@media(max-width:600px){
+    .header{padding:35px 15px}
+    .header h1{font-size:28px}
+    .container{width:92%}
+    .section{padding:21px 18px}
+    nav{gap:11px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Arduino Experiment</h1>
+    <p>Automatic Object Counting Gate</p>
+</header>
+
+<nav>
+    <a href="../index.html">← Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To detect objects passing through a gate using an IR sensor, count each new object,
+        and display the count on a single-digit common-cathode 7-segment display using Arduino UNO.
+    </p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>
+        The system detects an object at the IR gate and increases the count by one
+        whenever a new object is detected.
+    </p>
+    <p>
+        The current count is shown on a single-digit 7-segment display.
+        The program can operate either with the actual IR sensor or in automatic simulation mode.
+    </p>
+</section>
+
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png" alt="Arduino UNO R3">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>Main controller for object detection and counting.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="IR Sensor.png" alt="IR Sensor">
+            <h4>IR Sensor (×1)</h4>
+            <p>Detects an object passing through the gate.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Single Digit 7 Segment Display.png" alt="Single Digit 7 Segment Display">
+            <h4>Single-Digit 7-Segment Display (×1)</h4>
+            <p>Displays the current object count.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Recommended for convenient prototyping.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used for electrical connections.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Arduino cable.png" alt="USB Cable">
+            <h4>USB Cable / Power Source</h4>
+            <p>Used for programming and powering Arduino UNO.</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                    <th>Arduino Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>IR Sensor</td><td>OUT</td><td>D2</td></tr>
+                <tr><td>7-Segment Display</td><td>Segment A</td><td>D3</td></tr>
+                <tr><td>7-Segment Display</td><td>Segment B</td><td>D4</td></tr>
+                <tr><td>7-Segment Display</td><td>Segment C</td><td>D5</td></tr>
+                <tr><td>7-Segment Display</td><td>Segment D</td><td>D6</td></tr>
+                <tr><td>7-Segment Display</td><td>Segment E</td><td>D7</td></tr>
+                <tr><td>7-Segment Display</td><td>Segment F</td><td>D8</td></tr>
+                <tr><td>7-Segment Display</td><td>Segment G</td><td>D9</td></tr>
+                <tr><td>7-Segment Display</td><td>Common Cathode</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+    <img class="circuit-img" src="Automatic_Object_Counting_Gate_Circuit.png" alt="Automatic Object Counting Gate Circuit Diagram">
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        Arduino Starts<br>
+        ↓<br>
+        IR gate waits for an object<br>
+        ↓<br>
+        New object is detected<br>
+        ↓<br>
+        Object count increases by 1<br>
+        ↓<br>
+        Count is displayed on 7-segment display<br>
+        ↓<br>
+        Object leaves the gate<br>
+        ↓<br>
+        System becomes ready for the next object
+    </div>
+
+    <div class="note">
+        <strong>Count range:</strong> 0 to 9<br>
+        <strong>After 9:</strong> Count resets to 0<br>
+        <strong>Serial Monitor:</strong> Shows operating messages and current count at 9600 baud
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Connect the IR sensor OUT pin to Arduino D2.</li>
+        <li>Connect 7-segment display segment A to D3.</li>
+        <li>Connect segment B to D4.</li>
+        <li>Connect segment C to D5.</li>
+        <li>Connect segment D to D6.</li>
+        <li>Connect segment E to D7.</li>
+        <li>Connect segment F to D8.</li>
+        <li>Connect segment G to D9.</li>
+        <li>Connect the common cathode of the display to GND.</li>
+        <li>Connect Arduino UNO to the computer using USB.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Enter the program given below.</li>
+        <li>Select Arduino UNO from Tools → Board.</li>
+        <li>Select the correct COM port.</li>
+        <li>Verify and upload the program.</li>
+        <li>Open Serial Monitor at 9600 baud.</li>
+        <li>Observe the automatic simulation or set simulation mode to false to use the real IR sensor.</li>
+    </ol>
+</section>
+
+<section class="section" id="code">
+    <h2>Arduino Code</h2>
+
+    <div class="code-header">
+        <span>Automatic_Object_Counting_Gate.ino</span>
+        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    </div>
+
+<pre><code id="arduinoCode">/*
+  AUTOMATIC OBJECT COUNTING GATE
+  Arduino UNO R3 + Single Digit 7-Segment Display
+
+  AUTOMATIC SIMULATION MODE:
+  Simulates an object entering and leaving
+  the IR gate at regular intervals.
+
+  Display:
+  A -> D3
+  B -> D4
+  C -> D5
+  D -> D6
+  E -> D7
+  F -> D8
+  G -> D9
+  Common cathode -> GND
+*/
+
+// ---------------- PIN DEFINITIONS ----------------
+#define IR_SENSOR_PIN 2
+
+const byte segmentPins[7] = {
+  3, 4, 5, 6, 7, 8, 9
+};
+
+// ---------------- SIMULATION SETTINGS ----------------
+// true = Automatic simulation without manual sensor input
+// false = Read the actual IR sensor on D2
+const bool AUTOMATIC_SIMULATION = true;
+
+// Time between simulated objects
+const unsigned long OBJECT_INTERVAL = 3000;
+
+// Simulated object detection duration
+const unsigned long OBJECT_DURATION = 800;
+
+// ---------------- VARIABLES ----------------
+byte objectCount = 0;
+
+bool objectDetected = false;
+bool previousObjectDetected = false;
+
+unsigned long simulationStartTime = 0;
+
+// ---------------- DIGIT PATTERNS ----------------
+// Segment order: A, B, C, D, E, F, G
+const byte digitPatterns[10][7] = {
+  {1, 1, 1, 1, 1, 1, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0}, // 1
+  {1, 1, 0, 1, 1, 0, 1}, // 2
+  {1, 1, 1, 1, 0, 0, 1}, // 3
+  {0, 1, 1, 0, 0, 1, 1}, // 4
+  {1, 0, 1, 1, 0, 1, 1}, // 5
+  {1, 0, 1, 1, 1, 1, 1}, // 6
+  {1, 1, 1, 0, 0, 0, 0}, // 7
+  {1, 1, 1, 1, 1, 1, 1}, // 8
+  {1, 1, 1, 1, 0, 1, 1}  // 9
+};
+
+// ---------------- SETUP ----------------
+void setup() {
+
+  pinMode(IR_SENSOR_PIN, INPUT);
+
+  for (byte i = 0; i < 7; i++) {
+    pinMode(segmentPins[i], OUTPUT);
+  }
+
+  Serial.begin(9600);
+
+  displayNumber(0);
+
+  simulationStartTime = millis();
+
+  Serial.println("==============================");
+  Serial.println(" AUTOMATIC OBJECT COUNTING GATE");
+  Serial.println("==============================");
+
+  if (AUTOMATIC_SIMULATION) {
+    Serial.println("Mode: AUTOMATIC SIMULATION");
+    Serial.println("Objects will pass automatically.");
+  } else {
+    Serial.println("Mode: REAL IR SENSOR");
+    Serial.println("Waiting for object detection.");
+  }
+
+  Serial.println("------------------------------");
+  Serial.println("Current Count: 0");
+}
+
+// ---------------- MAIN LOOP ----------------
+void loop() {
+
+  if (AUTOMATIC_SIMULATION) {
+    automaticSimulation();
+  } else {
+    realIRSensor();
+  }
+}
+
+// ---------------- AUTOMATIC SIMULATION ----------------
+void automaticSimulation() {
+
+  unsigned long currentTime = millis();
+
+  unsigned long elapsedTime =
+    currentTime - simulationStartTime;
+
+  bool simulatedDetection =
+    (elapsedTime % OBJECT_INTERVAL) < OBJECT_DURATION;
+
+  objectDetected = simulatedDetection;
+
+  if (objectDetected == true &&
+      previousObjectDetected == false) {
+
+    increaseCount();
+
+    Serial.println("Simulated IR Detection: OBJECT DETECTED");
+    Serial.print("Object Count = ");
+    Serial.println(objectCount);
+    Serial.println("Display Updated");
+    Serial.println("------------------------------");
+  }
+
+  if (objectDetected == false &&
+      previousObjectDetected == true) {
+
+    Serial.println("Object passed through gate.");
+    Serial.println("Waiting for next object...");
+    Serial.println("------------------------------");
+  }
+
+  previousObjectDetected = objectDetected;
+
+  delay(10);
+}
+
+// ---------------- REAL IR SENSOR ----------------
+void realIRSensor() {
+
+  int sensorState = digitalRead(IR_SENSOR_PIN);
+
+  // Active LOW sensor:
+  // LOW = object detected
+  // HIGH = no object detected
+  objectDetected = (sensorState == LOW);
+
+  if (objectDetected == true &&
+      previousObjectDetected == false) {
+
+    increaseCount();
+
+    Serial.println("IR SENSOR: OBJECT DETECTED");
+    Serial.print("Object Count = ");
+    Serial.println(objectCount);
+    Serial.println("------------------------------");
+  }
+
+  if (objectDetected == false &&
+      previousObjectDetected == true) {
+
+    Serial.println("Object left the gate.");
+    Serial.println("Ready for next object.");
+    Serial.println("------------------------------");
+  }
+
+  previousObjectDetected = objectDetected;
+
+  delay(10);
+}
+
+// ---------------- COUNT FUNCTION ----------------
+void increaseCount() {
+
+  objectCount++;
+
+  // Single digit: reset after 9
+  if (objectCount > 9) {
+    objectCount = 0;
+  }
+
+  displayNumber(objectCount);
+}
+
+// ---------------- DISPLAY FUNCTION ----------------
+void displayNumber(byte number) {
+
+  for (byte i = 0; i < 7; i++) {
+
+    digitalWrite(
+      segmentPins[i],
+      digitPatterns[number][i]
+    );
+  }
+}</code></pre>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+
+    <p>
+        Each time a new object is detected, the count increases by one and
+        the updated value is shown on the single-digit 7-segment display.
+    </p>
+
+    <div class="note">
+        <strong>Automatic simulation:</strong> New simulated object every 3 seconds<br>
+        <strong>Detection duration:</strong> 800 ms<br>
+        <strong>Display:</strong> Shows count from 0 to 9<br>
+        <strong>After 9:</strong> Returns to 0
+    </div>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The Automatic Object Counting Gate experiment was implemented using Arduino UNO,
+        an IR sensor and a single-digit 7-segment display. Each new object detection
+        increases the count and updates the display.
+    </p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>How to detect objects using an IR sensor.</li>
+        <li>How to recognize a new detection using state transitions.</li>
+        <li>How to count detected objects using Arduino.</li>
+        <li>How to control a common-cathode 7-segment display.</li>
+        <li>How to display digits from 0 to 9.</li>
+        <li>How to use Serial Monitor for debugging and status messages.</li>
+        <li>How to switch between automatic simulation and real sensor operation.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>Arduino Experiment</strong><br>
+    Automatic Object Counting Gate
+</footer>
+
+<script>
+function copyCode(){
+    const code=document.getElementById("arduinoCode").innerText;
+    navigator.clipboard.writeText(code);
+
+    const button=document.querySelector(".copy-button");
+    button.innerText="Copied!";
+
+    setTimeout(function(){
+        button.innerText="Copy Code";
+    },1500);
+}
+</script>
+
+</body>
+</html>
