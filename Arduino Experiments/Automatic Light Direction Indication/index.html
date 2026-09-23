@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Automatic Light Direction Indication</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px}
+.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:950px;margin:35px auto}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
+.section p{margin-bottom:10px}ul,ol{padding-left:24px}li{margin-bottom:8px}.table-wrap{overflow-x:auto}
+table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
+.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:white;border-radius:8px 8px 0 0}
+.copy-button{border:0;padding:7px 12px;background:#2563eb;color:white;border-radius:5px;cursor:pointer;font-weight:bold}
+pre{margin:0;padding:20px;overflow-x:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font-family:Consolas,monospace;font-size:14px;line-height:1.7}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
+.component-card p{color:#475569;font-size:14px;margin:0;line-height:1.5}
+.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}footer strong{color:white}
+@media(max-width:600px){.header{padding:35px 15px}.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}nav{gap:11px}}
+</style>
+</head>
+<body>
+
+<header class="header">
+<h1>Arduino Experiment</h1>
+<p>Automatic Light Direction Indication</p>
+</header>
+
+<nav>
+<a href="../index.html">← Arduino Experiments</a>
+<a href="#aim">Aim</a>
+<a href="#components">Components</a>
+<a href="#connections">Connections</a>
+<a href="#working">Working</a>
+<a href="#procedure">Procedure</a>
+<a href="#code">Code</a>
+<a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To identify the direction of the strongest light using three LDR sensing circuits and move a servo motor toward the corresponding direction using Arduino UNO.</p>
+</section>
+
+<section class="section">
+<h2>About the Experiment</h2>
+<p>Three LDR circuits are used for left, center and right light sensing. They are connected to Arduino analog pins A0, A1 and A2.</p>
+<p>The supplied program generates random light-intensity values every two seconds, finds the strongest direction and moves the servo smoothly to the corresponding angle.</p>
+</section>
+
+<section class="section" id="components">
+<h2>Components Required</h2>
+<div class="components-grid">
+<div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO"><h4>Arduino Board (×1)</h4><p>Main controller for light comparison and servo control.</p></div>
+<div class="component-card"><img src="LDR.png" alt="LDR"><h4>LDR (×3)</h4><p>Used for left, center and right light sensing.</p></div>
+<div class="component-card"><img src="10K ohm resistor.png" alt="10K Ohm Resistor"><h4>10 kΩ Resistors (×3)</h4><p>Used in the LDR input circuits.</p></div>
+<div class="component-card"><img src="Servo Motor.png" alt="Servo Motor"><h4>Servo Motor (×1)</h4><p>Acts as the directional indicator.</p></div>
+<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Used for electrical connections.</p></div>
+</div>
+</section>
+
+<section class="section" id="connections">
+<h2>Wiring / Pin Connections</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Section</th><th>Connection</th><th>Arduino / Supply</th></tr></thead>
+<tbody>
+<tr><td>LDR 1 – Left</td><td>LDR Leg 1</td><td>5V</td></tr>
+<tr><td>LDR 1 – Left</td><td>LDR Leg 2</td><td>A0</td></tr>
+<tr><td>LDR 2 – Center</td><td>LDR Leg 1</td><td>5V</td></tr>
+<tr><td>LDR 2 – Center</td><td>LDR Leg 2</td><td>A1</td></tr>
+<tr><td>LDR 3 – Right</td><td>LDR Leg 1</td><td>5V</td></tr>
+<tr><td>LDR 3 – Right</td><td>LDR Leg 2</td><td>A2</td></tr>
+<tr><td>Servo</td><td>Red</td><td>5V</td></tr>
+<tr><td>Servo</td><td>Black / Brown</td><td>GND</td></tr>
+<tr><td>Servo</td><td>Yellow / Orange</td><td>D9</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note"><strong>A0:</strong> Left LDR &nbsp; | &nbsp; <strong>A1:</strong> Center LDR &nbsp; | &nbsp; <strong>A2:</strong> Right LDR &nbsp; | &nbsp; <strong>D9:</strong> Servo Signal</div>
+</section>
+
+<section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">
+Arduino Starts<br>↓<br>
+Light values are generated for Left, Center and Right<br>↓<br>
+Arduino compares all three values<br>↓<br>
+Strongest direction is identified<br>↓<br>
+Left → Servo moves to 30°<br>
+Center → Servo moves to 90°<br>
+Right → Servo moves to 150°<br>↓<br>
+Servo moves smoothly toward the selected direction
+</div>
+<div class="note"><strong>Left Angle:</strong> 30°<br><strong>Center Angle:</strong> 90°<br><strong>Right Angle:</strong> 150°<br><strong>Update Interval:</strong> Every 2 seconds</div>
+</section>
+
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol>
+<li>Connect the left LDR circuit to A0.</li>
+<li>Connect the center LDR circuit to A1.</li>
+<li>Connect the right LDR circuit to A2.</li>
+<li>Connect the servo red wire to 5V.</li>
+<li>Connect the servo black/brown wire to GND.</li>
+<li>Connect the servo yellow/orange signal wire to D9.</li>
+<li>Connect Arduino UNO to the computer.</li>
+<li>Open Arduino IDE.</li>
+<li>Enter the program given below.</li>
+<li>Select Arduino UNO and the correct COM port.</li>
+<li>Verify and upload the program.</li>
+<li>Open Serial Monitor at 9600 baud.</li>
+<li>Observe the generated light values and servo direction.</li>
+</ol>
+</section>
+
+<section class="section" id="code">
+<h2>Arduino Code</h2>
+<div class="code-header">
+<span>Automatic_Light_Direction_Indication.ino</span>
+<button class="copy-button" onclick="copyCode()">Copy Code</button>
+</div>
+<pre><code id="arduinoCode">#include &lt;Servo.h&gt;
+
+#define LDR_LEFT A0
+#define LDR_CENTER A1
+#define LDR_RIGHT A2
+
+#define SERVO_PIN 9
+
+Servo lightServo;
+
+#define LEFT_ANGLE 30
+#define CENTER_ANGLE 90
+#define RIGHT_ANGLE 150
+
+int leftLight;
+int centerLight;
+int rightLight;
+
+int currentAngle = 90;
+int targetAngle = 90;
+
+unsigned long previousTime = 0;
+const unsigned long interval = 2000;
+
+void setup() {
+
+  Serial.begin(9600);
+
+  lightServo.attach(SERVO_PIN);
+
+  lightServo.write(currentAngle);
+
+  randomSeed(analogRead(A5));
+
+  Serial.println("Automatic Light Direction Indicator");
+  Serial.println("Random Light Simulation");
+  Serial.println("-----------------------------------");
+
+  delay(1000);
+}
+
+void loop() {
+
+  if (millis() - previousTime >= interval) {
+
+    previousTime = millis();
+
+    leftLight = random(0, 1024);
+    centerLight = random(0, 1024);
+    rightLight = random(0, 1024);
+
+    Serial.println();
+    Serial.println("New Light Intensity Values:");
+
+    Serial.print("Left LDR: ");
+    Serial.println(leftLight);
+
+    Serial.print("Center LDR: ");
+    Serial.println(centerLight);
+
+    Serial.print("Right LDR: ");
+    Serial.println(rightLight);
+
+    if (leftLight >= centerLight &&
+        leftLight >= rightLight) {
+
+      targetAngle = LEFT_ANGLE;
+      Serial.println("Strongest Light: LEFT");
+    }
+
+    else if (centerLight >= leftLight &&
+             centerLight >= rightLight) {
+
+      targetAngle = CENTER_ANGLE;
+      Serial.println("Strongest Light: CENTER");
+    }
+
+    else {
+
+      targetAngle = RIGHT_ANGLE;
+      Serial.println("Strongest Light: RIGHT");
+    }
+
+    Serial.print("Target Servo Angle: ");
+    Serial.println(targetAngle);
+
+    Serial.println("-----------------------------------");
+  }
+
+  if (currentAngle < targetAngle) {
+
+    currentAngle++;
+
+    lightServo.write(currentAngle);
+
+    delay(15);
+  }
+
+  else if (currentAngle > targetAngle) {
+
+    currentAngle--;
+
+    lightServo.write(currentAngle);
+
+    delay(15);
+  }
+}</code></pre>
+</section>
+
+<section class="section">
+<h2>Expected Output</h2>
+<p>Every two seconds, new light-intensity values are generated for the left, center and right directions. The servo moves toward the direction with the highest value.</p>
+<div class="note"><strong>Strongest Left:</strong> Servo moves to 30°<br><strong>Strongest Center:</strong> Servo moves to 90°<br><strong>Strongest Right:</strong> Servo moves to 150°<br><strong>Serial Monitor:</strong> Displays light values and selected direction</div>
+</section>
+
+<section class="section" id="result">
+<h2>Result</h2>
+<p>The Automatic Light Direction Indication experiment was implemented using Arduino, three LDR sensing circuits and a servo motor. The system determines the strongest light direction and moves the servo toward the corresponding angle.</p>
+</section>
+
+<section class="section">
+<h2>What You Learn</h2>
+<ul>
+<li>How to work with multiple LDR inputs.</li>
+<li>How to compare three sensor values.</li>
+<li>How to control a servo motor using the Servo library.</li>
+<li>How to assign different servo angles to directions.</li>
+<li>How to use millis() for timed updates.</li>
+<li>How to generate simulated sensor values using random().</li>
+<li>How to move a servo smoothly toward a target angle.</li>
+</ul>
+</section>
+
+</main>
+
+<footer>
+<strong>Arduino Experiment</strong><br>
+Automatic Light Direction Indication
+</footer>
+
+<script>
+function copyCode(){
+  const code=document.getElementById("arduinoCode").innerText;
+  navigator.clipboard.writeText(code);
+  const button=document.querySelector(".copy-button");
+  button.innerText="Copied!";
+  setTimeout(function(){button.innerText="Copy Code";},1500);
+}
+</script>
+
+</body>
+</html>
