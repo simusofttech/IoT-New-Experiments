@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Stepper Motor Speed Controller</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px}
+.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:950px;margin:35px auto}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
+.section p{margin-bottom:10px}ul,ol{padding-left:24px}li{margin-bottom:8px}.table-wrap{overflow-x:auto}
+table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
+.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:white;border-radius:8px 8px 0 0}
+.copy-button{border:0;padding:7px 12px;background:#2563eb;color:white;border-radius:5px;cursor:pointer;font-weight:bold}
+pre{margin:0;padding:20px;overflow-x:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font-family:Consolas,monospace;font-size:14px;line-height:1.7}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
+.component-card p{color:#475569;font-size:14px;margin:0;line-height:1.5}
+.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}footer strong{color:white}
+@media(max-width:600px){.header{padding:35px 15px}.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}nav{gap:11px}}
+</style>
+</head>
+<body>
+
+<header class="header">
+<h1>Arduino Experiment</h1>
+<p>Stepper Motor Speed Controller</p>
+</header>
+
+<nav>
+<a href="../index.html">← Arduino Experiments</a>
+<a href="#aim">Aim</a>
+<a href="#components">Components</a>
+<a href="#connections">Connections</a>
+<a href="#working">Working</a>
+<a href="#procedure">Procedure</a>
+<a href="#code">Code</a>
+<a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To control motor speed using a potentiometer and monitor encoder pulse activity with Arduino UNO and a ULN2003 motor driver.</p>
+</section>
+
+<section class="section">
+<h2>About the Experiment</h2>
+<p>Arduino reads the potentiometer through analog pin A0 and maps the 0–1023 reading to a 0–255 PWM command. This PWM signal is sent on D5 to the ULN2003 driver, which controls the motor speed.</p>
+<p>The motor encoder provides pulse feedback through channels A and B. Arduino counts the encoder pulses and reports the total pulse count and pulses per second through the Serial Monitor.</p>
+</section>
+
+<section class="section" id="components">
+<h2>Components Required</h2>
+<div class="components-grid">
+<div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO"><h4>Arduino UNO (×1)</h4><p>Main controller for potentiometer input, PWM output and encoder monitoring.</p></div>
+<div class="component-card"><img src="Potentiometer.png" alt="Potentiometer"><h4>Potentiometer (×1)</h4><p>Provides the user-adjustable speed command.</p></div>
+<div class="component-card"><img src="DC Motor with Encoder.png" alt="DC Motor with Encoder"><h4>DC Motor with Encoder (×1)</h4><p>Motor being controlled and source of encoder pulse feedback.</p></div>
+<div class="component-card"><img src="ULN2003 Driver Board.png" alt="ULN2003 Driver"><h4>ULN2003 Driver (×1)</h4><p>Receives the PWM control signal and interfaces with the motor.</p></div>
+<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Used for electrical connections.</p></div>
+</div>
+</section>
+
+<section class="section" id="connections">
+<h2>Pin Connections</h2>
+<h3>Potentiometer to Arduino</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Potentiometer Pin</th><th>Arduino UNO Connection</th></tr></thead>
+<tbody>
+<tr><td>Outer Pin 1</td><td>5V</td></tr>
+<tr><td>Middle Pin</td><td>A0</td></tr>
+<tr><td>Outer Pin 2</td><td>GND</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Motor and ULN2003 Driver</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Connection</th><th>Connect To</th></tr></thead>
+<tbody>
+<tr><td>Motor Pin 1 (Motor +)</td><td>5V Motor Supply</td></tr>
+<tr><td>Motor Pin 6 (Motor −)</td><td>ULN2003 OUT1</td></tr>
+<tr><td>ULN2003 IN1</td><td>Arduino D5 (PWM)</td></tr>
+<tr><td>ULN2003 GND</td><td>Arduino GND</td></tr>
+<tr><td>ULN2003 COM (if present)</td><td>Motor Supply +5V</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Encoder to Arduino</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Motor Pin</th><th>Function</th><th>Arduino UNO</th></tr></thead>
+<tbody>
+<tr><td>2</td><td>Encoder Channel B</td><td>D3</td></tr>
+<tr><td>3</td><td>Encoder Power</td><td>5V</td></tr>
+<tr><td>4</td><td>Encoder GND</td><td>GND</td></tr>
+<tr><td>5</td><td>Encoder Channel A</td><td>D2</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note">
+<strong>Potentiometer:</strong> A0<br>
+<strong>PWM Output:</strong> D5<br>
+<strong>Encoder Channel A:</strong> D2<br>
+<strong>Encoder Channel B:</strong> D3
+</div>
+  
+<section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">
+Arduino Starts<br>↓<br>
+Potentiometer value is read on A0<br>↓<br>
+0–1023 input is mapped to 0–255 PWM<br>↓<br>
+PWM is sent on D5 to ULN2003<br>↓<br>
+Motor speed changes according to PWM<br>↓<br>
+Encoder Channel A generates pulses<br>↓<br>
+Arduino counts encoder pulses<br>↓<br>
+Total pulses and pulses per second are shown on Serial Monitor
+</div>
+<div class="note">
+<strong>Analog Input Range:</strong> 0–1023<br>
+<strong>PWM Range:</strong> 0–255<br>
+<strong>Serial Monitor:</strong> 9600 baud<br>
+<strong>Pulse Report Interval:</strong> 1 second
+</div>
+</section>
+
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol>
+<li>Connect one outer pin of the potentiometer to 5V.</li>
+<li>Connect the middle pin of the potentiometer to A0.</li>
+<li>Connect the other outer pin of the potentiometer to GND.</li>
+<li>Connect Motor Pin 1 to the 5V motor supply.</li>
+<li>Connect Motor Pin 6 to ULN2003 OUT1.</li>
+<li>Connect ULN2003 IN1 to Arduino D5.</li>
+<li>Connect ULN2003 GND to Arduino GND.</li>
+<li>Connect encoder Channel A to D2.</li>
+<li>Connect encoder Channel B to D3.</li>
+<li>Connect encoder power to 5V and encoder ground to GND.</li>
+<li>Connect Arduino UNO to the computer.</li>
+<li>Open Arduino IDE.</li>
+<li>Enter the program given below.</li>
+<li>Select Arduino UNO and the correct COM port.</li>
+<li>Verify and upload the program.</li>
+<li>Open Serial Monitor at 9600 baud.</li>
+<li>Rotate the potentiometer and observe PWM and encoder pulse readings.</li>
+</ol>
+</section>
+
+<section class="section" id="code">
+<h2>Arduino Code</h2>
+<div class="code-header">
+<span>Stepper_Motor_Speed_Controller.ino</span>
+<button class="copy-button" onclick="copyCode()">Copy Code</button>
+</div>
+<pre><code id="arduinoCode">/*
+  DC MOTOR SPEED CONTROLLER WITH ENCODER
+
+  Arduino UNO
+  DC Motor with Encoder
+  ULN2003 Driver
+  Potentiometer
+
+  MOTOR PIN ARRANGEMENT:
+
+  Pin 1 = Motor Positive
+  Pin 2 = Encoder Channel B
+  Pin 3 = Encoder Power
+  Pin 4 = Encoder GND
+  Pin 5 = Encoder Channel A
+  Pin 6 = Motor Negative
+*/
+
+#define POT_PIN A0
+
+#define MOTOR_PWM_PIN 5
+
+#define ENCODER_A_PIN 2
+#define ENCODER_B_PIN 3
+
+volatile long encoderPulses = 0;
+int encoderDirection = 1;
+
+int potValue = 0;
+int motorPWM = 0;
+
+unsigned long previousTime = 0;
+long previousPulses = 0;
+
+void encoderISR() {
+
+  int channelB = digitalRead(ENCODER_B_PIN);
+
+  if (channelB == HIGH) {
+    encoderPulses++;
+    encoderDirection = 1;
+  }
+  else {
+    encoderPulses++;
+    encoderDirection = 1;
+  }
+}
+
+void setup() {
+
+  Serial.begin(9600);
+
+  pinMode(MOTOR_PWM_PIN, OUTPUT);
+
+  pinMode(ENCODER_A_PIN, INPUT_PULLUP);
+  pinMode(ENCODER_B_PIN, INPUT_PULLUP);
+
+  attachInterrupt(
+    digitalPinToInterrupt(ENCODER_A_PIN),
+    encoderISR,
+    RISING
+  );
+
+  analogWrite(MOTOR_PWM_PIN, 0);
+
+  Serial.println("DC Motor Speed Controller");
+  Serial.println("Encoder Pulse Monitoring");
+  Serial.println("--------------------------------");
+}
+
+void loop() {
+
+  potValue = analogRead(POT_PIN);
+
+  motorPWM = map(
+    potValue,
+    0,
+    1023,
+    0,
+    255
+  );
+
+  analogWrite(MOTOR_PWM_PIN, motorPWM);
+
+  if (millis() - previousTime >= 1000) {
+
+    previousTime = millis();
+
+    noInterrupts();
+    long currentPulses = encoderPulses;
+    interrupts();
+
+    long pulsesPerSecond =
+      currentPulses - previousPulses;
+
+    previousPulses = currentPulses;
+
+    Serial.print("Potentiometer: ");
+    Serial.print(potValue);
+
+    Serial.print(" | PWM: ");
+    Serial.print(motorPWM);
+
+    Serial.print(" | Total Pulses: ");
+    Serial.print(currentPulses);
+
+    Serial.print(" | Pulses/Second: ");
+    Serial.println(pulsesPerSecond);
+
+    Serial.println("--------------------------------");
+  }
+
+  delay(10);
+}</code></pre>
+</section>
+
+<section class="section">
+<h2>Expected Output</h2>
+<p>Turning the potentiometer changes the PWM command from 0 to 255 and therefore changes the motor speed. Encoder pulses are counted continuously and reported on the Serial Monitor.</p>
+<div class="note">
+<strong>Potentiometer Minimum:</strong> PWM near 0<br>
+<strong>Potentiometer Maximum:</strong> PWM near 255<br>
+<strong>Serial Monitor:</strong> Potentiometer, PWM, Total Pulses, Pulses/Second
+</div>
+</section>
+
+<section class="section" id="result">
+<h2>Result</h2>
+<p>The Stepper Motor Speed Controller experiment was implemented using Arduino UNO, a potentiometer, ULN2003 driver and a motor with encoder feedback. Motor speed changes according to the potentiometer position and encoder pulses are monitored through the Serial Monitor.</p>
+</section>
+
+<section class="section">
+<h2>What You Learn</h2>
+<ul>
+<li>How to read a potentiometer using Arduino A0.</li>
+<li>How to map analog input from 0–1023 to PWM 0–255.</li>
+<li>How to control motor speed using PWM.</li>
+<li>How to interface a ULN2003 driver with Arduino.</li>
+<li>How to read encoder channels using digital pins.</li>
+<li>How to use an interrupt for pulse counting.</li>
+<li>How to calculate pulses per second.</li>
+<li>How to monitor motor activity using Serial Monitor.</li>
+</ul>
+</section>
+
+</main>
+
+<footer>
+<strong>Arduino Experiment</strong><br>
+Stepper Motor Speed Controller
+</footer>
+
+<script>
+function copyCode(){
+  const code=document.getElementById("arduinoCode").innerText;
+  navigator.clipboard.writeText(code);
+  const button=document.querySelector(".copy-button");
+  button.innerText="Copied!";
+  setTimeout(function(){button.innerText="Copy Code";},1500);
+}
+</script>
+
+</body>
+</html>
