@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Stepper Motor Position Selector</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+.container{
+    width:90%;
+    max-width:950px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section p{
+    margin-bottom:10px;
+}
+
+ul,ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+
+.code-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:#1e293b;
+    color:white;
+    border-radius:8px 8px 0 0;
+}
+
+.copy-button{
+    border:0;
+    padding:7px 12px;
+    background:#2563eb;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+pre{
+    margin:0;
+    padding:20px;
+    overflow-x:auto;
+    background:#020617;
+    color:#e2e8f0;
+    border-radius:0 0 8px 8px;
+    font-family:Consolas,monospace;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+    transition:box-shadow .2s,transform .2s;
+}
+
+.component-card:hover{
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    transform:translateY(-2px);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+    line-height:1.5;
+}
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:#fff;
+    padding:10px;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+@media(max-width:600px){
+    .header{padding:35px 15px}
+    .header h1{font-size:28px}
+    .container{width:92%}
+    .section{padding:21px 18px}
+    nav{gap:11px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Arduino Experiment</h1>
+    <p>Stepper Motor Position Selector</p>
+</header>
+
+<nav>
+    <a href="../index.html">← Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#working">Working</a>
+    <a href="#controls">Controls</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To design and operate a keypad-controlled motor position selector in Tinkercad,
+        where the user enters a numerical target position using a 4×4 keypad and Arduino
+        drives the motor toward the selected position through an L293D motor driver.
+    </p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>
+        The user enters a target position using the 4×4 keypad. Arduino processes the entered
+        value, displays the target and current position on the 16×2 I²C LCD, and controls
+        the L293D motor driver to move the motor forward or reverse.
+    </p>
+    <p>
+        The keypad also provides control functions for clearing input, stopping the motor,
+        showing the current position, zeroing the position, and resetting the position counter.
+    </p>
+</section>
+
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png" alt="Arduino UNO R3">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>Main controller for keypad input, LCD display and motor control.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="4x4 Keypad.png" alt="4x4 Matrix Keypad">
+            <h4>4×4 Matrix Keypad (×1)</h4>
+            <p>Used for target-position input and control commands.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="LCD 16X2 I2C.png" alt="16x2 I2C LCD">
+            <h4>16×2 I²C LCD (×1)</h4>
+            <p>Displays target position, current position and status.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="L293D Motor Driver.png" alt="L293D Motor Driver">
+            <h4>L293D Motor Driver (×1)</h4>
+            <p>Drives the motor in forward and reverse directions.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Stepper Motor.png" alt="Motor">
+            <h4>Motor / Positioning Motor (×1)</h4>
+            <p>Acts as the positioned output device in the simulation.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used for electrical interconnections.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Motor Power Supply.png" alt="Motor Power Supply">
+            <h4>Motor Supply</h4>
+            <p>Provides motor power as required by the simulation.</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="section" id="connections">
+    <h2>Pin Connections</h2>
+
+    <h3>4×4 Keypad</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Keypad Line</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>R1</td><td>D4</td></tr>
+                <tr><td>R2</td><td>D5</td></tr>
+                <tr><td>R3</td><td>D6</td></tr>
+                <tr><td>R4</td><td>D7</td></tr>
+                <tr><td>C1</td><td>D8</td></tr>
+                <tr><td>C2</td><td>D9</td></tr>
+                <tr><td>C3</td><td>D10</td></tr>
+                <tr><td>C4</td><td>D11</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>I²C LCD</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>LCD Pin</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>VCC</td><td>5V</td></tr>
+                <tr><td>SDA</td><td>A4</td></tr>
+                <tr><td>SCL</td><td>A5</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>L293D Motor Driver</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>L293D Signal</th>
+                    <th>Arduino Connection</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>EN1</td><td>D12</td><td>Enable motor channel</td></tr>
+                <tr><td>IN1</td><td>D13</td><td>Motor direction control</td></tr>
+                <tr><td>IN2</td><td>A0</td><td>Motor direction control</td></tr>
+                <tr><td>OUT1 / OUT2</td><td>Motor terminals</td><td>Motor output</td></tr>
+                <tr><td>Logic VCC</td><td>5V</td><td>L293D logic supply</td></tr>
+                <tr><td>Logic GND</td><td>GND</td><td>Common ground</td></tr>
+                <tr><td>Motor Supply</td><td>External / suitable supply</td><td>Motor power</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        Arduino Starts<br>
+        ↓<br>
+        LCD shows target and current position<br>
+        ↓<br>
+        User enters a numerical target using keypad<br>
+        ↓<br>
+        Press # to confirm target<br>
+        ↓<br>
+        Arduino compares target with current position<br>
+        ↓<br>
+        Target greater → Motor moves forward<br>
+        Target smaller → Motor moves reverse<br>
+        ↓<br>
+        Current position changes step by step<br>
+        ↓<br>
+        Target reached<br>
+        ↓<br>
+        Motor stops and LCD shows final position
+    </div>
+
+    <div class="note">
+        <strong>Position Update:</strong> One position unit per simulation step<br>
+        <strong>Step Delay:</strong> 100 ms<br>
+        <strong>LCD:</strong> Shows Target and Current position
+    </div>
+</section>
+
+<section class="section" id="controls">
+    <h2>Keypad Controls</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Function</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>0–9</td><td>Enter numerical target position</td></tr>
+                <tr><td>#</td><td>Confirm target and start movement</td></tr>
+                <tr><td>*</td><td>Clear input and stop motor</td></tr>
+                <tr><td>A</td><td>Zero the current position</td></tr>
+                <tr><td>B</td><td>Stop the motor</td></tr>
+                <tr><td>C</td><td>Show current and target position</td></tr>
+                <tr><td>D</td><td>Reset position counter</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Connect keypad rows R1–R4 to Arduino D4–D7.</li>
+        <li>Connect keypad columns C1–C4 to Arduino D8–D11.</li>
+        <li>Connect LCD SDA to A4 and SCL to A5.</li>
+        <li>Connect L293D EN1 to D12.</li>
+        <li>Connect L293D IN1 to D13.</li>
+        <li>Connect L293D IN2 to A0.</li>
+        <li>Connect the motor to L293D OUT1 and OUT2.</li>
+        <li>Connect L293D logic supply to 5V and common ground to GND.</li>
+        <li>Provide a suitable motor supply.</li>
+        <li>Open the circuit in Tinkercad.</li>
+        <li>Enter the Arduino code given below.</li>
+        <li>Start the simulation.</li>
+        <li>Enter a target position using the keypad.</li>
+        <li>Press # to start movement toward the target.</li>
+        <li>Use *, A, B, C and D for the available control functions.</li>
+        <li>Observe target and current position on the LCD.</li>
+    </ol>
+</section>
+
+<section class="section" id="code">
+    <h2>Arduino Code</h2>
+
+    <div class="code-header">
+        <span>Stepper_Motor_Position_Selector.ino</span>
+        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    </div>
+
+<pre><code id="arduinoCode">#include &lt;Keypad.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// KEYPAD
+const byte ROWS = 4;
+const byte COLS = 4;
+
+char keys[ROWS][COLS] =
+{
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {4, 5, 6, 7};
+byte colPins[COLS] = {8, 9, 10, 11};
+
+Keypad keypad = Keypad(
+  makeKeymap(keys),
+  rowPins,
+  colPins,
+  ROWS,
+  COLS
+);
+
+// MOTOR DRIVER
+const int EN1 = 12;
+const int IN1 = 13;
+const int IN2 = A0;
+
+// POSITION
+long currentPosition = 0;
+long targetPosition = 0;
+
+String inputNumber = "";
+
+void setup()
+{
+  pinMode(EN1, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+  motorStop();
+
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("POSITION SELECT");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Enter Target");
+
+  delay(2000);
+
+  showTarget();
+}
+
+void loop()
+{
+  char key = keypad.getKey();
+
+  if (key)
+  {
+    // Numerical target entry
+    if (key >= '0' && key <= '9')
+    {
+      if (inputNumber.length() < 6)
+      {
+        inputNumber += key;
+
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Target:");
+        lcd.print(inputNumber);
+
+        lcd.setCursor(0, 1);
+        lcd.print("#=GO *=CLEAR");
+      }
+    }
+
+    // Confirm target
+    else if (key == '#')
+    {
+      if (inputNumber.length() > 0)
+      {
+        targetPosition = inputNumber.toInt();
+        inputNumber = "";
+
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Target:");
+        lcd.print(targetPosition);
+
+        moveToTarget();
+      }
+    }
+
+    // Clear target input
+    else if (key == '*')
+    {
+      inputNumber = "";
+      motorStop();
+      showTarget();
+    }
+
+    // Zero current position
+    else if (key == 'A')
+    {
+      motorStop();
+      currentPosition = 0;
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Position ZERO");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Current: 0");
+
+      delay(1200);
+      showTarget();
+    }
+
+    // Stop motor
+    else if (key == 'B')
+    {
+      motorStop();
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("MOTOR STOPPED");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Current:");
+      lcd.print(currentPosition);
+
+      delay(1200);
+      showTarget();
+    }
+
+    // Show current position
+    else if (key == 'C')
+    {
+      motorStop();
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Current:");
+      lcd.print(currentPosition);
+
+      lcd.setCursor(0, 1);
+      lcd.print("Target:");
+      lcd.print(targetPosition);
+
+      delay(1200);
+      showTarget();
+    }
+
+    // Reset position counter
+    else if (key == 'D')
+    {
+      motorStop();
+      currentPosition = 0;
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("COUNTER RESET");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Current: 0");
+
+      delay(1200);
+      showTarget();
+    }
+  }
+}
+
+void moveToTarget()
+{
+  if (targetPosition == currentPosition)
+  {
+    motorStop();
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("TARGET REACHED");
+
+    lcd.setCursor(0, 1);
+    lcd.print("Pos:");
+    lcd.print(currentPosition);
+
+    delay(1200);
+    showTarget();
+    return;
+  }
+
+  // Move forward
+  if (targetPosition > currentPosition)
+  {
+    motorForward();
+
+    while (currentPosition < targetPosition)
+    {
+      // Simulation step:
+      // Increase one position unit per step.
+      currentPosition++;
+
+      lcd.setCursor(0, 0);
+      lcd.print("Moving Forward ");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Pos:");
+      lcd.print(currentPosition);
+      lcd.print(" ");
+
+      delay(100);
+    }
+  }
+
+  // Move reverse
+  else
+  {
+    motorReverse();
+
+    while (currentPosition > targetPosition)
+    {
+      // Simulation step:
+      // Decrease one position unit per step.
+      currentPosition--;
+
+      lcd.setCursor(0, 0);
+      lcd.print("Moving Reverse ");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Pos:");
+      lcd.print(currentPosition);
+      lcd.print(" ");
+
+      delay(100);
+    }
+  }
+
+  motorStop();
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("TARGET REACHED");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Pos:");
+  lcd.print(currentPosition);
+
+  delay(1200);
+
+  showTarget();
+}
+
+void motorForward()
+{
+  digitalWrite(EN1, HIGH);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+}
+
+void motorReverse()
+{
+  digitalWrite(EN1, HIGH);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+}
+
+void motorStop()
+{
+  digitalWrite(EN1, LOW);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+}
+
+void showTarget()
+{
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Target:");
+  lcd.print(targetPosition);
+
+  lcd.setCursor(0, 1);
+  lcd.print("Current:");
+  lcd.print(currentPosition);
+}</code></pre>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+
+    <p>
+        The user enters a numerical position and confirms it with #.
+        Arduino then drives the motor forward or reverse until the simulated current
+        position reaches the selected target.
+    </p>
+
+    <div class="note">
+        <strong>Target > Current:</strong> Motor moves forward<br>
+        <strong>Target < Current:</strong> Motor moves reverse<br>
+        <strong>Target = Current:</strong> Motor stops and shows TARGET REACHED<br>
+        <strong>LCD:</strong> Displays current and target positions
+    </div>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The Stepper Motor Position Selector experiment was implemented in Tinkercad
+        using Arduino UNO, a 4×4 keypad, 16×2 I²C LCD and L293D motor driver.
+        The entered target position controls the simulated motor movement and position display.
+    </p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>How to enter numeric target values using a 4×4 keypad.</li>
+        <li>How to control a motor using an L293D driver.</li>
+        <li>How to move a motor forward and reverse.</li>
+        <li>How to track target and current positions in software.</li>
+        <li>How to display position information on an I²C LCD.</li>
+        <li>How to assign keypad keys to control functions.</li>
+        <li>How to simulate position movement in Tinkercad.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>Arduino Experiment</strong><br>
+    Stepper Motor Position Selector
+</footer>
+
+<script>
+function copyCode(){
+    const code=document.getElementById("arduinoCode").innerText;
+    navigator.clipboard.writeText(code);
+
+    const button=document.querySelector(".copy-button");
+    button.innerText="Copied!";
+
+    setTimeout(function(){
+        button.innerText="Copy Code";
+    },1500);
+}
+</script>
+
+</body>
+</html>
