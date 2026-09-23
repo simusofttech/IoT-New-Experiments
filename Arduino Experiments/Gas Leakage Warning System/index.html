@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Gas Leakage Warning System</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+nav a:hover{color:#2563eb}
+.container{
+    width:90%;
+    max-width:950px;
+    margin:35px auto;
+}
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+.section p{margin-bottom:10px}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+.table-wrap{overflow-x:auto}
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+.code-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:#1e293b;
+    color:white;
+    border-radius:8px 8px 0 0;
+}
+.copy-button{
+    border:0;
+    padding:7px 12px;
+    background:#2563eb;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+pre{
+    margin:0;
+    padding:20px;
+    overflow-x:auto;
+    background:#020617;
+    color:#e2e8f0;
+    border-radius:0 0 8px 8px;
+    font-family:Consolas,monospace;
+    font-size:14px;
+    line-height:1.7;
+}
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+    transition:box-shadow .2s,transform .2s;
+}
+.component-card:hover{
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    transform:translateY(-2px);
+}
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+    line-height:1.5;
+}
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:#fff;
+    padding:10px;
+}
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+footer strong{color:white}
+@media(max-width:600px){
+    .header{padding:35px 15px}
+    .header h1{font-size:28px}
+    .container{width:92%}
+    .section{padding:21px 18px}
+    nav{gap:11px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Arduino Experiment</h1>
+    <p>Gas Leakage Warning System</p>
+</header>
+
+<nav>
+    <a href="../index.html">← Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To detect gas leakage using a bare six-pin MQ-2 gas sensor with Arduino UNO
+        and provide visual and audible warning using red and green LEDs and a buzzer.
+    </p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>
+        Arduino reads the analog signal from the MQ-2 sensor through A0 and compares
+        the reading with a starting threshold value of 400.
+    </p>
+    <p>
+        When the reading is greater than 400, the warning condition is activated:
+        the red LED turns ON, the green LED turns OFF, and the buzzer sounds continuously.
+        When the reading is 400 or below, the system remains in the normal condition.
+    </p>
+</section>
+
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png" alt="Arduino UNO R3">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>Main controller and ADC reader.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="MQ-2 Gas Sensor.png" alt="MQ-2 Gas Sensor">
+            <h4>MQ-2 Gas Sensor (×1)</h4>
+            <p>Provides the analog gas-sensing signal.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="10K ohm resistor.png" alt="10K Ohm Resistor">
+            <h4>10 kΩ Resistor (×1)</h4>
+            <p>Used as part of the common output node connection.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Red LED.png" alt="Red LED">
+            <h4>Red LED (×1)</h4>
+            <p>Visual warning indicator.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Green LED.png" alt="Green LED">
+            <h4>Green LED (×1)</h4>
+            <p>Visual normal-status indicator.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="220 ohm resistor.png" alt="220 Ohm Resistor">
+            <h4>220Ω Resistors (×2)</h4>
+            <p>Limits current through the LEDs.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Buzzer.png" alt="Buzzer">
+            <h4>Buzzer (×1)</h4>
+            <p>Provides the audible warning output.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used for electrical connections.</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="section" id="connections">
+    <h2>Pin Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component Pin</th>
+                    <th>Connect To</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>MQ-2 H1</td><td>Arduino 5V</td></tr>
+                <tr><td>MQ-2 H2</td><td>Arduino GND</td></tr>
+                <tr><td>MQ-2 A1</td><td>Arduino 5V</td></tr>
+                <tr><td>MQ-2 A2</td><td>Arduino 5V</td></tr>
+                <tr><td>MQ-2 B1</td><td>Common Output Node</td></tr>
+                <tr><td>MQ-2 B2</td><td>Common Output Node</td></tr>
+                <tr><td>Common Output Node</td><td>Arduino A0</td></tr>
+                <tr><td>Common Output Node</td><td>One side of 10 kΩ resistor</td></tr>
+                <tr><td>Other side of 10 kΩ resistor</td><td>Arduino GND</td></tr>
+                <tr><td>Red LED Anode</td><td>D8 through 220Ω</td></tr>
+                <tr><td>Red LED Cathode</td><td>GND</td></tr>
+                <tr><td>Green LED Anode</td><td>D9 through 220Ω</td></tr>
+                <tr><td>Green LED Cathode</td><td>GND</td></tr>
+                <tr><td>Buzzer Positive (+)</td><td>D10</td></tr>
+                <tr><td>Buzzer Negative (−)</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Sensor Input:</strong> A0<br>
+        <strong>Red LED:</strong> D8<br>
+        <strong>Green LED:</strong> D9<br>
+        <strong>Buzzer:</strong> D10<br>
+        <strong>Starting Threshold:</strong> 400
+    </div>
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        Arduino Starts<br>
+        ↓<br>
+        MQ-2 sensor produces analog reading<br>
+        ↓<br>
+        Arduino reads the sensor on A0<br>
+        ↓<br>
+        Reading is compared with threshold 400<br>
+        ↓<br>
+        Reading ≤ 400 → NORMAL<br>
+        ↓<br>
+        Green LED ON, Red LED OFF, Buzzer OFF<br><br>
+
+        Reading > 400 → WARNING<br>
+        ↓<br>
+        Red LED ON, Green LED OFF, Buzzer ON
+    </div>
+
+    <div class="note">
+        <strong>Normal Condition:</strong> Gas value ≤ 400<br>
+        <strong>Warning Condition:</strong> Gas value > 400<br>
+        <strong>Buzzer Frequency:</strong> 1000 Hz<br>
+        <strong>Serial Monitor:</strong> 9600 baud<br>
+        <strong>Update Interval:</strong> 500 ms
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Connect MQ-2 H1 to Arduino 5V.</li>
+        <li>Connect MQ-2 H2 to Arduino GND.</li>
+        <li>Connect MQ-2 A1 and A2 to Arduino 5V.</li>
+        <li>Join MQ-2 B1 and B2 to form the common output node.</li>
+        <li>Connect the common output node to Arduino A0.</li>
+        <li>Connect one side of the 10 kΩ resistor to the common output node.</li>
+        <li>Connect the other side of the 10 kΩ resistor to GND.</li>
+        <li>Connect the red LED anode to D8 through a 220Ω resistor.</li>
+        <li>Connect the red LED cathode to GND.</li>
+        <li>Connect the green LED anode to D9 through a 220Ω resistor.</li>
+        <li>Connect the green LED cathode to GND.</li>
+        <li>Connect the buzzer positive terminal to D10 and negative terminal to GND.</li>
+        <li>Connect Arduino UNO to the computer.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Enter the program given below.</li>
+        <li>Select Arduino UNO and the correct COM port.</li>
+        <li>Verify and upload the program.</li>
+        <li>Open Serial Monitor at 9600 baud.</li>
+        <li>Observe the LEDs, buzzer and sensor values.</li>
+    </ol>
+</section>
+
+<section class="section" id="code">
+    <h2>Arduino Code</h2>
+
+    <div class="code-header">
+        <span>Gas_Leakage_Warning_System.ino</span>
+        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    </div>
+
+<pre><code id="arduinoCode">/*
+  Gas Leakage Warning System
+
+  CONTROLLER: Arduino UNO R3
+  SENSOR: Bare six-pin MQ-2
+
+  MQ-2 analog output node -> A0
+  Red LED -> D8 through 220 ohm resistor
+  Green LED -> D9 through 220 ohm resistor
+  Buzzer -> D10
+
+  The threshold is a starting value for simulation.
+*/
+
+#define GAS_SENSOR_PIN A0
+#define RED_LED_PIN 8
+#define GREEN_LED_PIN 9
+#define BUZZER_PIN 10
+
+// Starting threshold for Tinkercad
+const int GAS_THRESHOLD = 400;
+
+void setup() {
+
+  // Configure pin modes
+  pinMode(GAS_SENSOR_PIN, INPUT);
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  // Start Serial Monitor
+  Serial.begin(9600);
+
+  // Initial normal state
+  digitalWrite(RED_LED_PIN, LOW);
+  digitalWrite(GREEN_LED_PIN, HIGH);
+  noTone(BUZZER_PIN);
+
+  Serial.println("================================");
+  Serial.println(" GAS LEAKAGE WARNING SYSTEM");
+  Serial.println("================================");
+  Serial.println("System Initializing...");
+
+  delay(2000);
+
+  Serial.println("System Ready");
+  Serial.println("--------------------------------");
+}
+
+void loop() {
+
+  // Read analog value from MQ-2
+  int gasValue = analogRead(GAS_SENSOR_PIN);
+
+  // Convert ADC reading to voltage
+  float voltage = gasValue * (5.0 / 1023.0);
+
+  // Print sensor information
+  Serial.print("MQ-2 Sensor Value: ");
+  Serial.println(gasValue);
+
+  Serial.print("Sensor Voltage: ");
+  Serial.print(voltage, 2);
+  Serial.println(" V");
+
+  // Compare reading with threshold
+  if (gasValue > GAS_THRESHOLD) {
+
+    // WARNING CONDITION
+    digitalWrite(RED_LED_PIN, HIGH);
+    digitalWrite(GREEN_LED_PIN, LOW);
+
+    // Activate buzzer
+    tone(BUZZER_PIN, 1000);
+
+    Serial.println("STATUS: WARNING");
+    Serial.println("GAS LEAKAGE DETECTED!");
+
+  } else {
+
+    // NORMAL CONDITION
+    digitalWrite(RED_LED_PIN, LOW);
+    digitalWrite(GREEN_LED_PIN, HIGH);
+
+    // Turn off buzzer
+    noTone(BUZZER_PIN);
+
+    Serial.println("STATUS: NORMAL");
+  }
+
+  Serial.println("--------------------------------");
+
+  // Wait 500 milliseconds
+  delay(500);
+}</code></pre>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+
+    <p>
+        In the normal condition, the green LED remains ON and the buzzer is silent.
+        When the MQ-2 analog reading rises above 400, the red LED turns ON and the buzzer sounds continuously.
+    </p>
+
+    <div class="note">
+        <strong>Gas Value ≤ 400:</strong> Green LED ON, Red LED OFF, Buzzer OFF<br>
+        <strong>Gas Value > 400:</strong> Red LED ON, Green LED OFF, Buzzer ON<br>
+        <strong>Serial Monitor:</strong> Shows sensor value, voltage and system status
+    </div>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The Gas Leakage Warning System experiment was implemented using Arduino UNO,
+        a bare six-pin MQ-2 sensor, red and green LEDs, and a buzzer. The system
+        indicates normal or warning conditions according to the programmed gas threshold.
+    </p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>How to interface a bare MQ-2 gas sensor with Arduino UNO.</li>
+        <li>How to read an analog gas sensor using A0.</li>
+        <li>How to compare a sensor reading with a threshold.</li>
+        <li>How to use red and green LEDs as status indicators.</li>
+        <li>How to activate a buzzer during a warning condition.</li>
+        <li>How to convert ADC readings into voltage.</li>
+        <li>How to display sensor status in the Serial Monitor.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>Arduino Experiment</strong><br>
+    Gas Leakage Warning System
+</footer>
+
+<script>
+function copyCode(){
+    const code=document.getElementById("arduinoCode").innerText;
+    navigator.clipboard.writeText(code);
+
+    const button=document.querySelector(".copy-button");
+    button.innerText="Copied!";
+
+    setTimeout(function(){
+        button.innerText="Copy Code";
+    },1500);
+}
+</script>
+
+</body>
+</html>
