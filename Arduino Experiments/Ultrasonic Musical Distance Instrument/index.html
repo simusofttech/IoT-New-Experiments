@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Arduino Experiment - Ultrasonic Musical Distance Instrument</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}.header{background:#2563eb;color:#fff;text-align:center;padding:42px 20px}.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}.container{width:90%;max-width:950px;margin:35px auto}.section{background:#fff;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}.section h2{margin-top:0;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center}.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}.component-card h4{color:#1e3a8a;margin:0 0 8px}.component-card p{font-size:14px;color:#475569;margin:0}.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto;border:1px solid #e2e8f0;border-radius:10px;padding:10px}.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:#fff;border-radius:8px 8px 0 0}.copy-button{border:0;padding:7px 12px;background:#2563eb;color:#fff;border-radius:5px;cursor:pointer;font-weight:bold}pre{margin:0;padding:20px;overflow:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font:14px/1.7 Consolas,monospace}footer{text-align:center;padding:25px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}@media(max-width:600px){.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}}
+</style></head><body>
+<header class="header"><h1>Arduino Experiment</h1><p>Ultrasonic Musical Distance Instrument</p></header>
+<nav><a href="../index.html">← Arduino Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#zones">Musical Zones</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#result">Result</a></nav>
+<main class="container">
+<section class="section" id="aim"><h2>Aim</h2><p>To develop an interactive musical instrument that measures object distance using an HC-SR04 ultrasonic sensor and generates different musical notes through a passive buzzer. A single-digit 7-segment display indicates the active distance zone from 1 to 9.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>The HC-SR04 measures object distance. Arduino divides the measured distance into nine zones. Each zone is assigned a musical note and a display digit. Outside the defined range, the buzzer stops and the display shows 0.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid">
+<div class="component-card"><img src="Arduino UNO.png"><h4>Arduino UNO R3 (×1)</h4><p>Main controller.</p></div>
+<div class="component-card"><img src="HC-SR04 Sensor.png"><h4>HC-SR04 Ultrasonic Sensor (×1)</h4><p>Measures object distance.</p></div>
+<div class="component-card"><img src="Buzzer.png"><h4>Passive Piezo Buzzer (×1)</h4><p>Generates musical notes.</p></div>
+<div class="component-card"><img src="Single Digit 7 Segment Display.png"><h4>Single Digit 7-Segment Display (×1)</h4><p>Displays the active zone.</p></div>
+<div class="component-card"><img src="220 ohm resistor.png"><h4>220 Ω Resistor (×7)</h4><p>One resistor for each segment.</p></div>
+<div class="component-card"><img src="Breadboard.png"><h4>Breadboard (×1)</h4><p>Used for circuit assembly.</p></div>
+<div class="component-card"><img src="Jumper Wires.png"><h4>Jumper Wires</h4><p>Used for circuit connections.</p></div>
+</div></section>
+<section class="section" id="connections"><h2>Pin Connections</h2><h3>HC-SR04 Ultrasonic Sensor</h3><div class="table-wrap"><table><tr><th>HC-SR04 Pin</th><th>Arduino UNO Pin</th><th>Function</th></tr><tr><td>VCC</td><td>5V</td><td>Power supply</td></tr><tr><td>GND</td><td>GND</td><td>Ground</td></tr><tr><td>TRIG</td><td>D9</td><td>Trigger pulse</td></tr><tr><td>ECHO</td><td>D10</td><td>Echo input</td></tr></table></div><h3>Passive Buzzer</h3><div class="table-wrap"><table><tr><th>Terminal</th><th>Arduino Pin</th><th>Function</th></tr><tr><td>Positive (+)</td><td>D8</td><td>Tone output</td></tr><tr><td>Negative (−)</td><td>GND</td><td>Ground</td></tr></table></div><h3>Common-Cathode 7-Segment Display</h3><div class="table-wrap"><table><tr><th>Segment</th><th>Arduino Pin</th><th>Protection</th></tr><tr><td>a</td><td>D2</td><td>220 Ω</td></tr><tr><td>b</td><td>D3</td><td>220 Ω</td></tr><tr><td>c</td><td>D4</td><td>220 Ω</td></tr><tr><td>d</td><td>D5</td><td>220 Ω</td></tr><tr><td>e</td><td>D6</td><td>220 Ω</td></tr><tr><td>f</td><td>D7</td><td>220 Ω</td></tr><tr><td>g</td><td>D11</td><td>220 Ω</td></tr><tr><td>Common Cathode</td><td>GND</td><td>Common pins to GND</td></tr></table></div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">Arduino Starts<br>↓<br>HC-SR04 measures distance<br>↓<br>Arduino calculates distance in cm<br>↓<br>Distance is assigned to one of nine zones<br>↓<br>7-segment display shows zone 1–9<br>↓<br>Passive buzzer plays the corresponding note<br>↓<br>Outside 2–47 cm → Display 0 and Buzzer OFF</div></section>
+<section class="section" id="zones"><h2>Musical Distance Zones</h2><div class="table-wrap"><table><tr><th>Distance</th><th>Display</th><th>Note</th><th>Frequency</th></tr><tr><td>2–6.9 cm</td><td>1</td><td>C4</td><td>262 Hz</td></tr><tr><td>7–11.9 cm</td><td>2</td><td>D4</td><td>294 Hz</td></tr><tr><td>12–16.9 cm</td><td>3</td><td>E4</td><td>330 Hz</td></tr><tr><td>17–21.9 cm</td><td>4</td><td>F4</td><td>349 Hz</td></tr><tr><td>22–26.9 cm</td><td>5</td><td>G4</td><td>392 Hz</td></tr><tr><td>27–31.9 cm</td><td>6</td><td>A4</td><td>440 Hz</td></tr><tr><td>32–36.9 cm</td><td>7</td><td>B4</td><td>494 Hz</td></tr><tr><td>37–41.9 cm</td><td>8</td><td>C5</td><td>523 Hz</td></tr><tr><td>42–46.9 cm</td><td>9</td><td>D5</td><td>587 Hz</td></tr><tr><td>Outside 2–47 cm</td><td>0</td><td>Silent</td><td>—</td></tr></table></div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect HC-SR04 VCC to 5V and GND to GND.</li><li>Connect TRIG to D9 and ECHO to D10.</li><li>Connect buzzer positive to D8 and negative to GND.</li><li>Connect display segments a, b, c, d, e, f and g to D2, D3, D4, D5, D6, D7 and D11 through 220 Ω resistors.</li><li>Connect the common-cathode pins to GND.</li><li>Enter the Arduino code and start the simulation or upload it to Arduino UNO.</li><li>Move an object in front of the ultrasonic sensor.</li><li>Observe the zone digit and corresponding musical note.</li><li>Open Serial Monitor at 9600 baud to view distance, zone, note and frequency.</li></ol></section>
+<section class="section" id="code"><h2>Arduino Code</h2><div class="code-header"><span>Ultrasonic_Musical_Distance_Instrument.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><pre><code id="arduinoCode">#define TRIG_PIN 9
+#define ECHO_PIN 10
+#define BUZZER_PIN 8
+
+const byte segmentPins[7] = {2, 3, 4, 5, 6, 7, 11};
+const int notes[9] = {262, 294, 330, 349, 392, 440, 494, 523, 587};
+const char* noteNames[9] = {"C4","D4","E4","F4","G4","A4","B4","C5","D5"};
+
+const byte digitPatterns[10][7] = {
+ {1,1,1,1,1,1,0},{0,1,1,0,0,0,0},{1,1,0,1,1,0,1},{1,1,1,1,0,0,1},{0,1,1,0,0,1,1},
+ {1,0,1,1,0,1,1},{1,0,1,1,1,1,1},{1,1,1,0,0,0,0},{1,1,1,1,1,1,1},{1,1,1,1,0,1,1}
+};
+
+int previousZone = -1;
+
+void setup(){
+ Serial.begin(9600);
+ pinMode(TRIG_PIN,OUTPUT); pinMode(ECHO_PIN,INPUT); pinMode(BUZZER_PIN,OUTPUT);
+ for(byte i=0;i&lt;7;i++) pinMode(segmentPins[i],OUTPUT);
+ displayDigit(0); noTone(BUZZER_PIN);
+ Serial.println("ULTRASONIC MUSICAL INSTRUMENT");
+}
+
+void loop(){
+ digitalWrite(TRIG_PIN,LOW); delayMicroseconds(2);
+ digitalWrite(TRIG_PIN,HIGH); delayMicroseconds(10);
+ digitalWrite(TRIG_PIN,LOW);
+ long duration=pulseIn(ECHO_PIN,HIGH,30000);
+ float distance=(duration==0)?-1:duration*0.0343/2.0;
+ int zone=-1;
+ if(distance&gt;=2 &amp;&amp; distance&lt;47){ zone=(int)((distance-2)/5); zone=constrain(zone,0,8); }
+ if(zone!=previousZone){
+   if(zone&gt;=0 &amp;&amp; zone&lt;=8){
+     tone(BUZZER_PIN,notes[zone]); displayDigit(zone+1);
+     Serial.print("Distance: "); Serial.print(distance,1); Serial.print(" cm | Zone: "); Serial.print(zone+1);
+     Serial.print(" | Note: "); Serial.print(noteNames[zone]); Serial.print(" | Frequency: "); Serial.print(notes[zone]); Serial.println(" Hz");
+   }else{
+     noTone(BUZZER_PIN); displayDigit(0);
+     Serial.print("Distance: "); if(distance&lt;0) Serial.println("No Echo / Out of Range"); else {Serial.print(distance,1); Serial.println(" cm | Silent");}
+   }
+   previousZone=zone;
+ }
+ delay(50);
+}
+
+void displayDigit(byte digit){
+ if(digit&gt;9) digit=0;
+ for(byte i=0;i&lt;7;i++) digitalWrite(segmentPins[i],digitPatterns[digit][i]?HIGH:LOW);
+}</code></pre></section>
+<section class="section"><h2>Expected Output</h2><p>Moving an object between 2 cm and 47 cm changes the musical zone. The display shows 1–9 and the buzzer plays the corresponding note. Outside the range, the display shows 0 and the buzzer is silent.</p></section>
+<section class="section" id="result"><h2>Result</h2><p>The Ultrasonic Musical Distance Instrument experiment measures object distance, converts it into one of nine musical zones, plays the assigned note and displays the corresponding zone number.</p></section>
+<section class="section"><h2>What You Learn</h2><ul><li>Distance measurement using HC-SR04.</li><li>Distance calculation from echo pulse duration.</li><li>Creating distance-based zones.</li><li>Generating musical notes using tone().</li><li>Controlling a common-cathode 7-segment display.</li><li>Combining sensor, sound and visual output in one Arduino experiment.</li></ul></section>
+</main><footer><strong>Arduino Experiment</strong><br>Ultrasonic Musical Distance Instrument</footer>
+<script>function copyCode(){const c=document.getElementById('arduinoCode').innerText;navigator.clipboard.writeText(c);const b=document.querySelector('.copy-button');b.innerText='Copied!';setTimeout(()=>b.innerText='Copy Code',1500)}</script>
+</body></html>
