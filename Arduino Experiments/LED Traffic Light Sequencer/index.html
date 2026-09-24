@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - LED Traffic Light Sequencer</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+.container{
+    width:90%;
+    max-width:950px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section p{margin-bottom:10px}
+
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+
+.table-wrap{overflow-x:auto}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+
+.code-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:#1e293b;
+    color:white;
+    border-radius:8px 8px 0 0;
+}
+
+.copy-button{
+    border:0;
+    padding:7px 12px;
+    background:#2563eb;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+pre{
+    margin:0;
+    padding:20px;
+    overflow-x:auto;
+    background:#020617;
+    color:#e2e8f0;
+    border-radius:0 0 8px 8px;
+    font-family:Consolas,monospace;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+    transition:box-shadow .2s,transform .2s;
+}
+
+.component-card:hover{
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    transform:translateY(-2px);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+    line-height:1.5;
+}
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:#fff;
+    padding:10px;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+footer strong{color:white}
+
+@media(max-width:600px){
+    .header{padding:35px 15px}
+    .header h1{font-size:28px}
+    .container{width:92%}
+    .section{padding:21px 18px}
+    nav{gap:11px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Arduino Experiment</h1>
+    <p>LED Traffic Light Sequencer</p>
+</header>
+
+<nav>
+    <a href="../index.html">← Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To create a traffic light sequence using Arduino UNO with three red LEDs,
+        three yellow LEDs and three green LEDs.
+    </p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>
+        Arduino controls nine LEDs arranged as three red, three yellow and three green lights.
+        The three red LEDs turn ON together for 5 seconds, followed by the three green LEDs
+        for 5 seconds, and then the three yellow LEDs for 2 seconds.
+    </p>
+    <p>
+        After the yellow lights turn OFF, the same Red → Green → Yellow sequence repeats continuously.
+    </p>
+</section>
+
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png" alt="Arduino UNO R3">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>Main controller for the traffic light sequence.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="LED.png" alt="Red LED">
+            <h4>Red LED (×3)</h4>
+            <p>Represents the stop signal.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="LED.png" alt="Yellow LED">
+            <h4>Yellow LED (×3)</h4>
+            <p>Represents the caution signal.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="LED.png" alt="Green LED">
+            <h4>Green LED (×3)</h4>
+            <p>Represents the go signal.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="220 ohm resistor.png" alt="220 Ohm Resistor">
+            <h4>220Ω Resistor (×9)</h4>
+            <p>Limits current through each LED.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Used for circuit assembly.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used for electrical connections.</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Red LED 1 Anode (+)</td><td>220Ω → D2</td></tr>
+                <tr><td>Red LED 2 Anode (+)</td><td>220Ω → D3</td></tr>
+                <tr><td>Red LED 3 Anode (+)</td><td>220Ω → D4</td></tr>
+                <tr><td>Yellow LED 1 Anode (+)</td><td>220Ω → D5</td></tr>
+                <tr><td>Yellow LED 2 Anode (+)</td><td>220Ω → D6</td></tr>
+                <tr><td>Yellow LED 3 Anode (+)</td><td>220Ω → D7</td></tr>
+                <tr><td>Green LED 1 Anode (+)</td><td>220Ω → D8</td></tr>
+                <tr><td>Green LED 2 Anode (+)</td><td>220Ω → D9</td></tr>
+                <tr><td>Green LED 3 Anode (+)</td><td>220Ω → D10</td></tr>
+                <tr><td>All LED Cathodes (−)</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Red LEDs:</strong> D2, D3, D4<br>
+        <strong>Yellow LEDs:</strong> D5, D6, D7<br>
+        <strong>Green LEDs:</strong> D8, D9, D10
+    </div>
+</section>
+
+<section class="section" id="circuit">
+    <h2>Circuit Diagram</h2>
+
+    <p>
+        Connect each LED anode to its assigned Arduino pin through a 220Ω resistor,
+        and connect all LED cathodes to GND.
+    </p>
+
+    <img class="circuit-img"
+         src="LED_Traffic_Light_Sequencer_Circuit.png"
+         alt="LED Traffic Light Sequencer Circuit Diagram">
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        Arduino Starts<br>
+        ↓<br>
+        All LEDs remain OFF initially<br>
+        ↓<br>
+        Three Red LEDs turn ON for 5 seconds<br>
+        ↓<br>
+        Red LEDs turn OFF<br>
+        ↓<br>
+        Three Green LEDs turn ON for 5 seconds<br>
+        ↓<br>
+        Green LEDs turn OFF<br>
+        ↓<br>
+        Three Yellow LEDs turn ON for 2 seconds<br>
+        ↓<br>
+        Yellow LEDs turn OFF<br>
+        ↓<br>
+        Sequence repeats continuously
+    </div>
+
+    <div class="note">
+        <strong>Red Time:</strong> 5 seconds<br>
+        <strong>Green Time:</strong> 5 seconds<br>
+        <strong>Yellow Time:</strong> 2 seconds<br>
+        <strong>Sequence:</strong> Red → Green → Yellow
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Connect Red LED 1 to D2 through a 220Ω resistor.</li>
+        <li>Connect Red LED 2 to D3 through a 220Ω resistor.</li>
+        <li>Connect Red LED 3 to D4 through a 220Ω resistor.</li>
+        <li>Connect Yellow LED 1 to D5 through a 220Ω resistor.</li>
+        <li>Connect Yellow LED 2 to D6 through a 220Ω resistor.</li>
+        <li>Connect Yellow LED 3 to D7 through a 220Ω resistor.</li>
+        <li>Connect Green LED 1 to D8 through a 220Ω resistor.</li>
+        <li>Connect Green LED 2 to D9 through a 220Ω resistor.</li>
+        <li>Connect Green LED 3 to D10 through a 220Ω resistor.</li>
+        <li>Connect all LED cathodes to GND.</li>
+        <li>Connect Arduino UNO to the computer.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Enter the program given below.</li>
+        <li>Select Arduino UNO and the correct COM port.</li>
+        <li>Verify and upload the program.</li>
+        <li>Observe the repeating Red → Green → Yellow sequence.</li>
+    </ol>
+</section>
+
+<section class="section" id="code">
+    <h2>Arduino Code</h2>
+
+    <div class="code-header">
+        <span>LED_Traffic_Light_Sequencer.ino</span>
+        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    </div>
+
+<pre><code id="arduinoCode">#define RED1 2
+#define RED2 3
+#define RED3 4
+
+#define YELLOW1 5
+#define YELLOW2 6
+#define YELLOW3 7
+
+#define GREEN1 8
+#define GREEN2 9
+#define GREEN3 10
+
+void setup()
+{
+  // Red LEDs
+  pinMode(RED1, OUTPUT);
+  pinMode(RED2, OUTPUT);
+  pinMode(RED3, OUTPUT);
+
+  // Yellow LEDs
+  pinMode(YELLOW1, OUTPUT);
+  pinMode(YELLOW2, OUTPUT);
+  pinMode(YELLOW3, OUTPUT);
+
+  // Green LEDs
+  pinMode(GREEN1, OUTPUT);
+  pinMode(GREEN2, OUTPUT);
+  pinMode(GREEN3, OUTPUT);
+
+  // Start with everything OFF
+  allLightsOff();
+}
+
+void loop()
+{
+  // RED
+  allLightsOff();
+
+  digitalWrite(RED1, HIGH);
+  digitalWrite(RED2, HIGH);
+  digitalWrite(RED3, HIGH);
+
+  delay(5000);
+
+  // GREEN
+  allLightsOff();
+
+  digitalWrite(GREEN1, HIGH);
+  digitalWrite(GREEN2, HIGH);
+  digitalWrite(GREEN3, HIGH);
+
+  delay(5000);
+
+  // YELLOW
+  allLightsOff();
+
+  digitalWrite(YELLOW1, HIGH);
+  digitalWrite(YELLOW2, HIGH);
+  digitalWrite(YELLOW3, HIGH);
+
+  delay(2000);
+}
+
+void allLightsOff()
+{
+  // Red OFF
+  digitalWrite(RED1, LOW);
+  digitalWrite(RED2, LOW);
+  digitalWrite(RED3, LOW);
+
+  // Yellow OFF
+  digitalWrite(YELLOW1, LOW);
+  digitalWrite(YELLOW2, LOW);
+  digitalWrite(YELLOW3, LOW);
+
+  // Green OFF
+  digitalWrite(GREEN1, LOW);
+  digitalWrite(GREEN2, LOW);
+  digitalWrite(GREEN3, LOW);
+}</code></pre>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+
+    <p>
+        The three red LEDs turn ON together for 5 seconds, followed by the three green LEDs
+        for 5 seconds and then the three yellow LEDs for 2 seconds.
+        The sequence repeats continuously.
+    </p>
+
+    <div class="note">
+        <strong>Red:</strong> ON for 5 seconds<br>
+        <strong>Green:</strong> ON for 5 seconds<br>
+        <strong>Yellow:</strong> ON for 2 seconds<br>
+        <strong>Repeat:</strong> Continuous
+    </div>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The LED Traffic Light Sequencer experiment was implemented using Arduino UNO,
+        nine LEDs and nine 220Ω resistors. The red, green and yellow LED groups operate
+        sequentially with the programmed timing.
+    </p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>How to control multiple LEDs using Arduino UNO.</li>
+        <li>How to group LEDs for traffic-light operation.</li>
+        <li>How to use digitalWrite() for ON and OFF control.</li>
+        <li>How to create timed sequences using delay().</li>
+        <li>How to use a function to turn multiple outputs OFF.</li>
+        <li>How a basic traffic light sequence works.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>Arduino Experiment</strong><br>
+    LED Traffic Light Sequencer
+</footer>
+
+<script>
+function copyCode(){
+    const code=document.getElementById("arduinoCode").innerText;
+    navigator.clipboard.writeText(code);
+
+    const button=document.querySelector(".copy-button");
+    button.innerText="Copied!";
+
+    setTimeout(function(){
+        button.innerText="Copy Code";
+    },1500);
+}
+</script>
+
+</body>
+</html>
