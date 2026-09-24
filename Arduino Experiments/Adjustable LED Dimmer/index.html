@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Adjustable LED Dimmer</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px}
+.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:950px;margin:35px auto}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
+ul,ol{padding-left:24px}li{margin-bottom:8px}.table-wrap{overflow-x:auto}
+table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
+.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:white;border-radius:8px 8px 0 0}
+.copy-button{border:0;padding:7px 12px;background:#2563eb;color:white;border-radius:5px;cursor:pointer;font-weight:bold}
+pre{margin:0;padding:20px;overflow-x:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font-family:Consolas,monospace;font-size:14px;line-height:1.7}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}.component-card p{color:#475569;font-size:14px;margin:0;line-height:1.5}
+.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}footer strong{color:white}
+@media(max-width:600px){.header{padding:35px 15px}.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}nav{gap:11px}}
+</style>
+</head>
+<body>
+<header class="header"><h1>Arduino Experiment</h1><p>Adjustable LED Dimmer</p></header>
+<nav>
+<a href="../index.html">← Arduino Experiments</a>
+<a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#result">Result</a>
+</nav>
+<main class="container">
+
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To control the brightness of an LED using a 10K potentiometer and Arduino UNO.</p>
+</section>
+
+<section class="section">
+<h2>About the Experiment</h2>
+<p>Arduino reads the potentiometer value through analog pin A0. The analog value from 0 to 1023 is converted into a PWM brightness value from 0 to 255.</p>
+<p>The PWM signal is sent to the LED through D9. Rotating the potentiometer changes the LED brightness from very dim or OFF to maximum brightness.</p>
+</section>
+
+<section class="section" id="components">
+<h2>Components Required</h2>
+<div class="components-grid">
+<div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO"><h4>Arduino UNO R3 (×1)</h4><p>Main controller for reading the potentiometer and controlling LED brightness.</p></div>
+<div class="component-card"><img src="Potentiometer.png" alt="Potentiometer"><h4>10K Potentiometer (×1)</h4><p>Provides the adjustable analog input for brightness control.</p></div>
+<div class="component-card"><img src="LED.png" alt="LED"><h4>LED (×1)</h4><p>Changes brightness according to the potentiometer position.</p></div>
+<div class="component-card"><img src="220 ohm resistor.png" alt="220 ohm resistor"><h4>220Ω Resistor (×1)</h4><p>Limits current through the LED.</p></div>
+<div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard (×1)</h4><p>Used for circuit assembly.</p></div>
+<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Used for electrical connections.</p></div>
+</div>
+</section>
+
+<section class="section" id="connections">
+<h2>Circuit Connections</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Component</th><th>Connection</th></tr></thead>
+<tbody>
+<tr><td>Potentiometer Left Pin</td><td>5V</td></tr>
+<tr><td>Potentiometer Middle Pin (Wiper)</td><td>A0</td></tr>
+<tr><td>Potentiometer Right Pin</td><td>GND</td></tr>
+<tr><td>LED Anode (+)</td><td>220Ω Resistor → D9</td></tr>
+<tr><td>LED Cathode (−)</td><td>GND</td></tr>
+</tbody></table></div>
+<div class="note"><strong>Potentiometer Input:</strong> A0<br><strong>LED PWM Output:</strong> D9<br><strong>Analog Range:</strong> 0–1023<br><strong>PWM Brightness Range:</strong> 0–255</div>
+</section>
+
+<section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">Arduino Starts<br>↓<br>Potentiometer value is read through A0<br>↓<br>Analog value ranges from 0 to 1023<br>↓<br>Arduino maps the value to PWM range 0 to 255<br>↓<br>PWM signal is sent to LED through D9<br>↓<br>Rotating the potentiometer changes LED brightness</div>
+<div class="note"><strong>Minimum Potentiometer Value:</strong> LED OFF or very dim<br><strong>Maximum Potentiometer Value:</strong> LED at maximum brightness<br><strong>Serial Monitor:</strong> Shows potentiometer and brightness values</div>
+</section>
+
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol>
+<li>Connect the left pin of the potentiometer to Arduino 5V.</li>
+<li>Connect the middle pin of the potentiometer to Arduino A0.</li>
+<li>Connect the right pin of the potentiometer to Arduino GND.</li>
+<li>Connect the LED anode to Arduino D9 through a 220Ω resistor.</li>
+<li>Connect the LED cathode to GND.</li>
+<li>Connect Arduino UNO to the computer using the USB A-B cable.</li>
+<li>Open Arduino IDE.</li>
+<li>Enter the program given below.</li>
+<li>Select Arduino UNO and the correct COM port.</li>
+<li>Verify and upload the program.</li>
+<li>Open Serial Monitor at 9600 baud.</li>
+<li>Rotate the potentiometer and observe the LED brightness.</li>
+</ol>
+</section>
+
+<section class="section" id="code">
+<h2>Arduino Code</h2>
+<div class="code-header"><span>Adjustable_LED_Dimmer.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div>
+<pre><code id="arduinoCode">#define POT_PIN A0
+#define LED_PIN 9
+
+void setup()
+{
+  pinMode(LED_PIN, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int potValue = analogRead(POT_PIN);
+
+  int brightness = map(potValue, 0, 1023, 0, 255);
+
+  analogWrite(LED_PIN, brightness);
+
+  Serial.print("Potentiometer: ");
+  Serial.print(potValue);
+
+  Serial.print(" Brightness: ");
+  Serial.println(brightness);
+
+  delay(20);
+}</code></pre>
+</section>
+
+<section class="section">
+<h2>Expected Output</h2>
+<p>Rotating the potentiometer changes the brightness of the LED. The potentiometer value and calculated brightness value are displayed on the Serial Monitor.</p>
+<div class="note"><strong>Potentiometer Minimum:</strong> LED OFF or very dim<br><strong>Potentiometer Maximum:</strong> LED at maximum brightness<br><strong>Serial Monitor:</strong> Potentiometer value and brightness value</div>
+</section>
+
+<section class="section" id="result">
+<h2>Result</h2>
+<p>The Adjustable LED Dimmer experiment was implemented using Arduino UNO, a 10K potentiometer, an LED and a 220Ω resistor. The LED brightness changes according to the potentiometer position.</p>
+</section>
+
+<section class="section">
+<h2>What You Learn</h2>
+<ul>
+<li>How to read an analog potentiometer using Arduino A0.</li>
+<li>How analog values range from 0 to 1023.</li>
+<li>How to map an analog value to a PWM range of 0 to 255.</li>
+<li>How to control LED brightness using analogWrite().</li>
+<li>How to use a 220Ω resistor with an LED.</li>
+<li>How to view potentiometer and brightness values in the Serial Monitor.</li>
+</ul>
+</section>
+
+</main>
+
+<footer><strong>Arduino Experiment</strong><br>Adjustable LED Dimmer</footer>
+
+<script>
+function copyCode(){
+  const code=document.getElementById("arduinoCode").innerText;
+  navigator.clipboard.writeText(code);
+  const button=document.querySelector(".copy-button");
+  button.innerText="Copied!";
+  setTimeout(function(){button.innerText="Copy Code";},1500);
+}
+</script>
+</body>
+</html>
