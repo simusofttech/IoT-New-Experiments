@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Programmable Electronic Control Console</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+.container{
+    width:90%;
+    max-width:950px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section p{
+    margin-bottom:10px;
+}
+
+ul,ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+
+.code-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:#1e293b;
+    color:white;
+    border-radius:8px 8px 0 0;
+}
+
+.copy-button{
+    border:0;
+    padding:7px 12px;
+    background:#2563eb;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+pre{
+    margin:0;
+    padding:20px;
+    overflow-x:auto;
+    background:#020617;
+    color:#e2e8f0;
+    border-radius:0 0 8px 8px;
+    font-family:Consolas,monospace;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+    transition:box-shadow .2s,transform .2s;
+}
+
+.component-card:hover{
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    transform:translateY(-2px);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+    line-height:1.5;
+}
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:#fff;
+    padding:10px;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+@media(max-width:600px){
+    .header{padding:35px 15px}
+    .header h1{font-size:28px}
+    .container{width:92%}
+    .section{padding:21px 18px}
+    nav{gap:11px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Arduino Experiment</h1>
+    <p>Programmable Electronic Control Console</p>
+</header>
+
+<nav>
+    <a href="../index.html">← Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To create a programmable electronic control console using Arduino UNO,
+        a 4×4 keypad, LCD, 4-digit display, relay and buzzer.
+    </p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+
+    <p>
+        The 4×4 keypad is used to enter different commands.
+        Arduino reads each key and performs the assigned action.
+    </p>
+
+    <p>
+        The LCD shows the selected operation and system status.
+        The relay and buzzer can be controlled using different keypad keys.
+    </p>
+</section>
+
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png" alt="Arduino UNO">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>Main controller for the control console.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="4x4 Keypad.png" alt="4x4 Keypad">
+            <h4>4×4 Keypad (×1)</h4>
+            <p>Used to enter commands and select operations.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="LCD 16X2 I2C.png" alt="LCD 16X2 I2C">
+            <h4>LCD1602 I²C (×1)</h4>
+            <p>Displays commands, values and system status.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="4 Digit 7 Segment Display.png" alt="4 Digit 7 Segment Display">
+            <h4>4-Digit 7-Segment Display (×1)</h4>
+            <p>Included in the control console display system.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Relay.png" alt="Relay">
+            <h4>SPDT Relay (×1)</h4>
+            <p>Controls an external load.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Buzzer.png" alt="Buzzer">
+            <h4>Buzzer (×1)</h4>
+            <p>Provides key and alert sounds.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Used to assemble the circuit.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used for electrical connections.</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <h3>4×4 Keypad</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Keypad Pin</th>
+                    <th>Arduino UNO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>R1</td><td>D2</td></tr>
+                <tr><td>R2</td><td>D3</td></tr>
+                <tr><td>R3</td><td>D4</td></tr>
+                <tr><td>R4</td><td>D5</td></tr>
+                <tr><td>C1</td><td>D6</td></tr>
+                <tr><td>C2</td><td>D7</td></tr>
+                <tr><td>C3</td><td>D8</td></tr>
+                <tr><td>C4</td><td>D9</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>LCD1602 I²C</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>LCD Pin</th>
+                    <th>Arduino UNO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>VCC</td><td>5V</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>SDA</td><td>A4</td></tr>
+                <tr><td>SCL</td><td>A5</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>4-Digit Display</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Display Pin</th>
+                    <th>Arduino UNO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>SDA</td><td>A4</td></tr>
+                <tr><td>SCK</td><td>A5</td></tr>
+                <tr><td>VCC</td><td>5V</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Relay and Buzzer</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Relay Terminal 5</td><td>D10</td></tr>
+                <tr><td>Relay Terminal 8</td><td>GND</td></tr>
+                <tr><td>Relay Terminal 1</td><td>5V</td></tr>
+                <tr><td>Relay Terminal 12</td><td>5V supply for load</td></tr>
+                <tr><td>Relay Terminal 6</td><td>Load +</td></tr>
+                <tr><td>Buzzer +</td><td>D11</td></tr>
+                <tr><td>Buzzer −</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Keypad:</strong> D2 to D9<br>
+        <strong>Relay:</strong> D10<br>
+        <strong>Buzzer:</strong> D11<br>
+        <strong>LCD SDA:</strong> A4<br>
+        <strong>LCD SCL:</strong> A5
+    </div>
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        Arduino Starts<br>
+        ↓<br>
+        LCD shows System Ready<br>
+        ↓<br>
+        User presses a keypad key<br>
+        ↓<br>
+        Arduino reads the selected key<br>
+        ↓<br>
+        Assigned relay, buzzer or display action is performed<br>
+        ↓<br>
+        LCD shows the selected operation or system status
+    </div>
+
+    <div class="note">
+        <strong>Key 1:</strong> Relay ON<br>
+        <strong>Key 2:</strong> Relay OFF<br>
+        <strong>Key 3:</strong> Buzzer ON<br>
+        <strong>Key 4:</strong> Buzzer OFF<br>
+        <strong>Keys 5–9:</strong> Show selected key<br>
+        <strong>Key 0:</strong> Reset system<br>
+        <strong>Key A:</strong> Display 1234<br>
+        <strong>Key B:</strong> Display 0000<br>
+        <strong>Key C:</strong> Relay + buzzer<br>
+        <strong>Key D:</strong> Relay OFF + buzzer alert<br>
+        <strong>Key *:</strong> Clear display<br>
+        <strong>Key #:</strong> Show relay status
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Connect keypad rows R1–R4 to D2–D5.</li>
+        <li>Connect keypad columns C1–C4 to D6–D9.</li>
+        <li>Connect LCD SDA to A4 and SCL to A5.</li>
+        <li>Connect the 4-digit display SDA to A4 and SCK to A5.</li>
+        <li>Connect relay control to D10.</li>
+        <li>Connect buzzer positive terminal to D11 and negative terminal to GND.</li>
+        <li>Connect all required 5V and GND connections.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Install the Keypad and LiquidCrystal_I2C libraries if required.</li>
+        <li>Enter the Arduino program given below.</li>
+        <li>Upload the program to Arduino UNO.</li>
+        <li>Press different keypad keys and observe the LCD, relay and buzzer response.</li>
+    </ol>
+</section>
+
+<section class="section" id="code">
+    <h2>Arduino Code</h2>
+
+    <div class="code-header">
+        <span>Programmable_Electronic_Control_Console.ino</span>
+        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    </div>
+
+<pre><code id="arduinoCode">#include &lt;Keypad.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+// LCD
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Keypad size
+const byte rows = 4;
+const byte cols = 4;
+
+// Keypad buttons
+char keys[rows][cols] =
+{
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+};
+
+// Keypad connections
+byte rowPins[rows] = {2, 3, 4, 5};
+byte colPins[cols] = {6, 7, 8, 9};
+
+// Create keypad
+Keypad keypad = Keypad(
+  makeKeymap(keys),
+  rowPins,
+  colPins,
+  rows,
+  cols
+);
+
+// Output pins
+int relay = 10;
+int buzzer = 11;
+
+void setup()
+{
+  pinMode(relay, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+
+  // Start with relay and buzzer OFF
+  digitalWrite(relay, LOW);
+  digitalWrite(buzzer, LOW);
+
+  // Start LCD
+  lcd.init();
+  lcd.backlight();
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Control Console");
+
+  lcd.setCursor(0, 1);
+  lcd.print("System Ready");
+
+  delay(2000);
+
+  lcd.clear();
+  lcd.print("Press Key");
+}
+
+void loop()
+{
+  // Read keypad
+  char key = keypad.getKey();
+
+  // Run only when a key is pressed
+  if (key)
+  {
+    // Short beep
+    digitalWrite(buzzer, HIGH);
+    delay(80);
+    digitalWrite(buzzer, LOW);
+
+    // Key 1 = Relay ON
+    if (key == '1')
+    {
+      digitalWrite(relay, HIGH);
+
+      lcd.clear();
+      lcd.print("RELAY: ON");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Key 1");
+    }
+
+    // Key 2 = Relay OFF
+    else if (key == '2')
+    {
+      digitalWrite(relay, LOW);
+
+      lcd.clear();
+      lcd.print("RELAY: OFF");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Key 2");
+    }
+
+    // Key 3 = Buzzer ON
+    else if (key == '3')
+    {
+      digitalWrite(buzzer, HIGH);
+
+      lcd.clear();
+      lcd.print("BUZZER: ON");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Key 3");
+    }
+
+    // Key 4 = Buzzer OFF
+    else if (key == '4')
+    {
+      digitalWrite(buzzer, LOW);
+
+      lcd.clear();
+      lcd.print("BUZZER: OFF");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Key 4");
+    }
+
+    // Keys 5 to 9
+    else if (key >= '5' && key <= '9')
+    {
+      lcd.clear();
+      lcd.print("Selected Key:");
+
+      lcd.setCursor(0, 1);
+      lcd.print(key);
+    }
+
+    // Key 0 = Reset
+    else if (key == '0')
+    {
+      digitalWrite(relay, LOW);
+      digitalWrite(buzzer, LOW);
+
+      lcd.clear();
+      lcd.print("SYSTEM RESET");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Relay: OFF");
+    }
+
+    // Key A
+    else if (key == 'A')
+    {
+      lcd.clear();
+      lcd.print("Value:");
+
+      lcd.setCursor(0, 1);
+      lcd.print("1234");
+    }
+
+    // Key B
+    else if (key == 'B')
+    {
+      lcd.clear();
+      lcd.print("Value:");
+
+      lcd.setCursor(0, 1);
+      lcd.print("0000");
+    }
+
+    // Key C
+    else if (key == 'C')
+    {
+      digitalWrite(relay, HIGH);
+
+      lcd.clear();
+      lcd.print("RELAY + BUZZER");
+
+      lcd.setCursor(0, 1);
+      lcd.print("ACTIVE");
+
+      digitalWrite(buzzer, HIGH);
+      delay(500);
+      digitalWrite(buzzer, LOW);
+    }
+
+    // Key D
+    else if (key == 'D')
+    {
+      digitalWrite(relay, LOW);
+
+      lcd.clear();
+      lcd.print("RELAY OFF");
+
+      lcd.setCursor(0, 1);
+      lcd.print("BUZZER ALERT");
+
+      digitalWrite(buzzer, HIGH);
+      delay(500);
+      digitalWrite(buzzer, LOW);
+    }
+
+    // * = Clear LCD
+    else if (key == '*')
+    {
+      lcd.clear();
+      lcd.print("Display Cleared");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Press Key");
+    }
+
+    // # = Show relay status
+    else if (key == '#')
+    {
+      lcd.clear();
+      lcd.print("SYSTEM STATUS");
+
+      lcd.setCursor(0, 1);
+
+      if (digitalRead(relay) == HIGH)
+      {
+        lcd.print("Relay: ON");
+      }
+      else
+      {
+        lcd.print("Relay: OFF");
+      }
+    }
+
+    delay(200);
+  }
+}</code></pre>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+
+    <p>
+        Pressing different keypad keys performs different control operations.
+        The LCD displays the selected command and system status while the relay
+        and buzzer respond according to the programmed key.
+    </p>
+
+    <div class="note">
+        <strong>1:</strong> Relay ON<br>
+        <strong>2:</strong> Relay OFF<br>
+        <strong>3:</strong> Buzzer ON<br>
+        <strong>4:</strong> Buzzer OFF<br>
+        <strong>0:</strong> System Reset<br>
+        <strong>A:</strong> 1234<br>
+        <strong>B:</strong> 0000<br>
+        <strong>C:</strong> Relay + Buzzer<br>
+        <strong>D:</strong> Relay OFF + Alert
+    </div>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The Programmable Electronic Control Console experiment was implemented
+        using Arduino UNO and a 4×4 keypad. Different keypad commands control
+        the relay and buzzer while the LCD displays the selected operation and
+        system status.
+    </p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>How to interface a 4×4 keypad with Arduino UNO.</li>
+        <li>How to read different keypad keys.</li>
+        <li>How to display messages on an I²C LCD.</li>
+        <li>How to control a relay using Arduino.</li>
+        <li>How to control a buzzer.</li>
+        <li>How to assign different functions to keypad buttons.</li>
+        <li>How to create a simple programmable control console.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>Arduino Experiment</strong><br>
+    Programmable Electronic Control Console
+</footer>
+
+<script>
+function copyCode(){
+    const code=document.getElementById("arduinoCode").innerText;
+    navigator.clipboard.writeText(code);
+
+    const button=document.querySelector(".copy-button");
+    button.innerText="Copied!";
+
+    setTimeout(function(){
+        button.innerText="Copy Code";
+    },1500);
+}
+</script>
+
+</body>
+</html>
