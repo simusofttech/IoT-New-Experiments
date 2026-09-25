@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Experiment - Electronic Voting Machine Prototype</title>
+
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+.container{
+    width:90%;
+    max-width:950px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section p{
+    margin-bottom:10px;
+}
+
+ul,ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+
+.code-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:#1e293b;
+    color:white;
+    border-radius:8px 8px 0 0;
+}
+
+.copy-button{
+    border:0;
+    padding:7px 12px;
+    background:#2563eb;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+pre{
+    margin:0;
+    padding:20px;
+    overflow-x:auto;
+    background:#020617;
+    color:#e2e8f0;
+    border-radius:0 0 8px 8px;
+    font-family:Consolas,monospace;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+    transition:box-shadow .2s,transform .2s;
+}
+
+.component-card:hover{
+    box-shadow:0 6px 15px rgba(0,0,0,.08);
+    transform:translateY(-2px);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+    line-height:1.5;
+}
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:#fff;
+    padding:10px;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+@media(max-width:600px){
+    .header{padding:35px 15px}
+    .header h1{font-size:28px}
+    .container{width:92%}
+    .section{padding:21px 18px}
+    nav{gap:11px}
+}
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Arduino Experiment</h1>
+    <p>Electronic Voting Machine Prototype</p>
+</header>
+
+<nav>
+    <a href="../index.html">← Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>To create an electronic voting machine prototype using Arduino UNO, three push buttons, three LEDs, a buzzer and an I²C LCD.</p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>Each push button represents a candidate. Pressing a button adds one vote to that candidate.</p>
+    <p>The corresponding LED turns ON, the buzzer gives a short confirmation beep and the LCD displays the updated vote totals.</p>
+</section>
+
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png" alt="Arduino UNO R3 (×1)">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>Main controller for vote counting.</p>
+        </div>
+    
+
+        <div class="component-card">
+            <img src="Push Button.png" alt="Push Button (×3)">
+            <h4>Push Button (×3)</h4>
+            <p>Used to vote for Candidate A, B or C.</p>
+        </div>
+    
+
+        <div class="component-card">
+            <img src="LCD 16X2 I2C.png" alt="LCD 16×2 I²C (×1)">
+            <h4>LCD 16×2 I²C (×1)</h4>
+            <p>Displays vote confirmation and totals.</p>
+        </div>
+    
+
+        <div class="component-card">
+            <img src="LED.png" alt="LED (×3)">
+            <h4>LED (×3)</h4>
+            <p>Shows which candidate was selected.</p>
+        </div>
+    
+
+        <div class="component-card">
+            <img src="Buzzer.png" alt="Buzzer (×1)">
+            <h4>Buzzer (×1)</h4>
+            <p>Provides a confirmation beep.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard (×1)">
+            <h4>Breadboard (×1)</h4>
+            <p>Used to assemble the voting circuit.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used for electrical connections.</p>
+        </div>
+    
+    </div>
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Component</th><th>Connection</th></tr></thead>
+            <tbody>
+                <tr><td>Candidate A Button</td><td>D2 and GND</td></tr>
+                <tr><td>Candidate B Button</td><td>D3 and GND</td></tr>
+                <tr><td>Candidate C Button</td><td>D4 and GND</td></tr>
+                <tr><td>Candidate A LED</td><td>D5</td></tr>
+                <tr><td>Candidate B LED</td><td>D6</td></tr>
+                <tr><td>Candidate C LED</td><td>D7</td></tr>
+                <tr><td>Buzzer</td><td>D8 and GND</td></tr>
+                <tr><td>LCD SDA</td><td>A4</td></tr>
+                <tr><td>LCD SCL</td><td>A5</td></tr>
+            </tbody>
+        </table>
+    </div>
+  
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        Voting Machine Ready<br>↓<br>
+        Candidate button pressed<br>↓<br>
+        Vote count increases by 1<br>↓<br>
+        Candidate LED turns ON<br>↓<br>
+        Buzzer beeps<br>↓<br>
+        LCD shows updated vote totals
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Connect Candidate A, B and C buttons to D2, D3 and D4.</li>
+        <li>Connect Candidate A, B and C LEDs to D5, D6 and D7.</li>
+        <li>Connect the buzzer to D8.</li>
+        <li>Connect LCD SDA to A4 and SCL to A5.</li>
+        <li>Upload the Arduino code.</li>
+        <li>Press each candidate button and observe the vote count.</li>
+    </ol>
+</section>
+
+<section class="section" id="code">
+    <h2>Arduino Code</h2>
+
+    <div class="code-header">
+        <span>Electronic_Voting_Machine_Prototype.ino</span>
+        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    </div>
+
+<pre><code id="arduinoCode">#include &lt;Adafruit_LiquidCrystal.h&gt;
+
+// Create LCD object
+Adafruit_LiquidCrystal lcd(0);
+
+// Candidate buttons
+int buttonA = 2;
+int buttonB = 3;
+int buttonC = 4;
+
+// Candidate LEDs
+int ledA = 5;
+int ledB = 6;
+int ledC = 7;
+
+// Buzzer
+int buzzer = 8;
+
+// Vote counters
+int votesA = 0;
+int votesB = 0;
+int votesC = 0;
+
+void setup()
+{
+  pinMode(buttonA, INPUT_PULLUP);
+  pinMode(buttonB, INPUT_PULLUP);
+  pinMode(buttonC, INPUT_PULLUP);
+
+  pinMode(ledA, OUTPUT);
+  pinMode(ledB, OUTPUT);
+  pinMode(ledC, OUTPUT);
+
+  pinMode(buzzer, OUTPUT);
+
+  lcd.begin(16, 2);
+  lcd.setBacklight(1);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Voting Machine");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Ready");
+
+  delay(2000);
+
+  showVotes();
+}
+
+void loop()
+{
+  // Candidate A
+  if (digitalRead(buttonA) == LOW)
+  {
+    votesA++;
+
+    digitalWrite(ledA, HIGH);
+
+    tone(buzzer, 1000);
+    delay(200);
+    noTone(buzzer);
+
+    lcd.clear();
+    lcd.print("Vote Recorded");
+    lcd.setCursor(0, 1);
+    lcd.print("Candidate A");
+
+    delay(1000);
+
+    digitalWrite(ledA, LOW);
+
+    showVotes();
+
+    while (digitalRead(buttonA) == LOW)
+    {
+      delay(10);
+    }
+  }
+
+  // Candidate B
+  if (digitalRead(buttonB) == LOW)
+  {
+    votesB++;
+
+    digitalWrite(ledB, HIGH);
+
+    tone(buzzer, 1000);
+    delay(200);
+    noTone(buzzer);
+
+    lcd.clear();
+    lcd.print("Vote Recorded");
+    lcd.setCursor(0, 1);
+    lcd.print("Candidate B");
+
+    delay(1000);
+
+    digitalWrite(ledB, LOW);
+
+    showVotes();
+
+    while (digitalRead(buttonB) == LOW)
+    {
+      delay(10);
+    }
+  }
+
+  // Candidate C
+  if (digitalRead(buttonC) == LOW)
+  {
+    votesC++;
+
+    digitalWrite(ledC, HIGH);
+
+    tone(buzzer, 1000);
+    delay(200);
+    noTone(buzzer);
+
+    lcd.clear();
+    lcd.print("Vote Recorded");
+    lcd.setCursor(0, 1);
+    lcd.print("Candidate C");
+
+    delay(1000);
+
+    digitalWrite(ledC, LOW);
+
+    showVotes();
+
+    while (digitalRead(buttonC) == LOW)
+    {
+      delay(10);
+    }
+  }
+}
+
+void showVotes()
+{
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("A:");
+  lcd.print(votesA);
+
+  lcd.print(" B:");
+  lcd.print(votesB);
+
+  lcd.setCursor(0, 1);
+  lcd.print("C:");
+  lcd.print(votesC);
+
+  lcd.print(" T:");
+  lcd.print(votesA + votesB + votesC);
+}</code></pre>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+
+    <p>Pressing a candidate button increases that candidate's vote count. The matching LED turns ON briefly, the buzzer beeps and the LCD displays the updated vote totals.</p>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>The Electronic Voting Machine Prototype experiment records votes for three candidates and displays the updated counts using an I²C LCD.</p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>How to read multiple push buttons.</li>
+        <li>How to count votes using variables.</li>
+        <li>How to control LEDs.</li>
+        <li>How to use a buzzer for confirmation.</li>
+        <li>How to display values on an I²C LCD.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>Arduino Experiment</strong><br>
+    Electronic Voting Machine Prototype
+</footer>
+
+<script>
+function copyCode(){
+    const code=document.getElementById("arduinoCode").innerText;
+    navigator.clipboard.writeText(code);
+
+    const button=document.querySelector(".copy-button");
+    button.innerText="Copied!";
+
+    setTimeout(function(){
+        button.innerText="Copy Code";
+    },1500);
+}
+</script>
+
+</body>
+</html>
