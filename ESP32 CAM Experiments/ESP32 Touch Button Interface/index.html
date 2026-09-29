@@ -1,0 +1,2581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ESP32 Touch Button Interface</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:130px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+
+    min-width:600px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+
+    max-width:720px;
+
+    margin:20px auto;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+}
+
+
+/* =========================
+   TOUCH STATUS
+========================= */
+
+.status-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.status-card{
+    padding:22px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+.status-icon{
+    width:70px;
+    height:70px;
+
+    margin:0 auto 12px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    font-size:30px;
+
+    background:#dbeafe;
+
+    color:#2563eb;
+}
+
+.active-box{
+    background:#eff6ff;
+    border:2px solid #2563eb;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+    font-weight:bold;
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+    margin:0 0 22px;
+}
+
+
+.code-layout{
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* CODE PANEL */
+
+.code-panel{
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.filename{
+    font:bold 14px Consolas, monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.code-body{
+    height:600px;
+
+    overflow:auto;
+
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:20px;
+
+    white-space:pre;
+
+    font:13px/24px Consolas, monospace;
+
+    color:#1e293b;
+
+    border-bottom:1px solid #f1f5f9;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+.line-number{
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+
+    user-select:none;
+}
+
+
+/* GUIDE */
+
+.guide{
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+    padding:0;
+    margin:0 0 8px;
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+}
+
+.steps{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.step{
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+.step:hover{
+    border-color:#60a5fa;
+    background:#f8fbff;
+}
+
+.step.active{
+    background:#eff6ff;
+    border-color:#60a5fa;
+}
+
+.step-number{
+    color:#2563eb;
+    font-size:12px;
+}
+
+.explanation{
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+.explanation h3{
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+
+    font-size:17px;
+}
+
+.explanation p{
+    margin:0;
+    color:#526875;
+}
+
+.guide details{
+    border-top:1px solid #dce6e9;
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+.tip{
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    text-align:center;
+
+    padding:25px 20px;
+}
+
+footer strong{
+    color:white;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+    .status-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .section{
+        padding:20px;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+<h1>
+ESP32 Experiment
+</h1>
+
+<p>
+ESP32 Touch Button Interface
+</p>
+
+</header>
+
+
+<nav>
+
+<a href="../index.html">
+← ESP32 Experiments
+</a>
+
+<a href="#aim">
+Aim
+</a>
+
+<a href="#components">
+Components
+</a>
+
+<a href="#connections">
+Connections
+</a>
+
+<a href="#circuit">
+Circuit
+</a>
+
+<a href="#working">
+Working
+</a>
+
+<a href="#procedure">
+Procedure
+</a>
+
+<a href="#code">
+Code
+</a>
+
+<a href="#result">
+Result
+</a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section
+class="section"
+id="aim">
+
+<h2>
+Aim
+</h2>
+
+<p>
+
+To create a touch-sensitive
+interface using an ESP32 and
+TTP223 touch sensor that detects
+each touch and displays the touch
+status and total number of touches
+on an OLED display.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+<h2>
+About the Experiment
+</h2>
+
+<p>
+
+In this Experiment,
+the TTP223 capacitive touch
+sensor acts like a digital button.
+
+</p>
+
+<p>
+
+When the sensor is touched,
+its output becomes HIGH
+and the ESP32 detects
+the touch through GPIO 4.
+
+</p>
+
+<p>
+
+The OLED displays whether
+the touch sensor is
+<strong>READY</strong>
+or
+<strong>ACTIVE</strong>
+and also shows the total
+number of touches.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section
+class="section"
+id="components">
+
+<h2>
+Components Required
+</h2>
+
+
+<div class="components-grid">
+
+
+<div class="component-card">
+
+<img
+src="ESP32 Development Board.png"
+alt="ESP32 Development Board">
+
+<h4>
+ESP32 DevKitC (×1)
+</h4>
+
+<p>
+Main controller of
+the Experiment.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="TTP223 Touch Sensor.png"
+alt="TTP223 Touch Sensor">
+
+<h4>
+TTP223 Touch Sensor (×1)
+</h4>
+
+<p>
+Detects when the touch
+pad is touched.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="1.3 Inch OLED SH1106.png"
+alt="1.3 Inch OLED SH1106">
+
+<h4>
+1.3" OLED I2C SH1106 (×1)
+</h4>
+
+<p>
+Displays touch status,
+animation and touch count.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Breadboard.png"
+alt="Breadboard">
+
+<h4>
+Breadboard (×1)
+</h4>
+
+<p>
+Provides a convenient
+base for circuit connections.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Jumper Wires.png"
+alt="Jumper Wires">
+
+<h4>
+Jumper Wires
+</h4>
+
+<p>
+Used to connect the ESP32,
+touch sensor and OLED.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section
+class="section"
+id="connections">
+
+<h2>
+Circuit Connections
+</h2>
+
+
+<h3>
+TTP223 Touch Sensor → ESP32
+</h3>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>TTP223 Pin</th>
+<th>ESP32 Pin</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>VCC</td>
+<td>3.3V</td>
+</tr>
+
+<tr>
+<td>GND</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>OUT</td>
+<td>GPIO 4</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h3>
+OLED SH1106 → ESP32
+</h3>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>OLED Pin</th>
+<th>ESP32 Pin</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>VCC</td>
+<td>3.3V</td>
+</tr>
+
+<tr>
+<td>GND</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>SDA</td>
+<td>GPIO 21</td>
+</tr>
+
+<tr>
+<td>SCL</td>
+<td>GPIO 22</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="note">
+
+<strong>
+Touch Sensor OUT:
+</strong>
+GPIO 4
+
+<br>
+
+<strong>
+OLED SDA:
+</strong>
+GPIO 21
+
+<br>
+
+<strong>
+OLED SCL:
+</strong>
+GPIO 22
+
+<br>
+
+<strong>
+Supply Voltage:
+</strong>
+3.3V
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+<h2>
+Circuit Diagram
+</h2>
+
+<p>
+
+Connect the ESP32,
+TTP223 touch sensor
+and OLED as shown
+in the circuit diagram.
+
+</p>
+
+
+<img
+src="ESP32 Touch Button Interface Circuit.png"
+alt="ESP32 Touch Button Interface Circuit"
+class="circuit-img">
+
+</section>
+
+
+<!-- =========================
+     TOUCH STATUS
+========================= -->
+
+<section class="section">
+
+<h2>
+Touch Status
+</h2>
+
+
+<div class="status-grid">
+
+
+<div class="status-card">
+
+<div class="status-icon">
+☝
+</div>
+
+<h3>
+READY
+</h3>
+
+<p>
+The sensor is waiting
+for the user to touch
+the touch pad.
+</p>
+
+</div>
+
+
+<div class="status-card active-box">
+
+<div class="status-icon">
+●
+</div>
+
+<h3>
+ACTIVE
+</h3>
+
+<p>
+The touch sensor has
+detected a touch and
+its output is HIGH.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section
+class="section"
+id="working">
+
+<h2>
+Working Principle
+</h2>
+
+
+<div class="flow">
+
+ESP32 Starts
+
+<br>↓<br>
+
+OLED Initializes
+
+<br>↓<br>
+
+Touch Sensor is Read on GPIO 4
+
+<br>↓<br>
+
+No Touch Detected
+
+<br>↓<br>
+
+OLED Shows READY
+
+<br>↓<br>
+
+User Touches TTP223 Sensor
+
+<br>↓<br>
+
+Sensor Output Becomes HIGH
+
+<br>↓<br>
+
+ESP32 Detects New Touch
+
+<br>↓<br>
+
+Touch Counter Increases
+
+<br>↓<br>
+
+OLED Shows ACTIVE
+
+<br>↓<br>
+
+Touch Animation is Displayed
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section
+class="section"
+id="procedure">
+
+<h2>
+Procedure
+</h2>
+
+
+<ol>
+
+<li>
+Place the ESP32 on the breadboard.
+</li>
+
+<li>
+Connect TTP223 VCC to ESP32 3.3V.
+</li>
+
+<li>
+Connect TTP223 GND to ESP32 GND.
+</li>
+
+<li>
+Connect TTP223 OUT to GPIO 4.
+</li>
+
+<li>
+Connect OLED VCC to ESP32 3.3V.
+</li>
+
+<li>
+Connect OLED GND to ESP32 GND.
+</li>
+
+<li>
+Connect OLED SDA to GPIO 21.
+</li>
+
+<li>
+Connect OLED SCL to GPIO 22.
+</li>
+
+<li>
+Open Arduino IDE.
+</li>
+
+<li>
+Install the U8g2 library.
+</li>
+
+<li>
+Upload the program to ESP32.
+</li>
+
+<li>
+Open Serial Monitor at 115200 baud.
+</li>
+
+<li>
+Touch the TTP223 sensor.
+</li>
+
+<li>
+Observe the OLED change
+from READY to ACTIVE.
+</li>
+
+<li>
+Observe the touch count increase
+after every new touch.
+</li>
+
+<li>
+Release the sensor and observe
+the status return to READY.
+</li>
+
+</ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section
+class="section"
+id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+ESP32 Experiment · Code Review
+</p>
+
+
+<h2 class="lesson-title">
+Explore the Code
+</h2>
+
+
+<p class="intro">
+
+ESP32 Touch Button Interface ·
+Select a step to understand
+what each part of the program does.
+
+</p>
+
+
+<div class="code-layout">
+
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+<span class="filename">
+ESP32_Touch_Button_Interface.ino
+</span>
+
+
+<button
+class="copy-button"
+onclick="copyCode()">
+
+Copy Code
+
+</button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<article class="guide">
+
+
+<h2>
+Understand it step by step
+</h2>
+
+
+<p>
+
+Choose a step.
+The matching code
+will light up on the left.
+
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">01</span>
+
+Load libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">02</span>
+
+Set pins
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">03</span>
+
+Create OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">04</span>
+
+Store touch data
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">05</span>
+
+Start system
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">06</span>
+
+Read touch sensor
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">07</span>
+
+Count touches
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">08</span>
+
+Animate touch
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">09</span>
+
+Draw interface
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(9)">
+
+<span class="step-number">10</span>
+
+Show ON / OFF
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+1. Load libraries
+</h3>
+
+<p>
+
+The Wire library provides
+I²C communication and
+U8g2 controls the OLED display.
+
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+Explore more: touch counting
+</summary>
+
+<p>
+
+The program increases the
+touch counter only when
+the sensor changes from
+LOW to HIGH.
+
+</p>
+
+<p>
+
+This prevents one long touch
+from being counted many times.
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Check your understanding
+</summary>
+
+<ul>
+
+<li>
+Which GPIO reads the touch sensor?
+<strong>GPIO 4</strong>
+</li>
+
+<li>
+Which pin is OLED SDA?
+<strong>GPIO 21</strong>
+</li>
+
+<li>
+Which pin is OLED SCL?
+<strong>GPIO 22</strong>
+</li>
+
+<li>
+What happens when a new touch is detected?
+<strong>The touch count increases.</strong>
+</li>
+
+<li>
+What does the OLED show when untouched?
+<strong>READY</strong>
+</li>
+
+</ul>
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>
+Try it:
+</strong>
+
+Touch the sensor several times
+and watch the touch counter
+increase on the OLED display.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>
+Result
+</h2>
+
+<p>
+
+The ESP32 Touch Button Interface
+Experiment successfully detects
+touch input from the TTP223 sensor.
+
+</p>
+
+<p>
+
+The OLED displays the current
+touch condition, an animated
+touch indicator and the total
+number of touches detected.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>
+What You Learn
+</h2>
+
+<ul>
+
+<li>
+Connecting a TTP223 touch sensor to ESP32.
+</li>
+
+<li>
+Reading digital touch input.
+</li>
+
+<li>
+Detecting a new touch event.
+</li>
+
+<li>
+Counting touch events.
+</li>
+
+<li>
+Using I²C communication.
+</li>
+
+<li>
+Connecting an OLED display.
+</li>
+
+<li>
+Creating a simple OLED interface.
+</li>
+
+<li>
+Creating basic OLED animation.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+ESP32 Touch Button Interface
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script
+type="text/plain"
+id="esp32-program">
+
+#include <Wire.h>
+#include <U8g2lib.h>
+
+#define TOUCH_PIN 4
+
+#define OLED_SDA 21
+#define OLED_SCL 22
+
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(
+    U8G2_R0,
+    U8X8_PIN_NONE
+);
+
+
+bool touchState = false;
+
+bool lastTouchState = false;
+
+unsigned long touchCount = 0;
+
+unsigned long animationTimer = 0;
+
+bool animationFrame = false;
+
+
+// =========================
+// SETUP
+// =========================
+
+void setup()
+{
+
+    Serial.begin(
+        115200
+    );
+
+
+    pinMode(
+        TOUCH_PIN,
+        INPUT_PULLDOWN
+    );
+
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+
+    oled.begin();
+
+    oled.setContrast(
+        255
+    );
+
+
+    Serial.println();
+
+    Serial.println(
+        "=============================="
+    );
+
+    Serial.println(
+        " ESP32 TOUCH BUTTON INTERFACE"
+    );
+
+    Serial.println(
+        "=============================="
+    );
+
+
+    // Startup screen
+
+    oled.clearBuffer();
+
+
+    oled.setFont(
+        u8g2_font_ncenB10_tr
+    );
+
+
+    oled.drawStr(
+        25,
+        22,
+        "TOUCH"
+    );
+
+
+    oled.setFont(
+        u8g2_font_ncenB08_tr
+    );
+
+
+    oled.drawStr(
+        27,
+        39,
+        "INTERFACE"
+    );
+
+
+    oled.drawFrame(
+        10,
+        46,
+        108,
+        10
+    );
+
+
+    oled.drawBox(
+        13,
+        49,
+        50,
+        4
+    );
+
+
+    oled.sendBuffer();
+
+
+    delay(
+        1500
+    );
+
+}
+
+
+// =========================
+// LOOP
+// =========================
+
+void loop()
+{
+
+    touchState =
+    digitalRead(
+        TOUCH_PIN
+    );
+
+
+    // Detect a new touch
+
+    if(
+        touchState == HIGH
+        &&
+        lastTouchState == LOW
+    )
+    {
+
+        touchCount++;
+
+
+        Serial.println(
+            "Touch detected!"
+        );
+
+
+        Serial.print(
+            "Touch Count: "
+        );
+
+
+        Serial.println(
+            touchCount
+        );
+
+    }
+
+
+    lastTouchState =
+    touchState;
+
+
+    // Animation
+
+    if(
+        millis()
+        -
+        animationTimer
+        >=
+        500
+    )
+    {
+
+        animationTimer =
+        millis();
+
+
+        animationFrame =
+        !animationFrame;
+
+    }
+
+
+    drawInterface();
+
+
+    delay(
+        50
+    );
+
+}
+
+
+// =========================
+// DRAW INTERFACE
+// =========================
+
+void drawInterface()
+{
+
+    oled.clearBuffer();
+
+
+    // Header
+
+    oled.drawBox(
+        0,
+        0,
+        128,
+        14
+    );
+
+
+    oled.setDrawColor(
+        0
+    );
+
+
+    oled.setFont(
+        u8g2_font_6x10_tf
+    );
+
+
+    oled.drawStr(
+        25,
+        10,
+        "TOUCH CONTROL"
+    );
+
+
+    oled.setDrawColor(
+        1
+    );
+
+
+    // Status
+
+    if(
+        touchState
+    )
+    {
+
+        oled.setFont(
+            u8g2_font_ncenB08_tr
+        );
+
+
+        oled.drawStr(
+            8,
+            28,
+            "ACTIVE"
+        );
+
+
+        if(
+            animationFrame
+        )
+        {
+
+            oled.drawCircle(
+                105,
+                25,
+                7
+            );
+
+
+            oled.drawCircle(
+                105,
+                25,
+                3
+            );
+
+        }
+
+        else
+        {
+
+            oled.drawCircle(
+                105,
+                25,
+                4
+            );
+
+        }
+
+
+        oled.setFont(
+            u8g2_font_6x10_tf
+        );
+
+
+        oled.drawStr(
+            8,
+            41,
+            "TOUCH DETECTED"
+        );
+
+    }
+
+    else
+    {
+
+        oled.setFont(
+            u8g2_font_ncenB08_tr
+        );
+
+
+        oled.drawStr(
+            8,
+            28,
+            "READY"
+        );
+
+
+        oled.setFont(
+            u8g2_font_6x10_tf
+        );
+
+
+        oled.drawStr(
+            8,
+            41,
+            "Touch the button"
+        );
+
+    }
+
+
+    // Touch counter
+
+    oled.setFont(
+        u8g2_font_6x10_tf
+    );
+
+
+    oled.drawStr(
+        8,
+        55,
+        "Touches:"
+    );
+
+
+    char countText[12];
+
+
+    sprintf(
+        countText,
+        "%lu",
+        touchCount
+    );
+
+
+    oled.setFont(
+        u8g2_font_ncenB08_tr
+    );
+
+
+    oled.drawStr(
+        58,
+        56,
+        countText
+    );
+
+
+    // ON / OFF indicator
+
+    if(
+        touchState
+    )
+    {
+
+        oled.drawBox(
+            98,
+            48,
+            22,
+            12
+        );
+
+
+        oled.setDrawColor(
+            0
+        );
+
+
+        oled.setFont(
+            u8g2_font_5x7_tf
+        );
+
+
+        oled.drawStr(
+            102,
+            57,
+            "ON"
+        );
+
+
+        oled.setDrawColor(
+            1
+        );
+
+    }
+
+    else
+    {
+
+        oled.drawFrame(
+            98,
+            48,
+            22,
+            12
+        );
+
+
+        oled.setFont(
+            u8g2_font_5x7_tf
+        );
+
+
+        oled.drawStr(
+            102,
+            57,
+            "OFF"
+        );
+
+    }
+
+
+    oled.sendBuffer();
+
+}
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+document
+.getElementById(
+    "esp32-program"
+)
+.textContent
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+const steps = [
+
+
+{
+
+title:
+"Load libraries",
+
+search:
+"#include <Wire.h>",
+
+text:
+"The Wire library provides I²C communication and U8g2 controls the OLED display."
+
+},
+
+
+{
+
+title:
+"Set pins",
+
+search:
+"#define TOUCH_PIN",
+
+text:
+"GPIO 4 reads the TTP223 touch sensor. GPIO 21 and GPIO 22 are used for OLED I²C communication."
+
+},
+
+
+{
+
+title:
+"Create OLED",
+
+search:
+"U8G2_SSD1306",
+
+text:
+"The program creates the OLED display object using the U8g2 library."
+
+},
+
+
+{
+
+title:
+"Store touch data",
+
+search:
+"bool touchState",
+
+text:
+"These variables remember the current touch state, previous state, touch count and animation timing."
+
+},
+
+
+{
+
+title:
+"Start system",
+
+search:
+"void setup()",
+
+text:
+"The setup function starts Serial communication, configures the touch input and initializes the OLED."
+
+},
+
+
+{
+
+title:
+"Read touch sensor",
+
+search:
+"touchState =",
+
+text:
+"The ESP32 continuously reads the TTP223 output using GPIO 4."
+
+},
+
+
+{
+
+title:
+"Count touches",
+
+search:
+"touchCount++",
+
+text:
+"A new touch is counted only when the sensor changes from LOW to HIGH."
+
+},
+
+
+{
+
+title:
+"Animate touch",
+
+search:
+"animationFrame =",
+
+text:
+"The animation state changes every 500 milliseconds to create a simple touch animation on the OLED."
+
+},
+
+
+{
+
+title:
+"Draw interface",
+
+search:
+"void drawInterface",
+
+text:
+"This function draws the header, touch status, touch counter and touch indicator on the OLED."
+
+},
+
+
+{
+
+title:
+"Show ON / OFF",
+
+search:
+"if(",
+
+text:
+"When the touch sensor is active, the OLED displays ON. When it is not touched, it displays OFF."
+
+}
+
+];
+
+
+function escapeHtml(text)
+{
+
+return text
+
+.replace(
+    /&/g,
+    "&amp;"
+)
+
+.replace(
+    /</g,
+    "&lt;"
+)
+
+.replace(
+    />/g,
+    "&gt;"
+);
+
+}
+
+
+function displayCode()
+{
+
+let output = "";
+
+
+lines.forEach(
+
+function(
+    line,
+    index
+)
+{
+
+output +=
+
+'<span class="code-line" ' +
+
+'id="line-' +
+
+(index + 1) +
+
+'">' +
+
+'<span class="line-number">' +
+
+(index + 1) +
+
+'</span>' +
+
+'<span>' +
+
+escapeHtml(line) +
+
+'</span>' +
+
+'</span>';
+
+}
+
+);
+
+
+document
+.getElementById(
+    "code-lines"
+)
+.innerHTML =
+output;
+
+}
+
+
+function showStep(index)
+{
+
+const step =
+steps[index];
+
+
+const buttons =
+document
+.querySelectorAll(
+    ".step"
+);
+
+
+buttons.forEach(
+
+function(button)
+{
+
+button
+.classList
+.remove(
+    "active"
+);
+
+}
+
+);
+
+
+buttons[index]
+.classList
+.add(
+    "active"
+);
+
+
+document
+.querySelectorAll(
+    ".code-line"
+)
+.forEach(
+
+function(line)
+{
+
+line
+.classList
+.remove(
+    "selected"
+);
+
+}
+
+);
+
+
+let foundLine =
+-1;
+
+
+for(
+    let i = 0;
+    i < lines.length;
+    i++
+)
+{
+
+if(
+    lines[i]
+    .includes(
+        step.search
+    )
+)
+{
+
+foundLine = i;
+
+break;
+
+}
+
+}
+
+
+if(
+    foundLine >= 0
+)
+{
+
+for(
+    let i = foundLine;
+    i <
+    Math.min(
+        foundLine + 12,
+        lines.length
+    );
+    i++
+)
+{
+
+document
+.getElementById(
+    "line-" +
+    (i + 1)
+)
+.classList
+.add(
+    "selected"
+);
+
+}
+
+
+const selectedLine =
+document
+.getElementById(
+    "line-" +
+    (foundLine + 1)
+);
+
+
+document
+.getElementById(
+    "code-body"
+)
+.scrollTo({
+
+top:
+selectedLine.offsetTop - 20,
+
+behavior:
+"smooth"
+
+});
+
+}
+
+
+document
+.getElementById(
+    "explanation"
+)
+.innerHTML =
+
+"<h3>" +
+
+(index + 1) +
+
+". " +
+
+step.title +
+
+"</h3>" +
+
+"<p>" +
+
+step.text +
+
+"</p>";
+
+}
+
+
+function copyCode()
+{
+
+navigator
+.clipboard
+.writeText(
+    program
+)
+.then(
+
+function()
+{
+
+const button =
+document
+.querySelector(
+    ".copy-button"
+);
+
+
+button.innerText =
+"Copied!";
+
+
+setTimeout(
+
+function()
+{
+
+button.innerText =
+"Copy Code";
+
+},
+
+1500
+
+);
+
+}
+
+);
+
+}
+
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+
+</html>
