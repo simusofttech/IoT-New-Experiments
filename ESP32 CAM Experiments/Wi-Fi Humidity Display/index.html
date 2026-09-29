@@ -1,0 +1,3070 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wi-Fi Humidity Display</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:130px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:600px;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT
+========================= */
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:650px;
+    margin:20px auto;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+}
+
+
+/* =========================
+   SENSOR STATUS
+========================= */
+
+.sensor-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.sensor-card{
+    padding:22px;
+    text-align:center;
+    border-radius:12px;
+    border:1px solid #bfdbfe;
+    background:#f8fbff;
+}
+
+.sensor-icon{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.sensor-value{
+    font-size:32px;
+    color:#2563eb;
+    font-weight:bold;
+    margin:8px 0;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+    text-align:center;
+    color:#1e3a8a;
+    font-size:18px;
+    font-weight:bold;
+    line-height:2;
+}
+
+
+/* =========================================
+   EXPLORE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+    font-weight:bold;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+    margin:0 0 8px !important;
+    color:#1e3a8a !important;
+    border:0 !important;
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+    margin:0 0 22px;
+}
+
+.code-layout{
+    display:grid;
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+    gap:20px;
+    align-items:start;
+}
+
+
+/* CODE PANEL */
+
+.code-panel{
+    background:white;
+    border:1px solid #bfdbfe;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:15px 20px;
+    background:#2563eb;
+    color:white;
+}
+
+.filename{
+    font:bold 14px Consolas, monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+    background:white;
+    color:#2563eb;
+    border-radius:8px;
+    padding:8px 14px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+.code-body{
+    height:600px;
+    overflow:auto;
+    padding:16px 0;
+    background:white;
+}
+
+.code-line{
+    display:flex;
+    min-width:max-content;
+    min-height:24px;
+    padding-right:20px;
+    white-space:pre;
+    font:13px/24px Consolas, monospace;
+    color:#1e293b;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.code-line:hover{
+    background:#f8fbff;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+    box-shadow:inset 4px 0 #2563eb;
+}
+
+.line-number{
+    min-width:52px;
+    text-align:right;
+    padding-right:15px;
+    color:#64748b;
+    user-select:none;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+    background:white;
+    border:1px solid #dce6e9;
+    border-radius:14px;
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+    padding:0;
+    margin:0 0 8px;
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+}
+
+.steps{
+    display:grid;
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+    gap:8px;
+    margin:16px 0;
+}
+
+.step{
+    border:1px solid #dce6e9;
+    border-radius:9px;
+    padding:10px;
+    min-height:65px;
+    background:white;
+    text-align:left;
+    font-size:13px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    color:#1e3a8a;
+}
+
+.step:hover{
+    border-color:#60a5fa;
+    background:#f8fbff;
+}
+
+.step.active{
+    background:#eff6ff;
+    border-color:#60a5fa;
+}
+
+.step-number{
+    color:#2563eb;
+    font-size:12px;
+}
+
+.explanation{
+    background:#eff6ff;
+    border-radius:9px;
+    padding:16px;
+    min-height:130px;
+}
+
+.explanation h3{
+    margin:0 0 7px;
+    color:#1e3a8a;
+    font-size:17px;
+}
+
+.explanation p{
+    margin:0;
+    color:#526875;
+}
+
+.guide details{
+    border-top:1px solid #dce6e9;
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+    color:#2563eb;
+    font-weight:bold;
+    padding:13px 0;
+}
+
+.guide code{
+    background:#e5ecf4;
+    padding:2px 5px;
+    border-radius:4px;
+}
+
+.tip{
+    background:#eff6ff;
+    color:#234e87;
+    padding:14px 17px;
+    border-radius:9px;
+    margin-top:20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+}
+
+footer strong{
+    color:white;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+    .sensor-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .section{
+        padding:20px;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+<h1>
+ESP32 Experiment
+</h1>
+
+<p>
+Wi-Fi Humidity Display
+</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+<a href="../index.html">
+← ESP32 Experiments
+</a>
+
+<a href="#aim">
+Aim
+</a>
+
+<a href="#components">
+Components
+</a>
+
+<a href="#connections">
+Connections
+</a>
+
+<a href="#circuit">
+Circuit
+</a>
+
+<a href="#working">
+Working
+</a>
+
+<a href="#procedure">
+Procedure
+</a>
+
+<a href="#code">
+Code
+</a>
+
+<a href="#result">
+Result
+</a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section
+class="section"
+id="aim">
+
+<h2>
+Aim
+</h2>
+
+<p>
+
+To create a Wi-Fi based
+temperature and humidity
+monitoring system using
+ESP32 and DHT22 that displays
+live sensor values on an OLED
+and a web dashboard.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+<h2>
+About the Experiment
+</h2>
+
+<p>
+
+In this Experiment,
+the DHT22 sensor measures
+temperature and relative humidity.
+
+</p>
+
+<p>
+
+The ESP32 reads the sensor
+through GPIO 4 and displays
+the values on a 1.3-inch
+SH1106 OLED display.
+
+</p>
+
+<p>
+
+The ESP32 also connects to Wi-Fi
+and creates a web dashboard
+for live monitoring of
+temperature and humidity.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section
+class="section"
+id="components">
+
+<h2>
+Components Required
+</h2>
+
+
+<div class="components-grid">
+
+
+<div class="component-card">
+
+<img
+src="ESP32 Development Board.png"
+alt="ESP32 Development Board">
+
+<h4>
+ESP32 DevKitC (×1)
+</h4>
+
+<p>
+Main controller with
+built-in Wi-Fi.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="DHT22 Temperature Humidity Sensor.png"
+alt="DHT22 Temperature Humidity Sensor">
+
+<h4>
+DHT22 (×1)
+</h4>
+
+<p>
+Measures temperature
+and relative humidity.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="1.3 Inch OLED SH1106.png"
+alt="1.3 Inch OLED SH1106">
+
+<h4>
+1.3" SH1106 OLED 128×64 I2C (×1)
+</h4>
+
+<p>
+Displays temperature
+and humidity readings.
+</p>
+
+</div>
+
+<div class="component-card">
+
+<img
+src="Jumper Wires.png"
+alt="Jumper Wires">
+
+<h4>
+Jumper Wires
+</h4>
+
+<p>
+Used to connect the ESP32,
+DHT22 and OLED.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section
+class="section"
+id="connections">
+
+<h2>
+Circuit Connections
+</h2>
+
+
+<h3>
+DHT22 → ESP32
+</h3>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+DHT22 Pin
+</th>
+
+<th>
+ESP32 Connection
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+
+<td>
+VCC
+</td>
+
+<td>
+3.3V
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+DATA
+</td>
+
+<td>
+GPIO 4
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+NC
+</td>
+
+<td>
+Not Connected
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+GND
+</td>
+
+<td>
+GND
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h3>
+OLED SH1106 → ESP32
+</h3>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+OLED Pin
+</th>
+
+<th>
+ESP32 Pin
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+<td>VCC</td>
+<td>3.3V</td>
+</tr>
+
+<tr>
+<td>GND</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>SDA</td>
+<td>GPIO 21</td>
+</tr>
+
+<tr>
+<td>SCL</td>
+<td>GPIO 22</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="note">
+
+<strong>
+DHT22 DATA:
+</strong>
+GPIO 4
+
+<br>
+
+<strong>
+OLED SDA:
+</strong>
+GPIO 21
+
+<br>
+
+<strong>
+OLED SCL:
+</strong>
+GPIO 22
+
+<br>
+
+<strong>
+Supply Voltage:
+</strong>
+3.3V
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+<h2>
+Circuit Diagram
+</h2>
+
+<p>
+
+Connect the ESP32,
+DHT22 sensor and SH1106 OLED
+as shown in the circuit diagram.
+
+</p>
+
+
+<img
+src="Wi-Fi Humidity Display Circuit.png"
+alt="Wi-Fi Humidity Display Circuit"
+class="circuit-img">
+
+</section>
+
+
+<!-- =========================
+     SENSOR VALUES
+========================= -->
+
+<section class="section">
+
+<h2>
+Sensor Readings
+</h2>
+
+
+<div class="sensor-grid">
+
+
+<div class="sensor-card">
+
+<div class="sensor-icon">
+🌡️
+</div>
+
+<h3>
+Temperature
+</h3>
+
+<div class="sensor-value">
+26.9 °C
+</div>
+
+<p>
+Ambient temperature
+measured by the DHT22.
+</p>
+
+</div>
+
+
+<div class="sensor-card">
+
+<div class="sensor-icon">
+💧
+</div>
+
+<h3>
+Humidity
+</h3>
+
+<div class="sensor-value">
+52.0 %
+</div>
+
+<p>
+Relative humidity
+measured by the DHT22.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section
+class="section"
+id="working">
+
+<h2>
+Working Principle
+</h2>
+
+
+<div class="flow">
+
+ESP32 Starts
+
+<br>↓<br>
+
+DHT22 Sensor Initializes
+
+<br>↓<br>
+
+SH1106 OLED Initializes
+
+<br>↓<br>
+
+ESP32 Connects to Wi-Fi
+
+<br>↓<br>
+
+Web Server Starts
+
+<br>↓<br>
+
+DHT22 Measures Temperature
+
+<br>↓<br>
+
+DHT22 Measures Humidity
+
+<br>↓<br>
+
+ESP32 Updates OLED Display
+
+<br>↓<br>
+
+Browser Requests Sensor Data
+
+<br>↓<br>
+
+Web Dashboard Displays Live Values
+
+<br>↓<br>
+
+Readings Update Every 3 Seconds
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section
+class="section"
+id="procedure">
+
+<h2>
+Procedure
+</h2>
+
+
+<ol>
+
+<li>
+Place the ESP32 on the breadboard.
+</li>
+
+<li>
+Connect DHT22 VCC to ESP32 3.3V.
+</li>
+
+<li>
+Connect DHT22 DATA to GPIO 4.
+</li>
+
+<li>
+Leave the DHT22 NC pin unconnected.
+</li>
+
+<li>
+Connect DHT22 GND to ESP32 GND.
+</li>
+
+<li>
+Connect OLED VCC to ESP32 3.3V.
+</li>
+
+<li>
+Connect OLED GND to ESP32 GND.
+</li>
+
+<li>
+Connect OLED SDA to GPIO 21.
+</li>
+
+<li>
+Connect OLED SCL to GPIO 22.
+</li>
+
+<li>
+Open Arduino IDE.
+</li>
+
+<li>
+Install the DHT sensor library.
+</li>
+
+<li>
+Install the U8g2 library.
+</li>
+
+<li>
+Upload the program to ESP32.
+</li>
+
+<li>
+Open Serial Monitor at 115200 baud.
+</li>
+
+<li>
+Wait for ESP32 to connect to Wi-Fi.
+</li>
+
+<li>
+Note the IP address shown
+in Serial Monitor.
+</li>
+
+<li>
+Open the IP address
+in a web browser.
+</li>
+
+<li>
+Observe temperature and humidity
+on the OLED.
+</li>
+
+<li>
+Observe the same readings
+on the web dashboard.
+</li>
+
+<li>
+Notice that the readings
+update every 3 seconds.
+</li>
+
+</ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section
+class="section"
+id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+ESP32 Experiment · Code Review
+</p>
+
+
+<h2 class="lesson-title">
+Explore the Code
+</h2>
+
+
+<p class="intro">
+
+Wi-Fi Humidity Display ·
+Select a step to understand
+what each part of the
+ESP32 program does.
+
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+<span class="filename">
+WiFi_Humidity_Display.ino
+</span>
+
+
+<button
+class="copy-button"
+onclick="copyCode()">
+
+Copy Code
+
+</button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- GUIDE -->
+
+<article class="guide">
+
+
+<h2>
+Understand it step by step
+</h2>
+
+
+<p>
+
+Choose a step.
+The matching code will
+light up on the left.
+
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">
+01
+</span>
+
+Load libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">
+02
+</span>
+
+Set DHT22
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">
+03
+</span>
+
+Prepare OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">
+04
+</span>
+
+Set Wi-Fi
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">
+05
+</span>
+
+Store sensor data
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">
+06
+</span>
+
+Read DHT22
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">
+07
+</span>
+
+Update OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">
+08
+</span>
+
+Send web data
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">
+09
+</span>
+
+Start system
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(9)">
+
+<span class="step-number">
+10
+</span>
+
+Keep monitoring
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+1. Load libraries
+</h3>
+
+<p>
+
+The program loads libraries
+for Wi-Fi, web server,
+I²C communication, SH1106 OLED
+and the DHT22 sensor.
+
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+Explore more: DHT22
+</summary>
+
+<p>
+
+The DHT22 provides two
+environmental measurements:
+
+</p>
+
+<ul>
+
+<li>
+Temperature in °C
+</li>
+
+<li>
+Relative humidity in %
+</li>
+
+</ul>
+
+<p>
+
+The ESP32 reads both values
+from the DATA pin connected
+to GPIO 4.
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Check your understanding
+</summary>
+
+<ul>
+
+<li>
+
+Which GPIO reads the DHT22?
+
+<strong>
+GPIO 4
+</strong>
+
+</li>
+
+
+<li>
+
+Which GPIO is OLED SDA?
+
+<strong>
+GPIO 21
+</strong>
+
+</li>
+
+
+<li>
+
+Which GPIO is OLED SCL?
+
+<strong>
+GPIO 22
+</strong>
+
+</li>
+
+
+<li>
+
+Which sensor measures humidity?
+
+<strong>
+DHT22
+</strong>
+
+</li>
+
+
+<li>
+
+How often are new readings taken?
+
+<strong>
+Every 3 seconds
+</strong>
+
+</li>
+
+</ul>
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>
+Try it:
+</strong>
+
+Breathe gently near the
+DHT22 sensor and observe
+whether the humidity value
+changes on the OLED and
+web dashboard.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>
+Expected Output
+</h2>
+
+<p>
+
+The OLED displays:
+
+</p>
+
+<ul>
+
+<li>
+Current temperature
+</li>
+
+<li>
+Current humidity
+</li>
+
+<li>
+Humidity level bar
+</li>
+
+<li>
+Wi-Fi status indicator
+</li>
+
+</ul>
+
+<p>
+
+The web dashboard displays
+live temperature, humidity,
+sensor status and history.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>
+Result
+</h2>
+
+<p>
+
+The Wi-Fi Humidity Display
+Experiment successfully measures
+temperature and relative humidity
+using the DHT22 sensor.
+
+</p>
+
+<p>
+
+The ESP32 displays the readings
+on the SH1106 OLED and also
+provides live monitoring
+through a Wi-Fi web dashboard.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>
+What You Learn
+</h2>
+
+<ul>
+
+<li>
+Connecting DHT22 to ESP32.
+</li>
+
+<li>
+Reading temperature using DHT22.
+</li>
+
+<li>
+Reading relative humidity.
+</li>
+
+<li>
+Using GPIO 4 as sensor input.
+</li>
+
+<li>
+Using an SH1106 OLED display.
+</li>
+
+<li>
+Using I²C communication.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Creating an ESP32 web server.
+</li>
+
+<li>
+Sending sensor data to a browser.
+</li>
+
+<li>
+Building a live environment monitor.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wi-Fi Humidity Display
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script
+type="text/plain"
+id="esp32-program">
+
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <U8g2lib.h>
+#include <DHT.h>
+
+
+// =====================================================
+// DHT22
+// =====================================================
+
+#define DHTPIN 4
+#define DHTTYPE DHT22
+
+DHT dht(
+    DHTPIN,
+    DHTTYPE
+);
+
+
+// =====================================================
+// OLED SH1106
+// =====================================================
+
+U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
+    U8G2_R0,
+    U8X8_PIN_NONE
+);
+
+
+// =====================================================
+// WIFI
+// =====================================================
+
+const char* ssid =
+"Wokwi-GUEST";
+
+const char* password =
+"";
+
+WebServer server(80);
+
+
+// =====================================================
+// SENSOR DATA
+// =====================================================
+
+float temperature =
+0.0;
+
+float humidity =
+0.0;
+
+unsigned long lastSensorRead =
+0;
+
+
+// =====================================================
+// OLED UPDATE
+// =====================================================
+
+void updateOLED()
+{
+
+    oled.clearBuffer();
+
+
+    // Header
+
+    oled.setFont(
+        u8g2_font_6x13B_tf
+    );
+
+
+    oled.drawStr(
+        2,
+        12,
+        "ENVIRONMENT"
+    );
+
+
+    // WiFi Indicator
+
+    oled.drawDisc(
+        121,
+        7,
+        3
+    );
+
+
+    // Temperature
+
+    oled.setFont(
+        u8g2_font_5x8_tf
+    );
+
+
+    oled.drawStr(
+        2,
+        23,
+        "TEMP"
+    );
+
+
+    oled.setFont(
+        u8g2_font_helvB14_tf
+    );
+
+
+    oled.setCursor(
+        2,
+        39
+    );
+
+
+    oled.print(
+        temperature,
+        1
+    );
+
+
+    oled.setFont(
+        u8g2_font_5x8_tf
+    );
+
+
+    oled.print(
+        " C"
+    );
+
+
+    // Humidity
+
+    oled.setFont(
+        u8g2_font_5x8_tf
+    );
+
+
+    oled.drawStr(
+        2,
+        48,
+        "HUMIDITY"
+    );
+
+
+    oled.setFont(
+        u8g2_font_helvB14_tf
+    );
+
+
+    oled.setCursor(
+        2,
+        63
+    );
+
+
+    oled.print(
+        humidity,
+        1
+    );
+
+
+    oled.setFont(
+        u8g2_font_5x8_tf
+    );
+
+
+    oled.print(
+        " %"
+    );
+
+
+    // Humidity Bar
+
+    oled.drawFrame(
+        70,
+        43,
+        52,
+        9
+    );
+
+
+    int barWidth =
+    map(
+        constrain(
+            (int)humidity,
+            0,
+            100
+        ),
+        0,
+        100,
+        0,
+        50
+    );
+
+
+    if(
+        barWidth > 0
+    )
+    {
+
+        oled.drawBox(
+            71,
+            44,
+            barWidth,
+            7
+        );
+
+    }
+
+
+    oled.sendBuffer();
+
+}
+
+
+// =====================================================
+// READ DHT22
+// =====================================================
+
+void readSensor()
+{
+
+    float newHumidity =
+    dht.readHumidity();
+
+
+    float newTemperature =
+    dht.readTemperature();
+
+
+    if(
+        !isnan(
+            newHumidity
+        )
+        &&
+        !isnan(
+            newTemperature
+        )
+    )
+    {
+
+        humidity =
+        newHumidity;
+
+
+        temperature =
+        newTemperature;
+
+    }
+
+}
+
+
+// =====================================================
+// WEB PAGE
+// =====================================================
+
+const char index_html[]
+PROGMEM =
+R"rawliteral(
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32 Environment Monitor
+</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#071525;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+}
+
+
+.dashboard{
+
+    width:100%;
+
+    max-width:800px;
+
+    padding:30px;
+
+    border-radius:22px;
+
+    background:#0b1f35;
+
+}
+
+
+h1{
+
+    color:#60a5fa;
+
+    text-align:center;
+
+}
+
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:20px;
+
+    margin-top:25px;
+
+}
+
+
+.card{
+
+    padding:25px;
+
+    text-align:center;
+
+    border-radius:16px;
+
+    background:#122a45;
+
+}
+
+
+.value{
+
+    margin-top:15px;
+
+    font-size:48px;
+
+    font-weight:bold;
+
+    color:#60a5fa;
+
+}
+
+
+.status{
+
+    text-align:center;
+
+    margin-top:25px;
+
+    color:#4ade80;
+
+}
+
+
+@media(max-width:600px){
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard">
+
+
+<h1>
+Environment Monitor
+</h1>
+
+
+<p style="text-align:center">
+
+ESP32 • DHT22 • Live IoT Dashboard
+
+</p>
+
+
+<div class="sensor-grid">
+
+
+<div class="card">
+
+<h2>
+Temperature
+</h2>
+
+<div
+class="value"
+id="temperature">
+
+--.- °C
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>
+Humidity
+</h2>
+
+<div
+class="value"
+id="humidity">
+
+--.- %
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<div class="status">
+
+● ESP32 ONLINE
+
+</div>
+
+
+</div>
+
+
+<script>
+
+function updateData()
+{
+
+    fetch(
+        "/data"
+    )
+
+    .then(
+        response =>
+        response.json()
+    )
+
+    .then(
+        data =>
+        {
+
+            document
+            .getElementById(
+                "temperature"
+            )
+            .innerText =
+            Number(
+                data.temperature
+            )
+            .toFixed(1)
+            +
+            " °C";
+
+
+            document
+            .getElementById(
+                "humidity"
+            )
+            .innerText =
+            Number(
+                data.humidity
+            )
+            .toFixed(1)
+            +
+            " %";
+
+        }
+
+    );
+
+}
+
+
+updateData();
+
+
+setInterval(
+    updateData,
+    3000
+);
+
+</script>
+
+
+</body>
+
+</html>
+
+)rawliteral";
+
+
+// =====================================================
+// WEB PAGE HANDLER
+// =====================================================
+
+void handleRoot()
+{
+
+    server.send_P(
+        200,
+        "text/html; charset=UTF-8",
+        index_html
+    );
+
+}
+
+
+// =====================================================
+// JSON API
+// =====================================================
+
+void handleData()
+{
+
+    String json;
+
+
+    json =
+    "{";
+
+
+    json +=
+    "\"temperature\":";
+
+
+    json +=
+    String(
+        temperature,
+        1
+    );
+
+
+    json +=
+    ",";
+
+
+    json +=
+    "\"humidity\":";
+
+
+    json +=
+    String(
+        humidity,
+        1
+    );
+
+
+    json +=
+    "}";
+
+
+    server.send(
+        200,
+        "application/json",
+        json
+    );
+
+}
+
+
+// =====================================================
+// SETUP
+// =====================================================
+
+void setup()
+{
+
+    Serial.begin(
+        115200
+    );
+
+
+    // DHT
+
+    dht.begin();
+
+
+    // OLED
+
+    Wire.begin(
+        21,
+        22
+    );
+
+
+    oled.begin();
+
+
+    // Startup Screen
+
+    oled.clearBuffer();
+
+
+    oled.setFont(
+        u8g2_font_6x13B_tf
+    );
+
+
+    oled.drawStr(
+        25,
+        25,
+        "ESP32"
+    );
+
+
+    oled.setFont(
+        u8g2_font_5x8_tf
+    );
+
+
+    oled.drawStr(
+        8,
+        43,
+        "Connecting WiFi..."
+    );
+
+
+    oled.sendBuffer();
+
+
+    // WIFI
+
+    WiFi.mode(
+        WIFI_STA
+    );
+
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    Serial.print(
+        "Connecting to WiFi"
+    );
+
+
+    while(
+        WiFi.status()
+        !=
+        WL_CONNECTED
+    )
+    {
+
+        delay(
+            500
+        );
+
+
+        Serial.print(
+            "."
+        );
+
+    }
+
+
+    Serial.println();
+
+
+    Serial.println(
+        "=============================="
+    );
+
+
+    Serial.println(
+        " WIFI CONNECTED"
+    );
+
+
+    Serial.println(
+        "=============================="
+    );
+
+
+    Serial.print(
+        "IP Address: "
+    );
+
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    // SERVER
+
+    server.on(
+        "/",
+        handleRoot
+    );
+
+
+    server.on(
+        "/data",
+        handleData
+    );
+
+
+    server.begin();
+
+
+    Serial.println(
+        "Web server started!"
+    );
+
+
+    // First Reading
+
+    readSensor();
+
+    updateOLED();
+
+
+    Serial.print(
+        "Temperature: "
+    );
+
+
+    Serial.print(
+        temperature,
+        1
+    );
+
+
+    Serial.print(
+        " C | Humidity: "
+    );
+
+
+    Serial.print(
+        humidity,
+        1
+    );
+
+
+    Serial.println(
+        " %"
+    );
+
+}
+
+
+// =====================================================
+// LOOP
+// =====================================================
+
+void loop()
+{
+
+    server.handleClient();
+
+
+    if(
+        millis()
+        -
+        lastSensorRead
+        >=
+        3000
+    )
+    {
+
+        lastSensorRead =
+        millis();
+
+
+        readSensor();
+
+
+        updateOLED();
+
+
+        Serial.print(
+            "Temperature: "
+        );
+
+
+        Serial.print(
+            temperature,
+            1
+        );
+
+
+        Serial.print(
+            " C | Humidity: "
+        );
+
+
+        Serial.print(
+            humidity,
+            1
+        );
+
+
+        Serial.println(
+            " %"
+        );
+
+    }
+
+}
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+document
+.getElementById(
+    "esp32-program"
+)
+.textContent
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+const steps = [
+
+
+{
+
+title:
+"Load libraries",
+
+search:
+"#include <WiFi.h>",
+
+text:
+"The program loads the Wi-Fi, WebServer, Wire, U8g2 and DHT libraries needed by the Experiment."
+
+},
+
+
+{
+
+title:
+"Set DHT22",
+
+search:
+"#define DHTPIN",
+
+text:
+"The DHT22 DATA pin is connected to GPIO 4 and the program identifies the sensor type as DHT22."
+
+},
+
+
+{
+
+title:
+"Prepare OLED",
+
+search:
+"U8G2_SH1106",
+
+text:
+"The program creates a 128 × 64 SH1106 OLED object using the U8g2 library."
+
+},
+
+
+{
+
+title:
+"Set Wi-Fi",
+
+search:
+"const char* ssid",
+
+text:
+"The ESP32 uses the SSID and password to connect to the Wi-Fi network."
+
+},
+
+
+{
+
+title:
+"Store sensor data",
+
+search:
+"float temperature",
+
+text:
+"These variables store the latest temperature and humidity values from the DHT22."
+
+},
+
+
+{
+
+title:
+"Read DHT22",
+
+search:
+"void readSensor",
+
+text:
+"The ESP32 reads humidity and temperature from the DHT22 and checks that the values are valid."
+
+},
+
+
+{
+
+title:
+"Update OLED",
+
+search:
+"void updateOLED",
+
+text:
+"The OLED displays temperature, humidity and a graphical humidity bar."
+
+},
+
+
+{
+
+title:
+"Send web data",
+
+search:
+"void handleData",
+
+text:
+"The ESP32 sends temperature and humidity values to the browser as JSON data."
+
+},
+
+
+{
+
+title:
+"Start system",
+
+search:
+"void setup()",
+
+text:
+"The setup function starts the DHT22, OLED, Wi-Fi connection and web server."
+
+},
+
+
+{
+
+title:
+"Keep monitoring",
+
+search:
+"void loop()",
+
+text:
+"The ESP32 reads the DHT22 every three seconds, updates the OLED and handles browser requests."
+
+}
+
+];
+
+
+function escapeHtml(text)
+{
+
+    return text
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+
+function displayCode()
+{
+
+    let output = "";
+
+
+    lines.forEach(
+
+        function(
+            line,
+            index
+        )
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+
+            (index + 1) +
+
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+
+        }
+
+    );
+
+
+    document
+    .getElementById(
+        "code-lines"
+    )
+    .innerHTML =
+    output;
+
+}
+
+
+function showStep(index)
+{
+
+    const step =
+    steps[index];
+
+
+    const buttons =
+    document
+    .querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+
+        function(button)
+        {
+
+            button
+            .classList
+            .remove(
+                "active"
+            );
+
+        }
+
+    );
+
+
+    buttons[index]
+    .classList
+    .add(
+        "active"
+    );
+
+
+    document
+    .querySelectorAll(
+        ".code-line"
+    )
+    .forEach(
+
+        function(line)
+        {
+
+            line
+            .classList
+            .remove(
+                "selected"
+            );
+
+        }
+
+    );
+
+
+    let foundLine =
+    -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+
+        if(
+            lines[i]
+            .includes(
+                step.search
+            )
+        )
+        {
+
+            foundLine =
+            i;
+
+            break;
+
+        }
+
+    }
+
+
+    if(
+        foundLine >= 0
+    )
+    {
+
+        for(
+            let i =
+            foundLine;
+
+            i <
+            Math.min(
+                foundLine + 12,
+                lines.length
+            );
+
+            i++
+        )
+        {
+
+            document
+            .getElementById(
+                "line-" +
+                (i + 1)
+            )
+            .classList
+            .add(
+                "selected"
+            );
+
+        }
+
+
+        const selectedLine =
+
+        document
+        .getElementById(
+            "line-" +
+            (foundLine + 1)
+        );
+
+
+        document
+        .getElementById(
+            "code-body"
+        )
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop
+            - 20,
+
+            behavior:
+            "smooth"
+
+        });
+
+    }
+
+
+    document
+    .getElementById(
+        "explanation"
+    )
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+
+    ". " +
+
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+
+}
+
+
+function copyCode()
+{
+
+    navigator
+    .clipboard
+    .writeText(
+        program
+    )
+    .then(
+
+        function()
+        {
+
+            const button =
+
+            document
+            .querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+
+                function()
+                {
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+
+                1500
+
+            );
+
+        }
+
+    );
+
+}
+
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+
+</html>
