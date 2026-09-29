@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ESP32 Experiment - Wi-Fi Digital Dice</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    font-weight:bold;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    line-height:2;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION LAYOUT */
+
+.code-layout{
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+    background:white;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px rgba(37,99,235,.10);
+}
+
+
+/* CODE TOP BAR */
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.filename{
+    color:white;
+
+    font:bold 14px/1.4
+    Consolas, Monaco, monospace;
+}
+
+
+/* COPY BUTTON */
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+
+/* CODE AREA */
+
+.code-body{
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas, Monaco, monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+.code-line:hover{
+    background:#f8fbff;
+}
+
+
+/* SELECTED CODE */
+
+.code-line.selected{
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+/* LINE NUMBER */
+
+.line-number{
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* CODE COLOURS */
+
+.token-comment{
+    color:#64748b;
+}
+
+.token-keyword{
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+.token-number{
+    color:#b45309;
+}
+
+.token-string{
+    color:#047857;
+}
+
+
+/* =========================
+   EXPLANATION PANEL
+========================= */
+
+.guide{
+    background:white;
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+/* STEP BUTTONS */
+
+.steps{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.step{
+    border:
+    1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+.step:hover{
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+.step.active{
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+.step-number{
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+/* EXPLANATION BOX */
+
+.explanation{
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+.explanation h3{
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+.explanation p{
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+/* MORE INFO */
+
+.guide details{
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+.guide details p,
+.guide details li{
+    color:#526875;
+
+    font-size:15px;
+}
+
+.guide code{
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+/* TIP */
+
+.tip{
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+        height:450px;
+    }
+}
+
+@media(max-width:600px){
+
+    .header{
+        padding:35px 15px;
+    }
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .section{
+        padding:21px 18px;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <h1>ESP32 Experiment</h1>
+
+    <p>Wi-Fi Digital Dice</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To create a Wi-Fi controlled digital dice
+        using an ESP32 DevKitC, OLED display and
+        push button, with both physical and
+        web-based dice control.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The ESP32 generates a random dice value
+        from 1 to 6 and displays the dice pattern
+        on a 0.96-inch OLED display.
+    </p>
+
+    <p>
+        The dice can be rolled using the physical
+        push button or from a Wi-Fi web dashboard.
+        The dashboard can also directly set the
+        dice to a selected number from 1 to 6 and
+        reset the dice to 1.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="ESP32 Development Board.png"
+            alt="ESP32 Development Board">
+
+            <h4>
+                ESP32 DevKitC (×1)
+            </h4>
+
+            <p>
+                Main controller with built-in Wi-Fi.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="OLED SSD1306.png"
+            alt="OLED SSD1306">
+
+            <h4>
+                0.96" OLED SSD1306 I²C (×1)
+            </h4>
+
+            <p>
+                Displays the dice pattern
+                and Wi-Fi status.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Push Button.png"
+            alt="Push Button">
+
+            <h4>
+                Push Button (×1)
+            </h4>
+
+            <p>
+                Used to roll the dice physically.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the circuit.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for electrical connections.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+
+    <h3>OLED to ESP32</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>OLED Pin</th>
+                    <th>ESP32 Pin</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO 21</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO 22</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <h3>Push Button to ESP32</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Push Button</th>
+                    <th>ESP32</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>One Terminal</td>
+                    <td>GPIO 4</td>
+                </tr>
+
+                <tr>
+                    <td>Other Terminal</td>
+                    <td>GND</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="note">
+
+        <strong>OLED SDA:</strong>
+        GPIO 21
+
+        <br>
+
+        <strong>OLED SCL:</strong>
+        GPIO 22
+
+        <br>
+
+        <strong>Push Button:</strong>
+        GPIO 4
+
+        <br>
+
+        <strong>OLED Address:</strong>
+        0x3C
+
+        <br>
+
+        <strong>Web Server Port:</strong>
+        80
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <p>
+        Connect the OLED display to the ESP32
+        I²C pins and connect the push button
+        between GPIO 4 and GND.
+    </p>
+
+    <img
+    class="circuit-img"
+    src="WiFi_Digital_Dice_Circuit.png"
+    alt="Wi-Fi Digital Dice Circuit Diagram">
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        ESP32 Starts
+
+        <br>↓<br>
+
+        OLED Initializes
+
+        <br>↓<br>
+
+        ESP32 Connects to Wi-Fi
+
+        <br>↓<br>
+
+        Web Server Starts
+
+        <br>↓<br>
+
+        Dice Value Appears on OLED
+
+        <br>↓<br>
+
+        Press Button or Use Web Dashboard
+
+        <br>↓<br>
+
+        Random Number 1 to 6 is Generated
+
+        <br>↓<br>
+
+        Result Appears on OLED and Web Page
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Connect OLED VCC to ESP32 3.3V.
+        </li>
+
+        <li>
+            Connect OLED GND to ESP32 GND.
+        </li>
+
+        <li>
+            Connect OLED SDA to GPIO 21.
+        </li>
+
+        <li>
+            Connect OLED SCL to GPIO 22.
+        </li>
+
+        <li>
+            Connect one push button terminal
+            to GPIO 4.
+        </li>
+
+        <li>
+            Connect the other button terminal
+            to GND.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install Adafruit GFX and
+            Adafruit SSD1306 libraries.
+        </li>
+
+        <li>
+            Upload the program to ESP32.
+        </li>
+
+        <li>
+            Open Serial Monitor at 115200 baud.
+        </li>
+
+        <li>
+            Note the IP address displayed
+            in Serial Monitor.
+        </li>
+
+        <li>
+            Open that IP address in a
+            web browser.
+        </li>
+
+        <li>
+            Press ROLL DICE or use the
+            physical push button.
+        </li>
+
+    </ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section class="section" id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+    ESP32 Experiment · Code Review
+</p>
+
+
+<h2 class="lesson-title">
+    Explore the Code
+</h2>
+
+
+<p class="intro">
+    Wi-Fi Digital Dice · Select a step to see
+    what each part of the ESP32 program does.
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+    <span class="filename">
+        WiFi_Digital_Dice.ino
+    </span>
+
+    <button
+    class="copy-button"
+    onclick="copyCode()">
+
+        Copy Code
+
+    </button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- EXPLANATION PANEL -->
+
+<article class="guide">
+
+
+<h2>
+    Understand it step by step
+</h2>
+
+
+<p>
+    Choose a step.
+    The matching code will light up on the left.
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">01</span>
+
+Load the libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">02</span>
+
+Set Wi-Fi details
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">03</span>
+
+Prepare OLED and button
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">04</span>
+
+Draw the dice
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">05</span>
+
+Roll the dice
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">06</span>
+
+Build web dashboard
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">07</span>
+
+Handle web controls
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">08</span>
+
+Start Wi-Fi and server
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">09</span>
+
+Check physical button
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+    1. Load the libraries
+</h3>
+
+<p>
+    The program loads the Wi-Fi,
+    web server, I²C, graphics and
+    OLED libraries needed by the experiment.
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+    Explore more: setup and loop
+</summary>
+
+<p>
+    <code>setup()</code>
+    runs once when the ESP32 starts.
+</p>
+
+<p>
+    It prepares the OLED,
+    push button, Wi-Fi connection
+    and web server.
+</p>
+
+<p>
+    <code>loop()</code>
+    runs continuously.
+</p>
+
+<p>
+    It checks the web server
+    and physical push button.
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+    Check your understanding
+</summary>
+
+<ul>
+
+<li>
+Which GPIO is used for the button?
+<strong>GPIO 4</strong>
+</li>
+
+<li>
+Which pins are used for OLED I²C?
+<strong>GPIO 21 and GPIO 22</strong>
+</li>
+
+<li>
+What values can the dice generate?
+<strong>1 to 6</strong>
+</li>
+
+<li>
+What does RESET do?
+<strong>Sets the dice to 1</strong>
+</li>
+
+</ul>
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>Try it:</strong>
+
+Upload the program to ESP32,
+open Serial Monitor at 115200 baud
+and open the displayed IP address
+in your browser.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>Expected Output</h2>
+
+<p>
+    The OLED displays a dice value
+    from 1 to 6.
+</p>
+
+<p>
+    Pressing the physical button
+    generates a new random dice value.
+</p>
+
+<p>
+    The Wi-Fi dashboard also allows
+    the user to roll the dice,
+    select a number from 1 to 6
+    and reset the dice.
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>Result</h2>
+
+<p>
+    The Wi-Fi Digital Dice experiment
+    was successfully implemented using
+    ESP32, an SSD1306 OLED display
+    and a push button.
+</p>
+
+<p>
+    The dice can be controlled
+    physically and through a
+    Wi-Fi web dashboard.
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>What You Learn</h2>
+
+<ul>
+
+<li>
+Connecting an OLED display to ESP32.
+</li>
+
+<li>
+Using I²C communication.
+</li>
+
+<li>
+Reading a push button.
+</li>
+
+<li>
+Generating random numbers.
+</li>
+
+<li>
+Displaying dice patterns on OLED.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Creating an ESP32 web server.
+</li>
+
+<li>
+Controlling an ESP32 experiment
+from a web browser.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wi-Fi Digital Dice
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script type="text/plain" id="esp32-program">
+
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+
+// -----------------------------
+// Wi-Fi Details
+// -----------------------------
+
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+
+// -----------------------------
+// OLED Settings
+// -----------------------------
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    OLED_RESET
+);
+
+
+// -----------------------------
+// Push Button
+// -----------------------------
+
+#define BUTTON_PIN 4
+
+
+// -----------------------------
+// Web Server
+// -----------------------------
+
+WebServer server(80);
+
+
+// Current dice value
+int diceValue = 1;
+
+
+// Button state
+bool lastButtonState = HIGH;
+
+
+// -----------------------------
+// Draw Dice
+// -----------------------------
+
+void drawDice(int value)
+{
+    display.clearDisplay();
+
+    display.setTextColor(SSD1306_WHITE);
+
+    display.setTextSize(1);
+
+    display.setCursor(35, 0);
+
+    display.print("DICE: ");
+
+    display.println(value);
+
+
+    int left = 35;
+    int top = 18;
+    int size = 42;
+
+
+    display.drawRoundRect(
+        left,
+        top,
+        size,
+        size,
+        5,
+        SSD1306_WHITE
+    );
+
+
+    int x1 = left + 10;
+    int x2 = left + 21;
+    int x3 = left + 32;
+
+    int y1 = top + 10;
+    int y2 = top + 21;
+    int y3 = top + 32;
+
+
+    if(value == 1)
+    {
+        display.fillCircle(
+            x2,
+            y2,
+            3,
+            SSD1306_WHITE
+        );
+    }
+
+
+    if(value == 2)
+    {
+        display.fillCircle(
+            x1,
+            y1,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y3,
+            3,
+            SSD1306_WHITE
+        );
+    }
+
+
+    if(value == 3)
+    {
+        display.fillCircle(
+            x1,
+            y1,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x2,
+            y2,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y3,
+            3,
+            SSD1306_WHITE
+        );
+    }
+
+
+    if(value == 4)
+    {
+        display.fillCircle(
+            x1,
+            y1,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y1,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x1,
+            y3,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y3,
+            3,
+            SSD1306_WHITE
+        );
+    }
+
+
+    if(value == 5)
+    {
+        display.fillCircle(
+            x1,
+            y1,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y1,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x2,
+            y2,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x1,
+            y3,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y3,
+            3,
+            SSD1306_WHITE
+        );
+    }
+
+
+    if(value == 6)
+    {
+        display.fillCircle(
+            x1,
+            y1,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y1,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x1,
+            y2,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y2,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x1,
+            y3,
+            3,
+            SSD1306_WHITE
+        );
+
+        display.fillCircle(
+            x3,
+            y3,
+            3,
+            SSD1306_WHITE
+        );
+    }
+
+
+    display.display();
+}
+
+
+// -----------------------------
+// Roll Dice
+// -----------------------------
+
+void rollDice()
+{
+    for(int i = 0; i < 10; i++)
+    {
+        diceValue = random(1, 7);
+
+        drawDice(diceValue);
+
+        delay(80);
+    }
+
+
+    diceValue = random(1, 7);
+
+    drawDice(diceValue);
+}
+
+
+// -----------------------------
+// Dashboard
+// -----------------------------
+
+String getDashboard()
+{
+    String page = "";
+
+    page += "<!DOCTYPE html>";
+
+    page += "<html>";
+
+    page += "<head>";
+
+    page += "<meta name='viewport' ";
+    page += "content='width=device-width, initial-scale=1'>";
+
+    page += "<title>Wi-Fi Digital Dice</title>";
+
+
+    page += "<style>";
+
+    page += "body{";
+    page += "font-family:Arial;";
+    page += "text-align:center;";
+    page += "background:#f4f7fb;";
+    page += "padding:30px;";
+    page += "}";
+
+    page += "h1{";
+    page += "color:#2563eb;";
+    page += "}";
+
+    page += ".dice{";
+    page += "font-size:70px;";
+    page += "font-weight:bold;";
+    page += "color:#1e3a8a;";
+    page += "margin:25px;";
+    page += "}";
+
+    page += "button{";
+    page += "padding:14px 20px;";
+    page += "margin:6px;";
+    page += "font-size:17px;";
+    page += "background:#2563eb;";
+    page += "color:white;";
+    page += "border:none;";
+    page += "border-radius:8px;";
+    page += "cursor:pointer;";
+    page += "}";
+
+    page += "button:hover{";
+    page += "background:#1d4ed8;";
+    page += "}";
+
+    page += "</style>";
+
+    page += "</head>";
+
+
+    page += "<body>";
+
+
+    page += "<h1>";
+    page += "Wi-Fi Digital Dice";
+    page += "</h1>";
+
+
+    page += "<p>";
+    page += "Current Dice Value";
+    page += "</p>";
+
+
+    page += "<div class='dice'>";
+
+    page += String(diceValue);
+
+    page += "</div>";
+
+
+    page += "<a href='/roll'>";
+
+    page += "<button>";
+    page += "ROLL DICE";
+    page += "</button>";
+
+    page += "</a>";
+
+
+    page += "<br><br>";
+
+
+    for(int i = 1; i <= 6; i++)
+    {
+        page += "<a href='/set?value=";
+
+        page += String(i);
+
+        page += "'>";
+
+        page += "<button>";
+
+        page += String(i);
+
+        page += "</button>";
+
+        page += "</a>";
+    }
+
+
+    page += "<br><br>";
+
+
+    page += "<a href='/reset'>";
+
+    page += "<button>";
+    page += "RESET";
+    page += "</button>";
+
+    page += "</a>";
+
+
+    page += "</body>";
+
+    page += "</html>";
+
+
+    return page;
+}
+
+
+// -----------------------------
+// Home Page
+// -----------------------------
+
+void handleRoot()
+{
+    server.send(
+        200,
+        "text/html",
+        getDashboard()
+    );
+}
+
+
+// -----------------------------
+// Web Roll
+// -----------------------------
+
+void handleRoll()
+{
+    rollDice();
+
+    server.send(
+        200,
+        "text/html",
+        getDashboard()
+    );
+}
+
+
+// -----------------------------
+// Direct Dice Value
+// -----------------------------
+
+void handleSet()
+{
+    if(server.hasArg("value"))
+    {
+        int value =
+        server.arg("value").toInt();
+
+
+        if(value >= 1 && value <= 6)
+        {
+            diceValue = value;
+
+            drawDice(diceValue);
+        }
+    }
+
+
+    server.send(
+        200,
+        "text/html",
+        getDashboard()
+    );
+}
+
+
+// -----------------------------
+// Reset Dice
+// -----------------------------
+
+void handleReset()
+{
+    diceValue = 1;
+
+    drawDice(diceValue);
+
+
+    server.send(
+        200,
+        "text/html",
+        getDashboard()
+    );
+}
+
+
+// -----------------------------
+// Setup
+// -----------------------------
+
+void setup()
+{
+    Serial.begin(115200);
+
+
+    pinMode(
+        BUTTON_PIN,
+        INPUT_PULLUP
+    );
+
+
+    Wire.begin(21, 22);
+
+
+    if(!display.begin(
+        SSD1306_SWITCHCAPVCC,
+        0x3C))
+    {
+        Serial.println(
+            "OLED failed"
+        );
+
+        while(true);
+    }
+
+
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(1);
+
+    display.setCursor(0, 0);
+
+    display.println(
+        "Connecting Wi-Fi..."
+    );
+
+    display.display();
+
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    while(
+        WiFi.status()
+        != WL_CONNECTED
+    )
+    {
+        delay(500);
+
+        Serial.print(".");
+    }
+
+
+    Serial.println();
+
+    Serial.println(
+        "Wi-Fi Connected"
+    );
+
+
+    Serial.print(
+        "IP Address: "
+    );
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    display.clearDisplay();
+
+    display.setCursor(0, 0);
+
+    display.println(
+        "Wi-Fi Connected"
+    );
+
+    display.println(
+        WiFi.localIP()
+    );
+
+    display.display();
+
+
+    delay(2000);
+
+
+    randomSeed(
+        analogRead(0)
+    );
+
+
+    diceValue =
+    random(1, 7);
+
+
+    drawDice(
+        diceValue
+    );
+
+
+    server.on(
+        "/",
+        handleRoot
+    );
+
+
+    server.on(
+        "/roll",
+        handleRoll
+    );
+
+
+    server.on(
+        "/set",
+        handleSet
+    );
+
+
+    server.on(
+        "/reset",
+        handleReset
+    );
+
+
+    server.begin();
+
+
+    Serial.println(
+        "Web Server Started"
+    );
+}
+
+
+// -----------------------------
+// Loop
+// -----------------------------
+
+void loop()
+{
+    server.handleClient();
+
+
+    bool buttonState =
+    digitalRead(
+        BUTTON_PIN
+    );
+
+
+    if(
+        lastButtonState == HIGH
+        &&
+        buttonState == LOW
+    )
+    {
+        rollDice();
+
+        delay(200);
+    }
+
+
+    lastButtonState =
+    buttonState;
+}
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+/* GET ESP32 CODE */
+
+const program =
+document
+.getElementById("esp32-program")
+.textContent
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+/* =========================
+   CODE STEP INFORMATION
+========================= */
+
+const steps = [
+
+{
+    title:"Load the libraries",
+
+    search:"#include <WiFi.h>",
+
+    text:
+    "The program loads the Wi-Fi, web server, I²C, graphics and OLED libraries needed by the experiment."
+},
+
+{
+    title:"Set Wi-Fi details",
+
+    search:"const char* ssid",
+
+    text:
+    "The SSID and password tell the ESP32 which Wi-Fi network it should connect to."
+},
+
+{
+    title:"Prepare OLED and button",
+
+    search:"#define SCREEN_WIDTH",
+
+    text:
+    "The OLED screen size is defined and GPIO 4 is selected for the physical push button."
+},
+
+{
+    title:"Draw the dice",
+
+    search:"void drawDice",
+
+    text:
+    "This function draws the correct number of dots on the OLED for dice values from 1 to 6."
+},
+
+{
+    title:"Roll the dice",
+
+    search:"void rollDice",
+
+    text:
+    "This function generates random values from 1 to 6 and creates a short rolling animation."
+},
+
+{
+    title:"Build web dashboard",
+
+    search:"String getDashboard",
+
+    text:
+    "This function creates the Wi-Fi dashboard that appears in the web browser."
+},
+
+{
+    title:"Handle web controls",
+
+    search:"void handleRoot",
+
+    text:
+    "These functions respond when the user rolls, sets or resets the dice from the web dashboard."
+},
+
+{
+    title:"Start Wi-Fi and server",
+
+    search:"void setup()",
+
+    text:
+    "The setup function prepares the OLED and button, connects the ESP32 to Wi-Fi and starts the web server."
+},
+
+{
+    title:"Check physical button",
+
+    search:"void loop()",
+
+    text:
+    "The loop continuously handles web requests and checks whether the physical push button has been pressed."
+}
+
+];
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text)
+{
+    return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+}
+
+
+/* =========================
+   DISPLAY CODE
+========================= */
+
+function displayCode()
+{
+    let output = "";
+
+
+    lines.forEach(
+        function(line,index)
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+            (index + 1) +
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+        }
+    );
+
+
+    document
+    .getElementById(
+        "code-lines"
+    )
+    .innerHTML = output;
+}
+
+
+/* =========================
+   SHOW STEP
+========================= */
+
+function showStep(index)
+{
+    const step =
+    steps[index];
+
+
+    const buttons =
+    document.querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+        function(button)
+        {
+            button
+            .classList
+            .remove("active");
+        }
+    );
+
+
+    buttons[index]
+    .classList
+    .add("active");
+
+
+    const codeLines =
+    document.querySelectorAll(
+        ".code-line"
+    );
+
+
+    codeLines.forEach(
+        function(line)
+        {
+            line
+            .classList
+            .remove("selected");
+        }
+    );
+
+
+    let foundLine = -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+        if(
+            lines[i]
+            .includes(step.search)
+        )
+        {
+            foundLine = i;
+
+            break;
+        }
+    }
+
+
+    if(foundLine >= 0)
+    {
+        for(
+            let i = foundLine;
+            i < Math.min(
+                foundLine + 10,
+                lines.length
+            );
+            i++
+        )
+        {
+            document
+            .getElementById(
+                "line-" + (i + 1)
+            )
+            .classList
+            .add("selected");
+        }
+
+
+        const selectedLine =
+        document.getElementById(
+            "line-" +
+            (foundLine + 1)
+        );
+
+
+        document
+        .getElementById(
+            "code-body"
+        )
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop - 20,
+
+            behavior:"smooth"
+
+        });
+    }
+
+
+    document
+    .getElementById(
+        "explanation"
+    )
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+    ". " +
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+}
+
+
+/* =========================
+   COPY ESP32 CODE
+========================= */
+
+function copyCode()
+{
+    navigator
+    .clipboard
+    .writeText(program)
+    .then(
+        function()
+        {
+            const button =
+            document.querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+                function()
+                {
+                    button.innerText =
+                    "Copy Code";
+                },
+                1500
+            );
+        }
+    );
+}
+
+
+/* START */
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+</html>
