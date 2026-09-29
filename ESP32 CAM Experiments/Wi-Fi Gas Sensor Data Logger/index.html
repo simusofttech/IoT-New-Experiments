@@ -1,0 +1,3863 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32 Experiment - Wi-Fi Gas Sensor Data Logger
+</title>
+
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+    background:#2563eb;
+
+    color:white;
+
+    text-align:center;
+
+    padding:42px 20px;
+}
+
+
+.header h1{
+
+    margin:0 0 8px;
+
+    font-size:34px;
+}
+
+
+.header p{
+
+    margin:0;
+
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:
+    1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:
+    1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:
+    1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:
+    1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    font-weight:bold;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    line-height:2;
+}
+
+
+/* =========================
+   GAS STATUS
+========================= */
+
+.status-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:15px;
+}
+
+
+.status-card{
+
+    border-radius:10px;
+
+    padding:18px;
+
+    text-align:center;
+
+    border:
+    1px solid #e2e8f0;
+}
+
+
+.safe{
+
+    background:#ecfdf5;
+}
+
+
+.warning{
+
+    background:#fffbea;
+}
+
+
+.danger{
+
+    background:#fff1f2;
+}
+
+
+.safe h3{
+
+    color:#15803d;
+}
+
+
+.warning h3{
+
+    color:#b45309;
+}
+
+
+.danger h3{
+
+    color:#dc2626;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+
+    display:block;
+
+    width:100%;
+
+    max-width:650px;
+
+    margin:20px auto 0;
+
+    border:
+    1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:
+    space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:
+    1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0
+    #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   EXPLANATION PANEL
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+/* STEP BUTTONS */
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+/* EXPLANATION */
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+/* MORE INFORMATION */
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .status-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <h1>
+        ESP32 Experiment
+    </h1>
+
+    <p>
+        Wi-Fi Gas Sensor Data Logger
+    </p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">
+        Aim
+    </a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section
+class="section"
+id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To measure gas and smoke levels using
+        an MQ-2 sensor and ESP32, display the
+        live reading on an OLED display and
+        monitor the sensor remotely through
+        a Wi-Fi web dashboard.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+    <h2>
+        About the Experiment
+    </h2>
+
+    <p>
+        The MQ-2 gas sensor provides an analog
+        reading to the ESP32.
+        The ESP32 converts this reading into
+        a percentage from 0% to 100%.
+    </p>
+
+    <p>
+        The system classifies the gas level as
+        <strong>SAFE</strong>,
+        <strong>WARNING</strong>
+        or
+        <strong>HIGH GAS</strong>.
+    </p>
+
+    <p>
+        The gas percentage, raw ADC reading
+        and status are displayed on the OLED
+        and on a Wi-Fi web dashboard.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section
+class="section"
+id="components">
+
+    <h2>
+        Components Required
+    </h2>
+
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="ESP32 Development Board.png"
+            alt="ESP32 Development Board">
+
+            <h4>
+                ESP32 DevKitC (×1)
+            </h4>
+
+            <p>
+                Main controller with
+                built-in Wi-Fi.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="MQ-2 Gas Sensor.png"
+            alt="MQ-2 Gas Sensor">
+
+            <h4>
+                MQ-2 Gas/Smoke Sensor (×1)
+            </h4>
+
+            <p>
+                Detects changes in gas
+                and smoke concentration.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="OLED SSD1306.png"
+            alt="OLED SSD1306">
+
+            <h4>
+                0.96" SSD1306 OLED I²C (×1)
+            </h4>
+
+            <p>
+                Displays gas level,
+                ADC reading and status.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used for convenient
+                circuit assembly.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used to connect the ESP32,
+                MQ-2 sensor and OLED display.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section
+class="section"
+id="connections">
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+
+    <h3>
+        MQ-2 Gas Sensor → ESP32
+    </h3>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        MQ-2 Pin
+                    </th>
+
+                    <th>
+                        ESP32 Pin
+                    </th>
+
+                    <th>
+                        Function
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>5V / VIN</td>
+                    <td>Sensor Power</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                    <td>Ground</td>
+                </tr>
+
+                <tr>
+                    <td>AO</td>
+                    <td>GPIO 34</td>
+                    <td>Analog Gas Reading</td>
+                </tr>
+
+                <tr>
+                    <td>DO</td>
+                    <td>Not Connected</td>
+                    <td>Not Used</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <h3>
+        OLED → ESP32
+    </h3>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        OLED Pin
+                    </th>
+
+                    <th>
+                        ESP32 Pin
+                    </th>
+
+                    <th>
+                        Function
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                    <td>OLED Power</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                    <td>Ground</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO 21</td>
+                    <td>I²C Data</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO 22</td>
+                    <td>I²C Clock</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="note">
+
+        <strong>
+            MQ-2 Analog Output:
+        </strong>
+        GPIO 34
+
+        <br>
+
+        <strong>
+            OLED SDA:
+        </strong>
+        GPIO 21
+
+        <br>
+
+        <strong>
+            OLED SCL:
+        </strong>
+        GPIO 22
+
+        <br>
+
+        <strong>
+            OLED Address:
+        </strong>
+        0x3C
+
+        <br>
+
+        <strong>
+            Web Server:
+        </strong>
+        Port 80
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <p>
+        Connect the MQ-2 gas sensor
+        and OLED display to the ESP32
+        as shown in the circuit diagram.
+    </p>
+
+    <img
+    class="circuit-img"
+    src="Wi-Fi Gas Sensor Data Logger Circuit.png"
+    alt="Wi-Fi Gas Sensor Data Logger Circuit">
+
+</section>
+
+
+<!-- =========================
+     GAS STATUS
+========================= -->
+
+<section class="section">
+
+    <h2>
+        Gas Level Status
+    </h2>
+
+
+    <div class="status-grid">
+
+
+        <div class="status-card safe">
+
+            <h3>
+                ✅ SAFE
+            </h3>
+
+            <p>
+                Gas level is below 30%.
+            </p>
+
+        </div>
+
+
+        <div class="status-card warning">
+
+            <h3>
+                ⚠ WARNING
+            </h3>
+
+            <p>
+                Gas level is between
+                30% and 69%.
+            </p>
+
+        </div>
+
+
+        <div class="status-card danger">
+
+            <h3>
+                🚨 HIGH GAS
+            </h3>
+
+            <p>
+                Gas level is 70%
+                or higher.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section
+class="section"
+id="working">
+
+    <h2>
+        Working Principle
+    </h2>
+
+
+    <div class="flow">
+
+        ESP32 Starts
+
+        <br>↓<br>
+
+        OLED Initializes
+
+        <br>↓<br>
+
+        ESP32 Connects to Wi-Fi
+
+        <br>↓<br>
+
+        MQ-2 Sensor Reads Gas Level
+
+        <br>↓<br>
+
+        ESP32 Reads Analog Value on GPIO 34
+
+        <br>↓<br>
+
+        ADC Value is Converted to 0–100%
+
+        <br>↓<br>
+
+        Gas Status is Calculated
+
+        <br>↓<br>
+
+        OLED Shows Gas Level and Status
+
+        <br>↓<br>
+
+        Wi-Fi Dashboard Displays Live Data
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section
+class="section"
+id="procedure">
+
+    <h2>
+        Procedure
+    </h2>
+
+
+    <ol>
+
+        <li>
+            Place the ESP32 on the breadboard.
+        </li>
+
+        <li>
+            Connect MQ-2 VCC to
+            ESP32 5V / VIN.
+        </li>
+
+        <li>
+            Connect MQ-2 GND
+            to ESP32 GND.
+        </li>
+
+        <li>
+            Connect MQ-2 AO
+            to GPIO 34.
+        </li>
+
+        <li>
+            Leave the MQ-2 DO pin
+            unconnected.
+        </li>
+
+        <li>
+            Connect OLED VCC
+            to ESP32 3.3V.
+        </li>
+
+        <li>
+            Connect OLED GND
+            to ESP32 GND.
+        </li>
+
+        <li>
+            Connect OLED SDA
+            to GPIO 21.
+        </li>
+
+        <li>
+            Connect OLED SCL
+            to GPIO 22.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install Adafruit GFX and
+            Adafruit SSD1306 libraries.
+        </li>
+
+        <li>
+            Upload the program
+            to the ESP32.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 115200 baud.
+        </li>
+
+        <li>
+            Note the ESP32 IP address
+            displayed in Serial Monitor.
+        </li>
+
+        <li>
+            Open the IP address
+            in a web browser.
+        </li>
+
+        <li>
+            Observe the live MQ-2
+            gas level on the OLED
+            and web dashboard.
+        </li>
+
+    </ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section
+class="section"
+id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+
+    ESP32 Experiment · Code Review
+
+</p>
+
+
+<h2 class="lesson-title">
+
+    Explore the Code
+
+</h2>
+
+
+<p class="intro">
+
+    Wi-Fi Gas Sensor Data Logger ·
+    Select a step to see what each part
+    of the ESP32 program does.
+
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+    <span class="filename">
+
+        WiFi_Gas_Sensor_Data_Logger.ino
+
+    </span>
+
+
+    <button
+    class="copy-button"
+    onclick="copyCode()">
+
+        Copy Code
+
+    </button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- EXPLANATION PANEL -->
+
+<article class="guide">
+
+
+<h2>
+
+    Understand it step by step
+
+</h2>
+
+
+<p>
+
+    Choose a step.
+    The matching code will light up
+    on the left.
+
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">
+01
+</span>
+
+Load libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">
+02
+</span>
+
+Set Wi-Fi details
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">
+03
+</span>
+
+Set sensor pins
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">
+04
+</span>
+
+Prepare OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">
+05
+</span>
+
+Read MQ-2 sensor
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">
+06
+</span>
+
+Set gas status
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">
+07
+</span>
+
+Update OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">
+08
+</span>
+
+Create dashboard
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">
+09
+</span>
+
+Start Wi-Fi
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(9)">
+
+<span class="step-number">
+10
+</span>
+
+Keep monitoring
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+
+    1. Load libraries
+
+</h3>
+
+<p>
+
+    These libraries provide Wi-Fi,
+    web server, I²C and OLED functions
+    required by the Experiment.
+
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+
+    Explore more: gas percentage
+
+</summary>
+
+<p>
+
+    The ESP32 ADC gives values from
+    <code>0</code>
+    to
+    <code>4095</code>.
+
+</p>
+
+<p>
+
+    The program maps this value to
+    a percentage between
+    <code>0%</code>
+    and
+    <code>100%</code>.
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+
+    Check your understanding
+
+</summary>
+
+
+<ul>
+
+<li>
+
+Which GPIO reads the MQ-2 analog value?
+
+<strong>
+GPIO 34
+</strong>
+
+</li>
+
+
+<li>
+
+Which pins are used for OLED I²C?
+
+<strong>
+GPIO 21 and GPIO 22
+</strong>
+
+</li>
+
+
+<li>
+
+What gas level is SAFE?
+
+<strong>
+Below 30%
+</strong>
+
+</li>
+
+
+<li>
+
+When does HIGH GAS appear?
+
+<strong>
+70% or above
+</strong>
+
+</li>
+
+
+<li>
+
+How often does the web dashboard refresh?
+
+<strong>
+Every 2 seconds
+</strong>
+
+</li>
+
+</ul>
+
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>
+Try it:
+</strong>
+
+Upload the program,
+open Serial Monitor at 115200 baud,
+note the ESP32 IP address,
+then open that address in a browser
+connected to the same network.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>
+    Expected Output
+</h2>
+
+
+<p>
+
+    The OLED displays the gas percentage,
+    raw ADC value, gas status and
+    Wi-Fi connection status.
+
+</p>
+
+
+<p>
+
+    The web dashboard displays the
+    current gas level, sensor ADC value
+    and MQ-2 sensor status.
+
+</p>
+
+
+<p>
+
+    The gas status changes between
+    SAFE, WARNING and HIGH GAS
+    depending on the measured value.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>
+    Result
+</h2>
+
+
+<p>
+
+    The Wi-Fi Gas Sensor Data Logger
+    Experiment was successfully implemented
+    using an ESP32, MQ-2 gas sensor
+    and SSD1306 OLED display.
+
+</p>
+
+
+<p>
+
+    The ESP32 continuously reads the
+    gas sensor and displays the gas level
+    locally on the OLED and remotely
+    through a Wi-Fi web dashboard.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>
+    What You Learn
+</h2>
+
+
+<ul>
+
+<li>
+Connecting an MQ-2 sensor to ESP32.
+</li>
+
+<li>
+Reading analog sensor values.
+</li>
+
+<li>
+Using the ESP32 12-bit ADC.
+</li>
+
+<li>
+Converting ADC readings into percentages.
+</li>
+
+<li>
+Using I²C communication with an OLED.
+</li>
+
+<li>
+Displaying sensor data on an OLED.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Creating an ESP32 web server.
+</li>
+
+<li>
+Monitoring sensor values in a web browser.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wi-Fi Gas Sensor Data Logger
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script
+type="text/plain"
+id="esp32-program">
+
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+
+// =====================================================
+// Wi-Fi
+// =====================================================
+
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+
+// =====================================================
+// Pins
+// =====================================================
+
+#define MQ2_PIN 34
+
+#define OLED_SDA 21
+#define OLED_SCL 22
+
+
+// =====================================================
+// OLED
+// =====================================================
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_ADDR 0x3C
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    -1
+);
+
+
+// =====================================================
+// Web Server
+// =====================================================
+
+WebServer server(80);
+
+
+// =====================================================
+// Sensor Variables
+// =====================================================
+
+int gasValue = 0;
+int gasPercent = 0;
+
+String gasStatus = "SAFE";
+
+
+// =====================================================
+// Read MQ-2
+// =====================================================
+
+void readGasSensor()
+{
+
+    gasValue =
+    analogRead(
+        MQ2_PIN
+    );
+
+
+    gasPercent =
+    map(
+        gasValue,
+        0,
+        4095,
+        0,
+        100
+    );
+
+
+    gasPercent =
+    constrain(
+        gasPercent,
+        0,
+        100
+    );
+
+
+    if(
+        gasPercent < 30
+    )
+    {
+
+        gasStatus =
+        "SAFE";
+
+    }
+
+    else if(
+        gasPercent < 70
+    )
+    {
+
+        gasStatus =
+        "WARNING";
+
+    }
+
+    else
+    {
+
+        gasStatus =
+        "HIGH GAS";
+
+    }
+
+}
+
+
+// =====================================================
+// OLED
+// =====================================================
+
+void updateOLED()
+{
+
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+
+    display.setTextSize(1);
+
+    display.setCursor(
+        20,
+        0
+    );
+
+    display.println(
+        "GAS MONITOR"
+    );
+
+
+    display.drawLine(
+        0,
+        11,
+        127,
+        11,
+        SSD1306_WHITE
+    );
+
+
+    display.setTextSize(2);
+
+    display.setCursor(
+        5,
+        18
+    );
+
+    display.print(
+        gasPercent
+    );
+
+    display.print("%");
+
+
+    display.setTextSize(1);
+
+    display.setCursor(
+        70,
+        21
+    );
+
+    display.print(
+        "ADC:"
+    );
+
+    display.print(
+        gasValue
+    );
+
+
+    display.setCursor(
+        5,
+        42
+    );
+
+    display.print(
+        "STATUS:"
+    );
+
+
+    display.setCursor(
+        60,
+        42
+    );
+
+    display.print(
+        gasStatus
+    );
+
+
+    display.setCursor(
+        5,
+        55
+    );
+
+
+    if(
+        WiFi.status()
+        ==
+        WL_CONNECTED
+    )
+    {
+
+        display.print(
+            "WiFi ONLINE"
+        );
+
+    }
+
+    else
+    {
+
+        display.print(
+            "WiFi OFFLINE"
+        );
+
+    }
+
+
+    display.display();
+
+}
+
+
+// =====================================================
+// Web Dashboard
+// =====================================================
+
+void handleRoot()
+{
+
+    String statusClass;
+
+
+    if(
+        gasPercent < 30
+    )
+    {
+
+        statusClass =
+        "safe";
+
+    }
+
+    else if(
+        gasPercent < 70
+    )
+    {
+
+        statusClass =
+        "warning";
+
+    }
+
+    else
+    {
+
+        statusClass =
+        "danger";
+
+    }
+
+
+    String html =
+    R"rawliteral(
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<meta
+http-equiv="refresh"
+content="2">
+
+<title>
+ESP32 Gas Monitor
+</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:
+    radial-gradient(
+        circle at top left,
+        #263b55 0%,
+        #101923 40%,
+        #080d13 100%
+    );
+
+    color:white;
+
+}
+
+
+.header{
+
+    width:100%;
+
+    padding:20px 25px;
+
+    background:
+    rgba(
+        255,
+        255,
+        255,
+        0.06
+    );
+
+    border-bottom:
+    1px solid
+    rgba(
+        255,
+        255,
+        255,
+        0.08
+    );
+
+    display:flex;
+
+    justify-content:
+    space-between;
+
+    align-items:center;
+
+}
+
+
+.logo{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+}
+
+
+.logo span{
+
+    color:#ff4f81;
+
+}
+
+
+.wifi{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:13px;
+
+    color:#b9c8d5;
+
+}
+
+
+.wifi-dot{
+
+    width:9px;
+
+    height:9px;
+
+    background:#35e58b;
+
+    border-radius:50%;
+
+    box-shadow:
+    0 0 10px
+    #35e58b;
+
+}
+
+
+.container{
+
+    max-width:900px;
+
+    margin:auto;
+
+    padding:35px 20px;
+
+}
+
+
+.title{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+
+.title h1{
+
+    margin:0;
+
+    font-size:34px;
+
+    letter-spacing:1px;
+
+}
+
+
+.title p{
+
+    margin-top:10px;
+
+    color:#91a3b4;
+
+    font-size:14px;
+
+}
+
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+
+.card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:25px;
+
+    border-radius:22px;
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(
+            255,
+            255,
+            255,
+            0.10
+        ),
+        rgba(
+            255,
+            255,
+            255,
+            0.035
+        )
+    );
+
+    border:
+    1px solid
+    rgba(
+        255,
+        255,
+        255,
+        0.09
+    );
+
+    box-shadow:
+    0 15px 40px
+    rgba(
+        0,
+        0,
+        0,
+        0.25
+    );
+
+}
+
+
+.card-title{
+
+    font-size:13px;
+
+    color:#9eb0c1;
+
+    text-transform:
+    uppercase;
+
+    letter-spacing:1.5px;
+
+}
+
+
+.gas-card{
+
+    grid-column:
+    span 2;
+
+    text-align:center;
+
+}
+
+
+.gas-value{
+
+    margin-top:12px;
+
+    font-size:72px;
+
+    font-weight:800;
+
+}
+
+
+.percent{
+
+    font-size:32px;
+
+    color:#ff4f81;
+
+}
+
+
+.gauge{
+
+    width:100%;
+
+    height:18px;
+
+    margin-top:20px;
+
+    border-radius:20px;
+
+    background:
+    rgba(
+        255,
+        255,
+        255,
+        0.10
+    );
+
+    overflow:hidden;
+
+}
+
+
+.gauge-fill{
+
+    height:100%;
+
+    width:%VALUE%%;
+
+    border-radius:20px;
+
+}
+
+
+.safe .gauge-fill{
+
+    background:
+    linear-gradient(
+        90deg,
+        #26d97f,
+        #65f2aa
+    );
+
+}
+
+
+.warning .gauge-fill{
+
+    background:
+    linear-gradient(
+        90deg,
+        #ffc107,
+        #ffdd55
+    );
+
+}
+
+
+.danger .gauge-fill{
+
+    background:
+    linear-gradient(
+        90deg,
+        #ff416c,
+        #ff4b2b
+    );
+
+}
+
+
+.status{
+
+    display:inline-block;
+
+    margin-top:20px;
+
+    padding:9px 22px;
+
+    border-radius:30px;
+
+    font-size:15px;
+
+    font-weight:700;
+
+}
+
+
+.safe-status{
+
+    color:#35e58b;
+
+    background:
+    rgba(
+        53,
+        229,
+        139,
+        0.12
+    );
+
+}
+
+
+.warning-status{
+
+    color:#ffd43b;
+
+    background:
+    rgba(
+        255,
+        212,
+        59,
+        0.12
+    );
+
+}
+
+
+.danger-status{
+
+    color:#ff5574;
+
+    background:
+    rgba(
+        255,
+        85,
+        116,
+        0.12
+    );
+
+}
+
+
+.metric{
+
+    min-height:160px;
+
+}
+
+
+.metric-value{
+
+    margin-top:18px;
+
+    font-size:38px;
+
+    font-weight:700;
+
+}
+
+
+.metric-unit{
+
+    color:#8195a7;
+
+    font-size:14px;
+
+}
+
+
+.footer{
+
+    text-align:center;
+
+    margin-top:30px;
+
+    color:#65798b;
+
+    font-size:12px;
+
+}
+
+
+.footer-line{
+
+    width:60px;
+
+    height:3px;
+
+    margin:
+    0 auto 12px;
+
+    border-radius:5px;
+
+    background:#ff4f81;
+
+}
+
+
+@media(
+    max-width:650px
+){
+
+    .grid{
+
+        grid-template-columns:
+        1fr;
+
+    }
+
+    .gas-card{
+
+        grid-column:
+        span 1;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <div class="logo">
+
+        ESP32
+
+        <span>
+            GAS MONITOR
+        </span>
+
+    </div>
+
+
+    <div class="wifi">
+
+        <div
+        class="wifi-dot">
+        </div>
+
+        Wi-Fi Connected
+
+    </div>
+
+</div>
+
+
+<div class="container">
+
+
+<div class="title">
+
+    <h1>
+        Gas Sensor Dashboard
+    </h1>
+
+    <p>
+        Real-time MQ-2 gas
+        and smoke monitoring
+    </p>
+
+</div>
+
+
+<div class="grid">
+
+
+<div
+class="card gas-card %STATUSCLASS%">
+
+    <div class="card-title">
+
+        Current Gas Level
+
+    </div>
+
+
+    <div class="gas-value">
+
+        %VALUE%
+
+        <span class="percent">
+            %
+        </span>
+
+    </div>
+
+
+    <div class="gauge">
+
+        <div
+        class="gauge-fill">
+        </div>
+
+    </div>
+
+
+    <div
+    class="%STATUSSTYLE%">
+
+        %STATUS%
+
+    </div>
+
+</div>
+
+
+<div class="card metric">
+
+    <div class="card-title">
+
+        Raw Sensor Value
+
+    </div>
+
+
+    <div class="metric-value">
+
+        %ADC%
+
+    </div>
+
+
+    <div class="metric-unit">
+
+        ADC Range: 0 - 4095
+
+    </div>
+
+</div>
+
+
+<div class="card metric">
+
+    <div class="card-title">
+
+        Sensor
+
+    </div>
+
+
+    <div class="metric-value">
+
+        MQ-2
+
+    </div>
+
+
+    <div class="metric-unit">
+
+        Gas / Smoke Detection
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+<div class="footer">
+
+    <div
+    class="footer-line">
+    </div>
+
+    ESP32 Wi-Fi Gas Data Logger
+
+    <br>
+
+    Live monitoring ·
+    Auto refresh: 2 seconds
+
+</div>
+
+
+</div>
+
+
+</body>
+
+</html>
+
+)rawliteral";
+
+
+    String statusStyle;
+
+
+    if(
+        gasPercent < 30
+    )
+    {
+
+        statusStyle =
+        "status safe-status";
+
+    }
+
+    else if(
+        gasPercent < 70
+    )
+    {
+
+        statusStyle =
+        "status warning-status";
+
+    }
+
+    else
+    {
+
+        statusStyle =
+        "status danger-status";
+
+    }
+
+
+    html.replace(
+        "%VALUE%",
+        String(
+            gasPercent
+        )
+    );
+
+
+    html.replace(
+        "%ADC%",
+        String(
+            gasValue
+        )
+    );
+
+
+    html.replace(
+        "%STATUS%",
+        gasStatus
+    );
+
+
+    html.replace(
+        "%STATUSCLASS%",
+        statusClass
+    );
+
+
+    html.replace(
+        "%STATUSSTYLE%",
+        statusStyle
+    );
+
+
+    server.send(
+        200,
+        "text/html",
+        html
+    );
+
+}
+
+
+// =====================================================
+// SETUP
+// =====================================================
+
+void setup()
+{
+
+    Serial.begin(
+        115200
+    );
+
+
+    analogReadResolution(
+        12
+    );
+
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+
+    if(
+        !display.begin(
+            SSD1306_SWITCHCAPVCC,
+            OLED_ADDR
+        )
+    )
+    {
+
+        Serial.println(
+            "OLED not found!"
+        );
+
+        while(true);
+
+    }
+
+
+    display.clearDisplay();
+
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+
+    display.setTextSize(1);
+
+
+    display.setCursor(
+        15,
+        20
+    );
+
+
+    display.println(
+        "Connecting WiFi..."
+    );
+
+
+    display.display();
+
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    Serial.print(
+        "Connecting to WiFi"
+    );
+
+
+    while(
+        WiFi.status()
+        !=
+        WL_CONNECTED
+    )
+    {
+
+        delay(500);
+
+        Serial.print(".");
+
+    }
+
+
+    Serial.println();
+
+
+    Serial.println(
+        "WiFi connected!"
+    );
+
+
+    Serial.print(
+        "IP Address: "
+    );
+
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    server.on(
+        "/",
+        handleRoot
+    );
+
+
+    server.begin();
+
+
+    Serial.println(
+        "Web server started"
+    );
+
+
+    readGasSensor();
+
+    updateOLED();
+
+}
+
+
+// =====================================================
+// LOOP
+// =====================================================
+
+void loop()
+{
+
+    server.handleClient();
+
+
+    static
+    unsigned long
+    lastRead = 0;
+
+
+    if(
+        millis() -
+        lastRead
+        >=
+        1000
+    )
+    {
+
+        lastRead =
+        millis();
+
+
+        readGasSensor();
+
+        updateOLED();
+
+
+        Serial.print(
+            "MQ-2 ADC: "
+        );
+
+
+        Serial.print(
+            gasValue
+        );
+
+
+        Serial.print(
+            " | Gas Level: "
+        );
+
+
+        Serial.print(
+            gasPercent
+        );
+
+
+        Serial.print(
+            "% | Status: "
+        );
+
+
+        Serial.println(
+            gasStatus
+        );
+
+    }
+
+}
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+
+document
+
+.getElementById(
+    "esp32-program"
+)
+
+.textContent
+
+.trim();
+
+
+const lines =
+
+program.split(
+    "\n"
+);
+
+
+/* =========================
+   CODE STEPS
+========================= */
+
+const steps = [
+
+
+{
+
+    title:
+    "Load libraries",
+
+    search:
+    "#include <WiFi.h>",
+
+    text:
+    "The program loads the Wi-Fi, web server, I²C, graphics and SSD1306 OLED libraries required by the Experiment."
+
+},
+
+
+{
+
+    title:
+    "Set Wi-Fi details",
+
+    search:
+    "const char* ssid",
+
+    text:
+    "The SSID and password tell the ESP32 which Wi-Fi network it should connect to."
+
+},
+
+
+{
+
+    title:
+    "Set sensor pins",
+
+    search:
+    "#define MQ2_PIN",
+
+    text:
+    "The MQ-2 analog output is connected to GPIO 34. The OLED uses GPIO 21 for SDA and GPIO 22 for SCL."
+
+},
+
+
+{
+
+    title:
+    "Prepare OLED",
+
+    search:
+    "#define SCREEN_WIDTH",
+
+    text:
+    "The OLED resolution is set to 128 × 64 pixels and its I²C address is 0x3C."
+
+},
+
+
+{
+
+    title:
+    "Read MQ-2 sensor",
+
+    search:
+    "void readGasSensor",
+
+    text:
+    "The ESP32 reads the MQ-2 sensor using its analog input and converts the raw ADC value into a percentage."
+
+},
+
+
+{
+
+    title:
+    "Set gas status",
+
+    search:
+    "if(",
+
+    text:
+    "Gas values below 30% are SAFE, values below 70% are WARNING and values of 70% or more are HIGH GAS."
+
+},
+
+
+{
+
+    title:
+    "Update OLED",
+
+    search:
+    "void updateOLED",
+
+    text:
+    "This function displays gas percentage, ADC reading, gas status and Wi-Fi connection status on the OLED."
+
+},
+
+
+{
+
+    title:
+    "Create dashboard",
+
+    search:
+    "void handleRoot",
+
+    text:
+    "This function builds the web dashboard showing the live gas percentage, raw ADC value and gas status."
+
+},
+
+
+{
+
+    title:
+    "Start Wi-Fi",
+
+    search:
+    "void setup()",
+
+    text:
+    "The setup function initializes the ADC, OLED, Wi-Fi connection and ESP32 web server."
+
+},
+
+
+{
+
+    title:
+    "Keep monitoring",
+
+    search:
+    "void loop()",
+
+    text:
+    "The loop handles web requests and updates the gas sensor reading and OLED once every second."
+
+}
+
+];
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text)
+{
+
+    return text
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+
+/* =========================
+   DISPLAY CODE
+========================= */
+
+function displayCode()
+{
+
+    let output = "";
+
+
+    lines.forEach(
+
+        function(
+            line,
+            index
+        )
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+
+            (index + 1) +
+
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+
+        }
+
+    );
+
+
+    document
+
+    .getElementById(
+        "code-lines"
+    )
+
+    .innerHTML =
+    output;
+
+}
+
+
+/* =========================
+   SHOW STEP
+========================= */
+
+function showStep(index)
+{
+
+    const step =
+    steps[index];
+
+
+    const buttons =
+
+    document
+
+    .querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+
+        function(button)
+        {
+
+            button
+
+            .classList
+
+            .remove(
+                "active"
+            );
+
+        }
+
+    );
+
+
+    buttons[index]
+
+    .classList
+
+    .add(
+        "active"
+    );
+
+
+    const codeLines =
+
+    document
+
+    .querySelectorAll(
+        ".code-line"
+    );
+
+
+    codeLines.forEach(
+
+        function(line)
+        {
+
+            line
+
+            .classList
+
+            .remove(
+                "selected"
+            );
+
+        }
+
+    );
+
+
+    let foundLine =
+    -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+
+        if(
+            lines[i]
+            .includes(
+                step.search
+            )
+        )
+        {
+
+            foundLine =
+            i;
+
+            break;
+
+        }
+
+    }
+
+
+    if(
+        foundLine >= 0
+    )
+    {
+
+        for(
+            let i =
+            foundLine;
+
+            i <
+            Math.min(
+                foundLine + 12,
+                lines.length
+            );
+
+            i++
+        )
+        {
+
+            document
+
+            .getElementById(
+
+                "line-" +
+                (i + 1)
+
+            )
+
+            .classList
+
+            .add(
+                "selected"
+            );
+
+        }
+
+
+        const
+        selectedLine =
+
+        document
+
+        .getElementById(
+
+            "line-" +
+            (foundLine + 1)
+
+        );
+
+
+        document
+
+        .getElementById(
+            "code-body"
+        )
+
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop
+            - 20,
+
+            behavior:
+            "smooth"
+
+        });
+
+    }
+
+
+    document
+
+    .getElementById(
+        "explanation"
+    )
+
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+
+    ". " +
+
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+
+}
+
+
+/* =========================
+   COPY CODE
+========================= */
+
+function copyCode()
+{
+
+    navigator
+
+    .clipboard
+
+    .writeText(
+        program
+    )
+
+    .then(
+
+        function()
+        {
+
+            const button =
+
+            document
+
+            .querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+
+                function()
+                {
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+
+                1500
+
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+
+</html>
