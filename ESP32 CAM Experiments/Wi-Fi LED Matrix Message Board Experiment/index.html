@@ -1,0 +1,2861 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wi-Fi LED Matrix Message Board</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:130px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+
+    max-width:720px;
+
+    margin:20px auto;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+}
+
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   MESSAGE EXAMPLE
+========================= */
+
+.matrix-demo{
+    background:#02070c;
+
+    color:#22c55e;
+
+    font-family:Consolas, monospace;
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    letter-spacing:7px;
+
+    text-align:center;
+
+    padding:30px;
+
+    border-radius:12px;
+
+    box-shadow:
+    inset 0 0 20px rgba(34,197,94,.15);
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+    margin:0 0 22px;
+}
+
+
+/* CODE LAYOUT */
+
+.code-layout{
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* CODE PANEL */
+
+.code-panel{
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.filename{
+    font:
+    bold 14px Consolas, monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+.code-body{
+    height:600px;
+
+    overflow:auto;
+
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:20px;
+
+    white-space:pre;
+
+    font:
+    13px/24px Consolas, monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+.line-number{
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+
+    user-select:none;
+}
+
+
+/* GUIDE */
+
+.guide{
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+}
+
+.steps{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.step{
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+.step:hover{
+    background:#f8fbff;
+    border-color:#60a5fa;
+}
+
+.step.active{
+    background:#eff6ff;
+    border-color:#60a5fa;
+}
+
+.step-number{
+    color:#2563eb;
+    font-size:12px;
+}
+
+.explanation{
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+.explanation h3{
+    color:#1e3a8a;
+
+    margin:0 0 7px;
+
+    font-size:17px;
+}
+
+.explanation p{
+    color:#526875;
+    margin:0;
+}
+
+.guide details{
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+.tip{
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+}
+
+footer strong{
+    color:white;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .section{
+        padding:20px;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+
+    .matrix-demo{
+        font-size:24px;
+        letter-spacing:4px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+<h1>
+ESP32 Experiment
+</h1>
+
+<p>
+Wi-Fi LED Matrix Message Board
+</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+<a href="../index.html">
+← ESP32 Experiments
+</a>
+
+<a href="#aim">
+Aim
+</a>
+
+<a href="#components">
+Components
+</a>
+
+<a href="#connections">
+Connections
+</a>
+
+<a href="#circuit">
+Circuit
+</a>
+
+<a href="#working">
+Working
+</a>
+
+<a href="#procedure">
+Procedure
+</a>
+
+<a href="#code">
+Code
+</a>
+
+<a href="#result">
+Result
+</a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section
+class="section"
+id="aim">
+
+<h2>
+Aim
+</h2>
+
+<p>
+
+To create a Wi-Fi controlled
+LED message board using ESP32
+and a MAX7219 4-in-1 LED matrix
+that displays text entered
+through a web browser.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+<h2>
+About the Experiment
+</h2>
+
+<p>
+
+In this Experiment,
+an ESP32 creates a web-based
+message control page.
+
+</p>
+
+<p>
+
+The user enters a message
+from a phone or computer.
+The message is sent to
+the ESP32 through Wi-Fi.
+
+</p>
+
+<p>
+
+The ESP32 then displays
+and scrolls the message
+across the MAX7219
+32 × 8 LED matrix.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section
+class="section"
+id="components">
+
+<h2>
+Components Required
+</h2>
+
+
+<div class="components-grid">
+
+
+<div class="component-card">
+
+<img
+src="ESP32 Development Board.png"
+alt="ESP32 Development Board">
+
+<h4>
+ESP32 DevKitC (×1)
+</h4>
+
+<p>
+Main controller with
+built-in Wi-Fi.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="MAX7219 4-in-1 LED Matrix.png"
+alt="MAX7219 4-in-1 LED Matrix">
+
+<h4>
+MAX7219 4-in-1 8×8 LED Dot Matrix (×1)
+</h4>
+
+<p>
+Displays scrolling text
+using 32 × 8 LEDs.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Breadboard.png"
+alt="Breadboard">
+
+<h4>
+Breadboard (×1)
+</h4>
+
+<p>
+Provides a convenient
+base for circuit connections.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Jumper Wires.png"
+alt="Jumper Wires">
+
+<h4>
+Jumper Wires
+</h4>
+
+<p>
+Used to connect the ESP32
+to the MAX7219 display.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section
+class="section"
+id="connections">
+
+<h2>
+Circuit Connections
+</h2>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+ESP32 DevKitC
+</th>
+
+<th>
+MAX7219 4-in-1
+</th>
+
+<th>
+Purpose
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+<td>GPIO 23</td>
+<td>DIN</td>
+<td>Data</td>
+</tr>
+
+<tr>
+<td>GPIO 18</td>
+<td>CLK</td>
+<td>Clock</td>
+</tr>
+
+<tr>
+<td>GPIO 5</td>
+<td>CS / LOAD</td>
+<td>Chip Select</td>
+</tr>
+
+<tr>
+<td>5V / VIN</td>
+<td>VCC</td>
+<td>Power</td>
+</tr>
+
+<tr>
+<td>GND</td>
+<td>GND</td>
+<td>Ground</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="note">
+
+<strong>DIN:</strong>
+GPIO 23
+
+<br>
+
+<strong>CLK:</strong>
+GPIO 18
+
+<br>
+
+<strong>CS / LOAD:</strong>
+GPIO 5
+
+<br>
+
+<strong>Power:</strong>
+5V / VIN
+
+<br>
+
+<strong>MAX7219 Modules:</strong>
+4
+
+<br>
+
+<strong>Display Size:</strong>
+32 × 8 LEDs
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+<h2>
+Circuit Diagram
+</h2>
+
+<p>
+
+Connect the ESP32
+and MAX7219 LED matrix
+as shown in the circuit
+diagram from the PDF.
+
+</p>
+
+
+<img
+src="Wi-Fi LED Matrix Message Board Circuit.png"
+alt="Wi-Fi LED Matrix Message Board Circuit"
+class="circuit-img">
+
+</section>
+
+
+<!-- =========================
+     DISPLAY EXAMPLE
+========================= -->
+
+<section class="section">
+
+<h2>
+LED Matrix Display
+</h2>
+
+<div class="matrix-demo">
+
+HELLO
+
+</div>
+
+<p style="text-align:center">
+
+The message scrolls across
+the 32 × 8 LED matrix.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section
+class="section"
+id="working">
+
+<h2>
+Working Principle
+</h2>
+
+
+<div class="flow">
+
+ESP32 Starts
+
+<br>↓<br>
+
+MAX7219 LED Matrix Initializes
+
+<br>↓<br>
+
+ESP32 Connects to Wi-Fi
+
+<br>↓<br>
+
+Web Server Starts
+
+<br>↓<br>
+
+User Opens ESP32 IP Address
+
+<br>↓<br>
+
+LED Message Board Dashboard Opens
+
+<br>↓<br>
+
+User Enters a Message
+
+<br>↓<br>
+
+Message is Sent to ESP32
+
+<br>↓<br>
+
+ESP32 Converts Message to Uppercase
+
+<br>↓<br>
+
+MAX7219 Displays the Message
+
+<br>↓<br>
+
+Text Scrolls Across the LED Matrix
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section
+class="section"
+id="procedure">
+
+<h2>
+Procedure
+</h2>
+
+
+<ol>
+
+<li>
+Place the ESP32 on the breadboard.
+</li>
+
+<li>
+Connect MAX7219 DIN to GPIO 23.
+</li>
+
+<li>
+Connect MAX7219 CLK to GPIO 18.
+</li>
+
+<li>
+Connect MAX7219 CS / LOAD to GPIO 5.
+</li>
+
+<li>
+Connect MAX7219 VCC to ESP32 5V / VIN.
+</li>
+
+<li>
+Connect MAX7219 GND to ESP32 GND.
+</li>
+
+<li>
+Open Arduino IDE.
+</li>
+
+<li>
+Install the MD_Parola library.
+</li>
+
+<li>
+Install the MD_MAX72xx library.
+</li>
+
+<li>
+Upload the program to ESP32.
+</li>
+
+<li>
+Open Serial Monitor at 115200 baud.
+</li>
+
+<li>
+Wait for ESP32 to connect to Wi-Fi.
+</li>
+
+<li>
+Note the IP address displayed
+in Serial Monitor.
+</li>
+
+<li>
+Open the IP address
+in a web browser.
+</li>
+
+<li>
+Enter a message
+in the message box.
+</li>
+
+<li>
+Press the
+<strong>SEND MESSAGE</strong>
+button.
+</li>
+
+<li>
+Observe the message
+scrolling on the
+LED matrix.
+</li>
+
+<li>
+Try quick messages such as
+HELLO, WELCOME, ESP32,
+GOOD DAY and SMART IOT.
+</li>
+
+</ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section
+class="section"
+id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+ESP32 Experiment · Code Review
+</p>
+
+
+<h2 class="lesson-title">
+Explore the Code
+</h2>
+
+
+<p class="intro">
+
+Wi-Fi LED Matrix Message Board ·
+Select a step to understand
+what each part of the program does.
+
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+<span class="filename">
+WiFi_LED_Matrix_Message_Board.ino
+</span>
+
+
+<button
+class="copy-button"
+onclick="copyCode()">
+
+Copy Code
+
+</button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- GUIDE -->
+
+<article class="guide">
+
+
+<h2>
+Understand it step by step
+</h2>
+
+
+<p>
+
+Choose a step.
+The matching section
+will light up on the left.
+
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">
+01
+</span>
+
+Load libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">
+02
+</span>
+
+Set Wi-Fi
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">
+03
+</span>
+
+Set matrix pins
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">
+04
+</span>
+
+Create matrix
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">
+05
+</span>
+
+Set message
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">
+06
+</span>
+
+Create web page
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">
+07
+</span>
+
+Receive message
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">
+08
+</span>
+
+Display message
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">
+09
+</span>
+
+Start system
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(9)">
+
+<span class="step-number">
+10
+</span>
+
+Animate display
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+1. Load libraries
+</h3>
+
+<p>
+
+The program loads Wi-Fi,
+web server, LED matrix
+and SPI libraries required
+for the Experiment.
+
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+Explore more: MAX7219 display
+</summary>
+
+<p>
+
+The 4-in-1 MAX7219 module
+contains four 8 × 8 LED matrices.
+
+</p>
+
+<p>
+
+Together they create
+a display that is
+32 LEDs wide and
+8 LEDs high.
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Check your understanding
+</summary>
+
+
+<ul>
+
+<li>
+
+Which GPIO sends data
+to the MAX7219?
+
+<strong>
+GPIO 23
+</strong>
+
+</li>
+
+
+<li>
+
+Which GPIO provides
+the clock signal?
+
+<strong>
+GPIO 18
+</strong>
+
+</li>
+
+
+<li>
+
+Which GPIO is used
+for CS / LOAD?
+
+<strong>
+GPIO 5
+</strong>
+
+</li>
+
+
+<li>
+
+How many MAX7219 modules
+are used?
+
+<strong>
+4
+</strong>
+
+</li>
+
+
+<li>
+
+What is the total
+matrix size?
+
+<strong>
+32 × 8 LEDs
+</strong>
+
+</li>
+
+</ul>
+
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>
+Try it:
+</strong>
+
+Enter your own message
+in the web dashboard
+and watch it scroll
+across the LED matrix.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>
+Result
+</h2>
+
+<p>
+
+The Wi-Fi LED Matrix Message Board
+Experiment successfully displays
+messages entered through
+a web browser.
+
+</p>
+
+<p>
+
+The ESP32 receives the text
+through Wi-Fi and scrolls
+the message across the
+MAX7219 32 × 8 LED display.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>
+What You Learn
+</h2>
+
+<ul>
+
+<li>
+Connecting a MAX7219 LED matrix to ESP32.
+</li>
+
+<li>
+Using GPIO 23 for matrix data.
+</li>
+
+<li>
+Using GPIO 18 for clock.
+</li>
+
+<li>
+Using GPIO 5 for chip select.
+</li>
+
+<li>
+Using MD_Parola library.
+</li>
+
+<li>
+Displaying scrolling text.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Creating an ESP32 web server.
+</li>
+
+<li>
+Sending text from a web browser.
+</li>
+
+<li>
+Creating an IoT message display.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wi-Fi LED Matrix Message Board
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script
+type="text/plain"
+id="esp32-program">
+
+#include <WiFi.h>
+#include <WebServer.h>
+#include <MD_Parola.h>
+#include <MD_MAX72xx.h>
+#include <SPI.h>
+
+
+// =====================================================
+// WIFI
+// =====================================================
+
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+WebServer server(80);
+
+
+// =====================================================
+// MAX7219 4-IN-1 MATRIX
+// =====================================================
+
+#define HARDWARE_TYPE MD_MAX72XX::PAROLA_HW
+
+#define MAX_DEVICES 4
+
+#define DATA_PIN 23
+#define CLK_PIN 18
+#define CS_PIN 5
+
+
+MD_Parola matrix(
+    HARDWARE_TYPE,
+    DATA_PIN,
+    CLK_PIN,
+    CS_PIN,
+    MAX_DEVICES
+);
+
+
+// =====================================================
+// CURRENT MESSAGE
+// =====================================================
+
+String currentMessage =
+"HELLO";
+
+
+// =====================================================
+// WEB PAGE
+// =====================================================
+
+String webpage()
+{
+
+    String page =
+    R"rawliteral(
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32 LED Message Board
+</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #03101f,
+        #08243c,
+        #03111e
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    padding:30px 15px;
+
+}
+
+
+.container{
+
+    width:100%;
+
+    max-width:900px;
+
+}
+
+
+.header{
+
+    display:flex;
+
+    justify-content:
+    space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+
+.card{
+
+    padding:25px;
+
+    border-radius:25px;
+
+    background:#08243c;
+
+}
+
+
+.matrix-box{
+
+    width:100%;
+
+    min-height:130px;
+
+    padding:20px;
+
+    border-radius:18px;
+
+    background:#02070c;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+.matrix-text{
+
+    font-family:
+    "Courier New",
+    monospace;
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    letter-spacing:7px;
+
+    color:#00ed9b;
+
+}
+
+
+input{
+
+    width:100%;
+
+    height:55px;
+
+    padding:0 18px;
+
+    margin-top:20px;
+
+    border-radius:10px;
+
+    border:1px solid #2563eb;
+
+    font-size:16px;
+
+}
+
+
+.send-btn{
+
+    width:100%;
+
+    height:55px;
+
+    margin-top:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+
+.quick-btn{
+
+    margin-top:10px;
+
+    padding:9px 14px;
+
+    border-radius:20px;
+
+    border:none;
+
+    cursor:pointer;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<div class="header">
+
+<h1>
+LED MESSAGE BOARD
+</h1>
+
+<strong>
+ESP32 ONLINE
+</strong>
+
+</div>
+
+
+<div class="card">
+
+
+<h3>
+LIVE LED DISPLAY
+</h3>
+
+
+<div class="matrix-box">
+
+<div
+class="matrix-text"
+id="preview">
+
+)rawliteral";
+
+
+page +=
+currentMessage;
+
+
+page +=
+R"rawliteral(
+
+</div>
+
+</div>
+
+
+<form
+action="/send"
+method="GET">
+
+
+<input
+id="message"
+name="msg"
+type="text"
+maxlength="40"
+value=")rawliteral";
+
+
+page +=
+currentMessage;
+
+
+page +=
+R"rawliteral("
+placeholder="Type your message..."
+required>
+
+
+<button
+class="send-btn"
+type="submit">
+
+SEND MESSAGE
+
+</button>
+
+
+</form>
+
+
+<div>
+
+<button
+class="quick-btn"
+type="button"
+onclick="setMessage('HELLO')">
+
+HELLO
+
+</button>
+
+
+<button
+class="quick-btn"
+type="button"
+onclick="setMessage('WELCOME')">
+
+WELCOME
+
+</button>
+
+
+<button
+class="quick-btn"
+type="button"
+onclick="setMessage('ESP32')">
+
+ESP32
+
+</button>
+
+
+<button
+class="quick-btn"
+type="button"
+onclick="setMessage('GOOD DAY')">
+
+GOOD DAY
+
+</button>
+
+
+<button
+class="quick-btn"
+type="button"
+onclick="setMessage('SMART IOT')">
+
+SMART IOT
+
+</button>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<script>
+
+const input =
+document.getElementById(
+    "message"
+);
+
+const preview =
+document.getElementById(
+    "preview"
+);
+
+
+input.addEventListener(
+    "input",
+    function()
+    {
+
+        let text =
+        this.value;
+
+
+        if(
+            text.length > 0
+        )
+        {
+
+            preview.innerText =
+            text.toUpperCase();
+
+        }
+
+        else
+        {
+
+            preview.innerText =
+            "HELLO";
+
+        }
+
+    }
+);
+
+
+function setMessage(text)
+{
+
+    input.value =
+    text;
+
+    preview.innerText =
+    text.toUpperCase();
+
+    input.focus();
+
+}
+
+</script>
+
+
+</body>
+
+</html>
+
+)rawliteral";
+
+
+return page;
+
+}
+
+
+// =====================================================
+// ROOT
+// =====================================================
+
+void handleRoot()
+{
+
+    server.send(
+        200,
+        "text/html; charset=UTF-8",
+        webpage()
+    );
+
+}
+
+
+// =====================================================
+// SEND MESSAGE
+// =====================================================
+
+void handleSend()
+{
+
+    if(
+        server.hasArg(
+            "msg"
+        )
+    )
+    {
+
+        currentMessage =
+        server.arg(
+            "msg"
+        );
+
+
+        currentMessage.trim();
+
+        currentMessage.toUpperCase();
+
+
+        if(
+            currentMessage.length()
+            ==
+            0
+        )
+        {
+
+            currentMessage =
+            "HELLO";
+
+        }
+
+
+        Serial.println();
+
+        Serial.println(
+            "================================"
+        );
+
+
+        Serial.print(
+            "NEW MESSAGE: "
+        );
+
+
+        Serial.println(
+            currentMessage
+        );
+
+
+        Serial.println(
+            "================================"
+        );
+
+
+        matrix.displayClear();
+
+
+        matrix.displayText(
+            currentMessage.c_str(),
+            PA_CENTER,
+            70,
+            0,
+            PA_SCROLL_LEFT,
+            PA_SCROLL_LEFT
+        );
+
+    }
+
+
+    server.send(
+        200,
+        "text/html; charset=UTF-8",
+        webpage()
+    );
+
+}
+
+
+// =====================================================
+// SETUP
+// =====================================================
+
+void setup()
+{
+
+    Serial.begin(
+        115200
+    );
+
+
+    // MATRIX
+
+    matrix.begin();
+
+    matrix.setIntensity(
+        5
+    );
+
+    matrix.displayClear();
+
+
+    matrix.displayText(
+        currentMessage.c_str(),
+        PA_CENTER,
+        70,
+        0,
+        PA_SCROLL_LEFT,
+        PA_SCROLL_LEFT
+    );
+
+
+    // WIFI
+
+    WiFi.mode(
+        WIFI_STA
+    );
+
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    Serial.println();
+
+
+    Serial.println(
+        "================================"
+    );
+
+
+    Serial.println(
+        " ESP32 LED MESSAGE BOARD"
+    );
+
+
+    Serial.println(
+        "================================"
+    );
+
+
+    Serial.print(
+        "Connecting to Wi-Fi"
+    );
+
+
+    while(
+        WiFi.status()
+        !=
+        WL_CONNECTED
+    )
+    {
+
+        delay(
+            500
+        );
+
+        Serial.print(
+            "."
+        );
+
+    }
+
+
+    Serial.println();
+
+    Serial.println(
+        "Wi-Fi Connected!"
+    );
+
+
+    Serial.print(
+        "IP Address: "
+    );
+
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    // WEB SERVER
+
+    server.on(
+        "/",
+        handleRoot
+    );
+
+
+    server.on(
+        "/send",
+        handleSend
+    );
+
+
+    server.begin();
+
+
+    Serial.println(
+        "Web Server Started!"
+    );
+
+}
+
+
+// =====================================================
+// LOOP
+// =====================================================
+
+void loop()
+{
+
+    server.handleClient();
+
+
+    if(
+        matrix.displayAnimate()
+    )
+    {
+
+        matrix.displayReset();
+
+    }
+
+}
+
+</script>
+
+
+<!-- =========================================
+     CODE EXPLORER SCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+
+document
+.getElementById(
+    "esp32-program"
+)
+.textContent
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+const steps = [
+
+
+{
+
+title:
+"Load libraries",
+
+search:
+"#include <WiFi.h>",
+
+text:
+"The program loads Wi-Fi, WebServer, MD_Parola, MD_MAX72xx and SPI libraries."
+
+},
+
+
+{
+
+title:
+"Set Wi-Fi",
+
+search:
+"const char* ssid",
+
+text:
+"The ESP32 uses the SSID and password to connect to the wireless network."
+
+},
+
+
+{
+
+title:
+"Set matrix pins",
+
+search:
+"#define DATA_PIN",
+
+text:
+"GPIO 23 sends data, GPIO 18 provides the clock and GPIO 5 is used for CS / LOAD."
+
+},
+
+
+{
+
+title:
+"Create matrix",
+
+search:
+"MD_Parola matrix",
+
+text:
+"The MD_Parola object controls four chained MAX7219 LED matrix modules."
+
+},
+
+
+{
+
+title:
+"Set message",
+
+search:
+"String currentMessage",
+
+text:
+"The current message starts as HELLO and changes whenever the user sends new text."
+
+},
+
+
+{
+
+title:
+"Create web page",
+
+search:
+"String webpage()",
+
+text:
+"This function builds the Wi-Fi dashboard where the user can type and send a message."
+
+},
+
+
+{
+
+title:
+"Receive message",
+
+search:
+"void handleSend",
+
+text:
+"The ESP32 reads the message sent from the browser, removes extra spaces and changes it to uppercase."
+
+},
+
+
+{
+
+title:
+"Display message",
+
+search:
+"matrix.displayText",
+
+text:
+"The message is displayed using a left-scrolling animation on the LED matrix."
+
+},
+
+
+{
+
+title:
+"Start system",
+
+search:
+"void setup()",
+
+text:
+"The setup function initializes the matrix, connects to Wi-Fi and starts the web server."
+
+},
+
+
+{
+
+title:
+"Animate display",
+
+search:
+"void loop()",
+
+text:
+"The loop handles browser requests and continuously runs the LED matrix scrolling animation."
+
+}
+
+];
+
+
+function escapeHtml(text)
+{
+
+return text
+
+.replace(
+    /&/g,
+    "&amp;"
+)
+
+.replace(
+    /</g,
+    "&lt;"
+)
+
+.replace(
+    />/g,
+    "&gt;"
+);
+
+}
+
+
+function displayCode()
+{
+
+let output = "";
+
+
+lines.forEach(
+
+function(
+    line,
+    index
+)
+{
+
+output +=
+
+'<span class="code-line" ' +
+
+'id="line-' +
+
+(index + 1) +
+
+'">' +
+
+'<span class="line-number">' +
+
+(index + 1) +
+
+'</span>' +
+
+'<span>' +
+
+escapeHtml(line) +
+
+'</span>' +
+
+'</span>';
+
+}
+
+);
+
+
+document
+.getElementById(
+    "code-lines"
+)
+.innerHTML =
+output;
+
+}
+
+
+function showStep(index)
+{
+
+const step =
+steps[index];
+
+
+const buttons =
+document
+.querySelectorAll(
+    ".step"
+);
+
+
+buttons.forEach(
+
+function(button)
+{
+
+button
+.classList
+.remove(
+    "active"
+);
+
+}
+
+);
+
+
+buttons[index]
+.classList
+.add(
+    "active"
+);
+
+
+document
+.querySelectorAll(
+    ".code-line"
+)
+.forEach(
+
+function(line)
+{
+
+line
+.classList
+.remove(
+    "selected"
+);
+
+}
+
+);
+
+
+let foundLine = -1;
+
+
+for(
+    let i=0;
+    i<lines.length;
+    i++
+)
+{
+
+if(
+    lines[i]
+    .includes(
+        step.search
+    )
+)
+{
+
+foundLine = i;
+
+break;
+
+}
+
+}
+
+
+if(
+    foundLine >= 0
+)
+{
+
+for(
+    let i=foundLine;
+    i<
+    Math.min(
+        foundLine + 12,
+        lines.length
+    );
+    i++
+)
+{
+
+document
+.getElementById(
+    "line-" +
+    (i + 1)
+)
+.classList
+.add(
+    "selected"
+);
+
+}
+
+
+const selectedLine =
+document
+.getElementById(
+    "line-" +
+    (foundLine + 1)
+);
+
+
+document
+.getElementById(
+    "code-body"
+)
+.scrollTo({
+
+top:
+selectedLine.offsetTop - 20,
+
+behavior:
+"smooth"
+
+});
+
+}
+
+
+document
+.getElementById(
+    "explanation"
+)
+.innerHTML =
+
+"<h3>" +
+
+(index + 1) +
+
+". " +
+
+step.title +
+
+"</h3>" +
+
+"<p>" +
+
+step.text +
+
+"</p>";
+
+}
+
+
+function copyCode()
+{
+
+navigator
+.clipboard
+.writeText(
+    program
+)
+.then(
+
+function()
+{
+
+const button =
+document
+.querySelector(
+    ".copy-button"
+);
+
+
+button.innerText =
+"Copied!";
+
+
+setTimeout(
+
+function()
+{
+
+button.innerText =
+"Copy Code";
+
+},
+
+1500
+
+);
+
+}
+
+);
+
+}
+
+
+displayCode();
+
+showStep(0);
+
+</script>
+
+
+</body>
+
+</html>
