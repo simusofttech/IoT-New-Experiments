@@ -1,0 +1,2440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ESP32 Digital Parking Bay Indicator</title>
+
+<style>
+
+/* ===============================
+   GLOBAL
+================================ */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#1e293b;
+    line-height:1.6;
+}
+
+
+/* ===============================
+   HEADER
+================================ */
+
+header{
+    background:linear-gradient(135deg,#1d4ed8,#2563eb);
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+header h1{
+    margin:0;
+    font-size:34px;
+}
+
+header p{
+    margin:8px 0 0;
+    font-size:17px;
+}
+
+
+/* ===============================
+   NAVIGATION
+================================ */
+
+nav{
+    position:sticky;
+    top:0;
+    z-index:100;
+
+    background:white;
+    border-bottom:1px solid #dbe3ee;
+
+    padding:12px 5%;
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+}
+
+nav a{
+    color:#2563eb;
+    text-decoration:none;
+    font-weight:bold;
+    font-size:14px;
+}
+
+nav a:hover{
+    color:#1e3a8a;
+}
+
+
+/* ===============================
+   CONTAINER
+================================ */
+
+.container{
+    width:92%;
+    max-width:1150px;
+    margin:30px auto;
+}
+
+.section{
+    background:white;
+    padding:28px;
+    margin-bottom:25px;
+
+    border-radius:14px;
+
+    box-shadow:
+    0 4px 15px rgba(0,0,0,0.07);
+}
+
+.section h2{
+    color:#1e3a8a;
+    margin-top:0;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:10px;
+}
+
+
+/* ===============================
+   AIM
+================================ */
+
+.aim-box{
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    padding:18px;
+
+    border-radius:8px;
+
+    color:#334155;
+}
+
+
+/* ===============================
+   COMPONENTS
+================================ */
+
+.component-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:18px;
+}
+
+.component-card{
+
+    background:#f8fbff;
+
+    border:
+    1px solid #dbeafe;
+
+    border-radius:12px;
+
+    padding:16px;
+
+    text-align:center;
+
+    transition:.2s;
+}
+
+.component-card:hover{
+
+    transform:
+    translateY(-4px);
+
+    box-shadow:
+    0 7px 18px rgba(37,99,235,.12);
+}
+
+.component-card img{
+
+    width:100%;
+
+    height:145px;
+
+    object-fit:contain;
+
+    margin-bottom:10px;
+}
+
+.component-card h4{
+
+    margin:5px 0;
+
+    color:#1e3a8a;
+
+    font-size:15px;
+}
+
+.component-card p{
+
+    margin:4px 0;
+
+    color:#64748b;
+
+    font-size:13px;
+}
+
+
+/* ===============================
+   CIRCUIT
+================================ */
+
+.circuit-image{
+
+    display:block;
+
+    width:100%;
+
+    max-width:780px;
+
+    margin:20px auto;
+
+    border-radius:10px;
+
+    border:
+    1px solid #e2e8f0;
+}
+
+
+/* ===============================
+   TABLE
+================================ */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:15px;
+}
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:12px;
+}
+
+td{
+
+    padding:11px;
+
+    border:
+    1px solid #dbe3ee;
+
+    text-align:center;
+}
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* ===============================
+   WORKING
+================================ */
+
+.working-step{
+
+    display:flex;
+
+    gap:15px;
+
+    align-items:flex-start;
+
+    margin:20px 0;
+}
+
+.step-number{
+
+    min-width:40px;
+
+    height:40px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:bold;
+}
+
+.working-step h3{
+
+    margin:0 0 4px;
+
+    color:#1e3a8a;
+
+    font-size:17px;
+}
+
+.working-step p{
+
+    margin:0;
+
+    color:#64748b;
+}
+
+
+/* ===============================
+   STATUS
+================================ */
+
+.status-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:18px;
+
+    margin-top:20px;
+}
+
+.status-card{
+
+    padding:20px;
+
+    border-radius:12px;
+
+    text-align:center;
+}
+
+.available{
+
+    background:#ecfdf5;
+
+    border:
+    2px solid #22c55e;
+}
+
+.occupied{
+
+    background:#fef2f2;
+
+    border:
+    2px solid #ef4444;
+}
+
+.status-card h3{
+
+    margin-top:0;
+}
+
+.available h3{
+    color:#15803d;
+}
+
+.occupied h3{
+    color:#dc2626;
+}
+
+
+/* ===============================
+   PROCEDURE
+================================ */
+
+.procedure-list{
+
+    padding-left:22px;
+}
+
+.procedure-list li{
+
+    margin-bottom:10px;
+}
+
+
+/* ===============================
+   CODE EXPLORER
+================================ */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    1.45fr .75fr;
+
+    gap:20px;
+
+    margin-top:20px;
+}
+
+.code-panel{
+
+    background:#0f172a;
+
+    border-radius:12px;
+
+    overflow:hidden;
+}
+
+.code-top{
+
+    background:#2563eb;
+
+    color:white;
+
+    padding:13px 17px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    font-weight:bold;
+}
+
+.copy-btn{
+
+    border:none;
+
+    background:white;
+
+    color:#2563eb;
+
+    padding:7px 12px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.code-body{
+
+    height:520px;
+
+    overflow:auto;
+
+    padding:12px 0;
+
+    font-family:
+    Consolas,
+    "Courier New",
+    monospace;
+
+    font-size:13px;
+}
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    color:#e2e8f0;
+
+    padding:2px 14px;
+
+    white-space:pre;
+}
+
+.code-line.selected{
+
+    background:#172554;
+
+    box-shadow:
+    inset 4px 0 #3b82f6;
+}
+
+.line-number{
+
+    width:42px;
+
+    min-width:42px;
+
+    color:#64748b;
+
+    user-select:none;
+
+    text-align:right;
+
+    margin-right:18px;
+}
+
+.code-text{
+
+    white-space:pre;
+}
+
+
+/* ===============================
+   CODE GUIDE
+================================ */
+
+.code-guide{
+
+    background:#f8fbff;
+
+    border:
+    1px solid #dbeafe;
+
+    border-radius:12px;
+
+    padding:18px;
+}
+
+.code-guide h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+.steps{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+}
+
+.step-btn{
+
+    border:
+    1px solid #bfdbfe;
+
+    background:white;
+
+    color:#1e3a8a;
+
+    padding:11px;
+
+    border-radius:8px;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    font-weight:bold;
+}
+
+.step-btn:hover{
+
+    background:#eff6ff;
+}
+
+.step-btn.active{
+
+    background:#2563eb;
+
+    color:white;
+
+    border-color:#2563eb;
+}
+
+.explanation{
+
+    margin-top:15px;
+
+    background:#eff6ff;
+
+    border-left:
+    4px solid #2563eb;
+
+    padding:14px;
+
+    border-radius:6px;
+
+    color:#334155;
+}
+
+
+/* ===============================
+   RESULT
+================================ */
+
+.result{
+
+    background:#ecfdf5;
+
+    border-left:
+    5px solid #22c55e;
+
+    padding:18px;
+
+    border-radius:8px;
+}
+
+
+/* ===============================
+   FOOTER
+================================ */
+
+footer{
+
+    margin-top:40px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    text-align:center;
+
+    padding:22px;
+}
+
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media(max-width:900px){
+
+    .component-grid{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:550px){
+
+    header h1{
+        font-size:26px;
+    }
+
+    .component-grid{
+        grid-template-columns:1fr;
+    }
+
+    .status-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section{
+        padding:20px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ===============================
+     HEADER
+================================ -->
+
+<header>
+
+<h1>ESP32 Experiment</h1>
+
+<p>
+ESP32 Digital Parking Bay Indicator
+</p>
+
+</header>
+
+
+<!-- ===============================
+     NAVIGATION
+================================ -->
+
+<nav>
+
+<a href="../index.html">
+← ESP32 Experiments
+</a>
+
+<a href="#aim">Aim</a>
+
+<a href="#components">
+Components
+</a>
+
+<a href="#circuit">
+Circuit
+</a>
+
+<a href="#connections">
+Connections
+</a>
+
+<a href="#working">
+Working
+</a>
+
+<a href="#procedure">
+Procedure
+</a>
+
+<a href="#code">
+Code
+</a>
+
+<a href="#result">
+Result
+</a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- ===============================
+     AIM
+================================ -->
+
+<section
+class="section"
+id="aim">
+
+<h2>Aim</h2>
+
+<div class="aim-box">
+
+To create a smart two-bay parking
+indicator using an ESP32 and ultrasonic
+sensors that detects whether each
+parking bay is available or occupied.
+
+The system uses green and red LEDs for
+visual indication and displays the
+parking status on an OLED display.
+
+</div>
+
+</section>
+
+
+<!-- ===============================
+     COMPONENTS
+================================ -->
+
+<section
+class="section"
+id="components">
+
+<h2>Components Required</h2>
+
+<div class="component-grid">
+
+
+<div class="component-card">
+
+<img
+src="ESP32 Development Board.png"
+alt="ESP32 Development Board">
+
+<h4>
+ESP32 DevKitC (×1)
+</h4>
+
+<p>
+Main controller of the parking system.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="HC-SR04 Ultrasonic Sensor.png"
+alt="HC-SR04 Ultrasonic Sensor">
+
+<h4>
+HC-SR04 Ultrasonic Sensor (×2)
+</h4>
+
+<p>
+Measures the distance to detect
+a vehicle in each parking bay.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Green LED.png"
+alt="Green LED">
+
+<h4>
+Green LED (×2)
+</h4>
+
+<p>
+Indicates that a parking bay
+is available.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Red LED.png"
+alt="Red LED">
+
+<h4>
+Red LED (×2)
+</h4>
+
+<p>
+Indicates that a parking bay
+is occupied.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="220 Ohm Resistor.png"
+alt="220 Ohm Resistor">
+
+<h4>
+220Ω Resistor (×4)
+</h4>
+
+<p>
+Limits the current flowing
+through the LEDs.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="OLED SSD1306.png"
+alt="OLED SSD1306">
+
+<h4>
+0.96" SSD1306 OLED (×1)
+</h4>
+
+<p>
+Displays parking bay status,
+distance and free slots.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Breadboard.png"
+alt="Breadboard">
+
+<h4>
+Breadboard (×1)
+</h4>
+
+<p>
+Provides an easy base for
+making the circuit connections.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Jumper Wires.png"
+alt="Jumper Wires">
+
+<h4>
+Jumper Wires
+</h4>
+
+<p>
+Used to connect the ESP32,
+sensors, LEDs and OLED.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- ===============================
+     CIRCUIT
+================================ -->
+
+<section
+class="section"
+id="circuit">
+
+<h2>Circuit Diagram</h2>
+
+<p>
+Connect the components as shown in the
+circuit diagram from the Experiment PDF.
+</p>
+
+<img
+src="ESP32 Digital Parking Bay Indicator Circuit.png"
+alt="ESP32 Digital Parking Bay Indicator Circuit"
+class="circuit-image">
+
+</section>
+
+
+<!-- ===============================
+     CONNECTIONS
+================================ -->
+
+<section
+class="section"
+id="connections">
+
+<h2>Pin Connections</h2>
+
+<div class="table-wrapper">
+
+<table>
+
+<tr>
+<th>Component</th>
+<th>Pin</th>
+<th>ESP32 Pin</th>
+</tr>
+
+<tr>
+<td>HC-SR04 #1</td>
+<td>VCC</td>
+<td>5V</td>
+</tr>
+
+<tr>
+<td>HC-SR04 #1</td>
+<td>TRIG</td>
+<td>GPIO 5</td>
+</tr>
+
+<tr>
+<td>HC-SR04 #1</td>
+<td>ECHO</td>
+<td>GPIO 18</td>
+</tr>
+
+<tr>
+<td>HC-SR04 #1</td>
+<td>GND</td>
+<td>GND</td>
+</tr>
+
+
+<tr>
+<td>HC-SR04 #2</td>
+<td>VCC</td>
+<td>5V</td>
+</tr>
+
+<tr>
+<td>HC-SR04 #2</td>
+<td>TRIG</td>
+<td>GPIO 19</td>
+</tr>
+
+<tr>
+<td>HC-SR04 #2</td>
+<td>ECHO</td>
+<td>GPIO 21</td>
+</tr>
+
+<tr>
+<td>HC-SR04 #2</td>
+<td>GND</td>
+<td>GND</td>
+</tr>
+
+
+<tr>
+<td>Green LED 1</td>
+<td>Anode via 220Ω</td>
+<td>GPIO 25</td>
+</tr>
+
+<tr>
+<td>Green LED 1</td>
+<td>Cathode</td>
+<td>GND</td>
+</tr>
+
+
+<tr>
+<td>Red LED 1</td>
+<td>Anode via 220Ω</td>
+<td>GPIO 26</td>
+</tr>
+
+<tr>
+<td>Red LED 1</td>
+<td>Cathode</td>
+<td>GND</td>
+</tr>
+
+
+<tr>
+<td>Green LED 2</td>
+<td>Anode via 220Ω</td>
+<td>GPIO 27</td>
+</tr>
+
+<tr>
+<td>Green LED 2</td>
+<td>Cathode</td>
+<td>GND</td>
+</tr>
+
+
+<tr>
+<td>Red LED 2</td>
+<td>Anode via 220Ω</td>
+<td>GPIO 14</td>
+</tr>
+
+<tr>
+<td>Red LED 2</td>
+<td>Cathode</td>
+<td>GND</td>
+</tr>
+
+
+<tr>
+<td>OLED</td>
+<td>VCC</td>
+<td>3.3V</td>
+</tr>
+
+<tr>
+<td>OLED</td>
+<td>GND</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>OLED</td>
+<td>SDA</td>
+<td>GPIO 23</td>
+</tr>
+
+<tr>
+<td>OLED</td>
+<td>SCL</td>
+<td>GPIO 22</td>
+</tr>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ===============================
+     STATUS
+================================ -->
+
+<section class="section">
+
+<h2>Parking Bay Indication</h2>
+
+<div class="status-grid">
+
+
+<div class="status-card available">
+
+<h3>🟢 AVAILABLE</h3>
+
+<p>
+When no vehicle is detected within
+10 cm, the green LED turns ON.
+</p>
+
+</div>
+
+
+<div class="status-card occupied">
+
+<h3>🔴 OCCUPIED</h3>
+
+<p>
+When a vehicle is detected within
+10 cm, the red LED turns ON.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- ===============================
+     WORKING
+================================ -->
+
+<section
+class="section"
+id="working">
+
+<h2>How Does It Work?</h2>
+
+
+<div class="working-step">
+
+<div class="step-number">
+1
+</div>
+
+<div>
+
+<h3>
+Measure Bay 1
+</h3>
+
+<p>
+The first HC-SR04 ultrasonic sensor
+measures the distance between the
+sensor and the object in Bay 1.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="working-step">
+
+<div class="step-number">
+2
+</div>
+
+<div>
+
+<h3>
+Measure Bay 2
+</h3>
+
+<p>
+The second ultrasonic sensor performs
+the same measurement for Bay 2.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="working-step">
+
+<div class="step-number">
+3
+</div>
+
+<div>
+
+<h3>
+Check the Distance
+</h3>
+
+<p>
+The ESP32 compares each measured
+distance with the 10 cm parking
+detection distance.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="working-step">
+
+<div class="step-number">
+4
+</div>
+
+<div>
+
+<h3>
+Show Available Bay
+</h3>
+
+<p>
+If the distance is greater than or
+equal to 10 cm, the bay is considered
+available and its green LED turns ON.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="working-step">
+
+<div class="step-number">
+5
+</div>
+
+<div>
+
+<h3>
+Show Occupied Bay
+</h3>
+
+<p>
+If the measured distance is less than
+10 cm, the bay is considered occupied
+and its red LED turns ON.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="working-step">
+
+<div class="step-number">
+6
+</div>
+
+<div>
+
+<h3>
+Update the OLED
+</h3>
+
+<p>
+The OLED shows the status and measured
+distance of both bays along with the
+number of free parking spaces.
+</p>
+
+</div>
+
+</div>
+
+
+</section>
+
+
+<!-- ===============================
+     PROCEDURE
+================================ -->
+
+<section
+class="section"
+id="procedure">
+
+<h2>Procedure</h2>
+
+<ol class="procedure-list">
+
+<li>
+Place the ESP32 on the breadboard.
+</li>
+
+<li>
+Connect two HC-SR04 ultrasonic sensors
+to the ESP32.
+</li>
+
+<li>
+Connect the green and red LEDs through
+220Ω resistors.
+</li>
+
+<li>
+Connect the SSD1306 OLED display.
+</li>
+
+<li>
+Check all VCC and GND connections.
+</li>
+
+<li>
+Connect the ESP32 to your computer.
+</li>
+
+<li>
+Upload the program to the ESP32.
+</li>
+
+<li>
+Open the Serial Monitor at
+115200 baud.
+</li>
+
+<li>
+Place an object in front of
+Ultrasonic Sensor 1.
+</li>
+
+<li>
+Observe the Bay 1 red LED turn ON
+when the object is closer than 10 cm.
+</li>
+
+<li>
+Remove the object and observe the
+green LED turn ON.
+</li>
+
+<li>
+Repeat the test with Bay 2.
+</li>
+
+<li>
+Observe the parking status and
+free-space count on the OLED display.
+</li>
+
+</ol>
+
+</section>
+
+
+<!-- ===============================
+     EXPLORE CODE
+================================ -->
+
+<section
+class="section"
+id="code">
+
+<h2>Explore the Code</h2>
+
+<p>
+Click each step to understand what
+that part of the ESP32 program does.
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<div class="code-panel">
+
+<div class="code-top">
+
+<span>
+ESP32 Digital Parking Code
+</span>
+
+<button
+class="copy-btn"
+onclick="copyCode()">
+
+Copy Code
+
+</button>
+
+</div>
+
+
+<div
+class="code-body"
+id="codeBody">
+</div>
+
+</div>
+
+
+<!-- GUIDE -->
+
+<div class="code-guide">
+
+<h3>
+Code Guide
+</h3>
+
+<div class="steps">
+
+<button
+class="step-btn active"
+onclick="showStep(0,this)">
+1. Libraries
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(1,this)">
+2. Sensor Pins
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(2,this)">
+3. LED Pins
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(3,this)">
+4. Detection Distance
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(4,this)">
+5. Measure Distance
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(5,this)">
+6. Setup
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(6,this)">
+7. Detect Parking
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(7,this)">
+8. LED Indication
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(8,this)">
+9. Free Spaces
+</button>
+
+<button
+class="step-btn"
+onclick="showStep(9,this)">
+10. OLED Display
+</button>
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+The program starts by loading the
+libraries required for I²C communication
+and the SSD1306 OLED display.
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ===============================
+     RESULT
+================================ -->
+
+<section
+class="section"
+id="result">
+
+<h2>Result</h2>
+
+<div class="result">
+
+The ESP32 successfully monitors two
+parking bays using ultrasonic sensors.
+
+A green LED indicates an available bay,
+while a red LED indicates an occupied bay.
+
+The OLED displays the condition of both
+parking bays, their measured distances
+and the total number of free spaces.
+
+</div>
+
+</section>
+
+
+<!-- ===============================
+     WHAT YOU LEARN
+================================ -->
+
+<section class="section">
+
+<h2>What You Learn</h2>
+
+<ul>
+
+<li>
+How an ultrasonic sensor measures distance.
+</li>
+
+<li>
+How ESP32 reads two ultrasonic sensors.
+</li>
+
+<li>
+How LEDs can indicate different system states.
+</li>
+
+<li>
+How to use an SSD1306 OLED with ESP32.
+</li>
+
+<li>
+How to create a simple smart parking system.
+</li>
+
+<li>
+How sensor data can be converted into
+real-world decisions.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+ESP32 Experiments
+
+</footer>
+
+
+<!-- ===============================
+     ESP32 PROGRAM
+================================ -->
+
+<script
+type="text/plain"
+id="esp32-program">
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// ===============================
+// OLED SETTINGS
+// ===============================
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_ADDR 0x3C
+
+Adafruit_SSD1306 display(
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  &Wire,
+  -1
+);
+
+// ===============================
+// ULTRASONIC SENSOR PINS
+// ===============================
+
+#define TRIG1 5
+#define ECHO1 18
+
+#define TRIG2 19
+#define ECHO2 21
+
+// ===============================
+// LED PINS
+// ===============================
+
+#define GREEN1 25
+#define RED1 26
+
+#define GREEN2 27
+#define RED2 14
+
+// ===============================
+// PARKING DETECTION DISTANCE
+// ===============================
+
+#define PARKING_DISTANCE 10.0
+
+
+// ===============================
+// GET DISTANCE
+// ===============================
+
+float getDistance(
+  int trigPin,
+  int echoPin
+)
+{
+
+  digitalWrite(
+    trigPin,
+    LOW
+  );
+
+  delayMicroseconds(2);
+
+  digitalWrite(
+    trigPin,
+    HIGH
+  );
+
+  delayMicroseconds(10);
+
+  digitalWrite(
+    trigPin,
+    LOW
+  );
+
+  long duration =
+    pulseIn(
+      echoPin,
+      HIGH,
+      30000
+    );
+
+  if(duration == 0)
+  {
+    return 999.0;
+  }
+
+  float distance =
+    duration *
+    0.0343 /
+    2.0;
+
+  return distance;
+}
+
+
+// ===============================
+// SETUP
+// ===============================
+
+void setup()
+{
+
+  Serial.begin(115200);
+
+  // Ultrasonic pins
+
+  pinMode(
+    TRIG1,
+    OUTPUT
+  );
+
+  pinMode(
+    ECHO1,
+    INPUT
+  );
+
+  pinMode(
+    TRIG2,
+    OUTPUT
+  );
+
+  pinMode(
+    ECHO2,
+    INPUT
+  );
+
+
+  // LED pins
+
+  pinMode(
+    GREEN1,
+    OUTPUT
+  );
+
+  pinMode(
+    RED1,
+    OUTPUT
+  );
+
+  pinMode(
+    GREEN2,
+    OUTPUT
+  );
+
+  pinMode(
+    RED2,
+    OUTPUT
+  );
+
+
+  // OLED I2C
+
+  Wire.begin(
+    23,
+    22
+  );
+
+
+  if(
+    !display.begin(
+      SSD1306_SWITCHCAPVCC,
+      OLED_ADDR
+    )
+  )
+  {
+
+    Serial.println(
+      "OLED ERROR!"
+    );
+
+    while(true);
+
+  }
+
+
+  // Startup screen
+
+  display.clearDisplay();
+
+  display.setTextColor(
+    SSD1306_WHITE
+  );
+
+  display.setTextSize(2);
+
+  display.setCursor(
+    13,
+    5
+  );
+
+  display.println(
+    "PARKING"
+  );
+
+  display.setTextSize(1);
+
+  display.setCursor(
+    22,
+    30
+  );
+
+  display.println(
+    "SMART SYSTEM"
+  );
+
+  display.setCursor(
+    27,
+    46
+  );
+
+  display.println(
+    "INITIALIZING"
+  );
+
+  display.display();
+
+  delay(2000);
+}
+
+
+// ===============================
+// LOOP
+// ===============================
+
+void loop()
+{
+
+  // Read Bay 1
+
+  float distance1 =
+    getDistance(
+      TRIG1,
+      ECHO1
+    );
+
+  delay(60);
+
+
+  // Read Bay 2
+
+  float distance2 =
+    getDistance(
+      TRIG2,
+      ECHO2
+    );
+
+
+  // ===============================
+  // DETERMINE OCCUPANCY
+  // ===============================
+
+  bool occupied1 =
+    distance1 <
+    PARKING_DISTANCE;
+
+  bool occupied2 =
+    distance2 <
+    PARKING_DISTANCE;
+
+
+  // ===============================
+  // BAY 1 LED
+  // ===============================
+
+  if(occupied1)
+  {
+
+    digitalWrite(
+      GREEN1,
+      LOW
+    );
+
+    digitalWrite(
+      RED1,
+      HIGH
+    );
+
+  }
+
+  else
+  {
+
+    digitalWrite(
+      GREEN1,
+      HIGH
+    );
+
+    digitalWrite(
+      RED1,
+      LOW
+    );
+
+  }
+
+
+  // ===============================
+  // BAY 2 LED
+  // ===============================
+
+  if(occupied2)
+  {
+
+    digitalWrite(
+      GREEN2,
+      LOW
+    );
+
+    digitalWrite(
+      RED2,
+      HIGH
+    );
+
+  }
+
+  else
+  {
+
+    digitalWrite(
+      GREEN2,
+      HIGH
+    );
+
+    digitalWrite(
+      RED2,
+      LOW
+    );
+
+  }
+
+
+  // ===============================
+  // FREE SPACE CALCULATION
+  // ===============================
+
+  int occupied = 0;
+
+  if(occupied1)
+    occupied++;
+
+  if(occupied2)
+    occupied++;
+
+  int freeSpaces =
+    2 - occupied;
+
+
+  // ===============================
+  // SERIAL MONITOR
+  // ===============================
+
+  Serial.println();
+
+  Serial.println(
+    "=========================="
+  );
+
+  Serial.print(
+    "BAY 1 : "
+  );
+
+  Serial.print(
+    distance1,
+    1
+  );
+
+  Serial.print(
+    " cm "
+  );
+
+  if(occupied1)
+    Serial.println(
+      "OCCUPIED"
+    );
+  else
+    Serial.println(
+      "AVAILABLE"
+    );
+
+
+  Serial.print(
+    "BAY 2 : "
+  );
+
+  Serial.print(
+    distance2,
+    1
+  );
+
+  Serial.print(
+    " cm "
+  );
+
+  if(occupied2)
+    Serial.println(
+      "OCCUPIED"
+    );
+  else
+    Serial.println(
+      "AVAILABLE"
+    );
+
+
+  Serial.print(
+    "FREE SLOTS : "
+  );
+
+  Serial.print(
+    freeSpaces
+  );
+
+  Serial.println(
+    "/2"
+  );
+
+  Serial.println(
+    "=========================="
+  );
+
+
+  // ===============================
+  // OLED DISPLAY
+  // ===============================
+
+  display.clearDisplay();
+
+  display.setTextSize(1);
+
+  display.setCursor(
+    17,
+    0
+  );
+
+  display.println(
+    "DIGITAL PARKING"
+  );
+
+  display.drawLine(
+    0,
+    10,
+    127,
+    10,
+    SSD1306_WHITE
+  );
+
+
+  // BAY 1
+
+  display.setCursor(
+    0,
+    16
+  );
+
+  display.print(
+    "BAY 1:"
+  );
+
+  if(occupied1)
+  {
+    display.print(
+      " OCCUPIED"
+    );
+  }
+  else
+  {
+    display.print(
+      " AVAILABLE"
+    );
+  }
+
+
+  display.setCursor(
+    0,
+    27
+  );
+
+  display.print(
+    "Distance: "
+  );
+
+  display.print(
+    distance1,
+    1
+  );
+
+  display.print(
+    "cm"
+  );
+
+
+  // BAY 2
+
+  display.setCursor(
+    0,
+    36
+  );
+
+  display.print(
+    "BAY 2:"
+  );
+
+  if(occupied2)
+  {
+    display.print(
+      " OCCUPIED"
+    );
+  }
+  else
+  {
+    display.print(
+      " AVAILABLE"
+    );
+  }
+
+
+  display.setCursor(
+    0,
+    47
+  );
+
+  display.print(
+    "Distance: "
+  );
+
+  display.print(
+    distance2,
+    1
+  );
+
+  display.print(
+    "cm"
+  );
+
+
+  // FREE SLOTS
+
+  display.drawLine(
+    0,
+    57,
+    127,
+    57,
+    SSD1306_WHITE
+  );
+
+  display.setCursor(
+    70,
+    58
+  );
+
+  display.print(
+    "FREE:"
+  );
+
+  display.print(
+    freeSpaces
+  );
+
+  display.display();
+
+
+  // Update every 500 ms
+
+  delay(500);
+}
+</script>
+
+
+<!-- ===============================
+     CODE EXPLORER SCRIPT
+================================ -->
+
+<script>
+
+const program =
+document
+.getElementById(
+    "esp32-program"
+)
+.textContent
+.trim();
+
+
+const codeLines =
+program.split("\n");
+
+
+const codeBody =
+document
+.getElementById(
+    "codeBody"
+);
+
+
+function escapeHTML(text){
+
+    return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+
+}
+
+
+function renderCode(){
+
+    codeBody.innerHTML =
+    codeLines
+    .map(
+        (line,index)=>`
+
+        <div
+        class="code-line"
+        id="line-${index}">
+
+            <span
+            class="line-number">
+            ${index+1}
+            </span>
+
+            <span
+            class="code-text">${escapeHTML(line)}</span>
+
+        </div>
+
+        `
+    )
+    .join("");
+
+}
+
+
+renderCode();
+
+
+const guideSteps = [
+
+{
+    search:
+    "#include <Wire.h>",
+
+    explanation:
+    "The program loads the Wire, Adafruit GFX and SSD1306 libraries needed to communicate with and control the OLED display."
+},
+
+{
+    search:
+    "#define TRIG1 5",
+
+    explanation:
+    "Two ultrasonic sensors are used. Bay 1 uses GPIO 5 and GPIO 18, while Bay 2 uses GPIO 19 and GPIO 21."
+},
+
+{
+    search:
+    "#define GREEN1 25",
+
+    explanation:
+    "Four GPIO pins control the two green and two red parking-status LEDs."
+},
+
+{
+    search:
+    "#define PARKING_DISTANCE 10.0",
+
+    explanation:
+    "The parking detection limit is 10 cm. A measured distance below this value means the bay is occupied."
+},
+
+{
+    search:
+    "float getDistance",
+
+    explanation:
+    "This function sends an ultrasonic trigger pulse, measures the returning echo and converts the travel time into distance in centimetres."
+},
+
+{
+    search:
+    "void setup()",
+
+    explanation:
+    "The setup section configures the sensor pins, LED pins and OLED display before the Experiment begins."
+},
+
+{
+    search:
+    "bool occupied1",
+
+    explanation:
+    "The ESP32 compares the measured distance with the 10 cm limit to decide whether each parking bay is occupied."
+},
+
+{
+    search:
+    "if(occupied1)",
+
+    explanation:
+    "When a bay is occupied its red LED turns ON and its green LED turns OFF. When available, the opposite happens."
+},
+
+{
+    search:
+    "int occupied = 0",
+
+    explanation:
+    "The program counts how many bays are occupied and subtracts that value from two to calculate the number of free spaces."
+},
+
+{
+    search:
+    'display.println(',
+
+    explanation:
+    "The OLED is updated with the parking bay status, measured distance and number of free parking spaces."
+}
+
+];
+
+
+function showStep(index,button){
+
+    document
+    .querySelectorAll(
+        ".step-btn"
+    )
+    .forEach(
+        btn=>
+        btn.classList.remove(
+            "active"
+        )
+    );
+
+
+    button
+    .classList
+    .add(
+        "active"
+    );
+
+
+    document
+    .querySelectorAll(
+        ".code-line"
+    )
+    .forEach(
+        line=>
+        line.classList.remove(
+            "selected"
+        )
+    );
+
+
+    const step =
+    guideSteps[index];
+
+
+    document
+    .getElementById(
+        "explanation"
+    )
+    .textContent =
+    step.explanation;
+
+
+    const lineIndex =
+    codeLines
+    .findIndex(
+        line=>
+        line.includes(
+            step.search
+        )
+    );
+
+
+    if(lineIndex === -1)
+        return;
+
+
+    for(
+        let i=lineIndex;
+        i<Math.min(
+            lineIndex+10,
+            codeLines.length
+        );
+        i++
+    ){
+
+        document
+        .getElementById(
+            `line-${i}`
+        )
+        .classList
+        .add(
+            "selected"
+        );
+
+    }
+
+
+    document
+    .getElementById(
+        `line-${lineIndex}`
+    )
+    .scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+    });
+
+}
+
+
+function copyCode(){
+
+    navigator
+    .clipboard
+    .writeText(
+        program
+    );
+
+    const button =
+    document
+    .querySelector(
+        ".copy-btn"
+    );
+
+    button.textContent =
+    "Copied!";
+
+    setTimeout(
+        ()=>{
+            button.textContent =
+            "Copy Code";
+        },
+        1500
+    );
+
+}
+
+
+window.addEventListener(
+    "load",
+    ()=>{
+        showStep(
+            0,
+            document.querySelector(
+                ".step-btn"
+            )
+        );
+    }
+);
+
+</script>
+
+
+</body>
+</html>
