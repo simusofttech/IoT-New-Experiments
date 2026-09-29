@@ -1,0 +1,3178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Wi-Fi Relay Control Panel</title>
+
+
+<style>
+
+/* =========================
+   BASIC PAGE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+    background:#2563eb;
+
+    color:white;
+
+    text-align:center;
+
+    padding:42px 20px;
+}
+
+
+.header h1{
+
+    margin:0 0 8px;
+
+    font-size:34px;
+}
+
+
+.header p{
+
+    margin:0;
+
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    color:#1e3a8a;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+    font-size:14px;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    padding:28px;
+
+    margin-bottom:24px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:130px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:600px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT
+========================= */
+
+.circuit-img{
+
+    display:block;
+
+    width:100%;
+
+    max-width:650px;
+
+    margin:20px auto;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+}
+
+
+/* =========================
+   RELAY STATUS
+========================= */
+
+.status-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:18px;
+}
+
+
+.status-card{
+
+    padding:22px;
+
+    text-align:center;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.status-icon{
+
+    width:70px;
+
+    height:70px;
+
+    margin:0 auto 12px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:32px;
+}
+
+
+.relay-off{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+}
+
+
+.relay-on{
+
+    background:#dcfce7;
+
+    color:#16a34a;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================================
+   EXPLORE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* CODE PANEL */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:
+    space-between;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    font:
+    bold 14px
+    Consolas,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    padding:16px 0;
+
+    background:white;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:20px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+
+    user-select:none;
+}
+
+
+/* =========================
+   CODE GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        2,
+        minmax(0,1fr)
+    );
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    background:#f8fbff;
+
+    border-color:#60a5fa;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+
+    font-size:17px;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 5px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .status-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+
+    .container{
+
+        width:92%;
+    }
+
+
+    .section{
+
+        padding:20px;
+    }
+
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+<h1>
+ESP32 Experiment
+</h1>
+
+<p>
+Wi-Fi Relay Control Panel
+</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+<a href="../index.html">
+← ESP32 Experiments
+</a>
+
+<a href="#aim">
+Aim
+</a>
+
+<a href="#components">
+Components
+</a>
+
+<a href="#connections">
+Connections
+</a>
+
+<a href="#circuit">
+Circuit
+</a>
+
+<a href="#working">
+Working
+</a>
+
+<a href="#procedure">
+Procedure
+</a>
+
+<a href="#code">
+Code
+</a>
+
+<a href="#result">
+Result
+</a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section
+class="section"
+id="aim">
+
+<h2>
+Aim
+</h2>
+
+<p>
+
+To create a Wi-Fi based relay
+control system using ESP32
+that allows a relay to be
+switched ON and OFF through
+a web browser while an LED
+shows the relay status.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+<h2>
+About the Experiment
+</h2>
+
+<p>
+
+In this Experiment,
+the ESP32 connects to Wi-Fi
+and creates a web-based
+relay control panel.
+
+</p>
+
+<p>
+
+The user can press
+<strong>TURN RELAY ON</strong>
+or
+<strong>TURN RELAY OFF</strong>
+from a phone or computer.
+
+</p>
+
+<p>
+
+The ESP32 controls the
+relay through GPIO 26.
+A green LED connected to
+GPIO 25 works as a
+visual status indicator.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section
+class="section"
+id="components">
+
+<h2>
+Components Required
+</h2>
+
+
+<div class="components-grid">
+
+
+<div class="component-card">
+
+<img
+src="ESP32 Development Board.png"
+alt="ESP32 Development Board">
+
+<h4>
+ESP32 DevKitC (×1)
+</h4>
+
+<p>
+Main controller with
+built-in Wi-Fi.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="1-Channel Relay Module.png"
+alt="1-Channel Relay Module">
+
+<h4>
+1-Channel Relay Module (×1)
+</h4>
+
+<p>
+Switches an external
+electrical load.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Green LED.png"
+alt="Green LED">
+
+<h4>
+Green LED (×1)
+</h4>
+
+<p>
+Shows whether the
+relay is ON or OFF.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="220 Ohm Resistor.png"
+alt="220 Ohm Resistor">
+
+<h4>
+220 Ω Resistor (×1)
+</h4>
+
+<p>
+Limits current through
+the LED.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Breadboard.png"
+alt="Breadboard">
+
+<h4>
+Breadboard (×1)
+</h4>
+
+<p>
+Provides a convenient
+base for circuit connections.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Jumper Wires.png"
+alt="Jumper Wires">
+
+<h4>
+Jumper Wires
+</h4>
+
+<p>
+Used to connect the ESP32,
+relay and LED.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section
+class="section"
+id="connections">
+
+<h2>
+Circuit Connections
+</h2>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Component
+</th>
+
+<th>
+Pin
+</th>
+
+<th>
+ESP32 Connection
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+
+<td>
+Relay
+</td>
+
+<td>
+IN
+</td>
+
+<td>
+GPIO 26
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Relay
+</td>
+
+<td>
+VCC
+</td>
+
+<td>
+5V
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+Relay
+</td>
+
+<td>
+GND
+</td>
+
+<td>
+GND
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+LED
+</td>
+
+<td>
+Anode (+)
+</td>
+
+<td>
+GPIO 25
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+LED
+</td>
+
+<td>
+Cathode (-)
+</td>
+
+<td>
+220 Ω Resistor → GND
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="note">
+
+<strong>
+Relay Control:
+</strong>
+GPIO 26
+
+<br>
+
+<strong>
+LED Status:
+</strong>
+GPIO 25
+
+<br>
+
+<strong>
+Relay Supply:
+</strong>
+5V
+
+<br>
+
+<strong>
+Web Server:
+</strong>
+Port 80
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+<h2>
+Circuit Diagram
+</h2>
+
+<p>
+
+Connect the ESP32,
+relay module, LED and
+resistor as shown in
+the circuit diagram
+from the PDF.
+
+</p>
+
+
+<img
+src="Wi-Fi Relay Control Panel Circuit.png"
+alt="Wi-Fi Relay Control Panel Circuit"
+class="circuit-img">
+
+</section>
+
+
+<!-- =========================
+     RELAY STATUS
+========================= -->
+
+<section class="section">
+
+<h2>
+Relay Status
+</h2>
+
+
+<div class="status-grid">
+
+
+<div class="status-card">
+
+<div
+class="status-icon relay-off">
+
+OFF
+
+</div>
+
+<h3>
+Relay OFF
+</h3>
+
+<p>
+
+GPIO 26 is LOW.
+The relay and
+status LED are OFF.
+
+</p>
+
+</div>
+
+
+<div class="status-card">
+
+<div
+class="status-icon relay-on">
+
+ON
+
+</div>
+
+<h3>
+Relay ON
+</h3>
+
+<p>
+
+GPIO 26 becomes HIGH.
+The relay switches ON
+and the green LED glows.
+
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section
+class="section"
+id="working">
+
+<h2>
+Working Principle
+</h2>
+
+
+<div class="flow">
+
+ESP32 Starts
+
+<br>↓<br>
+
+Relay and LED Pins are Configured
+
+<br>↓<br>
+
+ESP32 Connects to Wi-Fi
+
+<br>↓<br>
+
+Web Server Starts
+
+<br>↓<br>
+
+User Opens ESP32 IP Address
+
+<br>↓<br>
+
+Relay Control Panel Appears
+
+<br>↓<br>
+
+User Presses TURN RELAY ON
+
+<br>↓<br>
+
+ESP32 Sets GPIO 26 HIGH
+
+<br>↓<br>
+
+Relay Turns ON
+
+<br>↓<br>
+
+GPIO 25 Turns the LED ON
+
+<br>↓<br>
+
+User Presses TURN RELAY OFF
+
+<br>↓<br>
+
+Relay and LED Turn OFF
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section
+class="section"
+id="procedure">
+
+<h2>
+Procedure
+</h2>
+
+
+<ol>
+
+<li>
+Place the ESP32 on the breadboard.
+</li>
+
+<li>
+Connect relay IN to GPIO 26.
+</li>
+
+<li>
+Connect relay VCC to ESP32 5V.
+</li>
+
+<li>
+Connect relay GND to ESP32 GND.
+</li>
+
+<li>
+Connect the LED anode to GPIO 25.
+</li>
+
+<li>
+Connect the LED cathode
+through a 220 Ω resistor to GND.
+</li>
+
+<li>
+Check all connections carefully.
+</li>
+
+<li>
+Connect the ESP32 to the computer.
+</li>
+
+<li>
+Open Arduino IDE.
+</li>
+
+<li>
+Upload the ESP32 program.
+</li>
+
+<li>
+Open Serial Monitor at 115200 baud.
+</li>
+
+<li>
+Wait for ESP32 to connect to Wi-Fi.
+</li>
+
+<li>
+Note the IP address shown
+in Serial Monitor.
+</li>
+
+<li>
+Open the IP address
+in a web browser connected
+to the same Wi-Fi network.
+</li>
+
+<li>
+Press
+<strong>TURN RELAY ON</strong>.
+</li>
+
+<li>
+Observe the relay switch
+and LED turn ON.
+</li>
+
+<li>
+Press
+<strong>TURN RELAY OFF</strong>.
+</li>
+
+<li>
+Observe the relay
+and LED turn OFF.
+</li>
+
+</ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section
+class="section"
+id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+
+ESP32 Experiment · Code Review
+
+</p>
+
+
+<h2 class="lesson-title">
+
+Explore the Code
+
+</h2>
+
+
+<p class="intro">
+
+Wi-Fi Relay Control Panel ·
+Select a step to understand
+what each part of the
+ESP32 program does.
+
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+<span class="filename">
+
+WiFi_Relay_Control_Panel.ino
+
+</span>
+
+
+<button
+class="copy-button"
+onclick="copyCode()">
+
+Copy Code
+
+</button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- GUIDE -->
+
+<article class="guide">
+
+
+<h2>
+Understand it step by step
+</h2>
+
+
+<p>
+
+Choose a step.
+The matching section
+will light up on the left.
+
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">
+01
+</span>
+
+Load libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">
+02
+</span>
+
+Set Wi-Fi
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">
+03
+</span>
+
+Set pins
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">
+04
+</span>
+
+Store relay state
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">
+05
+</span>
+
+Control relay
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">
+06
+</span>
+
+Create dashboard
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">
+07
+</span>
+
+Relay ON command
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">
+08
+</span>
+
+Relay OFF command
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">
+09
+</span>
+
+Start system
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(9)">
+
+<span class="step-number">
+10
+</span>
+
+Handle requests
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+1. Load libraries
+</h3>
+
+<p>
+
+WiFi.h connects the ESP32
+to Wi-Fi and WebServer.h
+creates the browser-based
+relay control panel.
+
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+Explore more: relay control
+</summary>
+
+<p>
+
+The relay is controlled
+using:
+
+</p>
+
+<p>
+
+<code>
+digitalWrite(RELAY_PIN, HIGH);
+</code>
+
+</p>
+
+<p>
+
+or
+
+</p>
+
+<p>
+
+<code>
+digitalWrite(RELAY_PIN, LOW);
+</code>
+
+</p>
+
+<p>
+
+The status LED follows
+the same ON/OFF state
+as the relay.
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Check your understanding
+</summary>
+
+
+<ul>
+
+<li>
+
+Which GPIO controls the relay?
+
+<strong>
+GPIO 26
+</strong>
+
+</li>
+
+
+<li>
+
+Which GPIO controls
+the status LED?
+
+<strong>
+GPIO 25
+</strong>
+
+</li>
+
+
+<li>
+
+What voltage powers
+the relay module?
+
+<strong>
+5V
+</strong>
+
+</li>
+
+
+<li>
+
+Which web address
+turns the relay ON?
+
+<strong>
+/on
+</strong>
+
+</li>
+
+
+<li>
+
+Which web address
+turns the relay OFF?
+
+<strong>
+/off
+</strong>
+
+</li>
+
+</ul>
+
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>
+Try it:
+</strong>
+
+Open the ESP32 dashboard
+on your phone and switch
+the relay ON and OFF.
+Watch the physical relay
+and green LED change together.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>
+Expected Output
+</h2>
+
+<p>
+
+After connecting to Wi-Fi,
+the ESP32 prints its IP
+address in Serial Monitor.
+
+</p>
+
+<p>
+
+Opening this IP address
+shows the Wi-Fi Relay
+Control Panel.
+
+</p>
+
+<ul>
+
+<li>
+TURN RELAY ON switches the relay ON.
+</li>
+
+<li>
+TURN RELAY OFF switches the relay OFF.
+</li>
+
+<li>
+The green LED follows the relay state.
+</li>
+
+<li>
+The dashboard displays the relay status.
+</li>
+
+</ul>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>
+Result
+</h2>
+
+<p>
+
+The Wi-Fi Relay Control Panel
+Experiment successfully controls
+a relay from a web browser
+using an ESP32.
+
+</p>
+
+<p>
+
+The relay is controlled through
+GPIO 26 while the LED connected
+to GPIO 25 provides a visual
+indication of the relay state.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>
+What You Learn
+</h2>
+
+<ul>
+
+<li>
+Connecting a relay module to ESP32.
+</li>
+
+<li>
+Controlling a relay with a GPIO pin.
+</li>
+
+<li>
+Using an LED as a status indicator.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Creating an ESP32 web server.
+</li>
+
+<li>
+Sending ON and OFF commands
+from a web browser.
+</li>
+
+<li>
+Creating a basic IoT control system.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wi-Fi Relay Control Panel
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script
+type="text/plain"
+id="esp32-program">
+
+#include <WiFi.h>
+#include <WebServer.h>
+
+
+// ===============================
+// WIFI
+// ===============================
+
+const char* ssid =
+"Wokwi-GUEST";
+
+const char* password =
+"";
+
+
+// ===============================
+// PINS
+// ===============================
+
+#define RELAY_PIN 26
+#define LED_PIN 25
+
+
+// ===============================
+// WEB SERVER
+// ===============================
+
+WebServer server(80);
+
+
+// ===============================
+// RELAY STATE
+// ===============================
+
+bool relayState =
+false;
+
+
+// ===============================
+// RELAY CONTROL
+// ===============================
+
+void setRelay(
+    bool state
+)
+{
+
+    relayState =
+    state;
+
+
+    digitalWrite(
+        RELAY_PIN,
+        relayState
+        ?
+        HIGH
+        :
+        LOW
+    );
+
+
+    digitalWrite(
+        LED_PIN,
+        relayState
+        ?
+        HIGH
+        :
+        LOW
+    );
+
+}
+
+
+// ===============================
+// DASHBOARD
+// ===============================
+
+String getDashboard()
+{
+
+    String relayStatus =
+    relayState
+    ?
+    "ON"
+    :
+    "OFF";
+
+
+    String statusColor =
+    relayState
+    ?
+    "#00ff88"
+    :
+    "#ff4d4d";
+
+
+    String html =
+    R"rawliteral(
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32 Wi-Fi Relay Control
+</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #071524,
+        #030b14
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+}
+
+
+.panel{
+
+    width:100%;
+
+    max-width:700px;
+
+    padding:30px;
+
+    border-radius:25px;
+
+    background:#0c1f34;
+
+    border:
+    1px solid #174c7a;
+
+    text-align:center;
+
+}
+
+
+h1{
+
+    color:#38bdf8;
+
+}
+
+
+.status{
+
+    margin:25px auto;
+
+    max-width:250px;
+
+    padding:18px;
+
+    border-radius:40px;
+
+    border:
+    3px solid %COLOR%;
+
+    color:%COLOR%;
+
+    font-size:38px;
+
+    font-weight:bold;
+
+}
+
+
+.buttons{
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 1fr;
+
+    gap:15px;
+
+}
+
+
+.button{
+
+    display:block;
+
+    padding:18px;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+}
+
+
+.on{
+
+    background:#16a34a;
+
+}
+
+
+.off{
+
+    background:#dc2626;
+
+}
+
+
+.info{
+
+    margin-top:25px;
+
+    color:#cbd5e1;
+
+}
+
+
+@media(max-width:550px){
+
+    .buttons{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="panel">
+
+
+<h1>
+Wi-Fi Relay Control
+</h1>
+
+
+<p>
+ESP32 Relay Control Panel
+</p>
+
+
+<h3>
+Relay Status
+</h3>
+
+
+<div class="status">
+
+%STATUS%
+
+</div>
+
+
+<div class="buttons">
+
+
+<a
+href="/on"
+class="button on">
+
+TURN RELAY ON
+
+</a>
+
+
+<a
+href="/off"
+class="button off">
+
+TURN RELAY OFF
+
+</a>
+
+
+</div>
+
+
+<div class="info">
+
+<p>
+Relay GPIO:
+<strong>
+GPIO 26
+</strong>
+</p>
+
+<p>
+LED GPIO:
+<strong>
+GPIO 25
+</strong>
+</p>
+
+<p>
+IP Address:
+<strong>
+%IP%
+</strong>
+</p>
+
+</div>
+
+
+</div>
+
+
+</body>
+
+</html>
+
+)rawliteral";
+
+
+    html.replace(
+        "%STATUS%",
+        relayStatus
+    );
+
+
+    html.replace(
+        "%COLOR%",
+        statusColor
+    );
+
+
+    html.replace(
+        "%IP%",
+        WiFi
+        .localIP()
+        .toString()
+    );
+
+
+    return html;
+
+}
+
+
+// ===============================
+// HOME
+// ===============================
+
+void handleRoot()
+{
+
+    server.send(
+        200,
+        "text/html",
+        getDashboard()
+    );
+
+}
+
+
+// ===============================
+// RELAY ON
+// ===============================
+
+void handleOn()
+{
+
+    setRelay(
+        true
+    );
+
+
+    server.sendHeader(
+        "Location",
+        "/"
+    );
+
+
+    server.send(
+        303
+    );
+
+}
+
+
+// ===============================
+// RELAY OFF
+// ===============================
+
+void handleOff()
+{
+
+    setRelay(
+        false
+    );
+
+
+    server.sendHeader(
+        "Location",
+        "/"
+    );
+
+
+    server.send(
+        303
+    );
+
+}
+
+
+// ===============================
+// SETUP
+// ===============================
+
+void setup()
+{
+
+    Serial.begin(
+        115200
+    );
+
+
+    pinMode(
+        RELAY_PIN,
+        OUTPUT
+    );
+
+
+    pinMode(
+        LED_PIN,
+        OUTPUT
+    );
+
+
+    setRelay(
+        false
+    );
+
+
+    Serial.println();
+
+
+    Serial.println(
+        "================================="
+    );
+
+
+    Serial.println(
+        " ESP32 Wi-Fi Relay Panel"
+    );
+
+
+    Serial.println(
+        "================================="
+    );
+
+
+    WiFi.mode(
+        WIFI_STA
+    );
+
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    Serial.print(
+        "Connecting to Wi-Fi"
+    );
+
+
+    while(
+        WiFi.status()
+        !=
+        WL_CONNECTED
+    )
+    {
+
+        delay(
+            500
+        );
+
+
+        Serial.print(
+            "."
+        );
+
+    }
+
+
+    Serial.println();
+
+
+    Serial.println(
+        "WiFi connected!"
+    );
+
+
+    Serial.print(
+        "IP address: "
+    );
+
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    server.on(
+        "/",
+        handleRoot
+    );
+
+
+    server.on(
+        "/on",
+        handleOn
+    );
+
+
+    server.on(
+        "/off",
+        handleOff
+    );
+
+
+    server.begin();
+
+
+    Serial.println(
+        "Web server started!"
+    );
+
+}
+
+
+// ===============================
+// LOOP
+// ===============================
+
+void loop()
+{
+
+    server.handleClient();
+
+}
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+
+document
+.getElementById(
+    "esp32-program"
+)
+.textContent
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+const steps = [
+
+
+{
+
+title:
+"Load libraries",
+
+search:
+"#include <WiFi.h>",
+
+text:
+"The program loads WiFi.h for wireless communication and WebServer.h for the browser control panel."
+
+},
+
+
+{
+
+title:
+"Set Wi-Fi",
+
+search:
+"const char* ssid",
+
+text:
+"The ESP32 uses the SSID and password to connect to the Wi-Fi network."
+
+},
+
+
+{
+
+title:
+"Set pins",
+
+search:
+"#define RELAY_PIN",
+
+text:
+"GPIO 26 controls the relay and GPIO 25 controls the status LED."
+
+},
+
+
+{
+
+title:
+"Store relay state",
+
+search:
+"bool relayState",
+
+text:
+"This Boolean variable remembers whether the relay is currently ON or OFF."
+
+},
+
+
+{
+
+title:
+"Control relay",
+
+search:
+"void setRelay",
+
+text:
+"This function changes the relay output and the LED output together."
+
+},
+
+
+{
+
+title:
+"Create dashboard",
+
+search:
+"String getDashboard",
+
+text:
+"This function creates the web page used to control the relay from a browser."
+
+},
+
+
+{
+
+title:
+"Relay ON command",
+
+search:
+"void handleOn",
+
+text:
+"When the /on address is requested, the ESP32 switches the relay and LED ON."
+
+},
+
+
+{
+
+title:
+"Relay OFF command",
+
+search:
+"void handleOff",
+
+text:
+"When the /off address is requested, the ESP32 switches the relay and LED OFF."
+
+},
+
+
+{
+
+title:
+"Start system",
+
+search:
+"void setup()",
+
+text:
+"The setup function configures the GPIO pins, connects to Wi-Fi and starts the web server."
+
+},
+
+
+{
+
+title:
+"Handle requests",
+
+search:
+"void loop()",
+
+text:
+"The loop continuously checks for new commands coming from the web browser."
+
+}
+
+];
+
+
+function escapeHtml(text)
+{
+
+    return text
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+
+function displayCode()
+{
+
+    let output = "";
+
+
+    lines.forEach(
+
+        function(
+            line,
+            index
+        )
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+
+            (index + 1) +
+
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+
+        }
+
+    );
+
+
+    document
+    .getElementById(
+        "code-lines"
+    )
+    .innerHTML =
+    output;
+
+}
+
+
+function showStep(index)
+{
+
+    const step =
+    steps[index];
+
+
+    const buttons =
+    document
+    .querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+
+        function(button)
+        {
+
+            button
+            .classList
+            .remove(
+                "active"
+            );
+
+        }
+
+    );
+
+
+    buttons[index]
+    .classList
+    .add(
+        "active"
+    );
+
+
+    document
+    .querySelectorAll(
+        ".code-line"
+    )
+    .forEach(
+
+        function(line)
+        {
+
+            line
+            .classList
+            .remove(
+                "selected"
+            );
+
+        }
+
+    );
+
+
+    let foundLine =
+    -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+
+        if(
+            lines[i]
+            .includes(
+                step.search
+            )
+        )
+        {
+
+            foundLine =
+            i;
+
+            break;
+
+        }
+
+    }
+
+
+    if(
+        foundLine >= 0
+    )
+    {
+
+        for(
+            let i =
+            foundLine;
+
+            i <
+            Math.min(
+                foundLine + 12,
+                lines.length
+            );
+
+            i++
+        )
+        {
+
+            document
+            .getElementById(
+                "line-" +
+                (i + 1)
+            )
+            .classList
+            .add(
+                "selected"
+            );
+
+        }
+
+
+        const selectedLine =
+
+        document
+        .getElementById(
+            "line-" +
+            (foundLine + 1)
+        );
+
+
+        document
+        .getElementById(
+            "code-body"
+        )
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop
+            - 20,
+
+            behavior:
+            "smooth"
+
+        });
+
+    }
+
+
+    document
+    .getElementById(
+        "explanation"
+    )
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+
+    ". " +
+
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+
+}
+
+
+function copyCode()
+{
+
+    navigator
+    .clipboard
+    .writeText(
+        program
+    )
+    .then(
+
+        function()
+        {
+
+            const button =
+
+            document
+            .querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+
+                function()
+                {
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+
+                1500
+
+            );
+
+        }
+
+    );
+
+}
+
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+
+</html>
