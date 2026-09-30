@@ -24,9 +24,190 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
 <main class="container">
 <section class="section" id="aim"><h2>Aim</h2><p>To build an ESP32-based wireless RFID queue token generator that verifies authorized RFID cards, generates sequential tokens, displays status on an OLED, provides buzzer feedback and exposes system information through a web dashboard.</p></section>
 <section class="section"><h2>About the Experiment</h2><p>The RC522 reader scans an RFID card and compares its UID with two authorized UIDs. Authorized cards generate a three-digit token and receive success feedback; unauthorized cards are denied. The OLED shows ready, granted, denied and reset states. A browser dashboard displays the current token, total tokens, last UID, scan result, last event, ESP32 IP address and uptime, while both a physical reset button and /reset web route can reset the counter.</p></section>
-<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><div class="component-icon">ESP</div><h4>ESP32 DevKitC</h4><p>Main controller and Wi-Fi server.</p></div><div class="component-card"><div class="component-icon">RFID</div><h4>MFRC522 RFID Reader</h4><p>Reads RFID card UIDs.</p></div><div class="component-card"><div class="component-icon">OLED</div><h4>SSD1306 OLED</h4><p>Displays reader and token status.</p></div><div class="component-card"><div class="component-icon">BZ</div><h4>Buzzer</h4><p>Provides success and error tones.</p></div><div class="component-card"><div class="component-icon">BTN</div><h4>Push Button</h4><p>Resets the token counter.</p></div><div class="component-card"><div class="component-icon">CARD</div><h4>RFID Cards</h4><p>Authorized or unauthorized scan inputs.</p></div></div></section>
+
+  <!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="ESP32 Development Board.png"
+            alt="ESP32 Development Board">
+
+            <h4>
+                ESP32 DevKitC (×1)
+            </h4>
+
+            <p>
+                Main controller with built-in Wi-Fi.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="RC522 RFID Reader.png"
+            alt="RC522 RFID Reader">
+
+            <h4>
+                RC522 RFID Reader (×1)
+            </h4>
+
+            <p>
+                Reads RFID card
+                identification values.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="RFID Card Key Fob.png"
+            alt="RFID Card Key Fob">
+
+            <h4>
+                RFID Card / Key Fob
+            </h4>
+
+            <p>
+                Used as the RFID
+                identification input.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="OLED SSD1306.png"
+            alt="OLED SSD1306">
+
+            <h4>
+                0.96" OLED SSD1306 I²C (×1)
+            </h4>
+
+            <p>
+                Displays token
+                and RFID status.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Buzzer.png"
+            alt="Buzzer">
+
+            <h4>
+                Buzzer (×1)
+            </h4>
+
+            <p>
+                Provides access
+                feedback sounds.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Push Button.png"
+            alt="Push Button">
+
+            <h4>
+                Push Button (×1)
+            </h4>
+
+            <p>
+                Used to reset
+                the token counter.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the circuit.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for electrical connections.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+  
 <section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>RC522</td><td>SDA / SS</td><td>GPIO 5</td></tr><tr><td>RC522</td><td>RST</td><td>GPIO 27</td></tr><tr><td>RC522</td><td>SCK</td><td>GPIO 18</td></tr><tr><td>RC522</td><td>MISO</td><td>GPIO 19</td></tr><tr><td>RC522</td><td>MOSI</td><td>GPIO 23</td></tr><tr><td>RC522</td><td>3.3V / GND</td><td>3.3V / GND</td></tr><tr><td>OLED</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>OLED</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>Buzzer</td><td>Signal</td><td>GPIO 25</td></tr><tr><td>Buzzer</td><td>GND</td><td>GND</td></tr><tr><td>Reset Button</td><td>Input</td><td>GPIO 26</td></tr><tr><td>Reset Button</td><td>Other side</td><td>GND</td></tr></tbody></table></div><div class="note"><strong>Authorized UID 1:</strong> 01 02 03 04 &nbsp; <strong>Authorized UID 2:</strong> 55 66 77 88 &nbsp; <strong>Duplicate scan delay:</strong> 3 seconds</div></section>
-<section class="section" id="circuit"><h2>Circuit Diagram</h2><div class="circuit"><div class="node">ESP32 DevKitC</div><div class="arrow">→</div><div class="node">RC522 + OLED + Buzzer + Reset Button</div></div><div class="wire-list"><p>The RC522 uses SPI pins GPIO 5, 18, 19 and 23 with reset on GPIO 27. The OLED uses GPIO 21/22. The buzzer uses GPIO 25, and the reset button uses GPIO 26 with INPUT_PULLUP.</p></div></section>
+
+  <!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <p>
+        Connect the RC522 RFID reader,
+        OLED display, buzzer and reset button
+        to the ESP32 as shown in the circuit diagram.
+    </p>
+
+    <img
+    class="circuit-img"
+    src="Wireless RFID Token Generator Circuit.png"
+    alt="Wireless RFID Token Generator Circuit">
+
+</section>
+  
 <section class="section" id="working"><h2>Working Principle</h2><div class="flow">ESP32 Starts<br>↓<br>OLED + RFID + Wi-Fi Initialize<br>↓<br>Reader Waits for Card<br>↓<br>Read RFID UID<br>↓<br>Compare with Authorized UIDs<br>↓<br>Authorized → Increment Token + Success Beep + OLED Granted<br>↓<br>Unauthorized → No Token + Error Beep + OLED Denied<br>↓<br>Dashboard Updates Every 1 Second</div></section>
 <section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the RC522 to the ESP32 SPI pins and reset pin.</li><li>Connect the OLED to GPIO 21 (SDA) and GPIO 22 (SCL).</li><li>Connect the buzzer signal to GPIO 25.</li><li>Connect the reset push button between GPIO 26 and GND.</li><li>Upload the sketch and open Serial Monitor at 115200 baud.</li><li>Wait for Wi-Fi connection and note the ESP32 IP address.</li><li>Open the IP address in a browser to view the token dashboard.</li><li>Scan an authorized RFID card and verify that a new three-digit token is generated.</li><li>Scan an unauthorized card and verify that access is denied and no token is created.</li><li>Use the physical reset button or dashboard reset control to return the counter to 000.</li></ol></section>
 <section class="section" id="code"><h2>Explore the Code</h2><p>Key sketch sections used in this experiment:</p><div class="code-panel"><div class="code-top"><span>Wireless_RFID_Token_Generator.ino</span><button onclick="navigator.clipboard.writeText(document.getElementById('codeblock').innerText)">Copy Code</button></div><pre id="codeblock">#include &lt;WiFi.h&gt;
