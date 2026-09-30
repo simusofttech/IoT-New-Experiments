@@ -26,7 +26,31 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
 <section class="section"><h2>About the Experiment</h2><p>Ultrasonic Sensor 1 detects an approaching object. Ultrasonic Sensor 2 performs the inspection check. Objects detected within 50 cm enter the inspection process; a reading of 30 cm or less at the inspection sensor is treated as a pass. A passed object opens the servo gate to 90 degrees for 4 seconds, while failed inspections keep the gate closed. The OLED and web dashboard show live distances, inspection status and gate status.</p></section>
 <section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><div class="component-icon">ESP</div><h4>ESP32 DevKitC</h4><p>Main Wi-Fi controller.</p></div><div class="component-card"><div class="component-icon">US1</div><h4>HC-SR04 ×2</h4><p>Detection and inspection distance sensors.</p></div><div class="component-card"><div class="component-icon">90°</div><h4>Servo Motor</h4><p>Opens and closes the inspection gate.</p></div><div class="component-card"><div class="component-icon">OLED</div><h4>SSD1306 OLED</h4><p>Displays local system status.</p></div><div class="component-card"><div class="component-icon">BZ</div><h4>Buzzer</h4><p>Provides audible feedback.</p></div><div class="component-card"><div class="component-icon">↔</div><h4>Jumper Wires</h4><p>Circuit interconnections.</p></div></div></section>
 <section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>Ultrasonic 1</td><td>TRIG</td><td>GPIO 5</td></tr><tr><td>Ultrasonic 1</td><td>ECHO</td><td>GPIO 18</td></tr><tr><td>Ultrasonic 2</td><td>TRIG</td><td>GPIO 19</td></tr><tr><td>Ultrasonic 2</td><td>ECHO</td><td>GPIO 21</td></tr><tr><td>Servo</td><td>PWM</td><td>GPIO 14</td></tr><tr><td>Servo</td><td>V+</td><td>5V</td></tr><tr><td>Servo</td><td>GND</td><td>GND</td></tr><tr><td>Buzzer</td><td>+ / Signal</td><td>GPIO 12</td></tr><tr><td>Buzzer</td><td>GND</td><td>GND</td></tr><tr><td>OLED</td><td>SDA</td><td>GPIO 25</td></tr><tr><td>OLED</td><td>SCL</td><td>GPIO 26</td></tr><tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr></tbody></table></div><div class="note"><strong>Detection distance:</strong> 50 cm &nbsp; <strong>Inspection pass distance:</strong> 30 cm &nbsp; <strong>Gate positions:</strong> 0° closed / 90° open &nbsp; <strong>Gate open time:</strong> 4 seconds</div></section>
-<section class="section" id="circuit"><h2>Circuit Diagram</h2><div class="circuit"><div class="node">ESP32 DevKitC</div><div class="arrow">→</div><div class="node">US-01 + US-02 + Servo + OLED + Buzzer</div></div><div class="wire-list"><p>Sensor 1 uses GPIO 5/18, Sensor 2 uses GPIO 19/21, the servo uses GPIO 14, the buzzer uses GPIO 12, and the OLED uses I²C on GPIO 25/26.</p></div></section>
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <p>
+        Connect the two HC-SR04 ultrasonic sensors,
+        servo motor, OLED display and buzzer
+        to the ESP32 as shown in the circuit diagram.
+    </p>
+
+    <img
+    class="circuit-img"
+    src="ESP32 Wireless Automated Inspection Gate Circuit.png"
+    alt="ESP32 Wireless Automated Inspection Gate Circuit">
+
+</section>
+  
 <section class="section" id="working"><h2>Working Principle</h2><div class="flow">ESP32 Starts<br>↓<br>Sensors, OLED, Buzzer and Servo Initialize<br>↓<br>ESP32 Connects to Wi-Fi<br>↓<br>Sensor 1 Detects Object within 50 cm<br>↓<br>Sensor 2 Checks Inspection Zone<br>↓<br>≤ 30 cm: PASSED → Gate Opens 90° + Buzzer<br>↓<br>After 4 seconds Gate Closes<br><br>Otherwise: FAILED → Gate Remains Closed + Buzzer</div></section>
 <section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect both ultrasonic sensors to their TRIG and ECHO GPIO pins.</li><li>Connect the servo signal to GPIO 14 and power it from 5V.</li><li>Connect the buzzer to GPIO 12 and GND.</li><li>Connect the SSD1306 OLED to GPIO 25 (SDA) and GPIO 26 (SCL).</li><li>Upload the ESP32 sketch and open Serial Monitor at 115200 baud.</li><li>Wait for Wi-Fi to connect and note the ESP32 IP address.</li><li>Open the IP address in a browser to view the wireless inspection dashboard.</li><li>Move an object into Sensor 1's detection zone.</li><li>Move it into the second sensor's inspection zone and observe PASSED or FAILED status.</li><li>Verify that a passed inspection opens the gate for about 4 seconds.</li></ol></section>
 <section class="section" id="code"><h2>Explore the Code</h2><p>Key sketch sections used in this experiment:</p><div class="code-panel"><div class="code-top"><span>Wireless_Automated_Inspection_Gate.ino</span><button onclick="navigator.clipboard.writeText(document.getElementById('codeblock').innerText)">Copy Code</button></div><pre id="codeblock">#include &lt;WiFi.h&gt;
