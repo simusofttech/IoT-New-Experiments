@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ESP32 Mini Pan-Tilt Camera Mount</title><style>
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:#fff;text-align:center;padding:42px 20px}.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:1050px;margin:35px auto}.section{background:#fff;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}li{margin-bottom:8px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:18px;text-align:center;background:#fff}
+.component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:25px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
+.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.circuit{display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;align-items:center}.node{border:2px solid #bfdbfe;background:#eff6ff;border-radius:12px;padding:16px;text-align:center;font-weight:bold;color:#1e3a8a}.arrow{text-align:center;font-size:28px;color:#2563eb;font-weight:bold}.wire-list{margin-top:18px}
+.flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
+.code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
+pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
+.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}
+@media(max-width:700px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.circuit{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+</style></head><body>
+<header class="header"><h1>ESP32 Experiment</h1><p>ESP32 Mini Pan-Tilt Camera Mount</p></header>
+<nav><a href="../index.html">← ESP32 Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#expected-output">Expected Output</a><a href="#result">Result</a><a href="#learn">What You Learn</a></nav>
+<main class="container">
+<section class="section" id="aim"><h2>Aim</h2><p>To build a Wi-Fi controlled pan-tilt camera mount using two servo motors and an SSD1306 OLED, allowing the pan and tilt angles to be controlled from a browser.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>The ESP32 controls two servos: one for pan and one for tilt. The browser sends movement commands to the /control route, while the /angles route returns the current pan and tilt angles as JSON. The OLED continuously shows the current pan and tilt positions. The system starts centered at 90° for both axes and supports directional movement and preset positions.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><div class="component-icon">ESP</div><h4>ESP32 DevKitC</h4><p>Main controller and Wi-Fi server.</p></div><div class="component-card"><div class="component-icon">PAN</div><h4>Servo Motor ×2</h4><p>One servo for pan and one for tilt.</p></div><div class="component-card"><div class="component-icon">OLED</div><h4>SSD1306 OLED Display</h4><p>Shows current pan and tilt angles.</p></div><div class="component-card"><div class="component-icon">BB</div><h4>Breadboard</h4><p>Useful for organizing power and wiring.</p></div><div class="component-card"><div class="component-icon">↔</div><h4>Jumper Wires</h4><p>Used for circuit interconnections.</p></div></div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>Pan Servo</td><td>PWM</td><td>GPIO 13</td></tr><tr><td>Pan Servo</td><td>V+ / GND</td><td>3.3V / GND</td></tr><tr><td>Tilt Servo</td><td>PWM</td><td>GPIO 14</td></tr><tr><td>Tilt Servo</td><td>V+ / GND</td><td>3.3V / GND</td></tr><tr><td>OLED</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>OLED</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr></tbody></table></div><div class="note"><strong>Pan Servo:</strong> GPIO 13 &nbsp; <strong>Tilt Servo:</strong> GPIO 14 &nbsp; <strong>OLED:</strong> SDA 21 / SCL 22 &nbsp; <strong>Initial position:</strong> 90° / 90°</div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><div class="circuit"><div class="node">ESP32 DevKitC</div><div class="arrow">→</div><div class="node">Pan Servo + Tilt Servo + SSD1306 OLED</div></div><div class="wire-list"><p>The pan servo signal connects to GPIO 13 and the tilt servo signal connects to GPIO 14. Both servos are powered from 3.3V and GND in the supplied Wokwi circuit. The OLED uses I²C with SDA on GPIO 21 and SCL on GPIO 22.</p></div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">ESP32 Starts<br>↓<br>OLED and Two Servos Initialize<br>↓<br>Both Servos Move to 90°<br>↓<br>ESP32 Connects to Wi-Fi<br>↓<br>Browser Opens Pan-Tilt Dashboard<br>↓<br>User Sends Left / Right / Up / Down or Preset Command<br>↓<br>ESP32 Updates Servo Angles<br>↓<br>OLED and Browser Show New Angles</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the pan servo signal wire to GPIO 13.</li><li>Connect the tilt servo signal wire to GPIO 14.</li><li>Connect both servos to 3.3V and GND as shown in the supplied circuit.</li><li>Connect the SSD1306 OLED SDA to GPIO 21 and SCL to GPIO 22.</li><li>Upload the ESP32 sketch.</li><li>Open Serial Monitor at 115200 baud.</li><li>Wait for the Wi-Fi connection and note the ESP32 IP address.</li><li>Open the IP address in a browser.</li><li>Use the directional buttons and presets to move the pan and tilt servos.</li><li>Observe the current angles on both the OLED and web dashboard.</li></ol></section>
+<section class="section" id="code"><h2>Explore the Code</h2><p>Key sketch sections used in this experiment:</p><div class="code-panel"><div class="code-top"><span>ESP32_Mini_Pan_Tilt_Camera_Mount.ino</span><button onclick="navigator.clipboard.writeText(document.getElementById('codeblock').innerText)">Copy Code</button></div><pre id="codeblock">#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+#include &lt;ESP32Servo.h&gt;
+
+#define PAN_SERVO_PIN 13
+#define TILT_SERVO_PIN 14
+#define OLED_SDA 21
+#define OLED_SCL 22
+#define OLED_ADDRESS 0x3C
+
+WebServer server(80);
+Servo panServo;
+Servo tiltServo;
+
+int panAngle = 90;
+int tiltAngle = 90;
+
+String angleJSON() {
+  return "{\"pan\":" + String(panAngle) +
+         ",\"tilt\":" + String(tiltAngle) + "}";
+}
+
+void moveCamera() {
+  panServo.write(panAngle);
+  tiltServo.write(tiltAngle);
+  updateOLED();
+}
+
+void handleControl() {
+  if (!server.hasArg("cmd")) {
+    server.send(400, "text/plain", "Missing command");
+    return;
+  }
+
+  String cmd = server.arg("cmd");
+
+  if (cmd == "L") panAngle = max(0, panAngle - 10);
+  else if (cmd == "R") panAngle = min(180, panAngle + 10);
+  else if (cmd == "U") tiltAngle = min(180, tiltAngle + 10);
+  else if (cmd == "D") tiltAngle = max(0, tiltAngle - 10);
+  else if (cmd == "C") { panAngle = 90; tiltAngle = 90; }
+
+  moveCamera();
+  server.send(200, "application/json", angleJSON());
+}
+
+void loop() {
+  server.handleClient();
+}</pre></div></section>
+<section class="section" id="expected-output"><h2>Expected Output</h2><p>At startup, the pan and tilt angles are both 90° and the OLED shows P:90 and T:90.</p><p>Pressing LEFT or RIGHT changes the pan angle in 10° steps between 0° and 180°.</p><p>Pressing UP or DOWN changes the tilt angle in 10° steps between 0° and 180°.</p><p>The browser dashboard and OLED both update to show the new angles.</p><p>Preset buttons move the servos to predefined positions.</p></section>
+<section class="section" id="result"><h2>Result</h2><div class="result-box">The ESP32 successfully controls two servo motors over Wi-Fi, provides directional and preset movement, and displays the current pan and tilt angles on the OLED and browser dashboard.</div></section>
+<section class="section" id="learn"><h2>What You Learn</h2><ul><li>Controlling two servo motors with ESP32.</li><li>Using GPIO 13 and GPIO 14 as servo PWM control pins.</li><li>Using an SSD1306 OLED over I²C.</li><li>Creating browser-controlled movement commands.</li><li>Sending JSON angle data from an ESP32 web server.</li><li>Using preset servo positions.</li><li>Constraining servo angles between 0° and 180°.</li></ul></section>
+</main><footer><strong>IoT Experiments</strong> · ESP32 Mini Pan-Tilt Camera Mount</footer></body></html>
