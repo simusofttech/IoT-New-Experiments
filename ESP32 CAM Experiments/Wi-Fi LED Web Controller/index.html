@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wi-Fi LED Web Controller</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}
+nav a:hover{color:#2563eb}
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{background:white;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
+.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-icon{width:92px;height:92px;margin:0 auto 14px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:42px;font-weight:bold}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
+.component-card p{color:#475569;font-size:14px;margin:0}
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:600px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.status-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.status-card{padding:22px;text-align:center;border-radius:12px;border:1px solid #bfdbfe;background:#f8fbff}
+.status-icon{width:78px;height:78px;margin:0 auto 12px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:32px}
+.led-off{background:#fee2e2;color:#dc2626}
+.led-on{background:#dcfce7;color:#16a34a}
+.flow{text-align:center;color:#1e3a8a;font-size:18px;font-weight:bold;line-height:2}
+.code-lesson{color:#142e3a}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important}
+.intro{color:#526875;margin:0 0 22px}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 20px;background:#2563eb;color:white}
+.filename{font:bold 14px Consolas,monospace}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;font-weight:bold;cursor:pointer}
+.copy-button:hover{background:#eff6ff}
+.code-body{height:600px;overflow:auto;padding:16px 0;background:white}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:20px;white-space:pre;font:13px/24px Consolas,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
+.code-line:hover{background:#f8fbff}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{min-width:52px;text-align:right;padding-right:15px;color:#64748b;user-select:none}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px}
+.guide>p{color:#526875}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a}
+.step:hover,.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{color:#2563eb;font-size:12px}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px}
+.explanation h3{margin:0 0 7px;color:#1e3a8a;font-size:17px}
+.explanation p{margin:0;color:#526875}
+.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}
+footer strong{color:white}
+@media(max-width:850px){.code-layout,.status-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="header">
+<h1>ESP32 Experiment</h1>
+<p>Wi-Fi LED Web Controller</p>
+</header>
+
+<nav>
+<a href="../index.html">← ESP32 Experiments</a>
+<a href="#aim">Aim</a>
+<a href="#components">Components</a>
+<a href="#connections">Connections</a>
+<a href="#working">Working</a>
+<a href="#procedure">Procedure</a>
+<a href="#code">Code</a>
+<a href="#result">Result</a>
+</nav>
+
+<main class="container">
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To create a Wi-Fi based LED control system using an ESP32, allowing an LED connected to GPIO 2 to be switched ON and OFF from a web browser.</p>
+</section>
+
+<section class="section">
+<h2>About the Experiment</h2>
+<p>The ESP32 connects to Wi-Fi and starts a web server on port 80. When the user opens the ESP32 IP address in a browser, a control dashboard is displayed with POWER ON and POWER OFF buttons.</p>
+<p>The browser sends requests to the ESP32 using the <strong>/on</strong> and <strong>/off</strong> routes. The ESP32 then changes GPIO 2 to control the LED and updates the dashboard state.</p>
+</section>
+
+<section class="section" id="components">
+<h2>Components Required</h2>
+<div class="components-grid">
+<div class="component-card"><div class="component-icon">ESP</div><h4>ESP32 DevKitC (×1)</h4><p>Main controller with built-in Wi-Fi.</p></div>
+<div class="component-card"><div class="component-icon">●</div><h4>Red LED (×1)</h4><p>Visual output controlled through the ESP32 web interface.</p></div>
+<div class="component-card"><div class="component-icon">Ω</div><h4>220 Ω Resistor (×1)</h4><p>Limits current through the LED.</p></div>
+<div class="component-card"><div class="component-icon">↔</div><h4>Jumper Wires</h4><p>Used to connect the LED and resistor to the ESP32.</p></div>
+</div>
+</section>
+
+<section class="section" id="connections">
+<h2>Circuit Connections</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead>
+<tbody>
+<tr><td>LED</td><td>Anode (+)</td><td>220 Ω Resistor → GPIO 2</td></tr>
+<tr><td>LED</td><td>Cathode (-)</td><td>GND</td></tr>
+</tbody>
+</table>
+</div>
+<div class="note">
+<strong>LED Control Pin:</strong> GPIO 2<br>
+<strong>Web Server:</strong> Port 80<br>
+<strong>Wi-Fi SSID used in the supplied sketch:</strong> Wokwi-GUEST
+</div>
+</section>
+
+<section class="section">
+<h2>LED Status</h2>
+<div class="status-grid">
+<div class="status-card"><div class="status-icon led-off">OFF</div><h3>LED OFF</h3><p>GPIO 2 is LOW and the LED is turned off.</p></div>
+<div class="status-card"><div class="status-icon led-on">ON</div><h3>LED ON</h3><p>GPIO 2 is HIGH and the LED is turned on.</p></div>
+</div>
+</section>
+
+<section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">
+ESP32 Starts<br>↓<br>
+GPIO 2 is Configured as OUTPUT<br>↓<br>
+ESP32 Connects to Wi-Fi<br>↓<br>
+Web Server Starts on Port 80<br>↓<br>
+User Opens ESP32 IP Address<br>↓<br>
+LED Control Dashboard Appears<br>↓<br>
+POWER ON sends /on<br>↓<br>
+GPIO 2 becomes HIGH and LED Turns ON<br>↓<br>
+POWER OFF sends /off<br>↓<br>
+GPIO 2 becomes LOW and LED Turns OFF
+</div>
+</section>
+
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol>
+<li>Connect the LED cathode to ESP32 GND.</li>
+<li>Connect the LED anode through a 220 Ω resistor to GPIO 2.</li>
+<li>Connect the ESP32 to the computer and open Arduino IDE or the Wokwi simulator.</li>
+<li>Upload the supplied ESP32 program.</li>
+<li>Open Serial Monitor at 115200 baud.</li>
+<li>Wait until the ESP32 reports that Wi-Fi is connected.</li>
+<li>Note the IP address shown in Serial Monitor.</li>
+<li>Open that IP address in a web browser connected to the same Wi-Fi network.</li>
+<li>Press <strong>POWER ON</strong> and observe the LED turn on.</li>
+<li>Press <strong>POWER OFF</strong> and observe the LED turn off.</li>
+</ol>
+</section>
+
+<section class="section" id="code">
+<div class="code-lesson">
+<p class="eyebrow">ESP32 Experiment · Code Review</p>
+<h2 class="lesson-title">Explore the Code</h2>
+<p class="intro">Wi-Fi LED Web Controller · Select a step to understand what each part of the ESP32 program does.</p>
+<div class="code-layout">
+<article class="code-panel">
+<div class="code-top"><span class="filename">WiFi_LED_Web_Controller.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div>
+<div class="code-body" id="code-body"><code id="code-lines"></code></div>
+</article>
+<article class="guide">
+<h2>Understand it step by step</h2>
+<p>Choose a step. The matching section will light up on the left.</p>
+<div class="steps">
+<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load libraries</button>
+<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set Wi-Fi</button>
+<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Set LED pin</button>
+<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Create dashboard</button>
+<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Serve root page</button>
+<button class="step" onclick="showStep(5)"><span class="step-number">06</span>LED ON route</button>
+<button class="step" onclick="showStep(6)"><span class="step-number">07</span>LED OFF route</button>
+<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Start system</button>
+<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Handle clients</button>
+</div>
+<div class="explanation"><h3 id="explain-title">Load libraries</h3><p id="explain-text">WiFi.h connects the ESP32 to Wi-Fi and WebServer.h provides the HTTP web server.</p></div>
+</article>
+</div>
+</div>
+</section>
+
+<section class="section" id="result">
+<h2>Result</h2>
+<div class="result-box">The ESP32 successfully hosts a browser-based LED control dashboard. The LED connected to GPIO 2 can be switched ON and OFF using the web interface.</div>
+</section>
+</main>
+
+<footer><strong>IoT Experiments</strong> · ESP32 Wi-Fi LED Web Controller</footer>
+
+<script>
+const sourceCode = `#include <WiFi.h>
+#include <WebServer.h>
+
+// =====================================================
+// ESP32 WI-FI LED WEB CONTROLLER
+// =====================================================
+
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+#define LED_PIN 2
+
+WebServer server(80);
+
+bool ledState = false;
+
+// =====================================================
+// HTML DASHBOARD
+// =====================================================
+
+const char MAIN_page[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 LED Controller</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 20% 20%, #10285c 0%, transparent 30%),
+    radial-gradient(circle at 80% 80%, #30105c 0%, transparent 30%),
+    #020817;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+}
+
+.dashboard {
+  width: 100%;
+  max-width: 1050px;
+  background: linear-gradient(145deg, rgba(9,25,55,0.97), rgba(3,10,28,0.98));
+  border: 1px solid rgba(0,190,255,0.5);
+  border-radius: 30px;
+  box-shadow: 0 0 30px rgba(0,150,255,0.25), 0 0 80px rgba(120,0,255,0.12);
+  overflow: hidden;
+}
+
+.header { padding: 28px 40px; display:flex; justify-content:space-between; align-items:center; }
+.content { padding:35px; display:grid; grid-template-columns:1.2fr 1fr; gap:25px; }
+.card { background:rgba(20,43,80,.72); border:1px solid rgba(80,170,255,.25); border-radius:25px; padding:28px; }
+.control-card { text-align:center; }
+.led-container { width:190px; height:190px; margin:30px auto; border-radius:50%; display:flex; justify-content:center; align-items:center; border:5px solid #23385c; }
+.led-bulb { font-size:90px; filter:grayscale(1) brightness(.5); }
+.led-on { border-color:#00ff88; box-shadow:0 0 25px #00ff88,0 0 60px rgba(0,255,136,.5); }
+.led-on .led-bulb { filter:grayscale(0) brightness(1.5) drop-shadow(0 0 25px #ffe600); }
+.status { display:inline-flex; gap:10px; padding:13px 25px; border-radius:30px; background:rgba(255,255,255,.05); margin-bottom:25px; }
+.status-dot { width:12px; height:12px; border-radius:50%; background:#ff4050; }
+.status-on .status-dot { background:#00ff88; box-shadow:0 0 15px #00ff88; }
+.buttons { display:flex; gap:15px; }
+button { flex:1; border:none; padding:16px; border-radius:15px; color:white; font-size:16px; font-weight:bold; cursor:pointer; }
+.on-btn { background:linear-gradient(135deg,#00e676,#00a85a); }
+.off-btn { background:linear-gradient(135deg,#ff4055,#d60025); }
+.info-row { padding:16px; border-radius:14px; background:rgba(255,255,255,.035); margin-bottom:12px; }
+.footer { padding:18px 30px; color:#7895bb; display:flex; justify-content:space-between; }
+@media(max-width:750px){ .content{grid-template-columns:1fr}.buttons{flex-direction:column}.footer{flex-direction:column} }
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <div class="header">
+    <div><h1>ESP32 LED Controller</h1><p>Wi-Fi Web-Based Control Panel</p></div>
+    <div>● Wi-Fi Connected</div>
+  </div>
+
+  <div class="content">
+    <div class="card control-card">
+      <h2>LED CONTROL</h2>
+      <p>Control your LED wirelessly</p>
+      <div id="ledCircle" class="led-container"><div class="led-bulb">💡</div></div>
+      <div id="status" class="status"><span class="status-dot"></span><span id="statusText">LED IS OFF</span></div>
+      <div class="buttons">
+        <button class="on-btn" onclick="controlLED('on')">POWER ON</button>
+        <button class="off-btn" onclick="controlLED('off')">POWER OFF</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>DEVICE INFORMATION</h2>
+      <div class="info-row">Wi-Fi Status: <strong>Connected</strong></div>
+      <div class="info-row">IP Address: <strong>ESP32</strong></div>
+      <div class="info-row">GPIO: <strong>GPIO 2</strong></div>
+      <div class="info-row">Board: <strong>ESP32-DevKitC</strong></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>IoT Made Simple • <strong>ESP32</strong></span>
+    <span>Small Projects • Big Ideas</span>
+    <span>Learn • Build • Explore</span>
+  </div>
+</div>
+
+<script>
+function controlLED(state) {
+  fetch("/" + state)
+    .then(response => response.text())
+    .then(() => updateDashboard(state))
+    .catch(error => console.log(error));
+}
+
+function updateDashboard(state) {
+  const circle = document.getElementById("ledCircle");
+  const status = document.getElementById("status");
+  const text = document.getElementById("statusText");
+
+  if(state === "on") {
+    circle.classList.add("led-on");
+    status.classList.add("status-on");
+    text.innerHTML = "LED IS ON";
+  } else {
+    circle.classList.remove("led-on");
+    status.classList.remove("status-on");
+    text.innerHTML = "LED IS OFF";
+  }
+}
+<\/script>
+</body>
+</html>
+)rawliteral";
+
+// =====================================================
+// ROOT PAGE
+// =====================================================
+void handleRoot() {
+  server.send(200, "text/html", MAIN_page);
+}
+
+// =====================================================
+// LED ON
+// =====================================================
+void handleLEDOn() {
+  digitalWrite(LED_PIN, HIGH);
+  ledState = true;
+  server.send(200, "text/plain", "LED ON");
+}
+
+// =====================================================
+// LED OFF
+// =====================================================
+void handleLEDOff() {
+  digitalWrite(LED_PIN, LOW);
+  ledState = false;
+  server.send(200, "text/plain", "LED OFF");
+}
+
+// =====================================================
+// SETUP
+// =====================================================
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
+
+  Serial.println();
+  Serial.println("==============================");
+  Serial.println(" ESP32 LED WEB CONTROLLER");
+  Serial.println("==============================");
+  Serial.print("Connecting to Wi-Fi");
+
+  WiFi.begin(ssid, password);
+
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println();
+  Serial.println("Wi-Fi Connected!");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+
+  server.on("/", handleRoot);
+  server.on("/on", handleLEDOn);
+  server.on("/off", handleLEDOff);
+
+  server.begin();
+  Serial.println("Web Server Started!");
+  Serial.println("Open the IP address in your browser.");
+}
+
+// =====================================================
+// LOOP
+// =====================================================
+void loop() {
+  server.handleClient();
+}`;
+
+const steps = [
+  {title:"Load libraries", text:"WiFi.h connects the ESP32 to Wi-Fi and WebServer.h provides the HTTP server.", start:1, end:2},
+  {title:"Set Wi-Fi", text:"The sketch uses the Wokwi-GUEST SSID with an empty password.", start:8, end:9},
+  {title:"Set LED pin", text:"LED_PIN is assigned to GPIO 2, and ledState stores the current software state.", start:11, end:15},
+  {title:"Create dashboard", text:"MAIN_page stores the HTML, CSS and JavaScript dashboard in program memory.", start:20, end:105},
+  {title:"Serve root page", text:"handleRoot sends the dashboard to the browser as text/html.", start:111, end:113},
+  {title:"LED ON route", text:"handleLEDOn sets GPIO 2 HIGH and returns the text LED ON.", start:118, end:122},
+  {title:"LED OFF route", text:"handleLEDOff sets GPIO 2 LOW and returns the text LED OFF.", start:127, end:131},
+  {title:"Start system", text:"setup initializes Serial, configures GPIO 2, connects to Wi-Fi, registers routes and starts the server.", start:136, end:164},
+  {title:"Handle clients", text:"loop continuously calls server.handleClient() so incoming browser requests are processed.", start:169, end:171}
+];
+
+const lines = sourceCode.split("\n");
+const codeLines = document.getElementById("code-lines");
+
+function renderCode(){
+  codeLines.innerHTML = lines.map((line,i) =>
+    '<span class="code-line" data-line="'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeHtml(line)+'</span></span>'
+  ).join("");
+}
+
+function escapeHtml(text){
+  return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function showStep(index){
+  document.querySelectorAll(".step").forEach((b,i)=>b.classList.toggle("active",i===index));
+  document.querySelectorAll(".code-line").forEach(line=>{
+    const n = Number(line.dataset.line);
+    line.classList.toggle("selected",n>=steps[index].start && n<=steps[index].end);
+  });
+  document.getElementById("explain-title").textContent = steps[index].title;
+  document.getElementById("explain-text").textContent = steps[index].text;
+  const target = document.querySelector('.code-line[data-line="'+steps[index].start+'"]');
+  if(target) target.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function copyCode(){
+  navigator.clipboard.writeText(sourceCode);
+  const button = document.querySelector(".copy-button");
+  const old = button.textContent;
+  button.textContent = "Copied!";
+  setTimeout(()=>button.textContent=old,1200);
+}
+
+renderCode();
+showStep(0);
+</script>
+</body>
+</html>
