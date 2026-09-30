@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ESP32 IoT Machine Condition Monitor</title><style>
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:#fff;text-align:center;padding:42px 20px}.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:1050px;margin:35px auto}.section{background:#fff;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}li{margin-bottom:8px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:18px;text-align:center;background:#fff}
+.component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:25px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
+.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.circuit{display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;align-items:center}.node{border:2px solid #bfdbfe;background:#eff6ff;border-radius:12px;padding:16px;text-align:center;font-weight:bold;color:#1e3a8a}.arrow{text-align:center;font-size:28px;color:#2563eb;font-weight:bold}.wire-list{margin-top:18px}
+.flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
+.code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
+pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
+.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}
+@media(max-width:700px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.circuit{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+</style></head><body>
+<header class="header"><h1>ESP32 Experiment</h1><p>ESP32 IoT Machine Condition Monitor</p></header>
+<nav><a href="../index.html">← ESP32 Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#expected-output">Expected Output</a><a href="#result">Result</a><a href="#learn">What You Learn</a></nav>
+<main class="container">
+<section class="section" id="aim"><h2>Aim</h2><p>To monitor machine condition using two vibration inputs and a DHT22 temperature sensor, and to automatically trigger a relay, buzzer and fault LED when excessive vibration or high temperature is detected.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>The ESP32 uses two pushbuttons as simulated vibration sensors in Wokwi and reads temperature from a DHT22. A machine fault occurs when either vibration input is active or the measured temperature reaches 50°C or higher. During a fault, the relay is turned off, the buzzer is activated and the red fault LED is switched on. The OLED displays temperature, vibration status and the overall machine condition.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><div class="component-icon">ESP</div><h4>ESP32 DevKitC</h4><p>Main machine-condition controller.</p></div><div class="component-card"><div class="component-icon">VIB</div><h4>Push Button ×2</h4><p>Used as vibration sensor inputs in the Wokwi version.</p></div><div class="component-card"><div class="component-icon">DHT</div><h4>DHT22 Sensor</h4><p>Measures machine/environment temperature.</p></div><div class="component-card"><div class="component-icon">OLED</div><h4>SSD1306 OLED Display</h4><p>Shows live machine status.</p></div><div class="component-card"><div class="component-icon">BZ</div><h4>Buzzer</h4><p>Audible fault alarm.</p></div><div class="component-card"><div class="component-icon">RLY</div><h4>1-Channel Relay Module</h4><p>Simulates machine stop/protection output.</p></div><div class="component-card"><div class="component-icon">LED</div><h4>Red LED</h4><p>Visual fault indicator.</p></div><div class="component-card"><div class="component-icon">220Ω</div><h4>220 Ω Resistor</h4><p>Current limiting resistor for the fault LED.</p></div><div class="component-card"><div class="component-icon">BB</div><h4>Breadboard</h4><p>Useful for organizing the circuit.</p></div><div class="component-card"><div class="component-icon">↔</div><h4>Jumper Wires</h4><p>Used for circuit interconnections.</p></div></div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>Vibration Button 1</td><td>Signal</td><td>GPIO 18</td></tr><tr><td>Vibration Button 1</td><td>Other side</td><td>GND</td></tr><tr><td>Vibration Button 2</td><td>Signal</td><td>GPIO 19</td></tr><tr><td>Vibration Button 2</td><td>Other side</td><td>GND</td></tr><tr><td>DHT22</td><td>DATA</td><td>GPIO 4</td></tr><tr><td>DHT22</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>OLED</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>OLED</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>Buzzer</td><td>Signal</td><td>GPIO 25</td></tr><tr><td>Buzzer</td><td>GND</td><td>GND</td></tr><tr><td>Relay Module</td><td>IN</td><td>GPIO 26</td></tr><tr><td>Relay Module</td><td>VCC / GND</td><td>5V / GND</td></tr><tr><td>Fault LED</td><td>Anode</td><td>GPIO 27</td></tr><tr><td>Fault LED</td><td>Cathode</td><td>220 Ω Resistor → GND</td></tr></tbody></table></div><div class="note"><strong>Temperature limit:</strong> 50°C &nbsp; <strong>Vibration inputs:</strong> GPIO 18 / 19 &nbsp; <strong>Relay:</strong> GPIO 26 &nbsp; <strong>Fault LED:</strong> GPIO 27</div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><div class="circuit"><div class="node">ESP32 DevKitC</div><div class="arrow">→</div><div class="node">2 Vibration Inputs + DHT22 + OLED + Buzzer + Relay + Fault LED</div></div><div class="wire-list"><p>The two pushbuttons simulate vibration sensors on GPIO 18 and GPIO 19. DHT22 data connects to GPIO 4. The OLED uses SDA 21 and SCL 22. The buzzer uses GPIO 25, relay input GPIO 26, and the red fault LED is driven from GPIO 27 through a 220 Ω resistor to GND.</p></div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">ESP32 Starts<br>↓<br>DHT22 and OLED Initialize<br>↓<br>Read Temperature + Vibration Inputs<br>↓<br>Check if Vibration is Detected OR Temperature ≥ 50°C<br>↓<br>NO → Relay ON, Buzzer OFF, Fault LED OFF, Status NORMAL<br>↓<br>YES → Relay OFF, Buzzer ON, Fault LED ON, Status FAULT<br>↓<br>Update OLED and Serial Monitor Every 500 ms</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect vibration input button 1 between GPIO 18 and GND.</li><li>Connect vibration input button 2 between GPIO 19 and GND.</li><li>Connect the DHT22 data pin to GPIO 4.</li><li>Connect the SSD1306 OLED SDA to GPIO 21 and SCL to GPIO 22.</li><li>Connect the buzzer signal to GPIO 25.</li><li>Connect the relay module input to GPIO 26 and power the relay from 5V.</li><li>Connect the red LED anode to GPIO 27 and its cathode through a 220 Ω resistor to GND.</li><li>Upload the sketch and open Serial Monitor at 115200 baud.</li><li>Observe NORMAL operation when no vibration is detected and temperature is below 50°C.</li><li>Press either vibration button or raise the simulated temperature to 50°C or above.</li><li>Verify that the relay turns off, buzzer sounds, fault LED turns on and the OLED shows FAULT.</li></ol></section>
+<section class="section" id="code"><h2>Explore the Code</h2><p>Key sketch sections used in this experiment:</p><div class="code-panel"><div class="code-top"><span>ESP32_IoT_Machine_Condition_Monitor.ino</span><button onclick="navigator.clipboard.writeText(document.getElementById('codeblock').innerText)">Copy Code</button></div><pre id="codeblock">#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+#include &lt;DHT.h&gt;
+
+#define VIBRATION1_PIN 18
+#define VIBRATION2_PIN 19
+#define DHT_PIN 4
+#define DHT_TYPE DHT22
+#define BUZZER_PIN 25
+#define RELAY_PIN 26
+#define LED_PIN 27
+
+const float TEMPERATURE_LIMIT = 50.0;
+
+DHT dht(DHT_PIN, DHT_TYPE);
+
+void loop() {
+  float temperature = dht.readTemperature();
+
+  bool vibration1 = digitalRead(VIBRATION1_PIN) == LOW;
+  bool vibration2 = digitalRead(VIBRATION2_PIN) == LOW;
+  bool vibrationDetected = vibration1 || vibration2;
+
+  bool temperatureHigh = false;
+
+  if (!isnan(temperature)) {
+    temperatureHigh = temperature &gt;= TEMPERATURE_LIMIT;
+  }
+
+  bool machineFault = vibrationDetected || temperatureHigh;
+
+  if (machineFault) {
+    digitalWrite(RELAY_PIN, LOW);
+    digitalWrite(BUZZER_PIN, HIGH);
+    digitalWrite(LED_PIN, HIGH);
+  } else {
+    digitalWrite(RELAY_PIN, HIGH);
+    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(LED_PIN, LOW);
+  }
+
+  updateOLED();
+  delay(500);
+}</pre></div></section>
+<section class="section" id="expected-output"><h2>Expected Output</h2><p>During normal operation, the OLED shows the measured temperature, both vibration inputs as OK and the machine state as NORMAL.</p><p>If either vibration button is pressed, the machine state changes to FAULT.</p><p>If the DHT22 temperature reaches 50°C or higher, the machine state changes to FAULT.</p><p>During a fault, the relay output goes LOW, the buzzer turns on and the red fault LED lights.</p><p>When the fault condition clears, the relay returns HIGH, the buzzer turns off and the fault LED switches off.</p></section>
+<section class="section" id="result"><h2>Result</h2><div class="result-box">The ESP32 machine condition monitor successfully detects vibration or over-temperature conditions and automatically activates protective outputs while showing the machine status on the OLED and Serial Monitor.</div></section>
+<section class="section" id="learn"><h2>What You Learn</h2><ul><li>Using pushbuttons as simulated vibration inputs.</li><li>Reading temperature with a DHT22 sensor.</li><li>Creating a combined machine-fault condition.</li><li>Controlling a relay for machine protection.</li><li>Using a buzzer and LED for fault alarms.</li><li>Driving an SSD1306 OLED from ESP32.</li><li>Applying a 50°C temperature threshold in embedded logic.</li></ul></section>
+</main><footer><strong>IoT Experiments</strong> · ESP32 IoT Machine Condition Monitor</footer></body></html>
