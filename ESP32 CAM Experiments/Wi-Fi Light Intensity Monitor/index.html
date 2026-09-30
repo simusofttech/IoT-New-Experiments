@@ -1,0 +1,3441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wi-Fi Light Intensity Monitor</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:130px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    margin-top:15px;
+    padding:14px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT
+========================= */
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:600px;
+    margin:20px auto;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+}
+
+
+/* =========================
+   LIGHT LEVEL
+========================= */
+
+.light-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.light-card{
+    padding:18px;
+    text-align:center;
+    border:1px solid #bfdbfe;
+    background:#f8fbff;
+    border-radius:12px;
+}
+
+.light-card h3{
+    margin:0 0 7px;
+    font-size:17px;
+}
+
+.dark{
+    color:#475569;
+}
+
+.dim{
+    color:#64748b;
+}
+
+.bright{
+    color:#2563eb;
+}
+
+.very-bright{
+    color:#f59e0b;
+}
+
+
+/* =========================
+   LIGHT DEMO
+========================= */
+
+.light-demo{
+    max-width:650px;
+    margin:auto;
+    text-align:center;
+}
+
+.light-value{
+    color:#2563eb;
+    font-size:48px;
+    font-weight:bold;
+}
+
+.progress{
+    width:100%;
+    height:22px;
+    background:#e2e8f0;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:16px;
+}
+
+.progress-fill{
+    width:66%;
+    height:100%;
+    background:#2563eb;
+    border-radius:20px;
+}
+
+.light-status{
+    margin-top:12px;
+    color:#1e3a8a;
+    font-weight:bold;
+    font-size:20px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+    text-align:center;
+    color:#1e3a8a;
+    font-size:18px;
+    font-weight:bold;
+    line-height:2;
+}
+
+
+/* =========================================
+   EXPLORE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+    font-weight:bold;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+    margin:0 0 8px !important;
+    color:#1e3a8a !important;
+    border:0 !important;
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+    margin:0 0 22px;
+}
+
+
+.code-layout{
+    display:grid;
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+    gap:20px;
+    align-items:start;
+}
+
+
+/* CODE PANEL */
+
+.code-panel{
+    background:white;
+    border:1px solid #bfdbfe;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:15px 20px;
+    background:#2563eb;
+    color:white;
+}
+
+.filename{
+    font:bold 14px Consolas, monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+    background:white;
+    color:#2563eb;
+    border-radius:8px;
+    padding:8px 14px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+.code-body{
+    height:600px;
+    overflow:auto;
+    background:white;
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+    min-width:max-content;
+    min-height:24px;
+    padding-right:20px;
+    white-space:pre;
+    font:13px/24px Consolas, monospace;
+    color:#1e293b;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.code-line:hover{
+    background:#f8fbff;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+    box-shadow:inset 4px 0 #2563eb;
+}
+
+.line-number{
+    min-width:52px;
+    text-align:right;
+    padding-right:15px;
+    color:#64748b;
+    user-select:none;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+    background:white;
+    border:1px solid #dce6e9;
+    border-radius:14px;
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+    padding:0;
+    margin:0 0 8px;
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+}
+
+.steps{
+    display:grid;
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+    gap:8px;
+    margin:16px 0;
+}
+
+.step{
+    border:1px solid #dce6e9;
+    border-radius:9px;
+    padding:10px;
+    min-height:65px;
+    background:white;
+    text-align:left;
+    font-size:13px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    color:#1e3a8a;
+}
+
+.step:hover{
+    background:#f8fbff;
+    border-color:#60a5fa;
+}
+
+.step.active{
+    background:#eff6ff;
+    border-color:#60a5fa;
+}
+
+.step-number{
+    color:#2563eb;
+    font-size:12px;
+}
+
+.explanation{
+    background:#eff6ff;
+    border-radius:9px;
+    padding:16px;
+    min-height:130px;
+}
+
+.explanation h3{
+    margin:0 0 7px;
+    color:#1e3a8a;
+    font-size:17px;
+}
+
+.explanation p{
+    margin:0;
+    color:#526875;
+}
+
+.guide details{
+    border-top:1px solid #dce6e9;
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+    color:#2563eb;
+    font-weight:bold;
+    padding:13px 0;
+}
+
+.guide code{
+    background:#e5ecf4;
+    padding:2px 5px;
+    border-radius:4px;
+}
+
+.tip{
+    background:#eff6ff;
+    color:#234e87;
+    padding:14px 17px;
+    border-radius:9px;
+    margin-top:20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+}
+
+footer strong{
+    color:white;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+    .light-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .section{
+        padding:20px;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+
+    .light-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+<h1>
+ESP32 Experiment
+</h1>
+
+<p>
+Wi-Fi Light Intensity Monitor
+</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+<a href="../index.html">
+← ESP32 Experiments
+</a>
+
+<a href="#aim">Aim</a>
+
+<a href="#components">Components</a>
+
+<a href="#connections">Connections</a>
+
+<a href="#circuit">Circuit</a>
+
+<a href="#working">Working</a>
+
+<a href="#procedure">Procedure</a>
+
+<a href="#code">Code</a>
+
+<a href="#result">Result</a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section
+class="section"
+id="aim">
+
+<h2>
+Aim
+</h2>
+
+<p>
+
+To create a Wi-Fi based
+light intensity monitoring system
+using an ESP32 and LDR sensor
+that measures ambient light,
+displays the reading on an OLED
+and shows the live data
+on a web dashboard.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+<h2>
+About the Experiment
+</h2>
+
+<p>
+
+In this Experiment,
+the LDR sensor module
+measures the surrounding
+light intensity.
+
+</p>
+
+<p>
+
+The ESP32 reads the analog
+output of the sensor through
+GPIO 34.
+
+</p>
+
+<p>
+
+The raw ADC value is converted
+into a percentage from
+0% to 100%.
+
+</p>
+
+<p>
+
+The light level is then
+classified as
+<strong>DARK</strong>,
+<strong>DIM</strong>,
+<strong>BRIGHT</strong>
+or
+<strong>VERY BRIGHT</strong>.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section
+class="section"
+id="components">
+
+<h2>
+Components Required
+</h2>
+
+
+<div class="components-grid">
+
+
+<div class="component-card">
+
+<img
+src="ESP32 Development Board.png"
+alt="ESP32 Development Board">
+
+<h4>
+ESP32 DevKitC V4 (×1)
+</h4>
+
+<p>
+Main controller with
+built-in Wi-Fi.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="LDR Light Sensor Module.png"
+alt="LDR Light Sensor Module">
+
+<h4>
+LDR Light Sensor Module (×1)
+</h4>
+
+<p>
+Measures ambient
+light intensity.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="OLED SSD1306.png"
+alt="OLED SSD1306">
+
+<h4>
+SSD1306 OLED 128×64 (×1)
+</h4>
+
+<p>
+Displays light percentage,
+progress bar and status.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Breadboard.png"
+alt="Breadboard">
+
+<h4>
+Breadboard (×1)
+</h4>
+
+<p>
+Used for convenient
+hardware assembly.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Jumper Wires.png"
+alt="Jumper Wires">
+
+<h4>
+Jumper Wires
+</h4>
+
+<p>
+Used to connect
+all components.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section
+class="section"
+id="connections">
+
+<h2>
+Circuit Connections
+</h2>
+
+
+<h3>
+LDR Sensor Module → ESP32
+</h3>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+LDR Module Pin
+</th>
+
+<th>
+ESP32 Pin
+</th>
+
+<th>
+Function
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+<td>VCC</td>
+<td>3.3V</td>
+<td>Power</td>
+</tr>
+
+<tr>
+<td>GND</td>
+<td>GND</td>
+<td>Ground</td>
+</tr>
+
+<tr>
+<td>AO</td>
+<td>GPIO 34</td>
+<td>Analog Light Reading</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h3>
+SSD1306 OLED → ESP32
+</h3>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+OLED Pin
+</th>
+
+<th>
+ESP32 Pin
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+<td>VCC</td>
+<td>3.3V</td>
+</tr>
+
+<tr>
+<td>GND</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>SDA</td>
+<td>GPIO 21</td>
+</tr>
+
+<tr>
+<td>SCL</td>
+<td>GPIO 22</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="note">
+
+<strong>
+LDR Analog Output:
+</strong>
+GPIO 34
+
+<br>
+
+<strong>
+OLED SDA:
+</strong>
+GPIO 21
+
+<br>
+
+<strong>
+OLED SCL:
+</strong>
+GPIO 22
+
+<br>
+
+<strong>
+OLED Address:
+</strong>
+0x3C
+
+<br>
+
+<strong>
+ADC Resolution:
+</strong>
+12-bit
+
+<br>
+
+<strong>
+ADC Range:
+</strong>
+0 to 4095
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+<h2>
+Circuit Diagram
+</h2>
+
+<p>
+
+Connect the ESP32,
+LDR light sensor module
+and SSD1306 OLED as shown
+in the circuit diagram
+from the PDF.
+
+</p>
+
+
+<img
+src="Wi-Fi Light Intensity Monitor Circuit.png"
+alt="Wi-Fi Light Intensity Monitor Circuit"
+class="circuit-img">
+
+</section>
+
+
+<!-- =========================
+     LIGHT READING
+========================= -->
+
+<section class="section">
+
+<h2>
+Light Intensity
+</h2>
+
+
+<div class="light-demo">
+
+<div class="light-value">
+66%
+</div>
+
+<div class="progress">
+
+<div class="progress-fill">
+</div>
+
+</div>
+
+<div class="light-status">
+BRIGHT
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     LIGHT LEVELS
+========================= -->
+
+<section class="section">
+
+<h2>
+Light Conditions
+</h2>
+
+
+<div class="light-grid">
+
+
+<div class="light-card">
+
+<h3 class="dark">
+DARK
+</h3>
+
+<p>
+Below 20%
+</p>
+
+</div>
+
+
+<div class="light-card">
+
+<h3 class="dim">
+DIM
+</h3>
+
+<p>
+20% to 49%
+</p>
+
+</div>
+
+
+<div class="light-card">
+
+<h3 class="bright">
+BRIGHT
+</h3>
+
+<p>
+50% to 79%
+</p>
+
+</div>
+
+
+<div class="light-card">
+
+<h3 class="very-bright">
+VERY BRIGHT
+</h3>
+
+<p>
+80% to 100%
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section
+class="section"
+id="working">
+
+<h2>
+Working Principle
+</h2>
+
+
+<div class="flow">
+
+ESP32 Starts
+
+<br>↓<br>
+
+SSD1306 OLED Initializes
+
+<br>↓<br>
+
+ESP32 Connects to Wi-Fi
+
+<br>↓<br>
+
+LDR Sensor Measures Ambient Light
+
+<br>↓<br>
+
+Analog Signal Goes to GPIO 34
+
+<br>↓<br>
+
+ESP32 Reads ADC Value from 0 to 4095
+
+<br>↓<br>
+
+ADC Value is Converted to 0%–100%
+
+<br>↓<br>
+
+Light Condition is Calculated
+
+<br>↓<br>
+
+OLED Displays Percentage and Status
+
+<br>↓<br>
+
+Wi-Fi Dashboard Displays Live Light Data
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section
+class="section"
+id="procedure">
+
+<h2>
+Procedure
+</h2>
+
+
+<ol>
+
+<li>
+Place the ESP32 on the breadboard.
+</li>
+
+<li>
+Connect LDR module VCC to ESP32 3.3V.
+</li>
+
+<li>
+Connect LDR module GND to ESP32 GND.
+</li>
+
+<li>
+Connect LDR module AO to GPIO 34.
+</li>
+
+<li>
+Connect OLED VCC to ESP32 3.3V.
+</li>
+
+<li>
+Connect OLED GND to ESP32 GND.
+</li>
+
+<li>
+Connect OLED SDA to GPIO 21.
+</li>
+
+<li>
+Connect OLED SCL to GPIO 22.
+</li>
+
+<li>
+Open Arduino IDE.
+</li>
+
+<li>
+Install Adafruit GFX library.
+</li>
+
+<li>
+Install Adafruit SSD1306 library.
+</li>
+
+<li>
+Upload the program to the ESP32.
+</li>
+
+<li>
+Open Serial Monitor at 115200 baud.
+</li>
+
+<li>
+Wait for the ESP32 to connect to Wi-Fi.
+</li>
+
+<li>
+Note the ESP32 IP address.
+</li>
+
+<li>
+Open the IP address in a web browser.
+</li>
+
+<li>
+Cover the LDR sensor with your hand.
+</li>
+
+<li>
+Observe the light percentage decrease.
+</li>
+
+<li>
+Expose the sensor to more light.
+</li>
+
+<li>
+Observe the light percentage increase.
+</li>
+
+<li>
+Compare DARK, DIM, BRIGHT
+and VERY BRIGHT conditions.
+</li>
+
+</ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section
+class="section"
+id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+ESP32 Experiment · Code Review
+</p>
+
+
+<h2 class="lesson-title">
+Explore the Code
+</h2>
+
+
+<p class="intro">
+
+Wi-Fi Light Intensity Monitor ·
+Select a step to understand
+what each part of the program does.
+
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+<span class="filename">
+WiFi_Light_Intensity_Monitor.ino
+</span>
+
+
+<button
+class="copy-button"
+onclick="copyCode()">
+
+Copy Code
+
+</button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- GUIDE -->
+
+<article class="guide">
+
+
+<h2>
+Understand it step by step
+</h2>
+
+
+<p>
+
+Choose a step.
+The matching code
+will light up on the left.
+
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">
+01
+</span>
+
+Load libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">
+02
+</span>
+
+Set pins
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">
+03
+</span>
+
+Prepare OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">
+04
+</span>
+
+Store light data
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">
+05
+</span>
+
+Read LDR
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">
+06
+</span>
+
+Calculate percentage
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">
+07
+</span>
+
+Set light status
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">
+08
+</span>
+
+Update OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">
+09
+</span>
+
+Send web data
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(9)">
+
+<span class="step-number">
+10
+</span>
+
+Keep monitoring
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+1. Load libraries
+</h3>
+
+<p>
+
+The program loads libraries
+for Wi-Fi, web server,
+I2C communication and
+the SSD1306 OLED display.
+
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+Explore more: ADC percentage
+</summary>
+
+<p>
+
+The ESP32 reads a raw value
+between 0 and 4095.
+
+</p>
+
+<p>
+
+The program converts it
+to a percentage using:
+
+</p>
+
+<p>
+
+<code>
+map(ldrValue, 0, 4095, 0, 100)
+</code>
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Explore more: light conditions
+</summary>
+
+<ul>
+
+<li>
+Below 20% = DARK
+</li>
+
+<li>
+Below 50% = DIM
+</li>
+
+<li>
+Below 80% = BRIGHT
+</li>
+
+<li>
+80% or more = VERY BRIGHT
+</li>
+
+</ul>
+
+</details>
+
+
+<details>
+
+<summary>
+Check your understanding
+</summary>
+
+
+<ul>
+
+<li>
+
+Which GPIO reads the LDR?
+
+<strong>
+GPIO 34
+</strong>
+
+</li>
+
+
+<li>
+
+What is the ADC range?
+
+<strong>
+0 to 4095
+</strong>
+
+</li>
+
+
+<li>
+
+Which GPIO is OLED SDA?
+
+<strong>
+GPIO 21
+</strong>
+
+</li>
+
+
+<li>
+
+Which GPIO is OLED SCL?
+
+<strong>
+GPIO 22
+</strong>
+
+</li>
+
+
+<li>
+
+What status appears from 50% to 79%?
+
+<strong>
+BRIGHT
+</strong>
+
+</li>
+
+</ul>
+
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>
+Try it:
+</strong>
+
+Cover the light sensor
+with your hand and then
+shine more light on it.
+Watch the percentage and
+light condition change.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>
+Expected Output
+</h2>
+
+<p>
+
+The OLED displays:
+
+</p>
+
+<ul>
+
+<li>
+Light intensity percentage
+</li>
+
+<li>
+Graphical progress bar
+</li>
+
+<li>
+DARK, DIM, BRIGHT or VERY BRIGHT status
+</li>
+
+</ul>
+
+<p>
+
+The web dashboard displays:
+
+</p>
+
+<ul>
+
+<li>
+Raw LDR ADC value
+</li>
+
+<li>
+Light level percentage
+</li>
+
+<li>
+Light condition
+</li>
+
+<li>
+Description of the detected light
+</li>
+
+<li>
+Wi-Fi connection status
+</li>
+
+</ul>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>
+Result
+</h2>
+
+<p>
+
+The Wi-Fi Light Intensity Monitor
+Experiment successfully measures
+ambient light using an LDR
+sensor module connected to ESP32.
+
+</p>
+
+<p>
+
+The light intensity is displayed
+as a percentage on the OLED
+and can also be monitored
+through the Wi-Fi dashboard.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>
+What You Learn
+</h2>
+
+<ul>
+
+<li>
+Connecting an LDR sensor module to ESP32.
+</li>
+
+<li>
+Reading analog sensor values.
+</li>
+
+<li>
+Using GPIO 34 as an analog input.
+</li>
+
+<li>
+Understanding the ESP32 12-bit ADC.
+</li>
+
+<li>
+Converting ADC values to percentages.
+</li>
+
+<li>
+Classifying sensor readings.
+</li>
+
+<li>
+Using an SSD1306 OLED.
+</li>
+
+<li>
+Using I2C communication.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Creating a live sensor web dashboard.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wi-Fi Light Intensity Monitor
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script
+type="text/plain"
+id="esp32-program">
+
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+
+// =====================================================
+// WIFI
+// =====================================================
+
+const char* ssid =
+"Wokwi-GUEST";
+
+const char* password =
+"";
+
+
+// =====================================================
+// PIN DEFINITIONS
+// =====================================================
+
+#define LDR_AO 34
+
+#define OLED_SDA 21
+#define OLED_SCL 22
+
+
+// =====================================================
+// OLED SETTINGS
+// =====================================================
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+#define OLED_ADDR 0x3C
+
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    -1
+);
+
+
+// =====================================================
+// WEB SERVER
+// =====================================================
+
+WebServer server(
+    80
+);
+
+
+// =====================================================
+// VARIABLES
+// =====================================================
+
+int ldrValue =
+0;
+
+int lightPercent =
+0;
+
+String lightStatus =
+"DARK";
+
+String lightDescription =
+"Very low light detected";
+
+
+// =====================================================
+// READ LIGHT SENSOR
+// =====================================================
+
+void readLight()
+{
+
+    ldrValue =
+    analogRead(
+        LDR_AO
+    );
+
+
+    // Convert ADC to percentage
+
+    lightPercent =
+    map(
+        ldrValue,
+        0,
+        4095,
+        0,
+        100
+    );
+
+
+    lightPercent =
+    constrain(
+        lightPercent,
+        0,
+        100
+    );
+
+
+    // Determine condition
+
+    if(
+        lightPercent < 20
+    )
+    {
+
+        lightStatus =
+        "DARK";
+
+
+        lightDescription =
+        "Very low light detected";
+
+    }
+
+    else if(
+        lightPercent < 50
+    )
+    {
+
+        lightStatus =
+        "DIM";
+
+
+        lightDescription =
+        "Low light level detected";
+
+    }
+
+    else if(
+        lightPercent < 80
+    )
+    {
+
+        lightStatus =
+        "BRIGHT";
+
+
+        lightDescription =
+        "Good ambient light detected";
+
+    }
+
+    else
+    {
+
+        lightStatus =
+        "VERY BRIGHT";
+
+
+        lightDescription =
+        "High light level detected";
+
+    }
+
+}
+
+
+// =====================================================
+// OLED DISPLAY
+// =====================================================
+
+void updateOLED()
+{
+
+    display.clearDisplay();
+
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+
+    // Header
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.setCursor(
+        20,
+        0
+    );
+
+
+    display.println(
+        "LIGHT MONITOR"
+    );
+
+
+    display.drawLine(
+        0,
+        10,
+        127,
+        10,
+        SSD1306_WHITE
+    );
+
+
+    // Percentage
+
+    display.setTextSize(
+        2
+    );
+
+
+    display.setCursor(
+        38,
+        16
+    );
+
+
+    if(
+        lightPercent < 10
+    )
+    {
+
+        display.print(
+            " "
+        );
+
+    }
+
+
+    display.print(
+        lightPercent
+    );
+
+
+    display.println(
+        "%"
+    );
+
+
+    // Progress bar
+
+    display.drawRect(
+        8,
+        38,
+        112,
+        9,
+        SSD1306_WHITE
+    );
+
+
+    int barWidth =
+    map(
+        lightPercent,
+        0,
+        100,
+        0,
+        108
+    );
+
+
+    if(
+        barWidth > 0
+    )
+    {
+
+        display.fillRect(
+            10,
+            40,
+            barWidth,
+            5,
+            SSD1306_WHITE
+        );
+
+    }
+
+
+    // Status
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.setCursor(
+        42,
+        53
+    );
+
+
+    display.print(
+        lightStatus
+    );
+
+
+    display.display();
+
+}
+
+
+// =====================================================
+// WEB DASHBOARD
+// =====================================================
+
+void handleRoot()
+{
+
+    String html =
+    R"rawliteral(
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Light Intensity Monitor
+</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:
+    linear-gradient(
+        135deg,
+        #020b1c,
+        #071d3d,
+        #03152e
+    );
+
+    color:white;
+
+    padding:30px 20px;
+}
+
+
+.dashboard{
+
+    width:100%;
+
+    max-width:900px;
+
+    margin:auto;
+}
+
+
+.header{
+
+    display:flex;
+
+    justify-content:
+    space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+}
+
+
+h1{
+
+    margin:0;
+
+    color:#42dfff;
+}
+
+
+.wifi{
+
+    color:#40ff9a;
+
+    font-weight:bold;
+}
+
+
+.card{
+
+    padding:30px;
+
+    border-radius:25px;
+
+    background:#0b2345;
+
+    border:
+    1px solid #2563eb;
+}
+
+
+.monitor{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:25px;
+
+    align-items:center;
+}
+
+
+.value{
+
+    text-align:center;
+
+    font-size:70px;
+
+    font-weight:bold;
+}
+
+
+.condition{
+
+    text-align:center;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    background:#102e56;
+}
+
+
+.condition h2{
+
+    color:#ffd43b;
+
+    font-size:35px;
+}
+
+
+.progress{
+
+    margin-top:30px;
+
+    height:20px;
+
+    background:#173457;
+
+    border-radius:20px;
+
+    overflow:hidden;
+}
+
+
+.bar{
+
+    width:0%;
+
+    height:100%;
+
+    background:#ffd43b;
+}
+
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:15px;
+
+    margin-top:25px;
+}
+
+
+.stat{
+
+    padding:20px;
+
+    text-align:center;
+
+    border-radius:15px;
+
+    background:#102e56;
+}
+
+
+.stat-value{
+
+    margin-top:7px;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+    color:#42dfff;
+}
+
+
+@media(max-width:650px){
+
+    .monitor,
+    .stats{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard">
+
+
+<div class="header">
+
+<div>
+
+<h1>
+Light Intensity Monitor
+</h1>
+
+<p>
+ESP32 Wireless Sensor Dashboard
+</p>
+
+</div>
+
+
+<div class="wifi">
+● CONNECTED
+</div>
+
+</div>
+
+
+<div class="card">
+
+
+<div class="monitor">
+
+
+<div
+class="value">
+
+<span id="lightValue">
+0
+</span>%
+
+</div>
+
+
+<div class="condition">
+
+<p>
+Light Condition
+</p>
+
+<h2 id="condition">
+--
+</h2>
+
+<p id="description">
+Waiting for sensor...
+</p>
+
+</div>
+
+
+</div>
+
+
+<div class="progress">
+
+<div
+class="bar"
+id="progressBar">
+</div>
+
+</div>
+
+
+<div class="stats">
+
+
+<div class="stat">
+
+LDR ADC Value
+
+<div
+class="stat-value"
+id="adcValue">
+
+0
+
+</div>
+
+</div>
+
+
+<div class="stat">
+
+Light Level
+
+<div
+class="stat-value"
+id="lightLevel">
+
+0%
+
+</div>
+
+</div>
+
+
+<div class="stat">
+
+Status
+
+<div
+class="stat-value"
+id="statusValue">
+
+--
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+function updateDashboard()
+{
+
+    fetch(
+        "/data"
+    )
+
+    .then(
+        response =>
+        response.json()
+    )
+
+    .then(
+        data =>
+        {
+
+            document
+            .getElementById(
+                "lightValue"
+            )
+            .innerText =
+            data.percent;
+
+
+            document
+            .getElementById(
+                "progressBar"
+            )
+            .style
+            .width =
+            data.percent +
+            "%";
+
+
+            document
+            .getElementById(
+                "condition"
+            )
+            .innerText =
+            data.status;
+
+
+            document
+            .getElementById(
+                "description"
+            )
+            .innerText =
+            data.description;
+
+
+            document
+            .getElementById(
+                "adcValue"
+            )
+            .innerText =
+            data.adc;
+
+
+            document
+            .getElementById(
+                "lightLevel"
+            )
+            .innerText =
+            data.percent +
+            "%";
+
+
+            document
+            .getElementById(
+                "statusValue"
+            )
+            .innerText =
+            data.status;
+
+        }
+
+    );
+
+}
+
+
+setInterval(
+    updateDashboard,
+    1000
+);
+
+
+updateDashboard();
+
+
+</script>
+
+
+</body>
+
+</html>
+
+)rawliteral";
+
+
+    server.send(
+        200,
+        "text/html; charset=UTF-8",
+        html
+    );
+
+}
+
+
+// =====================================================
+// JSON DATA
+// =====================================================
+
+void handleData()
+{
+
+    readLight();
+
+
+    String json =
+    "{";
+
+
+    json +=
+    "\"adc\":";
+
+
+    json +=
+    String(
+        ldrValue
+    );
+
+
+    json +=
+    ",";
+
+
+    json +=
+    "\"percent\":";
+
+
+    json +=
+    String(
+        lightPercent
+    );
+
+
+    json +=
+    ",";
+
+
+    json +=
+    "\"status\":\"";
+
+
+    json +=
+    lightStatus;
+
+
+    json +=
+    "\",";
+
+
+    json +=
+    "\"description\":\"";
+
+
+    json +=
+    lightDescription;
+
+
+    json +=
+    "\"";
+
+
+    json +=
+    "}";
+
+
+    server.send(
+        200,
+        "application/json",
+        json
+    );
+
+}
+
+
+// =====================================================
+// SETUP
+// =====================================================
+
+void setup()
+{
+
+    Serial.begin(
+        115200
+    );
+
+
+    // ADC
+
+    analogReadResolution(
+        12
+    );
+
+
+    // OLED
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+
+    if(
+        !display.begin(
+            SSD1306_SWITCHCAPVCC,
+            OLED_ADDR
+        )
+    )
+    {
+
+        Serial.println(
+            "OLED not found!"
+        );
+
+
+        while(1);
+
+    }
+
+
+    // Startup OLED
+
+    display.clearDisplay();
+
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.setCursor(
+        20,
+        25
+    );
+
+
+    display.println(
+        "Connecting WiFi..."
+    );
+
+
+    display.display();
+
+
+    // WiFi
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    Serial.print(
+        "Connecting to WiFi"
+    );
+
+
+    while(
+        WiFi.status()
+        !=
+        WL_CONNECTED
+    )
+    {
+
+        delay(
+            500
+        );
+
+
+        Serial.print(
+            "."
+        );
+
+    }
+
+
+    Serial.println();
+
+
+    Serial.println(
+        "WiFi Connected!"
+    );
+
+
+    Serial.print(
+        "ESP32 IP Address: "
+    );
+
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    // Web Server
+
+    server.on(
+        "/",
+        handleRoot
+    );
+
+
+    server.on(
+        "/data",
+        handleData
+    );
+
+
+    server.begin();
+
+
+    Serial.println(
+        "Web server started"
+    );
+
+
+    // Initial reading
+
+    readLight();
+
+
+    updateOLED();
+
+}
+
+
+// =====================================================
+// LOOP
+// =====================================================
+
+void loop()
+{
+
+    server.handleClient();
+
+
+    static unsigned long
+    lastUpdate =
+    0;
+
+
+    if(
+        millis()
+        -
+        lastUpdate
+        >=
+        500
+    )
+    {
+
+        lastUpdate =
+        millis();
+
+
+        readLight();
+
+
+        updateOLED();
+
+
+        Serial.print(
+            "LDR ADC: "
+        );
+
+
+        Serial.print(
+            ldrValue
+        );
+
+
+        Serial.print(
+            " | Light: "
+        );
+
+
+        Serial.print(
+            lightPercent
+        );
+
+
+        Serial.print(
+            "%"
+        );
+
+
+        Serial.print(
+            " | Status: "
+        );
+
+
+        Serial.println(
+            lightStatus
+        );
+
+    }
+
+}
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+
+document
+.getElementById(
+    "esp32-program"
+)
+.textContent
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+const steps = [
+
+
+{
+
+title:
+"Load libraries",
+
+search:
+"#include <WiFi.h>",
+
+text:
+"The program loads Wi-Fi, WebServer, Wire, graphics and SSD1306 OLED libraries."
+
+},
+
+
+{
+
+title:
+"Set pins",
+
+search:
+"#define LDR_AO",
+
+text:
+"GPIO 34 receives the analog signal from the LDR. GPIO 21 and GPIO 22 are used for the OLED."
+
+},
+
+
+{
+
+title:
+"Prepare OLED",
+
+search:
+"#define SCREEN_WIDTH",
+
+text:
+"The SSD1306 OLED is configured as a 128 × 64 pixel display with I2C address 0x3C."
+
+},
+
+
+{
+
+title:
+"Store light data",
+
+search:
+"int ldrValue",
+
+text:
+"These variables store the raw ADC value, percentage, light status and description."
+
+},
+
+
+{
+
+title:
+"Read LDR",
+
+search:
+"void readLight",
+
+text:
+"The ESP32 reads the LDR analog output through GPIO 34."
+
+},
+
+
+{
+
+title:
+"Calculate percentage",
+
+search:
+"lightPercent =",
+
+text:
+"The raw ADC reading from 0 to 4095 is mapped to a light percentage from 0 to 100."
+
+},
+
+
+{
+
+title:
+"Set light status",
+
+search:
+'lightStatus = "DARK"',
+
+text:
+"The program classifies the light as DARK, DIM, BRIGHT or VERY BRIGHT according to the percentage."
+
+},
+
+
+{
+
+title:
+"Update OLED",
+
+search:
+"void updateOLED",
+
+text:
+"The OLED displays the light percentage, graphical progress bar and current light condition."
+
+},
+
+
+{
+
+title:
+"Send web data",
+
+search:
+"void handleData",
+
+text:
+"The ESP32 sends ADC value, percentage, status and description to the browser as JSON."
+
+},
+
+
+{
+
+title:
+"Keep monitoring",
+
+search:
+"void loop()",
+
+text:
+"The loop updates the sensor and OLED every 500 milliseconds while continuing to handle browser requests."
+
+}
+
+];
+
+
+function escapeHtml(text)
+{
+
+    return text
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+
+function displayCode()
+{
+
+    let output = "";
+
+
+    lines.forEach(
+
+        function(
+            line,
+            index
+        )
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+
+            (index + 1) +
+
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+
+        }
+
+    );
+
+
+    document
+    .getElementById(
+        "code-lines"
+    )
+    .innerHTML =
+    output;
+
+}
+
+
+function showStep(index)
+{
+
+    const step =
+    steps[index];
+
+
+    const buttons =
+
+    document
+    .querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+
+        function(button)
+        {
+
+            button
+            .classList
+            .remove(
+                "active"
+            );
+
+        }
+
+    );
+
+
+    buttons[index]
+    .classList
+    .add(
+        "active"
+    );
+
+
+    document
+    .querySelectorAll(
+        ".code-line"
+    )
+    .forEach(
+
+        function(line)
+        {
+
+            line
+            .classList
+            .remove(
+                "selected"
+            );
+
+        }
+
+    );
+
+
+    let foundLine =
+    -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+
+        if(
+            lines[i]
+            .includes(
+                step.search
+            )
+        )
+        {
+
+            foundLine =
+            i;
+
+            break;
+
+        }
+
+    }
+
+
+    if(
+        foundLine >= 0
+    )
+    {
+
+        for(
+            let i =
+            foundLine;
+
+            i <
+            Math.min(
+                foundLine + 12,
+                lines.length
+            );
+
+            i++
+        )
+        {
+
+            document
+            .getElementById(
+                "line-" +
+                (i + 1)
+            )
+            .classList
+            .add(
+                "selected"
+            );
+
+        }
+
+
+        const selectedLine =
+
+        document
+        .getElementById(
+            "line-" +
+            (foundLine + 1)
+        );
+
+
+        document
+        .getElementById(
+            "code-body"
+        )
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop
+            - 20,
+
+            behavior:
+            "smooth"
+
+        });
+
+    }
+
+
+    document
+    .getElementById(
+        "explanation"
+    )
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+
+    ". " +
+
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+
+}
+
+
+function copyCode()
+{
+
+    navigator
+    .clipboard
+    .writeText(
+        program
+    )
+    .then(
+
+        function()
+        {
+
+            const button =
+
+            document
+            .querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+
+                function()
+                {
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+
+                1500
+
+            );
+
+        }
+
+    );
+
+}
+
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+
+</html>
