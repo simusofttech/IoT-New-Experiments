@@ -1,0 +1,4059 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wi-Fi Countdown Timer</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:130px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+
+    max-width:760px;
+
+    margin:20px auto;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+}
+
+
+/* =========================
+   TIMER DISPLAY
+========================= */
+
+.timer-demo{
+    max-width:500px;
+
+    margin:20px auto;
+
+    padding:30px;
+
+    text-align:center;
+
+    background:#eff6ff;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+}
+
+.timer-demo h3{
+    margin:0 0 15px;
+}
+
+.demo-time{
+    font-size:55px;
+    font-weight:bold;
+    color:#2563eb;
+}
+
+.demo-status{
+    display:inline-block;
+
+    margin-top:10px;
+
+    padding:7px 18px;
+
+    background:#dbeafe;
+
+    color:#1e3a8a;
+
+    border-radius:20px;
+
+    font-weight:bold;
+}
+
+
+/* =========================
+   BUTTON FUNCTIONS
+========================= */
+
+.function-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:15px;
+}
+
+.function-card{
+    padding:18px;
+
+    text-align:center;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:12px;
+
+    background:#f8fbff;
+}
+
+.function-card strong{
+    display:block;
+
+    color:#1e3a8a;
+
+    font-size:17px;
+
+    margin-bottom:5px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================================
+   EXPLORE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+.code-layout{
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* CODE PANEL */
+
+.code-panel{
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.filename{
+    font:bold 14px Consolas, monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+.code-body{
+    height:600px;
+
+    overflow:auto;
+
+    padding:16px 0;
+
+    background:white;
+}
+
+.code-line{
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:20px;
+
+    white-space:pre;
+
+    font:13px/24px Consolas, monospace;
+
+    color:#1e293b;
+
+    border-bottom:1px solid #f1f5f9;
+}
+
+.code-line:hover{
+    background:#f8fbff;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+.line-number{
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+
+    user-select:none;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+}
+
+.steps{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.step{
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+.step:hover{
+    background:#f8fbff;
+
+    border-color:#60a5fa;
+}
+
+.step.active{
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+}
+
+.step-number{
+    color:#2563eb;
+
+    font-size:12px;
+}
+
+.explanation{
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+.explanation h3{
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+
+    font-size:17px;
+}
+
+.explanation p{
+    margin:0;
+
+    color:#526875;
+}
+
+.guide details{
+    border-top:1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+.guide code{
+    background:#e5ecf4;
+
+    padding:2px 5px;
+
+    border-radius:4px;
+}
+
+.tip{
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+}
+
+footer strong{
+    color:white;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+    .function-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .section{
+        padding:20px;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+
+    .function-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+<h1>
+ESP32 Experiment
+</h1>
+
+<p>
+Wi-Fi Countdown Timer
+</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+<a href="../index.html">
+← ESP32 Experiments
+</a>
+
+<a href="#aim">
+Aim
+</a>
+
+<a href="#components">
+Components
+</a>
+
+<a href="#connections">
+Connections
+</a>
+
+<a href="#circuit">
+Circuit
+</a>
+
+<a href="#working">
+Working
+</a>
+
+<a href="#procedure">
+Procedure
+</a>
+
+<a href="#code">
+Code
+</a>
+
+<a href="#result">
+Result
+</a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section
+class="section"
+id="aim">
+
+<h2>
+Aim
+</h2>
+
+<p>
+
+To create a Wi-Fi controlled
+countdown timer using ESP32
+that can be operated using
+physical push buttons or
+a web dashboard and gives
+an alarm using a buzzer
+when the timer reaches zero.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+<h2>
+About the Experiment
+</h2>
+
+<p>
+
+This Experiment uses an ESP32
+as a digital countdown timer.
+
+</p>
+
+<p>
+
+The user can add time,
+start or pause the timer,
+reset it and control
+the timer through Wi-Fi.
+
+</p>
+
+<p>
+
+The remaining time and
+timer status are shown on
+the SSD1306 OLED display.
+
+</p>
+
+<p>
+
+When the countdown reaches
+<strong>00:00</strong>,
+the buzzer produces an alarm.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section
+class="section"
+id="components">
+
+<h2>
+Components Required
+</h2>
+
+
+<div class="components-grid">
+
+
+<div class="component-card">
+
+<img
+src="ESP32 Development Board.png"
+alt="ESP32 Development Board">
+
+<h4>
+ESP32 DevKitC V4 (×1)
+</h4>
+
+<p>
+Main controller with
+built-in Wi-Fi.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="OLED SSD1306.png"
+alt="OLED SSD1306">
+
+<h4>
+0.96" SSD1306 OLED 128×64 (×1)
+</h4>
+
+<p>
+Displays countdown time,
+Wi-Fi and timer status.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Push Button.png"
+alt="Green Push Button">
+
+<h4>
+Green Push Button (×1)
+</h4>
+
+<p>
+Adds 10 seconds
+to the timer.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Push Button.png"
+alt="Yellow Push Button">
+
+<h4>
+Yellow Push Button (×1)
+</h4>
+
+<p>
+Starts, pauses or resets
+the countdown timer.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Buzzer.png"
+alt="Buzzer">
+
+<h4>
+Buzzer (×1)
+</h4>
+
+<p>
+Sounds an alarm when
+the countdown reaches zero.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Breadboard.png"
+alt="Breadboard">
+
+<h4>
+Breadboard (×1)
+</h4>
+
+<p>
+Used to assemble
+the physical circuit.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Jumper Wires.png"
+alt="Jumper Wires">
+
+<h4>
+Jumper Wires
+</h4>
+
+<p>
+Used for all electrical
+connections.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section
+class="section"
+id="connections">
+
+<h2>
+Circuit Connections
+</h2>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Component</th>
+<th>Connection</th>
+<th>ESP32 Pin</th>
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+<td>Green Push Button</td>
+<td>Signal</td>
+<td>GPIO 18</td>
+</tr>
+
+<tr>
+<td>Green Push Button</td>
+<td>Other Terminal</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>Yellow Push Button</td>
+<td>Signal</td>
+<td>GPIO 19</td>
+</tr>
+
+<tr>
+<td>Yellow Push Button</td>
+<td>Other Terminal</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>Buzzer</td>
+<td>Positive / Signal</td>
+<td>GPIO 25</td>
+</tr>
+
+<tr>
+<td>Buzzer</td>
+<td>Negative</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>OLED</td>
+<td>VCC</td>
+<td>3.3V</td>
+</tr>
+
+<tr>
+<td>OLED</td>
+<td>GND</td>
+<td>GND</td>
+</tr>
+
+<tr>
+<td>OLED</td>
+<td>SDA</td>
+<td>GPIO 21</td>
+</tr>
+
+<tr>
+<td>OLED</td>
+<td>SCL</td>
+<td>GPIO 22</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="note">
+
+<strong>
+Add Time Button:
+</strong>
+GPIO 18
+
+<br>
+
+<strong>
+Start / Pause Button:
+</strong>
+GPIO 19
+
+<br>
+
+<strong>
+Buzzer:
+</strong>
+GPIO 25
+
+<br>
+
+<strong>
+OLED SDA:
+</strong>
+GPIO 21
+
+<br>
+
+<strong>
+OLED SCL:
+</strong>
+GPIO 22
+
+<br>
+
+<strong>
+OLED Address:
+</strong>
+0x3C
+
+<br>
+
+<strong>
+Initial Timer:
+</strong>
+60 seconds
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+<h2>
+Circuit Diagram
+</h2>
+
+<p>
+
+Connect the ESP32,
+OLED, buzzer and
+two push buttons as
+shown in the circuit
+diagram from the PDF.
+
+</p>
+
+
+<img
+src="Wi-Fi Countdown Timer Circuit.png"
+alt="Wi-Fi Countdown Timer Circuit"
+class="circuit-img">
+
+</section>
+
+
+<!-- =========================
+     TIMER DEMO
+========================= -->
+
+<section class="section">
+
+<h2>
+Countdown Display
+</h2>
+
+
+<div class="timer-demo">
+
+<h3>
+Wi-Fi Countdown
+</h3>
+
+<div class="demo-time">
+00:34
+</div>
+
+<div class="demo-status">
+PAUSED
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONTROLS
+========================= -->
+
+<section class="section">
+
+<h2>
+Timer Controls
+</h2>
+
+
+<div class="function-grid">
+
+
+<div class="function-card">
+
+<strong>
++10 Seconds
+</strong>
+
+Adds 10 seconds
+to the countdown.
+
+</div>
+
+
+<div class="function-card">
+
+<strong>
+Start
+</strong>
+
+Starts the timer.
+
+</div>
+
+
+<div class="function-card">
+
+<strong>
+Pause
+</strong>
+
+Pauses the running timer.
+
+</div>
+
+
+<div class="function-card">
+
+<strong>
+Reset
+</strong>
+
+Returns the timer
+to 60 seconds.
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section
+class="section"
+id="working">
+
+<h2>
+Working Principle
+</h2>
+
+
+<div class="flow">
+
+ESP32 Starts
+
+<br>↓<br>
+
+OLED Initializes
+
+<br>↓<br>
+
+Push Buttons and Buzzer Initialize
+
+<br>↓<br>
+
+ESP32 Connects to Wi-Fi
+
+<br>↓<br>
+
+Timer Starts at 60 Seconds
+
+<br>↓<br>
+
+User Can Add 10 Seconds
+
+<br>↓<br>
+
+User Presses START
+
+<br>↓<br>
+
+Timer Decreases Every Second
+
+<br>↓<br>
+
+OLED Shows Remaining Time
+
+<br>↓<br>
+
+Web Dashboard Shows Live Countdown
+
+<br>↓<br>
+
+Timer Reaches 00:00
+
+<br>↓<br>
+
+Buzzer Alarm Sounds
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section
+class="section"
+id="procedure">
+
+<h2>
+Procedure
+</h2>
+
+
+<ol>
+
+<li>
+Place the ESP32 on the breadboard.
+</li>
+
+<li>
+Connect OLED VCC to ESP32 3.3V.
+</li>
+
+<li>
+Connect OLED GND to ESP32 GND.
+</li>
+
+<li>
+Connect OLED SDA to GPIO 21.
+</li>
+
+<li>
+Connect OLED SCL to GPIO 22.
+</li>
+
+<li>
+Connect the Green Push Button to GPIO 18 and GND.
+</li>
+
+<li>
+Connect the Yellow Push Button to GPIO 19 and GND.
+</li>
+
+<li>
+Connect buzzer signal to GPIO 25.
+</li>
+
+<li>
+Connect buzzer ground to ESP32 GND.
+</li>
+
+<li>
+Open Arduino IDE.
+</li>
+
+<li>
+Install Adafruit GFX library.
+</li>
+
+<li>
+Install Adafruit SSD1306 library.
+</li>
+
+<li>
+Upload the program to ESP32.
+</li>
+
+<li>
+Open Serial Monitor at 115200 baud.
+</li>
+
+<li>
+Wait for the ESP32 to connect to Wi-Fi.
+</li>
+
+<li>
+Note the ESP32 IP address.
+</li>
+
+<li>
+Open the IP address in a web browser.
+</li>
+
+<li>
+Press the Add button to add 10 seconds.
+</li>
+
+<li>
+Press the Start button once to start the countdown.
+</li>
+
+<li>
+Press the Start button again to pause the timer.
+</li>
+
+<li>
+Long-press the Start button to reset the timer.
+</li>
+
+<li>
+Allow the timer to reach 00:00.
+</li>
+
+<li>
+Observe the buzzer alarm.
+</li>
+
+</ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section
+class="section"
+id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+ESP32 Experiment · Code Review
+</p>
+
+
+<h2 class="lesson-title">
+Explore the Code
+</h2>
+
+
+<p class="intro">
+
+Wi-Fi Countdown Timer ·
+Select a step to understand
+what each part of the program does.
+
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+<span class="filename">
+WiFi_Countdown_Timer.ino
+</span>
+
+
+<button
+class="copy-button"
+onclick="copyCode()">
+
+Copy Code
+
+</button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- GUIDE -->
+
+<article class="guide">
+
+
+<h2>
+Understand it step by step
+</h2>
+
+
+<p>
+
+Choose a step.
+The matching code
+will light up on the left.
+
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">
+01
+</span>
+
+Load libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">
+02
+</span>
+
+Set pins
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">
+03
+</span>
+
+Prepare timer
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">
+04
+</span>
+
+Prepare alarm
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">
+05
+</span>
+
+Start hardware
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">
+06
+</span>
+
+Control buttons
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">
+07
+</span>
+
+Update timer
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">
+08
+</span>
+
+Sound alarm
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">
+09
+</span>
+
+Update OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(9)">
+
+<span class="step-number">
+10
+</span>
+
+Web control
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+1. Load libraries
+</h3>
+
+<p>
+
+The program loads Wi-Fi,
+WebServer, I2C and
+SSD1306 OLED libraries.
+
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+Explore more: Start button
+</summary>
+
+<p>
+
+A short press on the
+Start button changes between
+START and PAUSE.
+
+</p>
+
+<p>
+
+A long press of approximately
+one second resets the timer
+back to 60 seconds.
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Explore more: timer alarm
+</summary>
+
+<p>
+
+When the remaining time
+reaches zero, the ESP32
+starts the buzzer.
+
+</p>
+
+<p>
+
+The alarm uses a
+non-blocking timing method
+so the ESP32 can continue
+handling the web server.
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Check your understanding
+</summary>
+
+
+<ul>
+
+<li>
+Which GPIO is used for Add Time?
+<strong>GPIO 18</strong>
+</li>
+
+<li>
+Which GPIO is used for Start / Pause?
+<strong>GPIO 19</strong>
+</li>
+
+<li>
+Which GPIO controls the buzzer?
+<strong>GPIO 25</strong>
+</li>
+
+<li>
+What is the default timer value?
+<strong>60 seconds</strong>
+</li>
+
+<li>
+What happens when the timer reaches zero?
+<strong>The buzzer alarm starts.</strong>
+</li>
+
+</ul>
+
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>
+Try it:
+</strong>
+
+Set the timer to 20 seconds,
+press START and watch
+the OLED and web dashboard
+count down together.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>
+Expected Output
+</h2>
+
+<p>
+
+The OLED displays:
+
+</p>
+
+<ul>
+
+<li>
+Remaining countdown time
+</li>
+
+<li>
+Wi-Fi status
+</li>
+
+<li>
+RUNNING, PAUSED or TIME UP status
+</li>
+
+<li>
++10s control information
+</li>
+
+<li>
+START control information
+</li>
+
+</ul>
+
+<p>
+
+The web dashboard allows
+the timer to be started,
+paused, reset and adjusted
+remotely.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>
+Result
+</h2>
+
+<p>
+
+The Wi-Fi Countdown Timer
+Experiment successfully creates
+a countdown timer using ESP32.
+
+</p>
+
+<p>
+
+The timer can be controlled
+using physical push buttons
+or through the Wi-Fi
+web dashboard.
+
+</p>
+
+<p>
+
+When the timer reaches
+zero, the buzzer produces
+an alarm.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>
+What You Learn
+</h2>
+
+<ul>
+
+<li>
+Creating a countdown timer with ESP32.
+</li>
+
+<li>
+Using push buttons with INPUT_PULLUP.
+</li>
+
+<li>
+Detecting short and long button presses.
+</li>
+
+<li>
+Using millis() for timing.
+</li>
+
+<li>
+Creating a non-blocking timer.
+</li>
+
+<li>
+Controlling a buzzer.
+</li>
+
+<li>
+Using an SSD1306 OLED display.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Creating an ESP32 web server.
+</li>
+
+<li>
+Controlling a timer from a browser.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wi-Fi Countdown Timer
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script
+type="text/plain"
+id="esp32-program">
+
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+
+// =====================================================
+// OLED
+// =====================================================
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+#define OLED_RESET -1
+#define OLED_ADDR 0x3C
+
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    OLED_RESET
+);
+
+
+// =====================================================
+// PINS
+// =====================================================
+
+#define BUTTON_ADD 18
+#define BUTTON_START 19
+#define BUZZER 25
+
+
+// =====================================================
+// WIFI
+// =====================================================
+
+const char* ssid =
+"Wokwi-GUEST";
+
+const char* password =
+"";
+
+WebServer server(80);
+
+
+// =====================================================
+// TIMER
+// =====================================================
+
+unsigned long remainingSeconds =
+60;
+
+unsigned long totalSeconds =
+60;
+
+unsigned long lastSecond =
+0;
+
+bool timerRunning =
+false;
+
+
+// =====================================================
+// BUTTON VARIABLES
+// =====================================================
+
+bool startPressed =
+false;
+
+unsigned long startPressTime =
+0;
+
+bool lastAddState =
+HIGH;
+
+
+// =====================================================
+// ALARM
+// =====================================================
+
+bool alarmActive =
+false;
+
+unsigned long alarmStart =
+0;
+
+unsigned long lastBeep =
+0;
+
+int beepCount =
+0;
+
+bool beepState =
+false;
+
+
+// =====================================================
+// FORMAT TIME
+// =====================================================
+
+String formatTime(
+    unsigned long seconds
+)
+{
+
+    unsigned int minutes =
+    seconds / 60;
+
+    unsigned int secs =
+    seconds % 60;
+
+
+    char buffer[10];
+
+
+    sprintf(
+        buffer,
+        "%02u:%02u",
+        minutes,
+        secs
+    );
+
+
+    return String(
+        buffer
+    );
+
+}
+
+
+// =====================================================
+// WEB PAGE
+// =====================================================
+
+String webPage()
+{
+
+    String page =
+    R"rawliteral(
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32 Countdown Timer
+</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    min-height:100vh;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #061427,
+        #031020
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+}
+
+
+.timer-panel{
+
+    width:100%;
+
+    max-width:700px;
+
+    padding:30px;
+
+    text-align:center;
+
+    border-radius:25px;
+
+    background:#0b2340;
+
+}
+
+
+h1{
+
+    color:#38bdf8;
+
+}
+
+
+.timer{
+
+    margin:30px 0 15px;
+
+    font-size:72px;
+
+    font-weight:bold;
+
+}
+
+
+.status{
+
+    color:#93c5fd;
+
+    font-weight:bold;
+
+}
+
+
+.controls{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:12px;
+
+    margin-top:30px;
+
+}
+
+
+button{
+
+    padding:15px 10px;
+
+    border:none;
+
+    border-radius:10px;
+
+    color:white;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+
+.add{
+    background:#10b981;
+}
+
+
+.remove{
+    background:#ef4444;
+}
+
+
+.toggle{
+    background:#2563eb;
+}
+
+
+.reset{
+    background:#7c3aed;
+}
+
+
+.progress{
+
+    height:16px;
+
+    margin-top:25px;
+
+    background:#1e3a5f;
+
+    border-radius:20px;
+
+    overflow:hidden;
+}
+
+
+.progress-bar{
+
+    height:100%;
+
+    width:100%;
+
+    background:#38bdf8;
+}
+
+
+@media(max-width:600px){
+
+    .controls{
+
+        grid-template-columns:
+        repeat(2,1fr);
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="timer-panel">
+
+<h1>
+Countdown Timer
+</h1>
+
+<p>
+ESP32 Wi-Fi Timer Controller
+</p>
+
+
+<div
+class="timer"
+id="timer">
+
+01:00
+
+</div>
+
+
+<div
+class="status"
+id="state">
+
+PAUSED
+
+</div>
+
+
+<div class="controls">
+
+
+<button
+class="add"
+onclick="sendCommand('/add')">
+
++10 SEC
+
+</button>
+
+
+<button
+class="remove"
+onclick="sendCommand('/remove')">
+
+-10 SEC
+
+</button>
+
+
+<button
+class="toggle"
+onclick="sendCommand('/toggle')">
+
+START / PAUSE
+
+</button>
+
+
+<button
+class="reset"
+onclick="sendCommand('/reset')">
+
+RESET
+
+</button>
+
+
+</div>
+
+
+<div class="progress">
+
+<div
+class="progress-bar"
+id="progress">
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+function formatTime(seconds)
+{
+
+    let minutes =
+    Math.floor(
+        seconds / 60
+    );
+
+
+    let secs =
+    seconds % 60;
+
+
+    return String(
+        minutes
+    )
+    .padStart(
+        2,
+        "0"
+    )
+    +
+    ":"
+    +
+    String(
+        secs
+    )
+    .padStart(
+        2,
+        "0"
+    );
+
+}
+
+
+function updateData()
+{
+
+    fetch(
+        "/status"
+    )
+
+    .then(
+        response =>
+        response.json()
+    )
+
+    .then(
+        data =>
+        {
+
+            document
+            .getElementById(
+                "timer"
+            )
+            .innerText =
+            formatTime(
+                data.time
+            );
+
+
+            let state =
+            "PAUSED";
+
+
+            if(
+                data.time === 0
+            )
+            {
+
+                state =
+                "TIME UP!";
+
+            }
+
+            else if(
+                data.running
+            )
+            {
+
+                state =
+                "RUNNING";
+
+            }
+
+
+            document
+            .getElementById(
+                "state"
+            )
+            .innerText =
+            state;
+
+
+            let percent =
+            0;
+
+
+            if(
+                data.total > 0
+            )
+            {
+
+                percent =
+                (
+                    data.time
+                    /
+                    data.total
+                )
+                *
+                100;
+
+            }
+
+
+            document
+            .getElementById(
+                "progress"
+            )
+            .style
+            .width =
+            percent +
+            "%";
+
+        }
+
+    );
+
+}
+
+
+function sendCommand(path)
+{
+
+    fetch(
+        path
+    )
+
+    .then(
+        () =>
+        updateData()
+    );
+
+}
+
+
+setInterval(
+    updateData,
+    500
+);
+
+
+updateData();
+
+
+</script>
+
+</body>
+
+</html>
+
+)rawliteral";
+
+
+    return page;
+
+}
+
+
+// =====================================================
+// START ALARM
+// =====================================================
+
+void startAlarm()
+{
+
+    alarmActive =
+    true;
+
+
+    alarmStart =
+    millis();
+
+
+    lastBeep =
+    millis();
+
+
+    beepCount =
+    0;
+
+
+    beepState =
+    false;
+
+}
+
+
+// =====================================================
+// NON-BLOCKING ALARM
+// =====================================================
+
+void updateAlarm()
+{
+
+    if(
+        !alarmActive
+    )
+    {
+
+        return;
+
+    }
+
+
+    if(
+        millis()
+        -
+        lastBeep
+        >=
+        300
+    )
+    {
+
+        lastBeep =
+        millis();
+
+
+        beepState =
+        !beepState;
+
+
+        if(
+            beepState
+        )
+        {
+
+            tone(
+                BUZZER,
+                2000
+            );
+
+        }
+
+        else
+        {
+
+            noTone(
+                BUZZER
+            );
+
+
+            beepCount++;
+
+        }
+
+
+        if(
+            beepCount >= 6
+        )
+        {
+
+            alarmActive =
+            false;
+
+
+            noTone(
+                BUZZER
+            );
+
+        }
+
+    }
+
+}
+
+
+// =====================================================
+// TIMER
+// =====================================================
+
+void updateTimer()
+{
+
+    if(
+        !timerRunning
+    )
+    {
+
+        return;
+
+    }
+
+
+    if(
+        millis()
+        -
+        lastSecond
+        >=
+        1000
+    )
+    {
+
+        lastSecond =
+        millis();
+
+
+        if(
+            remainingSeconds > 0
+        )
+        {
+
+            remainingSeconds--;
+
+        }
+
+
+        if(
+            remainingSeconds == 0
+        )
+        {
+
+            timerRunning =
+            false;
+
+
+            startAlarm();
+
+        }
+
+    }
+
+}
+
+
+// =====================================================
+// BUTTON HANDLING
+// =====================================================
+
+void handleButtons()
+{
+
+    // ADD BUTTON
+
+    bool addState =
+    digitalRead(
+        BUTTON_ADD
+    );
+
+
+    if(
+        lastAddState == HIGH
+        &&
+        addState == LOW
+    )
+    {
+
+        remainingSeconds +=
+        10;
+
+
+        if(
+            remainingSeconds > 5999
+        )
+        {
+
+            remainingSeconds =
+            5999;
+
+        }
+
+
+        if(
+            remainingSeconds >
+            totalSeconds
+        )
+        {
+
+            totalSeconds =
+            remainingSeconds;
+
+        }
+
+
+        delay(
+            150
+        );
+
+    }
+
+
+    lastAddState =
+    addState;
+
+
+    // START BUTTON
+
+    bool startState =
+    digitalRead(
+        BUTTON_START
+    );
+
+
+    if(
+        startState == LOW
+        &&
+        !startPressed
+    )
+    {
+
+        startPressed =
+        true;
+
+
+        startPressTime =
+        millis();
+
+    }
+
+
+    if(
+        startState == HIGH
+        &&
+        startPressed
+    )
+    {
+
+        startPressed =
+        false;
+
+
+        unsigned long
+        pressDuration =
+
+        millis()
+        -
+        startPressTime;
+
+
+        // LONG PRESS = RESET
+
+        if(
+            pressDuration >= 1000
+        )
+        {
+
+            timerRunning =
+            false;
+
+
+            remainingSeconds =
+            60;
+
+
+            totalSeconds =
+            60;
+
+
+            alarmActive =
+            false;
+
+
+            noTone(
+                BUZZER
+            );
+
+        }
+
+
+        // SHORT PRESS =
+        // START / PAUSE
+
+        else
+        {
+
+            if(
+                remainingSeconds > 0
+            )
+            {
+
+                timerRunning =
+                !timerRunning;
+
+
+                lastSecond =
+                millis();
+
+            }
+
+        }
+
+
+        delay(
+            150
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// OLED
+// =====================================================
+
+void updateOLED()
+{
+
+    static unsigned long
+    lastUpdate =
+    0;
+
+
+    if(
+        millis()
+        -
+        lastUpdate
+        <
+        100
+    )
+    {
+
+        return;
+
+    }
+
+
+    lastUpdate =
+    millis();
+
+
+    display.clearDisplay();
+
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+
+    // HEADER
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.setCursor(
+        2,
+        0
+    );
+
+
+    display.print(
+        "WIFI COUNTDOWN"
+    );
+
+
+    display.setCursor(
+        104,
+        0
+    );
+
+
+    if(
+        WiFi.status()
+        ==
+        WL_CONNECTED
+    )
+    {
+
+        display.print(
+            "OK"
+        );
+
+    }
+
+    else
+    {
+
+        display.print(
+            "--"
+        );
+
+    }
+
+
+    display.drawLine(
+        0,
+        10,
+        127,
+        10,
+        SSD1306_WHITE
+    );
+
+
+    // TIME
+
+    unsigned int minutes =
+    remainingSeconds / 60;
+
+
+    unsigned int seconds =
+    remainingSeconds % 60;
+
+
+    char timeText[10];
+
+
+    sprintf(
+        timeText,
+        "%02d:%02d",
+        minutes,
+        seconds
+    );
+
+
+    display.setTextSize(
+        3
+    );
+
+
+    int16_t x1;
+    int16_t y1;
+
+    uint16_t width;
+    uint16_t height;
+
+
+    display.getTextBounds(
+        timeText,
+        0,
+        0,
+        &x1,
+        &y1,
+        &width,
+        &height
+    );
+
+
+    display.setCursor(
+        (
+            128
+            -
+            width
+        )
+        /
+        2,
+        18
+    );
+
+
+    display.print(
+        timeText
+    );
+
+
+    // STATUS
+
+    display.setTextSize(
+        1
+    );
+
+
+    if(
+        remainingSeconds == 0
+    )
+    {
+
+        display.setCursor(
+            42,
+            48
+        );
+
+
+        display.print(
+            "TIME UP!"
+        );
+
+    }
+
+    else if(
+        timerRunning
+    )
+    {
+
+        display.setCursor(
+            45,
+            48
+        );
+
+
+        display.print(
+            "RUNNING"
+        );
+
+    }
+
+    else
+    {
+
+        display.setCursor(
+            43,
+            48
+        );
+
+
+        display.print(
+            "PAUSED"
+        );
+
+    }
+
+
+    display.setCursor(
+        2,
+        57
+    );
+
+
+    display.print(
+        "+10s"
+    );
+
+
+    display.setCursor(
+        84,
+        57
+    );
+
+
+    display.print(
+        "START"
+    );
+
+
+    display.display();
+
+}
+
+
+// =====================================================
+// SETUP
+// =====================================================
+
+void setup()
+{
+
+    Serial.begin(
+        115200
+    );
+
+
+    // BUTTONS
+
+    pinMode(
+        BUTTON_ADD,
+        INPUT_PULLUP
+    );
+
+
+    pinMode(
+        BUTTON_START,
+        INPUT_PULLUP
+    );
+
+
+    // BUZZER
+
+    pinMode(
+        BUZZER,
+        OUTPUT
+    );
+
+
+    digitalWrite(
+        BUZZER,
+        LOW
+    );
+
+
+    // OLED
+
+    Wire.begin(
+        21,
+        22
+    );
+
+
+    if(
+        !display.begin(
+            SSD1306_SWITCHCAPVCC,
+            OLED_ADDR
+        )
+    )
+    {
+
+        Serial.println(
+            "OLED ERROR!"
+        );
+
+
+        while(true);
+
+    }
+
+
+    display.clearDisplay();
+
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+
+    display.setTextSize(
+        2
+    );
+
+
+    display.setCursor(
+        22,
+        8
+    );
+
+
+    display.println(
+        "TIMER"
+    );
+
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.setCursor(
+        12,
+        35
+    );
+
+
+    display.println(
+        "Connecting WiFi..."
+    );
+
+
+    display.display();
+
+
+    // WIFI
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    Serial.print(
+        "Connecting to WiFi"
+    );
+
+
+    while(
+        WiFi.status()
+        !=
+        WL_CONNECTED
+    )
+    {
+
+        delay(
+            300
+        );
+
+
+        Serial.print(
+            "."
+        );
+
+    }
+
+
+    Serial.println();
+
+
+    Serial.println(
+        "WiFi Connected!"
+    );
+
+
+    Serial.print(
+        "IP Address: "
+    );
+
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    // WEB ROUTES
+
+    server.on(
+        "/",
+        []()
+        {
+
+            server.send(
+                200,
+                "text/html",
+                webPage()
+            );
+
+        }
+    );
+
+
+    server.on(
+        "/status",
+        []()
+        {
+
+            String json =
+            "{";
+
+
+            json +=
+            "\"time\":";
+
+
+            json +=
+            remainingSeconds;
+
+
+            json +=
+            ",\"total\":";
+
+
+            json +=
+            totalSeconds;
+
+
+            json +=
+            ",\"running\":";
+
+
+            json +=
+            timerRunning
+            ?
+            "true"
+            :
+            "false";
+
+
+            json +=
+            "}";
+
+
+            server.send(
+                200,
+                "application/json",
+                json
+            );
+
+        }
+    );
+
+
+    // TOGGLE
+
+    server.on(
+        "/toggle",
+        []()
+        {
+
+            if(
+                remainingSeconds > 0
+            )
+            {
+
+                timerRunning =
+                !timerRunning;
+
+
+                lastSecond =
+                millis();
+
+            }
+
+
+            server.send(
+                200,
+                "text/plain",
+                "OK"
+            );
+
+        }
+    );
+
+
+    // RESET
+
+    server.on(
+        "/reset",
+        []()
+        {
+
+            timerRunning =
+            false;
+
+
+            alarmActive =
+            false;
+
+
+            noTone(
+                BUZZER
+            );
+
+
+            remainingSeconds =
+            60;
+
+
+            totalSeconds =
+            60;
+
+
+            server.send(
+                200,
+                "text/plain",
+                "OK"
+            );
+
+        }
+    );
+
+
+    // ADD TIME
+
+    server.on(
+        "/add",
+        []()
+        {
+
+            remainingSeconds +=
+            10;
+
+
+            if(
+                remainingSeconds >
+                5999
+            )
+            {
+
+                remainingSeconds =
+                5999;
+
+            }
+
+
+            if(
+                remainingSeconds >
+                totalSeconds
+            )
+            {
+
+                totalSeconds =
+                remainingSeconds;
+
+            }
+
+
+            server.send(
+                200,
+                "text/plain",
+                "OK"
+            );
+
+        }
+    );
+
+
+    // REMOVE TIME
+
+    server.on(
+        "/remove",
+        []()
+        {
+
+            if(
+                remainingSeconds >=
+                10
+            )
+            {
+
+                remainingSeconds -=
+                10;
+
+            }
+
+            else
+            {
+
+                remainingSeconds =
+                0;
+
+            }
+
+
+            server.send(
+                200,
+                "text/plain",
+                "OK"
+            );
+
+        }
+    );
+
+
+    server.begin();
+
+
+    Serial.println(
+        "Web Server Started!"
+    );
+
+
+    delay(
+        1000
+    );
+
+}
+
+
+// =====================================================
+// LOOP
+// =====================================================
+
+void loop()
+{
+
+    server.handleClient();
+
+
+    handleButtons();
+
+
+    updateTimer();
+
+
+    updateAlarm();
+
+
+    updateOLED();
+
+
+    delay(
+        5
+    );
+
+}
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+
+document
+.getElementById(
+    "esp32-program"
+)
+.textContent
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+const steps = [
+
+
+{
+
+title:
+"Load libraries",
+
+search:
+"#include <WiFi.h>",
+
+text:
+"The program loads Wi-Fi, web server, I2C, graphics and SSD1306 OLED libraries."
+
+},
+
+
+{
+
+title:
+"Set pins",
+
+search:
+"#define BUTTON_ADD",
+
+text:
+"GPIO 18 is the Add button, GPIO 19 is the Start / Pause button and GPIO 25 controls the buzzer."
+
+},
+
+
+{
+
+title:
+"Prepare timer",
+
+search:
+"unsigned long remainingSeconds",
+
+text:
+"The countdown starts at 60 seconds. The program also stores the total time and whether the timer is running."
+
+},
+
+
+{
+
+title:
+"Prepare alarm",
+
+search:
+"bool alarmActive",
+
+text:
+"These variables control the non-blocking buzzer alarm when the timer reaches zero."
+
+},
+
+
+{
+
+title:
+"Start hardware",
+
+search:
+"void setup()",
+
+text:
+"The setup function prepares the push buttons, buzzer, OLED display, Wi-Fi connection and web server."
+
+},
+
+
+{
+
+title:
+"Control buttons",
+
+search:
+"void handleButtons",
+
+text:
+"The Add button increases the timer by 10 seconds. A short Start-button press starts or pauses the timer, while a long press resets it."
+
+},
+
+
+{
+
+title:
+"Update timer",
+
+search:
+"void updateTimer",
+
+text:
+"When the timer is running, one second is removed every 1000 milliseconds until the countdown reaches zero."
+
+},
+
+
+{
+
+title:
+"Sound alarm",
+
+search:
+"void updateAlarm",
+
+text:
+"The buzzer switches ON and OFF every 300 milliseconds to create an alarm when time is up."
+
+},
+
+
+{
+
+title:
+"Update OLED",
+
+search:
+"void updateOLED",
+
+text:
+"The OLED displays Wi-Fi status, countdown time and whether the timer is RUNNING, PAUSED or finished."
+
+},
+
+
+{
+
+title:
+"Web control",
+
+search:
+'server.on(',
+
+text:
+"The web server provides routes for status, start/pause, reset, adding time and removing time."
+
+}
+
+];
+
+
+function escapeHtml(text)
+{
+
+    return text
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+
+function displayCode()
+{
+
+    let output = "";
+
+
+    lines.forEach(
+
+        function(
+            line,
+            index
+        )
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+
+            (index + 1) +
+
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+
+        }
+
+    );
+
+
+    document
+    .getElementById(
+        "code-lines"
+    )
+    .innerHTML =
+    output;
+
+}
+
+
+function showStep(index)
+{
+
+    const step =
+    steps[index];
+
+
+    const buttons =
+
+    document
+    .querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+
+        function(button)
+        {
+
+            button
+            .classList
+            .remove(
+                "active"
+            );
+
+        }
+
+    );
+
+
+    buttons[index]
+    .classList
+    .add(
+        "active"
+    );
+
+
+    document
+    .querySelectorAll(
+        ".code-line"
+    )
+    .forEach(
+
+        function(line)
+        {
+
+            line
+            .classList
+            .remove(
+                "selected"
+            );
+
+        }
+
+    );
+
+
+    let foundLine =
+    -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+
+        if(
+            lines[i]
+            .includes(
+                step.search
+            )
+        )
+        {
+
+            foundLine =
+            i;
+
+            break;
+
+        }
+
+    }
+
+
+    if(
+        foundLine >= 0
+    )
+    {
+
+        for(
+            let i =
+            foundLine;
+
+            i <
+            Math.min(
+                foundLine + 12,
+                lines.length
+            );
+
+            i++
+        )
+        {
+
+            document
+            .getElementById(
+                "line-" +
+                (i + 1)
+            )
+            .classList
+            .add(
+                "selected"
+            );
+
+        }
+
+
+        const selectedLine =
+
+        document
+        .getElementById(
+            "line-" +
+            (foundLine + 1)
+        );
+
+
+        document
+        .getElementById(
+            "code-body"
+        )
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop
+            - 20,
+
+            behavior:
+            "smooth"
+
+        });
+
+    }
+
+
+    document
+    .getElementById(
+        "explanation"
+    )
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+
+    ". " +
+
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+
+}
+
+
+function copyCode()
+{
+
+    navigator
+    .clipboard
+    .writeText(
+        program
+    )
+    .then(
+
+        function()
+        {
+
+            const button =
+
+            document
+            .querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+
+                function()
+                {
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+
+                1500
+
+            );
+
+        }
+
+    );
+
+}
+
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+
+</html>
