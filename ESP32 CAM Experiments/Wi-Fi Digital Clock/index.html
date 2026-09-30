@@ -1,0 +1,3396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Wi-Fi Digital Clock
+</title>
+
+
+<style>
+
+/* =========================
+   BASIC PAGE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+    background:#2563eb;
+
+    color:white;
+
+    text-align:center;
+
+    padding:42px 20px;
+}
+
+
+.header h1{
+
+    margin:0 0 8px;
+
+    font-size:34px;
+}
+
+
+.header p{
+
+    margin:0;
+
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:
+    1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:130px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:600px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:
+    1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+
+    display:block;
+
+    width:100%;
+
+    max-width:600px;
+
+    margin:20px auto;
+
+    border:
+    1px solid #e2e8f0;
+
+    border-radius:10px;
+}
+
+
+/* =========================
+   CLOCK DEMO
+========================= */
+
+.clock-demo{
+
+    max-width:520px;
+
+    margin:20px auto;
+
+    padding:30px;
+
+    text-align:center;
+
+    background:#eff6ff;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:14px;
+}
+
+
+.clock-title{
+
+    color:#1e3a8a;
+
+    font-weight:bold;
+
+    font-size:18px;
+}
+
+
+.clock-time{
+
+    margin-top:15px;
+
+    color:#2563eb;
+
+    font-size:52px;
+
+    font-weight:bold;
+
+    letter-spacing:3px;
+}
+
+
+.clock-date{
+
+    margin-top:8px;
+
+    color:#475569;
+
+    font-size:18px;
+}
+
+
+.clock-day{
+
+    margin-top:3px;
+
+    color:#1e3a8a;
+
+    font-weight:bold;
+}
+
+
+/* =========================
+   FEATURES
+========================= */
+
+.feature-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:15px;
+}
+
+
+.feature-card{
+
+    padding:18px;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    background:#f8fbff;
+}
+
+
+.feature-card h3{
+
+    margin:0 0 8px;
+
+    font-size:17px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* CODE PANEL */
+
+.code-panel{
+
+    background:white;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:
+    space-between;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    font:
+    bold 14px
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:
+    1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    padding:16px 0;
+
+    background:white;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:20px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+
+    user-select:none;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+
+    font-size:17px;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 5px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .feature-grid{
+
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+
+    .container{
+
+        width:92%;
+    }
+
+
+    .section{
+
+        padding:20px;
+    }
+
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .feature-grid{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .clock-time{
+
+        font-size:40px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+<h1>
+ESP32 Experiment
+</h1>
+
+<p>
+Wi-Fi Digital Clock
+</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+<a href="../index.html">
+← ESP32 Experiments
+</a>
+
+<a href="#aim">
+Aim
+</a>
+
+<a href="#components">
+Components
+</a>
+
+<a href="#connections">
+Connections
+</a>
+
+<a href="#circuit">
+Circuit
+</a>
+
+<a href="#working">
+Working
+</a>
+
+<a href="#procedure">
+Procedure
+</a>
+
+<a href="#code">
+Code
+</a>
+
+<a href="#result">
+Result
+</a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section
+class="section"
+id="aim">
+
+<h2>
+Aim
+</h2>
+
+<p>
+
+To create a Wi-Fi Digital Clock
+using ESP32 that automatically
+gets the current time from an
+internet NTP server and displays
+the time, date and day
+on an OLED display.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+<h2>
+About the Experiment
+</h2>
+
+<p>
+
+In this Experiment,
+the ESP32 connects to Wi-Fi
+and communicates with an
+NTP time server.
+
+</p>
+
+<p>
+
+The ESP32 receives accurate
+internet time and applies
+the India timezone offset
+of UTC +5:30.
+
+</p>
+
+<p>
+
+The current time,
+date and day are displayed
+on the SSD1306 OLED.
+
+</p>
+
+<p>
+
+The OLED also shows
+a Wi-Fi status icon
+to indicate whether
+the ESP32 is connected.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section
+class="section"
+id="components">
+
+<h2>
+Components Required
+</h2>
+
+
+<div class="components-grid">
+
+
+<div class="component-card">
+
+<img
+src="ESP32 Development Board.png"
+alt="ESP32 Development Board">
+
+<h4>
+ESP32 DevKitC V4 (×1)
+</h4>
+
+<p>
+Main controller with
+built-in Wi-Fi.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="OLED SSD1306.png"
+alt="OLED SSD1306">
+
+<h4>
+0.96" SSD1306 OLED 128×64 (×1)
+</h4>
+
+<p>
+Displays the time,
+date and day.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Breadboard.png"
+alt="Breadboard">
+
+<h4>
+Breadboard (×1)
+</h4>
+
+<p>
+Used for convenient
+hardware assembly.
+</p>
+
+</div>
+
+
+<div class="component-card">
+
+<img
+src="Jumper Wires.png"
+alt="Jumper Wires">
+
+<h4>
+Jumper Wires
+</h4>
+
+<p>
+Used to connect the
+ESP32 and OLED display.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section
+class="section"
+id="connections">
+
+<h2>
+Circuit Connections
+</h2>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+OLED Pin
+</th>
+
+<th>
+ESP32 Pin
+</th>
+
+<th>
+Function
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+<tr>
+
+<td>
+VCC
+</td>
+
+<td>
+3.3V
+</td>
+
+<td>
+OLED Power
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+GND
+</td>
+
+<td>
+GND
+</td>
+
+<td>
+Ground
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+SDA
+</td>
+
+<td>
+GPIO 21
+</td>
+
+<td>
+I2C Data
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+SCL
+</td>
+
+<td>
+GPIO 22
+</td>
+
+<td>
+I2C Clock
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="note">
+
+<strong>
+OLED SDA:
+</strong>
+GPIO 21
+
+<br>
+
+<strong>
+OLED SCL:
+</strong>
+GPIO 22
+
+<br>
+
+<strong>
+OLED Address:
+</strong>
+0x3C
+
+<br>
+
+<strong>
+OLED Resolution:
+</strong>
+128 × 64
+
+<br>
+
+<strong>
+NTP Server:
+</strong>
+pool.ntp.org
+
+<br>
+
+<strong>
+Timezone:
+</strong>
+India – UTC +5:30
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+<h2>
+Circuit Diagram
+</h2>
+
+<p>
+
+Connect the ESP32
+and SSD1306 OLED
+as shown in the circuit
+diagram from the PDF.
+
+</p>
+
+
+<img
+src="Wi-Fi Digital Clock Circuit.png"
+alt="Wi-Fi Digital Clock Circuit"
+class="circuit-img">
+
+</section>
+
+
+<!-- =========================
+     CLOCK DISPLAY
+========================= -->
+
+<section class="section">
+
+<h2>
+Digital Clock Display
+</h2>
+
+
+<div class="clock-demo">
+
+<div class="clock-title">
+
+WIFI CLOCK
+
+</div>
+
+
+<div class="clock-time">
+
+18:07:54
+
+</div>
+
+
+<div class="clock-date">
+
+18 Sep 2026
+
+</div>
+
+
+<div class="clock-day">
+
+Friday
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     FEATURES
+========================= -->
+
+<section class="section">
+
+<h2>
+Clock Information
+</h2>
+
+
+<div class="feature-grid">
+
+
+<div class="feature-card">
+
+<h3>
+🕐 Time
+</h3>
+
+<p>
+Displayed in
+HH:MM:SS format.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<h3>
+📅 Date
+</h3>
+
+<p>
+Displayed in
+DD MMM YYYY format.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<h3>
+📆 Day
+</h3>
+
+<p>
+Displays the
+current weekday.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<h3>
+📶 Wi-Fi
+</h3>
+
+<p>
+Shows Wi-Fi
+connection status.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section
+class="section"
+id="working">
+
+<h2>
+Working Principle
+</h2>
+
+
+<div class="flow">
+
+ESP32 Starts
+
+<br>↓<br>
+
+SSD1306 OLED Initializes
+
+<br>↓<br>
+
+ESP32 Connects to Wi-Fi
+
+<br>↓<br>
+
+ESP32 Connects to pool.ntp.org
+
+<br>↓<br>
+
+NTP Server Provides Current Time
+
+<br>↓<br>
+
+India UTC +5:30 Offset is Applied
+
+<br>↓<br>
+
+ESP32 Calculates Time, Date and Day
+
+<br>↓<br>
+
+OLED Displays Current Time
+
+<br>↓<br>
+
+OLED Displays Date and Day
+
+<br>↓<br>
+
+Clock Updates Every Second
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section
+class="section"
+id="procedure">
+
+<h2>
+Procedure
+</h2>
+
+
+<ol>
+
+<li>
+Place the ESP32 on the breadboard.
+</li>
+
+<li>
+Connect OLED VCC to ESP32 3.3V.
+</li>
+
+<li>
+Connect OLED GND to ESP32 GND.
+</li>
+
+<li>
+Connect OLED SDA to GPIO 21.
+</li>
+
+<li>
+Connect OLED SCL to GPIO 22.
+</li>
+
+<li>
+Check all connections carefully.
+</li>
+
+<li>
+Connect the ESP32 to the computer.
+</li>
+
+<li>
+Open Arduino IDE.
+</li>
+
+<li>
+Install Adafruit GFX library.
+</li>
+
+<li>
+Install Adafruit SSD1306 library.
+</li>
+
+<li>
+Upload the program to ESP32.
+</li>
+
+<li>
+Open Serial Monitor at 115200 baud.
+</li>
+
+<li>
+Wait while the ESP32 connects to Wi-Fi.
+</li>
+
+<li>
+Wait for the ESP32 to synchronize
+with the NTP server.
+</li>
+
+<li>
+Observe the time on the OLED display.
+</li>
+
+<li>
+Check the current date.
+</li>
+
+<li>
+Check the current day.
+</li>
+
+<li>
+Observe the Wi-Fi icon
+on the OLED.
+</li>
+
+<li>
+Check that the clock updates
+every second.
+</li>
+
+</ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section
+class="section"
+id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+
+ESP32 Experiment · Code Review
+
+</p>
+
+
+<h2 class="lesson-title">
+
+Explore the Code
+
+</h2>
+
+
+<p class="intro">
+
+Wi-Fi Digital Clock ·
+Select a step to understand
+what each part of the
+ESP32 program does.
+
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+<span class="filename">
+
+WiFi_Digital_Clock.ino
+
+</span>
+
+
+<button
+class="copy-button"
+onclick="copyCode()">
+
+Copy Code
+
+</button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- GUIDE -->
+
+<article class="guide">
+
+
+<h2>
+Understand it step by step
+</h2>
+
+
+<p>
+
+Choose a step.
+The matching code
+will light up on the left.
+
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">
+01
+</span>
+
+Load libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">
+02
+</span>
+
+Prepare OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">
+03
+</span>
+
+Set Wi-Fi
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">
+04
+</span>
+
+Set NTP time
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">
+05
+</span>
+
+Start OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">
+06
+</span>
+
+Connect Wi-Fi
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">
+07
+</span>
+
+Synchronize time
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">
+08
+</span>
+
+Get time and date
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">
+09
+</span>
+
+Update OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(9)">
+
+<span class="step-number">
+10
+</span>
+
+Repeat every second
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+1. Load libraries
+</h3>
+
+<p>
+
+The program loads Wi-Fi,
+I2C, OLED graphics and
+time libraries needed
+for the Experiment.
+
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+Explore more: NTP
+</summary>
+
+<p>
+
+NTP means
+<strong>
+Network Time Protocol
+</strong>.
+
+</p>
+
+<p>
+
+It allows the ESP32
+to obtain accurate time
+from an internet time server.
+
+</p>
+
+<p>
+
+This Experiment uses:
+
+</p>
+
+<p>
+
+<code>
+pool.ntp.org
+</code>
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Explore more: India time
+</summary>
+
+<p>
+
+The NTP server normally
+provides UTC time.
+
+</p>
+
+<p>
+
+India is UTC +5 hours
+and 30 minutes.
+
+</p>
+
+<p>
+
+The program therefore uses:
+
+</p>
+
+<p>
+
+<code>
+gmtOffset_sec = 19800
+</code>
+
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+Check your understanding
+</summary>
+
+
+<ul>
+
+<li>
+
+Which GPIO is used
+for OLED SDA?
+
+<strong>
+GPIO 21
+</strong>
+
+</li>
+
+
+<li>
+
+Which GPIO is used
+for OLED SCL?
+
+<strong>
+GPIO 22
+</strong>
+
+</li>
+
+
+<li>
+
+Which NTP server is used?
+
+<strong>
+pool.ntp.org
+</strong>
+
+</li>
+
+
+<li>
+
+What is the India
+time offset?
+
+<strong>
+UTC +5:30
+</strong>
+
+</li>
+
+
+<li>
+
+How often does the
+clock update?
+
+<strong>
+Every 1 second
+</strong>
+
+</li>
+
+</ul>
+
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>
+Try it:
+</strong>
+
+Upload the program,
+connect the ESP32 to Wi-Fi
+and compare the OLED time
+with the current time
+on your phone.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>
+Expected Output
+</h2>
+
+<p>
+
+After Wi-Fi connection
+and NTP synchronization,
+the OLED displays:
+
+</p>
+
+<ul>
+
+<li>
+WIFI CLOCK heading
+</li>
+
+<li>
+Current time in HH:MM:SS
+</li>
+
+<li>
+Current date
+</li>
+
+<li>
+Current weekday
+</li>
+
+<li>
+Wi-Fi connection icon
+</li>
+
+</ul>
+
+<p>
+
+The Serial Monitor also
+prints the current time
+and date every second.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>
+Result
+</h2>
+
+<p>
+
+The Wi-Fi Digital Clock
+Experiment successfully
+connects the ESP32 to Wi-Fi
+and obtains accurate time
+from an NTP server.
+
+</p>
+
+<p>
+
+The ESP32 displays the
+current time, date and day
+on the SSD1306 OLED
+and updates the clock
+every second.
+
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>
+What You Learn
+</h2>
+
+
+<ul>
+
+<li>
+Connecting an SSD1306 OLED to ESP32.
+</li>
+
+<li>
+Using I2C communication.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Understanding Network Time Protocol.
+</li>
+
+<li>
+Using an internet NTP server.
+</li>
+
+<li>
+Applying timezone offsets.
+</li>
+
+<li>
+Displaying digital time on OLED.
+</li>
+
+<li>
+Displaying date and weekday.
+</li>
+
+<li>
+Creating a Wi-Fi connection indicator.
+</li>
+
+<li>
+Formatting time using strftime().
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wi-Fi Digital Clock
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script
+type="text/plain"
+id="esp32-program">
+
+#include <WiFi.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <time.h>
+
+
+// ===============================
+// OLED
+// ===============================
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    OLED_RESET
+);
+
+
+// ===============================
+// WIFI
+// ===============================
+
+const char* ssid =
+"Wokwi-GUEST";
+
+const char* password =
+"";
+
+
+// ===============================
+// NTP
+// India = UTC +5:30
+// ===============================
+
+const char* ntpServer =
+"pool.ntp.org";
+
+const long gmtOffset_sec =
+19800;
+
+const int daylightOffset_sec =
+0;
+
+
+// ===============================
+// SETUP
+// ===============================
+
+void setup()
+{
+
+    Serial.begin(
+        115200
+    );
+
+
+    // OLED
+
+    Wire.begin(
+        21,
+        22
+    );
+
+
+    if(
+        !display.begin(
+            SSD1306_SWITCHCAPVCC,
+            0x3C
+        )
+    )
+    {
+
+        Serial.println(
+            "OLED not found!"
+        );
+
+
+        while(true);
+
+    }
+
+
+    // Startup Screen
+
+    display.clearDisplay();
+
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+
+    display.setTextSize(
+        2
+    );
+
+
+    display.setCursor(
+        18,
+        10
+    );
+
+
+    display.println(
+        "Wi-Fi"
+    );
+
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.setCursor(
+        25,
+        38
+    );
+
+
+    display.println(
+        "DIGITAL CLOCK"
+    );
+
+
+    display.display();
+
+
+    delay(
+        2000
+    );
+
+
+    // Connect WiFi
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    display.clearDisplay();
+
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.setCursor(
+        20,
+        10
+    );
+
+
+    display.println(
+        "Connecting WiFi..."
+    );
+
+
+    display.display();
+
+
+    Serial.print(
+        "Connecting"
+    );
+
+
+    while(
+        WiFi.status()
+        !=
+        WL_CONNECTED
+    )
+    {
+
+        delay(
+            500
+        );
+
+
+        Serial.print(
+            "."
+        );
+
+
+        display.fillRect(
+            0,
+            30,
+            128,
+            10,
+            SSD1306_BLACK
+        );
+
+
+        display.setCursor(
+            10,
+            30
+        );
+
+
+        static int dots =
+        0;
+
+
+        dots++;
+
+
+        if(
+            dots > 3
+        )
+        {
+
+            dots =
+            1;
+
+        }
+
+
+        for(
+            int i = 0;
+            i < dots;
+            i++
+        )
+        {
+
+            display.print(
+                "."
+            );
+
+        }
+
+
+        display.display();
+
+    }
+
+
+    Serial.println();
+
+
+    Serial.println(
+        "WiFi Connected!"
+    );
+
+
+    // NTP Time
+
+    configTime(
+        gmtOffset_sec,
+        daylightOffset_sec,
+        ntpServer
+    );
+
+
+    delay(
+        1500
+    );
+
+}
+
+
+// ===============================
+// DRAW WIFI ICON
+// ===============================
+
+void drawWiFiIcon(
+    int x,
+    int y
+)
+{
+
+    if(
+        WiFi.status()
+        ==
+        WL_CONNECTED
+    )
+    {
+
+        // Outer Circle
+
+        display.drawCircle(
+            x,
+            y,
+            8,
+            SSD1306_WHITE
+        );
+
+
+        // Middle Circle
+
+        display.drawCircle(
+            x,
+            y,
+            5,
+            SSD1306_WHITE
+        );
+
+
+        // Center
+
+        display.fillCircle(
+            x,
+            y,
+            2,
+            SSD1306_WHITE
+        );
+
+    }
+
+    else
+    {
+
+        display.drawLine(
+            x - 7,
+            y - 7,
+            x + 7,
+            y + 7,
+            SSD1306_WHITE
+        );
+
+
+        display.drawLine(
+            x + 7,
+            y - 7,
+            x - 7,
+            y + 7,
+            SSD1306_WHITE
+        );
+
+    }
+
+}
+
+
+// ===============================
+// MAIN LOOP
+// ===============================
+
+void loop()
+{
+
+    struct tm timeinfo;
+
+
+    if(
+        !getLocalTime(
+            &timeinfo
+        )
+    )
+    {
+
+        Serial.println(
+            "Failed to get time"
+        );
+
+
+        display.clearDisplay();
+
+
+        display.setTextSize(
+            1
+        );
+
+
+        display.setCursor(
+            20,
+            25
+        );
+
+
+        display.println(
+            "TIME SYNC ERROR"
+        );
+
+
+        display.display();
+
+
+        delay(
+            1000
+        );
+
+
+        return;
+
+    }
+
+
+    // =============================
+    // TIME
+    // =============================
+
+    char timeString[10];
+
+
+    strftime(
+        timeString,
+        sizeof(
+            timeString
+        ),
+        "%H:%M:%S",
+        &timeinfo
+    );
+
+
+    // =============================
+    // DATE
+    // =============================
+
+    char dateString[20];
+
+
+    strftime(
+        dateString,
+        sizeof(
+            dateString
+        ),
+        "%d %b %Y",
+        &timeinfo
+    );
+
+
+    // =============================
+    // DAY
+    // =============================
+
+    char dayString[15];
+
+
+    strftime(
+        dayString,
+        sizeof(
+            dayString
+        ),
+        "%A",
+        &timeinfo
+    );
+
+
+    // =============================
+    // OLED
+    // =============================
+
+    display.clearDisplay();
+
+
+    // Header
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.setCursor(
+        4,
+        2
+    );
+
+
+    display.print(
+        "WIFI CLOCK"
+    );
+
+
+    // WiFi Indicator
+
+    drawWiFiIcon(
+        116,
+        9
+    );
+
+
+    // Divider
+
+    display.drawLine(
+        0,
+        18,
+        127,
+        18,
+        SSD1306_WHITE
+    );
+
+
+    // Large Time
+
+    display.setTextSize(
+        2
+    );
+
+
+    int16_t x1;
+    int16_t y1;
+
+    uint16_t w;
+    uint16_t h;
+
+
+    display.getTextBounds(
+        timeString,
+        0,
+        0,
+        &x1,
+        &y1,
+        &w,
+        &h
+    );
+
+
+    display.setCursor(
+        (
+            128
+            -
+            w
+        )
+        /
+        2,
+        25
+    );
+
+
+    display.println(
+        timeString
+    );
+
+
+    // Date
+
+    display.setTextSize(
+        1
+    );
+
+
+    display.getTextBounds(
+        dateString,
+        0,
+        0,
+        &x1,
+        &y1,
+        &w,
+        &h
+    );
+
+
+    display.setCursor(
+        (
+            128
+            -
+            w
+        )
+        /
+        2,
+        47
+    );
+
+
+    display.println(
+        dateString
+    );
+
+
+    // Day
+
+    display.getTextBounds(
+        dayString,
+        0,
+        0,
+        &x1,
+        &y1,
+        &w,
+        &h
+    );
+
+
+    display.setCursor(
+        (
+            128
+            -
+            w
+        )
+        /
+        2,
+        57
+    );
+
+
+    display.println(
+        dayString
+    );
+
+
+    display.display();
+
+
+    // Serial Monitor
+
+    Serial.print(
+        "Time: "
+    );
+
+
+    Serial.print(
+        timeString
+    );
+
+
+    Serial.print(
+        " | Date: "
+    );
+
+
+    Serial.println(
+        dateString
+    );
+
+
+    delay(
+        1000
+    );
+
+}
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+
+document
+
+.getElementById(
+    "esp32-program"
+)
+
+.textContent
+
+.trim();
+
+
+const lines =
+
+program.split(
+    "\n"
+);
+
+
+/* =========================
+   CODE STEPS
+========================= */
+
+const steps = [
+
+
+{
+
+    title:
+    "Load libraries",
+
+    search:
+    "#include <WiFi.h>",
+
+    text:
+    "The program loads Wi-Fi, Wire, graphics, SSD1306 OLED and time libraries."
+
+},
+
+
+{
+
+    title:
+    "Prepare OLED",
+
+    search:
+    "#define SCREEN_WIDTH",
+
+    text:
+    "The SSD1306 OLED is configured for 128 × 64 pixels."
+
+},
+
+
+{
+
+    title:
+    "Set Wi-Fi",
+
+    search:
+    "const char* ssid",
+
+    text:
+    "The ESP32 uses the network name and password to connect to Wi-Fi."
+
+},
+
+
+{
+
+    title:
+    "Set NTP time",
+
+    search:
+    "const char* ntpServer",
+
+    text:
+    "The clock gets its time from pool.ntp.org. The timezone offset is set to 19800 seconds for India."
+
+},
+
+
+{
+
+    title:
+    "Start OLED",
+
+    search:
+    "Wire.begin",
+
+    text:
+    "GPIO 21 is used for SDA and GPIO 22 is used for SCL. The OLED address is 0x3C."
+
+},
+
+
+{
+
+    title:
+    "Connect Wi-Fi",
+
+    search:
+    "WiFi.begin",
+
+    text:
+    "The ESP32 connects to Wi-Fi and waits until the wireless connection is ready."
+
+},
+
+
+{
+
+    title:
+    "Synchronize time",
+
+    search:
+    "configTime",
+
+    text:
+    "configTime connects the ESP32 clock to the NTP server and applies the required timezone offset."
+
+},
+
+
+{
+
+    title:
+    "Get time and date",
+
+    search:
+    "strftime",
+
+    text:
+    "strftime formats the current time as HH:MM:SS and also creates the date and weekday text."
+
+},
+
+
+{
+
+    title:
+    "Update OLED",
+
+    search:
+    "display.clearDisplay",
+
+    text:
+    "The OLED is cleared and redrawn with the latest Wi-Fi status, time, date and day."
+
+},
+
+
+{
+
+    title:
+    "Repeat every second",
+
+    search:
+    "delay(",
+
+    text:
+    "The program waits one second after displaying each reading, so the digital clock updates every second."
+
+}
+
+];
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text)
+{
+
+    return text
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+
+/* =========================
+   DISPLAY CODE
+========================= */
+
+function displayCode()
+{
+
+    let output = "";
+
+
+    lines.forEach(
+
+        function(
+            line,
+            index
+        )
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+
+            (index + 1) +
+
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+
+        }
+
+    );
+
+
+    document
+
+    .getElementById(
+        "code-lines"
+    )
+
+    .innerHTML =
+    output;
+
+}
+
+
+/* =========================
+   SHOW STEP
+========================= */
+
+function showStep(index)
+{
+
+    const step =
+    steps[index];
+
+
+    const buttons =
+
+    document
+
+    .querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+
+        function(button)
+        {
+
+            button
+
+            .classList
+
+            .remove(
+                "active"
+            );
+
+        }
+
+    );
+
+
+    buttons[index]
+
+    .classList
+
+    .add(
+        "active"
+    );
+
+
+    document
+
+    .querySelectorAll(
+        ".code-line"
+    )
+
+    .forEach(
+
+        function(line)
+        {
+
+            line
+
+            .classList
+
+            .remove(
+                "selected"
+            );
+
+        }
+
+    );
+
+
+    let foundLine =
+    -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+
+        if(
+            lines[i]
+            .includes(
+                step.search
+            )
+        )
+        {
+
+            foundLine =
+            i;
+
+            break;
+
+        }
+
+    }
+
+
+    if(
+        foundLine >= 0
+    )
+    {
+
+        for(
+            let i =
+            foundLine;
+
+            i <
+            Math.min(
+                foundLine + 12,
+                lines.length
+            );
+
+            i++
+        )
+        {
+
+            document
+
+            .getElementById(
+                "line-" +
+                (i + 1)
+            )
+
+            .classList
+
+            .add(
+                "selected"
+            );
+
+        }
+
+
+        const selectedLine =
+
+        document
+
+        .getElementById(
+            "line-" +
+            (foundLine + 1)
+        );
+
+
+        document
+
+        .getElementById(
+            "code-body"
+        )
+
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop
+            - 20,
+
+            behavior:
+            "smooth"
+
+        });
+
+    }
+
+
+    document
+
+    .getElementById(
+        "explanation"
+    )
+
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+
+    ". " +
+
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+
+}
+
+
+/* =========================
+   COPY CODE
+========================= */
+
+function copyCode()
+{
+
+    navigator
+
+    .clipboard
+
+    .writeText(
+        program
+    )
+
+    .then(
+
+        function()
+        {
+
+            const button =
+
+            document
+
+            .querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+
+                function()
+                {
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+
+                1500
+
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+
+</html>
