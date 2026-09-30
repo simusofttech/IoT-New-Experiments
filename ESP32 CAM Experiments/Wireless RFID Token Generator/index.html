@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Wireless RFID Token Generator</title><style>
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:#fff;text-align:center;padding:42px 20px}.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:1050px;margin:35px auto}.section{background:#fff;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}li{margin-bottom:8px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:18px;text-align:center;background:#fff}
+.component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:28px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
+.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.circuit{display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;align-items:center}.node{border:2px solid #bfdbfe;background:#eff6ff;border-radius:12px;padding:16px;text-align:center;font-weight:bold;color:#1e3a8a}.arrow{text-align:center;font-size:28px;color:#2563eb;font-weight:bold}.wire-list{margin-top:18px}
+.flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
+.code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
+pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
+.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}
+@media(max-width:700px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.circuit{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+</style></head><body>
+<header class="header"><h1>ESP32 Experiment</h1><p>Wireless RFID Token Generator</p></header>
+<nav><a href="../index.html">← ESP32 Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#expected-output">Expected Output</a><a href="#result">Result</a><a href="#learn">What You Learn</a></nav>
+<main class="container">
+<section class="section" id="aim"><h2>Aim</h2><p>To build an ESP32-based wireless RFID queue token generator that verifies authorized RFID cards, generates sequential tokens, displays status on an OLED, provides buzzer feedback and exposes system information through a web dashboard.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>The RC522 reader scans an RFID card and compares its UID with two authorized UIDs. Authorized cards generate a three-digit token and receive success feedback; unauthorized cards are denied. The OLED shows ready, granted, denied and reset states. A browser dashboard displays the current token, total tokens, last UID, scan result, last event, ESP32 IP address and uptime, while both a physical reset button and /reset web route can reset the counter.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><div class="component-icon">ESP</div><h4>ESP32 DevKitC</h4><p>Main controller and Wi-Fi server.</p></div><div class="component-card"><div class="component-icon">RFID</div><h4>MFRC522 RFID Reader</h4><p>Reads RFID card UIDs.</p></div><div class="component-card"><div class="component-icon">OLED</div><h4>SSD1306 OLED</h4><p>Displays reader and token status.</p></div><div class="component-card"><div class="component-icon">BZ</div><h4>Buzzer</h4><p>Provides success and error tones.</p></div><div class="component-card"><div class="component-icon">BTN</div><h4>Push Button</h4><p>Resets the token counter.</p></div><div class="component-card"><div class="component-icon">CARD</div><h4>RFID Cards</h4><p>Authorized or unauthorized scan inputs.</p></div></div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>RC522</td><td>SDA / SS</td><td>GPIO 5</td></tr><tr><td>RC522</td><td>RST</td><td>GPIO 27</td></tr><tr><td>RC522</td><td>SCK</td><td>GPIO 18</td></tr><tr><td>RC522</td><td>MISO</td><td>GPIO 19</td></tr><tr><td>RC522</td><td>MOSI</td><td>GPIO 23</td></tr><tr><td>RC522</td><td>3.3V / GND</td><td>3.3V / GND</td></tr><tr><td>OLED</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>OLED</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>Buzzer</td><td>Signal</td><td>GPIO 25</td></tr><tr><td>Buzzer</td><td>GND</td><td>GND</td></tr><tr><td>Reset Button</td><td>Input</td><td>GPIO 26</td></tr><tr><td>Reset Button</td><td>Other side</td><td>GND</td></tr></tbody></table></div><div class="note"><strong>Authorized UID 1:</strong> 01 02 03 04 &nbsp; <strong>Authorized UID 2:</strong> 55 66 77 88 &nbsp; <strong>Duplicate scan delay:</strong> 3 seconds</div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><div class="circuit"><div class="node">ESP32 DevKitC</div><div class="arrow">→</div><div class="node">RC522 + OLED + Buzzer + Reset Button</div></div><div class="wire-list"><p>The RC522 uses SPI pins GPIO 5, 18, 19 and 23 with reset on GPIO 27. The OLED uses GPIO 21/22. The buzzer uses GPIO 25, and the reset button uses GPIO 26 with INPUT_PULLUP.</p></div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">ESP32 Starts<br>↓<br>OLED + RFID + Wi-Fi Initialize<br>↓<br>Reader Waits for Card<br>↓<br>Read RFID UID<br>↓<br>Compare with Authorized UIDs<br>↓<br>Authorized → Increment Token + Success Beep + OLED Granted<br>↓<br>Unauthorized → No Token + Error Beep + OLED Denied<br>↓<br>Dashboard Updates Every 1 Second</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the RC522 to the ESP32 SPI pins and reset pin.</li><li>Connect the OLED to GPIO 21 (SDA) and GPIO 22 (SCL).</li><li>Connect the buzzer signal to GPIO 25.</li><li>Connect the reset push button between GPIO 26 and GND.</li><li>Upload the sketch and open Serial Monitor at 115200 baud.</li><li>Wait for Wi-Fi connection and note the ESP32 IP address.</li><li>Open the IP address in a browser to view the token dashboard.</li><li>Scan an authorized RFID card and verify that a new three-digit token is generated.</li><li>Scan an unauthorized card and verify that access is denied and no token is created.</li><li>Use the physical reset button or dashboard reset control to return the counter to 000.</li></ol></section>
+<section class="section" id="code"><h2>Explore the Code</h2><p>Key sketch sections used in this experiment:</p><div class="code-panel"><div class="code-top"><span>Wireless_RFID_Token_Generator.ino</span><button onclick="navigator.clipboard.writeText(document.getElementById('codeblock').innerText)">Copy Code</button></div><pre id="codeblock">#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;SPI.h&gt;
+#include &lt;MFRC522.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+
+#define RFID_SS 5
+#define RFID_RST 27
+#define RFID_SCK 18
+#define RFID_MISO 19
+#define RFID_MOSI 23
+#define OLED_SDA 21
+#define OLED_SCL 22
+#define BUZZER_PIN 25
+#define RESET_BUTTON 26
+
+MFRC522 rfid(RFID_SS, RFID_RST);
+WebServer server(80);
+
+int currentToken = 0;
+int totalTokens = 0;
+const unsigned long DUPLICATE_DELAY = 3000;
+
+byte authorizedUID1[] = {0x01,0x02,0x03,0x04};
+byte authorizedUID2[] = {0x55,0x66,0x77,0x88};
+
+String formatToken(int number) {
+  char buffer[10];
+  sprintf(buffer, "%03d", number);
+  return String(buffer);
+}
+
+void loop() {
+  server.handleClient();
+
+  if (digitalRead(RESET_BUTTON) == LOW) {
+    resetSystem();
+    delay(500);
+    return;
+  }
+
+  if (!rfid.PICC_IsNewCardPresent()) return;
+  if (!rfid.PICC_ReadCardSerial()) return;
+
+  if (millis() - lastScanTime &lt; DUPLICATE_DELAY) return;
+  lastScanTime = millis();
+
+  currentUID = readUID();
+
+  if (isAuthorized(rfid.uid.uidByte, rfid.uid.size)) {
+    currentToken++;
+    if (currentToken &gt; 999) currentToken = 1;
+    totalTokens++;
+    scanStatus = "AUTHORIZED";
+    showGrantedScreen();
+    successBeep();
+  } else {
+    scanStatus = "DENIED";
+    showDeniedScreen();
+    errorBeep();
+  }
+
+  rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+}</pre></div></section>
+<section class="section" id="expected-output"><h2>Expected Output</h2><p>The OLED initially shows READER: READY and the current three-digit token.</p><p>Scanning an authorized card changes the status to ACCESS GRANTED and generates the next token.</p><p>Scanning an unauthorized card shows ACCESS DENIED and does not increase the token counter.</p><p>The web dashboard displays token number, total generated tokens, last RFID UID, scan status, last event, IP address and system uptime.</p><p>The reset control returns the token counter to 000.</p></section>
+<section class="section" id="result"><h2>Result</h2><div class="result-box">The wireless RFID token generator successfully authorizes known RFID cards, generates sequential queue tokens, rejects unauthorized cards and publishes the live token system state over Wi-Fi.</div></section>
+<section class="section" id="learn"><h2>What You Learn</h2><ul><li>Interfacing the MFRC522 reader with ESP32 over SPI.</li><li>Reading and formatting RFID UIDs.</li><li>Comparing scanned cards with authorized UID arrays.</li><li>Generating fixed-width three-digit queue tokens.</li><li>Preventing rapid duplicate RFID scans.</li><li>Using an SSD1306 OLED for status screens.</li><li>Generating buzzer feedback for granted and denied scans.</li><li>Creating live /api and /reset web-server endpoints.</li><li>Using a physical INPUT_PULLUP reset button.</li></ul></section>
+</main><footer><strong>IoT Experiments</strong> · Wireless RFID Token Generator</footer></body></html>
