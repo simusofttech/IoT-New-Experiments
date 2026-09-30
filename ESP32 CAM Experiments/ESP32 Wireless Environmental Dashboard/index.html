@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ESP32 Wireless Environmental Dashboard</title><style>
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:#fff;text-align:center;padding:42px 20px}.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:1050px;margin:35px auto}.section{background:#fff;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}li{margin-bottom:8px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:18px;text-align:center;background:#fff}
+.component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:28px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
+.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.circuit{display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;align-items:center}.node{border:2px solid #bfdbfe;background:#eff6ff;border-radius:12px;padding:16px;text-align:center;font-weight:bold;color:#1e3a8a}.arrow{text-align:center;font-size:28px;color:#2563eb;font-weight:bold}.wire-list{margin-top:18px}
+.flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
+.code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
+pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
+.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}
+@media(max-width:700px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.circuit{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+</style></head><body>
+<header class="header"><h1>ESP32 Experiment</h1><p>ESP32 Wireless Environmental Dashboard</p></header>
+<nav><a href="../index.html">← ESP32 Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#expected-output">Expected Output</a><a href="#result">Result</a><a href="#learn">What You Learn</a></nav>
+<main class="container">
+<section class="section" id="aim"><h2>Aim</h2><p>To create a Wi-Fi environmental monitoring system that measures temperature, humidity, atmospheric pressure and light level, displays the readings on an OLED, and publishes them to a live ESP32 web dashboard.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>The ESP32 reads temperature and humidity from a DHT22, pressure from a BMP180 and light intensity from an analog LDR module. The readings are shown locally on an SSD1306 OLED and are also returned by a /data JSON endpoint for a browser dashboard that refreshes every two seconds.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><div class="component-icon">ESP</div><h4>ESP32 DevKitC</h4><p>Main controller and Wi-Fi server.</p></div><div class="component-card"><div class="component-icon">DHT</div><h4>DHT22</h4><p>Measures temperature and humidity.</p></div><div class="component-card"><div class="component-icon">BMP</div><h4>BMP180</h4><p>Measures atmospheric pressure.</p></div><div class="component-card"><div class="component-icon">LDR</div><h4>LDR Module</h4><p>Measures ambient light intensity.</p></div><div class="component-card"><div class="component-icon">OLED</div><h4>SSD1306 OLED</h4><p>Shows local environmental readings.</p></div><div class="component-card"><div class="component-icon">↔</div><h4>Jumper Wires</h4><p>Circuit interconnections.</p></div></div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>DHT22</td><td>DATA</td><td>GPIO 4</td></tr><tr><td>DHT22</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>LDR Module</td><td>AO</td><td>GPIO 35</td></tr><tr><td>LDR Module</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>BMP180</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>BMP180</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>BMP180</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>OLED</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>OLED</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr></tbody></table></div><div class="note"><strong>DHT22:</strong> GPIO 4 &nbsp; <strong>LDR analog input:</strong> GPIO 35 &nbsp; <strong>I²C SDA/SCL:</strong> GPIO 21 / 22 &nbsp; <strong>Web server:</strong> Port 80</div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><div class="circuit"><div class="node">ESP32 DevKitC</div><div class="arrow">→</div><div class="node">DHT22 + BMP180 + LDR + OLED</div></div><div class="wire-list"><p>The DHT22 data line connects to GPIO 4. The LDR analog output connects to GPIO 35. The BMP180 and SSD1306 OLED share the ESP32 I²C bus on GPIO 21 (SDA) and GPIO 22 (SCL).</p></div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">ESP32 Starts<br>↓<br>I²C, DHT22, BMP180 and OLED Initialize<br>↓<br>ESP32 Connects to Wi-Fi<br>↓<br>Read Temperature + Humidity + Pressure + Light<br>↓<br>Update OLED<br>↓<br>Serve JSON Data at /data<br>↓<br>Browser Dashboard Refreshes Every 2 Seconds</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the DHT22 data pin to GPIO 4 and power it from 3.3V.</li><li>Connect the LDR module analog output to GPIO 35.</li><li>Connect BMP180 SDA/SCL to GPIO 21/22.</li><li>Connect the SSD1306 OLED to the same I²C GPIO 21/22 bus.</li><li>Upload the sketch and open Serial Monitor at 115200 baud.</li><li>Wait for Wi-Fi connection and note the ESP32 IP address.</li><li>Open the IP address in a browser.</li><li>Observe temperature, humidity, pressure and light readings on the dashboard.</li><li>Compare the web readings with the OLED readings.</li><li>Change environmental conditions and observe the dashboard status messages and progress bars.</li></ol></section>
+<section class="section" id="code"><h2>Explore the Code</h2><p>Key sketch sections used in this experiment:</p><div class="code-panel"><div class="code-top"><span>Wireless_Environmental_Dashboard.ino</span><button onclick="navigator.clipboard.writeText(document.getElementById('codeblock').innerText)">Copy Code</button></div><pre id="codeblock">#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+#include &lt;DHT.h&gt;
+#include &lt;Adafruit_BMP085.h&gt;
+
+#define DHT_PIN 4
+#define DHT_TYPE DHT22
+#define LDR_PIN 35
+#define I2C_SDA 21
+#define I2C_SCL 22
+
+DHT dht(DHT_PIN, DHT_TYPE);
+Adafruit_BMP085 bmp;
+WebServer server(80);
+
+float temperature = 0.0;
+float humidity = 0.0;
+float pressure = 0.0;
+int lightPercent = 0;
+
+void readSensors() {
+  float t = dht.readTemperature();
+  float h = dht.readHumidity();
+
+  if (!isnan(t)) temperature = t;
+  if (!isnan(h)) humidity = h;
+
+  pressure = bmp.readPressure() / 100.0;
+
+  int ldrRaw = analogRead(LDR_PIN);
+  lightPercent = map(ldrRaw, 0, 4095, 0, 100);
+  lightPercent = constrain(lightPercent, 0, 100);
+}
+
+void handleData() {
+  String json = "{";
+  json += "\"temperature\":" + String(temperature, 2) + ",";
+  json += "\"humidity\":" + String(humidity, 2) + ",";
+  json += "\"pressure\":" + String(pressure, 2) + ",";
+  json += "\"light\":" + String(lightPercent);
+  json += "}";
+  server.send(200, "application/json", json);
+}
+
+void loop() {
+  readSensors();
+  updateOLED();
+  server.handleClient();
+  delay(2000);
+}</pre></div></section>
+<section class="section" id="expected-output"><h2>Expected Output</h2><p>The OLED displays temperature, humidity, pressure and light percentage.</p><p>The web dashboard presents the same four measurements in live sensor cards.</p><p>Temperature status changes between cool, warm and high-temperature messages based on the measured value.</p><p>Humidity, pressure and light cards update their progress bars and status messages every two seconds.</p></section>
+<section class="section" id="result"><h2>Result</h2><div class="result-box">The ESP32 successfully monitors four environmental parameters, displays them locally on the OLED and publishes the readings through a Wi-Fi web dashboard.</div></section>
+<section class="section" id="learn"><h2>What You Learn</h2><ul><li>Reading temperature and humidity with DHT22.</li><li>Reading atmospheric pressure with BMP180.</li><li>Reading a 12-bit ESP32 analog input from an LDR module.</li><li>Sharing an I²C bus between BMP180 and OLED.</li><li>Converting analog readings into percentages.</li><li>Creating a JSON sensor-data endpoint.</li><li>Building a live wireless environmental dashboard.</li></ul></section>
+</main><footer><strong>IoT Experiments</strong> · ESP32 Wireless Environmental Dashboard</footer></body></html>
