@@ -75,7 +75,28 @@ ul,ol{padding-left:24px}li{margin-bottom:8px}
 .component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:25px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
 .table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
 .note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
-.circuit{display:grid;grid-template-columns:1fr 80px 1fr;gap:10px;align-items:center}.node{border:2px solid #bfdbfe;background:#eff6ff;border-radius:12px;padding:16px;text-align:center;font-weight:bold;color:#1e3a8a}.arrow{text-align:center;font-size:28px;color:#2563eb;font-weight:bold}.wire-list{margin-top:18px}
+
+   /* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+   
 .flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
 .code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
 pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
@@ -210,7 +231,19 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
 
 </section>
 <section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>Servo 1</td><td>PWM</td><td>GPIO 18</td></tr><tr><td>Servo 1</td><td>V+ / GND</td><td>5V / GND</td></tr><tr><td>Servo 2</td><td>PWM</td><td>GPIO 19</td></tr><tr><td>Servo 2</td><td>V+ / GND</td><td>5V / GND</td></tr><tr><td>Save Button</td><td>Signal</td><td>GPIO 25</td></tr><tr><td>Save Button</td><td>Other side</td><td>GND</td></tr><tr><td>Recall Button</td><td>Signal</td><td>GPIO 26</td></tr><tr><td>Recall Button</td><td>Other side</td><td>GND</td></tr><tr><td>OLED</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>OLED</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr></tbody></table></div><div class="note"><strong>Servo 1:</strong> GPIO 18 &nbsp; <strong>Servo 2:</strong> GPIO 19 &nbsp; <strong>Save:</strong> GPIO 25 &nbsp; <strong>Recall:</strong> GPIO 26 &nbsp; <strong>Memory:</strong> ESP32 Preferences</div></section>
-<section class="section" id="circuit"><h2>Circuit Diagram</h2><div class="circuit"><div class="node">ESP32 DevKitC</div><div class="arrow">→</div><div class="node">Two Servos + Save/Recall Buttons + SSD1306 OLED</div></div><div class="wire-list"><p>Servo 1 uses GPIO 18 and Servo 2 uses GPIO 19. The save button connects between GPIO 25 and GND, while the recall button connects between GPIO 26 and GND. Both buttons use INPUT_PULLUP. The OLED in the supplied circuit uses SDA GPIO 21 and SCL GPIO 22.</p></div></section>
+
+   <!-- Wireless Servo Position Memory -->
+<section class="section" id="circuit">
+
+<h2>Circuit Diagram</h2>
+
+<img
+    src="Wireless Servo Position Memory Circuit.png"
+    alt="Wireless Servo Position Memory Circuit"
+    class="circuit-img">
+
+</section>
+   
 <section class="section" id="working"><h2>Working Principle</h2><div class="flow">ESP32 Starts<br>↓<br>Load Saved Angles from Preferences<br>↓<br>Move Both Servos to Saved Positions<br>↓<br>Connect to Wi-Fi and Start Web Server<br>↓<br>User Selects Angles and Presses MOVE<br>↓<br>Press SAVE → Store Angles in Non-Volatile Memory<br>↓<br>Press RECALL → Restore Saved Angles<br>↓<br>Physical Save/Recall Buttons Perform the Same Memory Actions</div></section>
 <section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect Servo 1 signal to GPIO 18 and Servo 2 signal to GPIO 19.</li><li>Power both servos from 5V and connect their grounds to ESP32 GND.</li><li>Connect the save push button between GPIO 25 and GND.</li><li>Connect the recall push button between GPIO 26 and GND.</li><li>Connect the SSD1306 OLED as shown in the circuit: SDA to GPIO 21 and SCL to GPIO 22.</li><li>Upload the sketch and open Serial Monitor at 115200 baud.</li><li>Open the ESP32 IP address in a browser.</li><li>Choose angles for both servos and press MOVE SERVOS.</li><li>Press SAVE POSITION to store the current servo angles.</li><li>Change the angles, then press RECALL POSITION to restore the saved values.</li><li>Test the physical save and recall buttons.</li></ol></section>
 <section class="section" id="code"><h2>Explore the Code</h2><p>Key sketch sections used in this experiment:</p><div class="code-panel"><div class="code-top"><span>Wireless_Servo_Position_Memory.ino</span><button onclick="navigator.clipboard.writeText(document.getElementById('codeblock').innerText)">Copy Code</button></div><pre id="codeblock">#include &lt;WiFi.h&gt;
