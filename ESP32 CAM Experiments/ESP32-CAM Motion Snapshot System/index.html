@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32-CAM Motion Snapshot System
+</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    font-weight:bold;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    line-height:2;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   CODE
+========================= */
+
+.code-panel{
+    background:#0f172a;
+
+    border-radius:12px;
+
+    overflow:hidden;
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 16px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+pre{
+    margin:0;
+
+    padding:18px;
+
+    overflow:auto;
+
+    background:#0f172a;
+
+    color:#dbeafe;
+
+    font:
+    13px/1.55
+    Consolas, Monaco, monospace;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <h1>ESP32-CAM Experiment</h1>
+
+    <p>ESP32-CAM Motion Snapshot System</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To detect motion using a PIR sensor and automatically capture a snapshot with the ESP32-CAM while providing buzzer, OLED and web-dashboard feedback.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The PIR sensor is connected to GPIO 13 and detects motion around the ESP32-CAM.
+    </p>
+
+    <p>
+        When motion is detected, the buzzer on GPIO 12 sounds and the OV2640 captures a JPEG snapshot.
+    </p>
+
+    <p>
+        The most recent image is stored in memory and can be viewed from the Wi-Fi web dashboard. The OLED displays connection and capture status.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="ESP32-CAM.png"
+            alt="AI-Thinker ESP32-CAM">
+
+            <h4>
+                AI-Thinker ESP32-CAM (×1)
+            </h4>
+
+            <p>
+                Main controller with Wi-Fi and camera interface.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="OV2640 Camera Module.png"
+            alt="OV2640 Camera Module">
+
+            <h4>
+                OV2640 Camera Module (×1)
+            </h4>
+
+            <p>
+                Captures snapshots.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="HC-SR501 PIR Motion Sensor.png"
+            alt="PIR Motion Sensor HC-SR501">
+
+            <h4>
+                PIR Motion Sensor HC-SR501 (×1)
+            </h4>
+
+            <p>
+                Detects motion.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Buzzer.png"
+            alt="Buzzer">
+
+            <h4>
+                Buzzer (×1)
+            </h4>
+
+            <p>
+                Provides audible motion alert.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="LED.png"
+            alt="1.3" I²C OLED SSD1306 128×64">
+
+            <h4>
+                1.3" I²C OLED SSD1306 128×64 (×1)
+            </h4>
+
+            <p>
+                Displays system and capture status.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="USB-TTL Programmer.png"
+            alt="USB-to-TTL Programmer">
+
+            <h4>
+                USB-to-TTL Programmer (×1)
+            </h4>
+
+            <p>
+                Used for programming the ESP32-CAM.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the circuit.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for electrical connections.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Component</th>
+                    <th>Pin</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>OLED</td>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>SDA</td>
+                    <td>GPIO 14</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>SCL</td>
+                    <td>GPIO 15</td>
+                </tr>
+
+
+                <tr>
+                    <td>PIR Sensor</td>
+                    <td>VCC</td>
+                    <td>5V</td>
+                </tr>
+
+
+                <tr>
+                    <td>PIR Sensor</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+
+                <tr>
+                    <td>PIR Sensor</td>
+                    <td>OUT</td>
+                    <td>GPIO 13</td>
+                </tr>
+
+
+                <tr>
+                    <td>Buzzer</td>
+                    <td>+</td>
+                    <td>GPIO 12</td>
+                </tr>
+
+
+                <tr>
+                    <td>Buzzer</td>
+                    <td>-</td>
+                    <td>GND</td>
+                </tr>
+
+
+                <tr>
+                    <td>USB-TTL</td>
+                    <td>5V</td>
+                    <td>5V</td>
+                </tr>
+
+
+                <tr>
+                    <td>USB-TTL</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+
+                <tr>
+                    <td>USB-TTL</td>
+                    <td>TX</td>
+                    <td>U0R / GPIO 3</td>
+                </tr>
+
+
+                <tr>
+                    <td>USB-TTL</td>
+                    <td>RX</td>
+                    <td>U0T / GPIO 1</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="ESP32-CAM Motion Snapshot System Circuit.png"
+    alt="ESP32-CAM Motion Snapshot System Circuit">
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        ESP32-CAM Starts
+
+        <br>↓<br>
+
+        OLED, PIR, Buzzer and Camera Initialize
+
+        <br>↓<br>
+
+        ESP32-CAM Connects to Wi-Fi
+
+        <br>↓<br>
+
+        System Waits for PIR Motion
+
+        <br>↓<br>
+
+        Motion Detected
+
+        <br>↓<br>
+
+        Buzzer Alerts
+
+        <br>↓<br>
+
+        OV2640 Captures Snapshot
+
+        <br>↓<br>
+
+        Latest JPEG Stored in Memory
+
+        <br>↓<br>
+
+        Browser Displays Latest Snapshot
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Connect OLED SDA to GPIO 14 and SCL to GPIO 15.
+        </li>
+
+        <li>
+            Connect PIR OUT to GPIO 13 and power the PIR from 5V and GND.
+        </li>
+
+        <li>
+            Connect the buzzer positive pin to GPIO 12 and negative pin to GND.
+        </li>
+
+        <li>
+            Connect the USB-TTL programmer to the ESP32-CAM.
+        </li>
+
+        <li>
+            Put GPIO 0 to GND only during upload.
+        </li>
+
+        <li>
+            Upload the program and then remove GPIO 0 from GND.
+        </li>
+
+        <li>
+            Press RESET and open Serial Monitor at 115200 baud.
+        </li>
+
+        <li>
+            Open the ESP32-CAM IP address in a browser.
+        </li>
+
+        <li>
+            Trigger the PIR sensor and confirm the buzzer and snapshot operation.
+        </li>
+
+        <li>
+            Use Capture Now on the dashboard to test manual image capture.
+        </li>
+
+    </ol>
+
+</section>
+
+
+<!-- =========================
+     EXPLORE THE CODE
+========================= -->
+
+<section class="section" id="code">
+
+    <h2>Explore the Code</h2>
+
+    <div class="code-panel">
+
+        <div class="code-top">
+
+            <span>
+                ESP32-CAM_Motion_Snapshot_System.ino
+            </span>
+
+            <button
+            class="copy-button"
+            onclick="copyCode()">
+
+                Copy Code
+
+            </button>
+
+        </div>
+
+        <pre id="codeblock">#include "esp_camera.h"
+#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+
+#define OLED_SDA 14
+#define OLED_SCL 15
+#define PIR_PIN 13
+#define BUZZER_PIN 12
+
+WebServer server(80);
+
+bool motionDetected = false;
+unsigned long lastMotionTime = 0;
+const unsigned long MOTION_COOLDOWN = 5000;
+
+void loop()
+{
+    server.handleClient();
+
+    int pirState =
+    digitalRead(PIR_PIN);
+
+    if(
+        pirState == HIGH &amp;&amp;
+        !motionDetected &amp;&amp;
+        millis() - lastMotionTime &gt;
+        MOTION_COOLDOWN
+    )
+    {
+        motionDetected = true;
+        lastMotionTime = millis();
+
+        buzzerAlert();
+        captureSnapshot();
+    }
+
+    if(pirState == LOW)
+    {
+        motionDetected = false;
+    }
+
+    delay(50);
+}</pre>
+
+    </div>
+
+    <h3>Check Your Understanding</h3>
+
+    <ul>
+        <li>
+            Identify the main input used by this Experiment.
+        </li>
+
+        <li>
+            Identify the main output or actuator controlled by the ESP32-CAM.
+        </li>
+
+        <li>
+            Check the GPIO numbers in the Circuit Connections table before wiring.
+        </li>
+    </ul>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>Expected Output</h2>
+
+<p>
+    The OLED shows startup, Wi-Fi and motion/capture messages.
+</p>
+
+<p>
+    When the PIR goes HIGH, the buzzer produces an alert and the camera captures a snapshot.
+</p>
+
+<p>
+    The browser dashboard shows the latest snapshot and provides a manual Capture Now button.
+</p>
+
+<p>
+    The most recent image is stored in memory for browser viewing.
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>Result</h2>
+
+<p>
+    The ESP32-CAM Motion Snapshot System successfully detects motion, captures a JPEG snapshot, gives buzzer feedback and makes the latest image available through the web dashboard.
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>What You Learn</h2>
+
+<ul>
+
+<li>
+Interfacing an HC-SR501 PIR sensor with ESP32-CAM.
+</li>
+
+<li>
+Controlling a buzzer from GPIO 12.
+</li>
+
+<li>
+Using an OLED on GPIO 14 and GPIO 15.
+</li>
+
+<li>
+Capturing and storing JPEG images in memory.
+</li>
+
+<li>
+Creating a Wi-Fi snapshot dashboard.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32-CAM Experiment
+</strong>
+
+<br>
+
+ESP32-CAM Motion Snapshot System
+
+</footer>
+
+
+<script>
+
+function copyCode()
+{
+    navigator
+    .clipboard
+    .writeText(
+        document
+        .getElementById("codeblock")
+        .innerText
+    );
+}
+
+</script>
+
+
+</body>
+</html>
