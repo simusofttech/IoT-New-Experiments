@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32-CAM Wi-Fi Photo Booth
+</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    font-weight:bold;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    line-height:2;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   CODE
+========================= */
+
+.code-panel{
+    background:#0f172a;
+
+    border-radius:12px;
+
+    overflow:hidden;
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 16px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+pre{
+    margin:0;
+
+    padding:18px;
+
+    overflow:auto;
+
+    background:#0f172a;
+
+    color:#dbeafe;
+
+    font:
+    13px/1.55
+    Consolas, Monaco, monospace;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <h1>ESP32-CAM Experiment</h1>
+
+    <p>ESP32-CAM Wi-Fi Photo Booth</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To create a Wi-Fi photo booth and timelapse camera using an ESP32-CAM, OLED and push button with browser-based monitoring and image capture.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The ESP32-CAM captures JPEG images using the OV2640 camera and serves a browser dashboard over Wi-Fi.
+    </p>
+
+    <p>
+        A push button on GPIO 2 can start or stop the timelapse sequence, and the software uses a 10-second capture interval.
+    </p>
+
+    <p>
+        The OLED displays Wi-Fi state, photo count and timelapse status. The latest captured photo is stored in RAM and displayed in the dashboard gallery.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="ESP32-CAM.png"
+            alt="AI-Thinker ESP32-CAM">
+
+            <h4>
+                AI-Thinker ESP32-CAM (×1)
+            </h4>
+
+            <p>
+                Main Wi-Fi camera controller.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="OV2640 Camera Module.png"
+            alt="ESP32-CAM OV2640 Camera">
+
+            <h4>
+                ESP32-CAM OV2640 Camera (×1)
+            </h4>
+
+            <p>
+                Captures the photos.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="LED.png"
+            alt="1.3" I²C OLED SH1106 128×64">
+
+            <h4>
+                1.3" I²C OLED SH1106 128×64 (×1)
+            </h4>
+
+            <p>
+                Displays Wi-Fi, photo count and status.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Push Button.png"
+            alt="Push Button">
+
+            <h4>
+                Push Button (×1)
+            </h4>
+
+            <p>
+                Starts or stops the timelapse.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for electrical connections.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="USB-TTL Programmer.png"
+            alt="5V Power Supply / USB-TTL Programmer">
+
+            <h4>
+                5V Power Supply / USB-TTL Programmer (×1)
+            </h4>
+
+            <p>
+                Provides programming and stable power.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the button wiring.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Component</th>
+                    <th>Pin</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>OLED</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>VCC</td>
+                    <td>5V</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>SCL</td>
+                    <td>GPIO 14</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>SDA</td>
+                    <td>GPIO 13</td>
+                </tr>
+
+
+                <tr>
+                    <td>Push Button</td>
+                    <td>One leg</td>
+                    <td>GPIO 2</td>
+                </tr>
+
+
+                <tr>
+                    <td>Push Button</td>
+                    <td>Opposite leg</td>
+                    <td>GND</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="ESP32-CAM Wi-Fi Photo Booth Circuit.png"
+    alt="ESP32-CAM Wi-Fi Photo Booth Circuit">
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        ESP32-CAM Starts
+
+        <br>↓<br>
+
+        OLED and Camera Initialize
+
+        <br>↓<br>
+
+        ESP32-CAM Connects to Wi-Fi
+
+        <br>↓<br>
+
+        Web Dashboard Starts
+
+        <br>↓<br>
+
+        User Starts Timelapse from Browser or Button
+
+        <br>↓<br>
+
+        Wait 10 Seconds
+
+        <br>↓<br>
+
+        Camera Captures JPEG
+
+        <br>↓<br>
+
+        Photo Count Increases
+
+        <br>↓<br>
+
+        Latest Photo Appears in Gallery
+
+        <br>↓<br>
+
+        Cycle Repeats Until Stopped
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Connect OLED SCL to GPIO 14 and SDA to GPIO 13.
+        </li>
+
+        <li>
+            Connect the OLED VCC to 5V and GND to GND as shown in the source document.
+        </li>
+
+        <li>
+            Connect one push-button leg to GPIO 2 and the opposite leg to GND.
+        </li>
+
+        <li>
+            Program the ESP32-CAM and restart it in normal mode.
+        </li>
+
+        <li>
+            Open Serial Monitor at 115200 baud and note the IP address.
+        </li>
+
+        <li>
+            Open the ESP32-CAM dashboard in a browser.
+        </li>
+
+        <li>
+            Press Start Timelapse or use the physical push button.
+        </li>
+
+        <li>
+            Wait for the first photo after 10 seconds.
+        </li>
+
+        <li>
+            Observe new images and photo count in the gallery.
+        </li>
+
+        <li>
+            Press Stop or use the physical button again to stop the timelapse.
+        </li>
+
+    </ol>
+
+</section>
+
+
+<!-- =========================
+     EXPLORE THE CODE
+========================= -->
+
+<section class="section" id="code">
+
+    <h2>Explore the Code</h2>
+
+    <div class="code-panel">
+
+        <div class="code-top">
+
+            <span>
+                ESP32-CAM_Wi-Fi_Photo_Booth.ino
+            </span>
+
+            <button
+            class="copy-button"
+            onclick="copyCode()">
+
+                Copy Code
+
+            </button>
+
+        </div>
+
+        <pre id="codeblock">#include "esp_camera.h"
+#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;U8g2lib.h&gt;
+
+#define OLED_SDA 13
+#define OLED_SCL 14
+#define BUTTON_PIN 2
+
+const unsigned long
+CAPTURE_INTERVAL = 10000UL;
+
+bool timelapseRunning = false;
+
+WebServer server(80);
+
+void loop()
+{
+    server.handleClient();
+
+    checkButton();
+
+    processTimelapse();
+}</pre>
+
+    </div>
+
+    <h3>Check Your Understanding</h3>
+
+    <ul>
+        <li>
+            Identify the main input used by this Experiment.
+        </li>
+
+        <li>
+            Identify the main output or actuator controlled by the ESP32-CAM.
+        </li>
+
+        <li>
+            Check the GPIO numbers in the Circuit Connections table before wiring.
+        </li>
+    </ul>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>Expected Output</h2>
+
+<p>
+    The OLED shows Wi-Fi connected, photo count and RUNNING or STOPPED status.
+</p>
+
+<p>
+    The first timelapse photo is captured 10 seconds after Start.
+</p>
+
+<p>
+    Additional captures occur every 10 seconds while the timelapse is running.
+</p>
+
+<p>
+    The web dashboard shows the live camera, photo count, status and captured-image gallery.
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>Result</h2>
+
+<p>
+    The ESP32-CAM Wi-Fi Photo Booth successfully captures timed JPEG images, updates the OLED and presents the latest photos through a Wi-Fi dashboard.
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>What You Learn</h2>
+
+<ul>
+
+<li>
+Using a push button with INPUT_PULLUP on GPIO 2.
+</li>
+
+<li>
+Creating a 10-second timelapse interval.
+</li>
+
+<li>
+Capturing JPEG frames with ESP32-CAM.
+</li>
+
+<li>
+Storing the latest photo in RAM.
+</li>
+
+<li>
+Displaying capture status on a SH1106 OLED.
+</li>
+
+<li>
+Building a browser gallery and status dashboard.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32-CAM Experiment
+</strong>
+
+<br>
+
+ESP32-CAM Wi-Fi Photo Booth
+
+</footer>
+
+
+<script>
+
+function copyCode()
+{
+    navigator
+    .clipboard
+    .writeText(
+        document
+        .getElementById("codeblock")
+        .innerText
+    );
+}
+
+</script>
+
+
+</body>
+</html>
