@@ -1,0 +1,2562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ESP32 Experiment - Wireless Stepper Position Controller</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    font-weight:bold;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    line-height:2;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+.code-layout{
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+.code-panel{
+    background:white;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.filename{
+    color:white;
+
+    font:bold 14px/1.4
+    Consolas, Monaco, monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+.code-body{
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas, Monaco, monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+.code-line:hover{
+    background:#f8fbff;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+.line-number{
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+.guide{
+    background:white;
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+
+    font-size:15px;
+}
+
+.steps{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.step{
+    border:
+    1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+.step:hover{
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+.step.active{
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+.step-number{
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+.explanation{
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+.explanation h3{
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+.explanation p{
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+.guide details{
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+.guide details p,
+.guide details li{
+    color:#526875;
+
+    font-size:15px;
+}
+
+.guide code{
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+.tip{
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+        height:450px;
+    }
+}
+
+@media(max-width:600px){
+
+    .header{
+        padding:35px 15px;
+    }
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .section{
+        padding:21px 18px;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <h1>ESP32 Experiment</h1>
+
+    <p>Wireless Stepper Position Controller</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To control the position of a bipolar
+        stepper motor wirelessly using an ESP32,
+        A4988 stepper motor driver and a
+        Wi-Fi web dashboard.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The ESP32 sends STEP and DIR signals
+        to an A4988 stepper motor driver.
+        The driver controls the bipolar
+        stepper motor position.
+    </p>
+
+    <p>
+        The web dashboard allows manual movement,
+        fixed-step movement, target-position control,
+        return-to-home operation and preset positions.
+    </p>
+
+    <p>
+        The SSD1306 OLED displays the current
+        motor position, target position and
+        movement status.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="ESP32 Development Board.png"
+            alt="ESP32 Development Board">
+
+            <h4>
+                ESP32 DevKitC V4 (×1)
+            </h4>
+
+            <p>
+                Main controller with built-in Wi-Fi.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Bipolar Stepper Motor.png"
+            alt="Bipolar Stepper Motor">
+
+            <h4>
+                Bipolar Stepper Motor (×1)
+            </h4>
+
+            <p>
+                Provides precise rotational
+                position control.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="A4988 Stepper Motor Driver.png"
+            alt="A4988 Stepper Motor Driver">
+
+            <h4>
+                A4988 Stepper Motor Driver (×1)
+            </h4>
+
+            <p>
+                Drives the bipolar stepper
+                motor from ESP32 signals.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="LED.png"
+            alt="OLED SSD1306">
+
+            <h4>
+                SSD1306 OLED 128×64 I²C (×1)
+            </h4>
+
+            <p>
+                Displays position,
+                target and motor status.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the circuit.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for electrical connections.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+
+    <h3>ESP32 to A4988</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>ESP32 Pin</th>
+                    <th>A4988 Pin</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>GPIO 18</td>
+                    <td>STEP</td>
+                </tr>
+
+                <tr>
+                    <td>GPIO 19</td>
+                    <td>DIR</td>
+                </tr>
+
+                <tr>
+                    <td>3.3V</td>
+                    <td>VDD</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND.1 and GND.2</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>ENABLE</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>MS1, MS2 and MS3</td>
+                </tr>
+
+                <tr>
+                    <td>3.3V</td>
+                    <td>RESET and SLEEP</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <h3>OLED to ESP32</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>OLED Pin</th>
+                    <th>ESP32 Pin</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO 21</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO 22</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <h3>A4988 to Bipolar Stepper Motor</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Stepper Motor Pin</th>
+                    <th>A4988 Pin</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>A+</td>
+                    <td>1A</td>
+                </tr>
+
+                <tr>
+                    <td>A-</td>
+                    <td>1B</td>
+                </tr>
+
+                <tr>
+                    <td>B+</td>
+                    <td>2A</td>
+                </tr>
+
+                <tr>
+                    <td>B-</td>
+                    <td>2B</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="note">
+
+        <strong>STEP:</strong>
+        GPIO 18
+
+        <br>
+
+        <strong>DIR:</strong>
+        GPIO 19
+
+        <br>
+
+        <strong>OLED SDA:</strong>
+        GPIO 21
+
+        <br>
+
+        <strong>OLED SCL:</strong>
+        GPIO 22
+
+        <br>
+
+        <strong>OLED Address:</strong>
+        0x3C
+
+        <br>
+
+        <strong>Steps Per Revolution:</strong>
+        200
+
+        <br>
+
+        <strong>Web Server Port:</strong>
+        80
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <p>
+        Connect the A4988 stepper driver,
+        bipolar stepper motor and OLED display
+        to the ESP32 as shown in the
+        circuit diagram.
+    </p>
+
+    <img
+    class="circuit-img"
+    src="Wireless Stepper Position Controller Circuit.png"
+    alt="Wireless Stepper Position Controller Circuit">
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        ESP32 Starts
+
+        <br>↓<br>
+
+        A4988 STEP and DIR Pins Initialize
+
+        <br>↓<br>
+
+        OLED Initializes
+
+        <br>↓<br>
+
+        ESP32 Connects to Wi-Fi
+
+        <br>↓<br>
+
+        Motion Hub Web Server Starts
+
+        <br>↓<br>
+
+        User Selects Direction, Step Count
+        or Target Position
+
+        <br>↓<br>
+
+        ESP32 Sends STEP Pulses
+        and DIR Signal to A4988
+
+        <br>↓<br>
+
+        Stepper Motor Moves to
+        the Required Position
+
+        <br>↓<br>
+
+        OLED and Dashboard
+        Show Updated Position
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Connect A4988 STEP
+            to ESP32 GPIO 18.
+        </li>
+
+        <li>
+            Connect A4988 DIR
+            to ESP32 GPIO 19.
+        </li>
+
+        <li>
+            Connect A4988 VDD
+            to ESP32 3.3V.
+        </li>
+
+        <li>
+            Connect the A4988 logic
+            grounds to ESP32 GND.
+        </li>
+
+        <li>
+            Connect ENABLE, MS1,
+            MS2 and MS3 to GND.
+        </li>
+
+        <li>
+            Connect RESET and SLEEP
+            to ESP32 3.3V.
+        </li>
+
+        <li>
+            Connect the bipolar stepper
+            motor coils to A4988 outputs
+            1A, 1B, 2A and 2B.
+        </li>
+
+        <li>
+            Connect OLED SDA
+            to GPIO 21.
+        </li>
+
+        <li>
+            Connect OLED SCL
+            to GPIO 22.
+        </li>
+
+        <li>
+            Connect OLED VCC and GND
+            to 3.3V and GND.
+        </li>
+
+        <li>
+            Upload the program
+            to the ESP32.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 115200 baud.
+        </li>
+
+        <li>
+            Note the displayed
+            ESP32 IP address.
+        </li>
+
+        <li>
+            Open the IP address
+            in a web browser.
+        </li>
+
+        <li>
+            Use manual direction,
+            quick-step controls,
+            target position or presets
+            to move the motor.
+        </li>
+
+    </ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section class="section" id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+    ESP32 Experiment · Code Review
+</p>
+
+
+<h2 class="lesson-title">
+    Explore the Code
+</h2>
+
+
+<p class="intro">
+    Wireless Stepper Position Controller ·
+    Select a step to see what each part
+    of the ESP32 program does.
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+    <span class="filename">
+        Wireless_Stepper_Position_Controller.ino
+    </span>
+
+    <button
+    class="copy-button"
+    onclick="copyCode()">
+
+        Copy Code
+
+    </button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- EXPLANATION PANEL -->
+
+<article class="guide">
+
+
+<h2>
+    Understand it step by step
+</h2>
+
+
+<p>
+    Choose a step.
+    The matching code will light up on the left.
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">01</span>
+
+Load the libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">02</span>
+
+Set A4988 pins
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">03</span>
+
+Set motor variables
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">04</span>
+
+Generate one step
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">05</span>
+
+Move to target
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">06</span>
+
+Update OLED
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">07</span>
+
+Handle web movement
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">08</span>
+
+Start system
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">09</span>
+
+Handle web clients
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+    1. Load the libraries
+</h3>
+
+<p>
+    The program loads the Wi-Fi,
+    web server, I²C, graphics
+    and OLED libraries.
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+    Explore more: stepper position
+</summary>
+
+<p>
+    <code>currentPosition</code>
+    stores the motor's current step.
+</p>
+
+<p>
+    <code>targetPosition</code>
+    stores the requested destination.
+</p>
+
+<p>
+    The program uses
+    <strong>200 steps per revolution</strong>.
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+    Check your understanding
+</summary>
+
+<ul>
+
+<li>
+Which GPIO sends STEP pulses?
+<strong>GPIO 18</strong>
+</li>
+
+<li>
+Which GPIO controls direction?
+<strong>GPIO 19</strong>
+</li>
+
+<li>
+How many steps are used
+for one revolution?
+<strong>200 steps</strong>
+</li>
+
+<li>
+Which route returns
+the current position?
+<strong>/position</strong>
+</li>
+
+</ul>
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>Try it:</strong>
+
+Upload the program to ESP32,
+open Serial Monitor at 115200 baud,
+note the displayed IP address
+and open Motion Hub in your browser.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>Expected Output</h2>
+
+<p>
+    The OLED displays the current
+    position, target position
+    and motor status.
+</p>
+
+<p>
+    The web dashboard displays
+    the stepper position from
+    0 to 199 steps.
+</p>
+
+<p>
+    LEFT and RIGHT controls move
+    the motor manually.
+</p>
+
+<p>
+    Quick-step controls move
+    the motor by -100, -50,
+    +50 or +100 steps.
+</p>
+
+<p>
+    The target control moves
+    the motor to a selected
+    position from 0 to 199.
+</p>
+
+<p>
+    Presets provide quick positions
+    for 0°, 90°, 180° and 270°.
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>Result</h2>
+
+<p>
+    The Wireless Stepper Position Controller
+    experiment was successfully implemented
+    using an ESP32, A4988 driver,
+    bipolar stepper motor and OLED display.
+</p>
+
+<p>
+    The motor position can be
+    controlled wirelessly from
+    a web dashboard while the OLED
+    displays live position information.
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>What You Learn</h2>
+
+<ul>
+
+<li>
+Interfacing an A4988 driver
+with ESP32.
+</li>
+
+<li>
+Controlling a bipolar stepper motor.
+</li>
+
+<li>
+Generating STEP pulses.
+</li>
+
+<li>
+Controlling motor direction
+with a DIR signal.
+</li>
+
+<li>
+Tracking stepper motor position.
+</li>
+
+<li>
+Using an SSD1306 OLED
+with ESP32 I²C.
+</li>
+
+<li>
+Connecting ESP32 to Wi-Fi.
+</li>
+
+<li>
+Creating a web-based
+stepper motor controller.
+</li>
+
+<li>
+Using target positions,
+home control and presets.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32 Experiment
+</strong>
+
+<br>
+
+Wireless Stepper Position Controller
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<textarea
+id="esp32-program"
+style="display:none;">
+
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// =====================================================
+// WIFI
+// =====================================================
+
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+WebServer server(80);
+
+
+// =====================================================
+// A4988
+// =====================================================
+
+#define STEP_PIN 18
+#define DIR_PIN 19
+
+
+// =====================================================
+// OLED
+// =====================================================
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_ADDR 0x3C
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    -1
+);
+
+
+// =====================================================
+// STEPPER
+// =====================================================
+
+const int STEPS_PER_REV = 200;
+
+long currentPosition = 0;
+long targetPosition = 0;
+
+int stepDelay = 1200;
+
+bool motorMoving = false;
+
+
+// =====================================================
+// STEP MOTOR
+// =====================================================
+
+void singleStep(bool clockwise)
+{
+    digitalWrite(
+        DIR_PIN,
+        clockwise ? HIGH : LOW
+    );
+
+    digitalWrite(
+        STEP_PIN,
+        HIGH
+    );
+
+    delayMicroseconds(
+        stepDelay
+    );
+
+    digitalWrite(
+        STEP_PIN,
+        LOW
+    );
+
+    delayMicroseconds(
+        stepDelay
+    );
+
+
+    if(clockwise)
+    {
+        currentPosition++;
+    }
+    else
+    {
+        currentPosition--;
+    }
+
+
+    if(
+        currentPosition >=
+        STEPS_PER_REV
+    )
+    {
+        currentPosition = 0;
+    }
+
+
+    if(
+        currentPosition < 0
+    )
+    {
+        currentPosition =
+        STEPS_PER_REV - 1;
+    }
+}
+
+
+// =====================================================
+// MOVE TO POSITION
+// =====================================================
+
+void moveToPosition(long target)
+{
+    target =
+    target % STEPS_PER_REV;
+
+
+    if(target < 0)
+    {
+        target +=
+        STEPS_PER_REV;
+    }
+
+
+    targetPosition =
+    target;
+
+    motorMoving =
+    true;
+
+    updateOLED();
+
+
+    while(
+        currentPosition !=
+        targetPosition
+    )
+    {
+        long clockwiseDistance =
+
+        (
+            targetPosition -
+            currentPosition +
+            STEPS_PER_REV
+        )
+        %
+        STEPS_PER_REV;
+
+
+        long counterClockwiseDistance =
+
+        (
+            currentPosition -
+            targetPosition +
+            STEPS_PER_REV
+        )
+        %
+        STEPS_PER_REV;
+
+
+        if(
+            clockwiseDistance <=
+            counterClockwiseDistance
+        )
+        {
+            singleStep(true);
+        }
+        else
+        {
+            singleStep(false);
+        }
+
+
+        if(
+            currentPosition % 5 == 0
+        )
+        {
+            updateOLED();
+        }
+    }
+
+
+    motorMoving =
+    false;
+
+    updateOLED();
+}
+
+
+// =====================================================
+// OLED DISPLAY
+// =====================================================
+
+void updateOLED()
+{
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(1);
+
+    display.setCursor(
+        0,
+        0
+    );
+
+    display.print(
+        "MOTION HUB"
+    );
+
+
+    display.setCursor(
+        0,
+        16
+    );
+
+    display.print(
+        "POSITION"
+    );
+
+
+    display.setTextSize(2);
+
+    display.setCursor(
+        0,
+        26
+    );
+
+    display.print(
+        currentPosition
+    );
+
+
+    display.setTextSize(1);
+
+    display.print(
+        " / "
+    );
+
+    display.print(
+        STEPS_PER_REV
+    );
+
+
+    display.setCursor(
+        0,
+        43
+    );
+
+    display.print(
+        "TARGET: "
+    );
+
+    display.print(
+        targetPosition
+    );
+
+
+    display.display();
+}
+
+
+// =====================================================
+// WEB HANDLERS
+// =====================================================
+
+void handleMove()
+{
+    if(
+        !server.hasArg(
+            "steps"
+        )
+    )
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Missing steps"
+        );
+
+        return;
+    }
+
+
+    long steps =
+    server
+    .arg("steps")
+    .toInt();
+
+
+    bool clockwise =
+    steps > 0;
+
+
+    steps =
+    abs(steps);
+
+
+    motorMoving =
+    true;
+
+
+    for(
+        long i = 0;
+        i < steps;
+        i++
+    )
+    {
+        singleStep(
+            clockwise
+        );
+    }
+
+
+    motorMoving =
+    false;
+
+    targetPosition =
+    currentPosition;
+
+    updateOLED();
+
+
+    server.send(
+        200,
+        "text/plain",
+        String(currentPosition)
+    );
+}
+
+
+void handleTarget()
+{
+    if(
+        !server.hasArg(
+            "pos"
+        )
+    )
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Missing position"
+        );
+
+        return;
+    }
+
+
+    long target =
+    server
+    .arg("pos")
+    .toInt();
+
+
+    moveToPosition(
+        target
+    );
+
+
+    server.send(
+        200,
+        "text/plain",
+        String(currentPosition)
+    );
+}
+
+
+void handleHome()
+{
+    moveToPosition(0);
+
+    currentPosition = 0;
+    targetPosition = 0;
+    motorMoving = false;
+
+    updateOLED();
+
+
+    server.send(
+        200,
+        "text/plain",
+        "0"
+    );
+}
+
+
+void handlePosition()
+{
+    server.send(
+        200,
+        "text/plain",
+        String(currentPosition)
+    );
+}
+
+
+// =====================================================
+// SETUP
+// =====================================================
+
+void setup()
+{
+    Serial.begin(115200);
+
+
+    pinMode(
+        STEP_PIN,
+        OUTPUT
+    );
+
+    pinMode(
+        DIR_PIN,
+        OUTPUT
+    );
+
+
+    digitalWrite(
+        STEP_PIN,
+        LOW
+    );
+
+    digitalWrite(
+        DIR_PIN,
+        LOW
+    );
+
+
+    Wire.begin(
+        21,
+        22
+    );
+
+
+    if(
+        !display.begin(
+            SSD1306_SWITCHCAPVCC,
+            OLED_ADDR
+        )
+    )
+    {
+        Serial.println(
+            "OLED ERROR"
+        );
+
+        while(true);
+    }
+
+
+    updateOLED();
+
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    while(
+        WiFi.status() !=
+        WL_CONNECTED
+    )
+    {
+        delay(500);
+
+        Serial.print(".");
+    }
+
+
+    Serial.println();
+
+    Serial.println(
+        "WiFi connected"
+    );
+
+
+    Serial.print(
+        "IP Address: "
+    );
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    server.on(
+        "/move",
+        handleMove
+    );
+
+    server.on(
+        "/target",
+        handleTarget
+    );
+
+    server.on(
+        "/home",
+        handleHome
+    );
+
+    server.on(
+        "/position",
+        handlePosition
+    );
+
+
+    server.begin();
+
+
+    Serial.println(
+        "Motion Hub started"
+    );
+}
+
+
+// =====================================================
+// LOOP
+// =====================================================
+
+void loop()
+{
+    server.handleClient();
+}
+
+</textarea>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+const program =
+document
+.getElementById("esp32-program")
+.value
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+const steps = [
+
+{
+    title:"Load the libraries",
+
+    search:"#include <WiFi.h>",
+
+    text:
+    "The program loads the Wi-Fi, web server, I²C, graphics and OLED libraries required by the experiment."
+},
+
+{
+    title:"Set A4988 pins",
+
+    search:"#define STEP_PIN 18",
+
+    text:
+    "GPIO 18 sends STEP pulses and GPIO 19 controls the motor direction through the A4988."
+},
+
+{
+    title:"Set motor variables",
+
+    search:"const int STEPS_PER_REV",
+
+    text:
+    "The program uses 200 steps per revolution and stores the current and target positions."
+},
+
+{
+    title:"Generate one step",
+
+    search:"void singleStep",
+
+    text:
+    "This function sets the direction, generates a STEP pulse and updates the motor position."
+},
+
+{
+    title:"Move to target",
+
+    search:"void moveToPosition",
+
+    text:
+    "This function calculates the shortest direction and moves the motor until it reaches the target position."
+},
+
+{
+    title:"Update OLED",
+
+    search:"void updateOLED",
+
+    text:
+    "The OLED shows the current position, target position and motor status."
+},
+
+{
+    title:"Handle web movement",
+
+    search:"void handleMove",
+
+    text:
+    "The web handlers move the motor by relative steps, target position, home position and return the current position."
+},
+
+{
+    title:"Start system",
+
+    search:"void setup()",
+
+    text:
+    "The setup function initializes A4988 pins, OLED, Wi-Fi and the web server."
+},
+
+{
+    title:"Handle web clients",
+
+    search:"void loop()",
+
+    text:
+    "The loop continuously processes incoming browser requests."
+}
+
+];
+
+
+function escapeHtml(text)
+{
+    return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+}
+
+
+function displayCode()
+{
+    let output = "";
+
+
+    lines.forEach(
+        function(line,index)
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+            (index + 1) +
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+        }
+    );
+
+
+    document
+    .getElementById(
+        "code-lines"
+    )
+    .innerHTML = output;
+}
+
+
+function showStep(index)
+{
+    const step =
+    steps[index];
+
+
+    const buttons =
+    document.querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+        function(button)
+        {
+            button
+            .classList
+            .remove("active");
+        }
+    );
+
+
+    buttons[index]
+    .classList
+    .add("active");
+
+
+    const codeLines =
+    document.querySelectorAll(
+        ".code-line"
+    );
+
+
+    codeLines.forEach(
+        function(line)
+        {
+            line
+            .classList
+            .remove("selected");
+        }
+    );
+
+
+    let foundLine = -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+        if(
+            lines[i]
+            .includes(step.search)
+        )
+        {
+            foundLine = i;
+
+            break;
+        }
+    }
+
+
+    if(foundLine >= 0)
+    {
+        for(
+            let i = foundLine;
+            i < Math.min(
+                foundLine + 10,
+                lines.length
+            );
+            i++
+        )
+        {
+            document
+            .getElementById(
+                "line-" + (i + 1)
+            )
+            .classList
+            .add("selected");
+        }
+
+
+        const selectedLine =
+        document.getElementById(
+            "line-" +
+            (foundLine + 1)
+        );
+
+
+        document
+        .getElementById(
+            "code-body"
+        )
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop - 20,
+
+            behavior:"smooth"
+
+        });
+    }
+
+
+    document
+    .getElementById(
+        "explanation"
+    )
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+    ". " +
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+}
+
+
+function copyCode()
+{
+    navigator
+    .clipboard
+    .writeText(program)
+    .then(
+        function()
+        {
+            const button =
+            document.querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+                function()
+                {
+                    button.innerText =
+                    "Copy Code";
+                },
+                1500
+            );
+        }
+    );
+}
+
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+</html>
