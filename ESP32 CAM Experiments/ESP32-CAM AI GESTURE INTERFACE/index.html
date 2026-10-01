@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32-CAM AI GESTURE INTERFACE
+</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    font-weight:bold;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    line-height:2;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   CODE
+========================= */
+
+.code-panel{
+    background:#0f172a;
+
+    border-radius:12px;
+
+    overflow:hidden;
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 16px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+pre{
+    margin:0;
+
+    padding:18px;
+
+    overflow:auto;
+
+    background:#0f172a;
+
+    color:#dbeafe;
+
+    font:
+    13px/1.55
+    Consolas, Monaco, monospace;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <h1>ESP32-CAM Experiment</h1>
+
+    <p>ESP32-CAM AI GESTURE INTERFACE</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To control a servo from hand gestures using an ESP32-CAM with both automatic AI mode and manual web-dashboard mode.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The ESP32-CAM captures images while a PC-side AI program uses MediaPipe to recognize gestures such as Open Palm, Closed Fist and Thumb Up.
+    </p>
+
+    <p>
+        In AUTO mode, recognized gestures are sent to the ESP32-CAM as commands. In MANUAL mode, the same servo positions can be selected directly from the browser dashboard.
+    </p>
+
+    <p>
+        The OLED shows operating mode, gesture and servo status.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="ESP32-CAM.png"
+            alt="AI-Thinker ESP32-CAM">
+
+            <h4>
+                AI-Thinker ESP32-CAM (×1)
+            </h4>
+
+            <p>
+                Main camera and Wi-Fi controller.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="OV2640 Camera Module.png"
+            alt="OV2640 Camera Module">
+
+            <h4>
+                OV2640 Camera Module (×1)
+            </h4>
+
+            <p>
+                Captures hand images.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="LED.png"
+            alt="SH1106 OLED 128×64 I²C">
+
+            <h4>
+                SH1106 OLED 128×64 I²C (×1)
+            </h4>
+
+            <p>
+                Displays mode and gesture status.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Servo Motor.png"
+            alt="SG90 Servo Motor">
+
+            <h4>
+                SG90 Servo Motor (×1)
+            </h4>
+
+            <p>
+                Moves to gesture-controlled positions.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="USB-TTL Programmer.png"
+            alt="USB-to-TTL Programmer">
+
+            <h4>
+                USB-to-TTL Programmer (×1)
+            </h4>
+
+            <p>
+                Used for programming the ESP32-CAM.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="5V Power Supply.png"
+            alt="External 5V Power Supply">
+
+            <h4>
+                External 5V Power Supply (×1)
+            </h4>
+
+            <p>
+                Provides stable servo power.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the circuit.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for electrical connections.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Component</th>
+                    <th>Pin</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>OLED</td>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>SDA</td>
+                    <td>GPIO 14</td>
+                </tr>
+
+
+                <tr>
+                    <td>OLED</td>
+                    <td>SCL</td>
+                    <td>GPIO 15</td>
+                </tr>
+
+
+                <tr>
+                    <td>Servo Motor</td>
+                    <td>Signal</td>
+                    <td>GPIO 13</td>
+                </tr>
+
+
+                <tr>
+                    <td>Servo Motor</td>
+                    <td>VCC</td>
+                    <td>External 5V</td>
+                </tr>
+
+
+                <tr>
+                    <td>Servo Motor</td>
+                    <td>GND</td>
+                    <td>External GND / common GND</td>
+                </tr>
+
+
+                <tr>
+                    <td>USB-TTL</td>
+                    <td>5V</td>
+                    <td>5V</td>
+                </tr>
+
+
+                <tr>
+                    <td>USB-TTL</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+
+                <tr>
+                    <td>USB-TTL</td>
+                    <td>TX</td>
+                    <td>U0R / GPIO 3</td>
+                </tr>
+
+
+                <tr>
+                    <td>USB-TTL</td>
+                    <td>RX</td>
+                    <td>U0T / GPIO 1</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="ESP32-CAM AI GESTURE INTERFACE Circuit.png"
+    alt="ESP32-CAM AI GESTURE INTERFACE Circuit">
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        ESP32-CAM Starts
+
+        <br>↓<br>
+
+        OLED, Servo and Camera Initialize
+
+        <br>↓<br>
+
+        ESP32-CAM Connects to Wi-Fi
+
+        <br>↓<br>
+
+        User Selects AUTO or MANUAL Mode
+
+        <br>↓<br>
+
+        AUTO → PC AI Reads Camera Image
+
+        <br>↓<br>
+
+        Gesture is Recognized
+
+        <br>↓<br>
+
+        Gesture Command Sent to ESP32-CAM
+
+        <br>↓<br>
+
+        MANUAL → Dashboard Button Sends Command
+
+        <br>↓<br>
+
+        Servo Moves to 0°, 90° or 180°
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Connect OLED SDA to GPIO 14 and SCL to GPIO 15.
+        </li>
+
+        <li>
+            Connect the servo signal to GPIO 13.
+        </li>
+
+        <li>
+            Power the servo from an external 5V supply and connect grounds together.
+        </li>
+
+        <li>
+            Connect and program the ESP32-CAM using a USB-TTL programmer.
+        </li>
+
+        <li>
+            Open the dashboard in a browser.
+        </li>
+
+        <li>
+            In MANUAL mode, test PALM, FIST and THUMB buttons.
+        </li>
+
+        <li>
+            Confirm PALM moves the servo to 0°, FIST to 90° and THUMB to 180°.
+        </li>
+
+        <li>
+            For AUTO mode, run the PC-side gesture AI program and ensure the PC and ESP32-CAM are on the same Wi-Fi network.
+        </li>
+
+        <li>
+            Show the supported gestures and verify automatic servo movement.
+        </li>
+
+    </ol>
+
+</section>
+
+
+<!-- =========================
+     EXPLORE THE CODE
+========================= -->
+
+<section class="section" id="code">
+
+    <h2>Explore the Code</h2>
+
+    <div class="code-panel">
+
+        <div class="code-top">
+
+            <span>
+                ESP32-CAM_AI_GESTURE_INTERFACE.ino
+            </span>
+
+            <button
+            class="copy-button"
+            onclick="copyCode()">
+
+                Copy Code
+
+            </button>
+
+        </div>
+
+        <pre id="codeblock">#include "esp_camera.h"
+#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;U8g2lib.h&gt;
+#include &lt;ESP32Servo.h&gt;
+
+#define OLED_SDA 14
+#define OLED_SCL 15
+#define SERVO_PIN 13
+
+Servo gestureServo;
+WebServer server(80);
+
+String currentMode = "MANUAL";
+
+void setGesture(String gesture)
+{
+    gesture.toUpperCase();
+
+    if(gesture == "PALM")
+    {
+        gestureServo.write(0);
+    }
+    else if(gesture == "FIST")
+    {
+        gestureServo.write(90);
+    }
+    else if(
+        gesture == "THUMB" ||
+        gesture == "THUMBS" ||
+        gesture == "THUMB_UP"
+    )
+    {
+        gestureServo.write(180);
+    }
+}
+
+void loop()
+{
+    server.handleClient();
+    delay(5);
+}</pre>
+
+    </div>
+
+    <h3>Check Your Understanding</h3>
+
+    <ul>
+        <li>
+            Identify the main input used by this Experiment.
+        </li>
+
+        <li>
+            Identify the main output or actuator controlled by the ESP32-CAM.
+        </li>
+
+        <li>
+            Check the GPIO numbers in the Circuit Connections table before wiring.
+        </li>
+    </ul>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>Expected Output</h2>
+
+<p>
+    The dashboard shows operating mode, detected gesture, servo position and live camera status.
+</p>
+
+<p>
+    PALM moves the servo to 0°.
+</p>
+
+<p>
+    FIST moves the servo to 90°.
+</p>
+
+<p>
+    THUMB or THUMB UP moves the servo to 180°.
+</p>
+
+<p>
+    AUTO mode accepts AI gesture commands, while MANUAL mode accepts dashboard commands.
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>Result</h2>
+
+<p>
+    The ESP32-CAM AI Gesture Interface successfully controls a servo using either AI-recognized hand gestures or manual browser controls.
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>What You Learn</h2>
+
+<ul>
+
+<li>
+Integrating ESP32-CAM with a PC-side MediaPipe workflow.
+</li>
+
+<li>
+Using AUTO and MANUAL operating modes.
+</li>
+
+<li>
+Sending gesture commands over HTTP.
+</li>
+
+<li>
+Controlling a servo on GPIO 13.
+</li>
+
+<li>
+Using a SH1106 OLED on GPIO 14 and GPIO 15.
+</li>
+
+<li>
+Mapping gestures to servo angles.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32-CAM Experiment
+</strong>
+
+<br>
+
+ESP32-CAM AI GESTURE INTERFACE
+
+</footer>
+
+
+<script>
+
+function copyCode()
+{
+    navigator
+    .clipboard
+    .writeText(
+        document
+        .getElementById("codeblock")
+        .innerText
+    );
+}
+
+</script>
+
+
+</body>
+</html>
