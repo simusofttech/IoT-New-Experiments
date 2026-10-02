@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ESP32-CAM AI GESTURE INTERFACE</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{color:#142e3a;}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px !important;margin:0 0 8px !important;color:#1e3a8a !important;border:0 !important;padding:0 !important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.token-comment{color:#64748b;}
+.token-keyword{color:#1d4ed8;font-weight:bold;}
+.token-number{color:#b45309;}
+.token-string{color:#047857;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;}
+.guide > p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;}
+.step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;}
+.explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;}
+.guide details p,.guide details li{color:#526875;font-size:15px;}
+.guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}.steps{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header class="header">
+    <h1>ESP32-CAM Experiment</h1>
+    <p>ESP32-CAM AI GESTURE INTERFACE</p>
+</header>
+
+<nav>
+    <a href="../index.html">← ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>To build an ESP32-CAM gesture interface that controls a servo using AI-recognized hand gestures in AUTO mode and browser controls in MANUAL mode.</p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>The ESP32-CAM provides camera images over Wi-Fi while a PC-side Python program uses OpenCV and MediaPipe Gesture Recognizer to identify supported hand gestures.</p>
+    <p>Open Palm, Closed Fist and Thumb Up are mapped to servo positions of 0°, 90° and 180°. The browser dashboard also allows direct manual control of the same positions.</p>
+    <p>The SH1106 OLED displays the operating mode, detected gesture and servo position.</p>
+</section>
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img
+            src="ESP32-CAM.png"
+            alt="AI-Thinker ESP32-CAM">
+            <h4>
+                AI-Thinker ESP32-CAM with OV2640 (×1)
+            </h4>
+            <p>
+                Main camera and Wi-Fi controller.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="OLED.png"
+            alt="OLED SSD1306">
+            <h4>
+                SH1106 OLED 128×64 I²C (×1)
+            </h4>
+            <p>
+                Displays mode, gesture and servo status.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="Servo Motor.png"
+            alt="Servo Motor">
+            <h4>
+                SG90 Servo Motor (×1)
+            </h4>
+            <p>
+                Moves to the gesture-controlled angle.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="USB-TTL Programmer.png"
+            alt="USB-to-TTL Programmer">
+            <h4>
+                USB-to-TTL Programmer (×1)
+            </h4>
+            <p>
+                Used to upload the ESP32-CAM program.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+            <h4>
+                Breadboard (×1)
+            </h4>
+            <p>
+                Used to assemble the circuit.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+            <h4>
+                Jumper Wires
+            </h4>
+            <p>
+                Used for electrical connections.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Component</th><th>Pin</th><th>ESP32-CAM Connection</th></tr></thead>
+            <tbody>
+                <tr><td>OLED</td><td>VCC</td><td>3.3V</td></tr>
+                <tr><td>OLED</td><td>GND</td><td>GND</td></tr>
+                <tr><td>OLED</td><td>SDA</td><td>GPIO 14</td></tr>
+                <tr><td>OLED</td><td>SCL</td><td>GPIO 15</td></tr>
+                <tr><td>Servo Motor</td><td>Signal</td><td>GPIO 13</td></tr>
+                <tr><td>Servo Motor</td><td>VCC</td><td>5V</td></tr>
+                <tr><td>Servo Motor</td><td>GND</td><td>Common GND</td></tr>
+                <tr><td>USB-TTL</td><td>5V</td><td>5V</td></tr>
+                <tr><td>USB-TTL</td><td>GND</td><td>GND</td></tr>
+                <tr><td>USB-TTL</td><td>TX</td><td>U0R / GPIO 3</td></tr>
+                <tr><td>USB-TTL</td><td>RX</td><td>U0T / GPIO 1</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="ESP32-CAM AI GESTURE INTERFACE Circuit.png"
+    alt="ESP32-CAM AI GESTURE INTERFACE Circuit">
+
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+    <div class="flow">
+        ESP32-CAM Starts<br>↓<br>
+        OLED, Servo and Camera Initialize<br>↓<br>
+        ESP32-CAM Connects to Wi-Fi<br>↓<br>
+        User Selects AUTO or MANUAL Mode<br>↓<br>
+        AUTO → PC Reads /capture Image<br>↓<br>
+        OpenCV + MediaPipe Recognize Gesture<br>↓<br>
+        Python Sends /ai?g=COMMAND<br>↓<br>
+        MANUAL → Dashboard Sends /manual?g=COMMAND<br>↓<br>
+        Servo Moves to 0°, 90° or 180°
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+    <ol>
+        <li>Connect OLED SDA to GPIO 14 and SCL to GPIO 15.</li>
+        <li>Connect the servo signal wire to GPIO 13.</li>
+        <li>Connect the servo power and ESP32-CAM ground so they share a common ground.</li>
+        <li>Connect the USB-to-TTL programmer to the ESP32-CAM.</li>
+        <li>Connect GPIO 0 to GND only while uploading, then remove the connection and reset the board.</li>
+        <li>Enter the Wi-Fi credentials and upload the program.</li>
+        <li>Open Serial Monitor at 115200 baud and note the ESP32-CAM IP address.</li>
+        <li>Open the dashboard and test PALM, FIST and THUMB in MANUAL mode.</li>
+        <li>For AUTO mode, run the Python MediaPipe gesture program on a PC connected to the same Wi-Fi network.</li>
+        <li>Show Open Palm, Closed Fist and Thumb Up gestures and verify 0°, 90° and 180° servo movement.</li>
+    </ol>
+</section>
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section class="section" id="code">
+
+<div class="code-lesson">
+
+<p class="eyebrow">
+    ESP32 Experiment · Code Review
+</p>
+
+<h2 class="lesson-title">
+    Explore the Code
+</h2>
+
+<p class="intro">
+    ESP32-CAM AI GESTURE INTERFACE · Select a step to see
+    what each part of the ESP32 program does.
+</p>
+
+<div class="code-layout">
+
+<article class="code-panel">
+
+<div class="code-top">
+    <span class="filename">
+        ESP32_CAM_Gesture_Interface.ino
+    </span>
+    <button
+    class="copy-button"
+    onclick="copyCode()">
+        Copy Code
+    </button>
+</div>
+
+<div
+class="code-body"
+id="code-body">
+<code id="code-lines"></code>
+</div>
+
+</article>
+
+<article class="guide">
+
+<h2>
+    Understand it step by step
+</h2>
+
+<p>
+    Choose a step.
+    The matching code will light up on the left.
+</p>
+
+<div class="steps">
+
+<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load the libraries</button>
+<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set OLED and servo pins</button>
+<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Map gestures to angles</button>
+<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Initialize camera</button>
+<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Switch AUTO / MANUAL</button>
+<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Handle manual commands</button>
+<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Handle AI commands</button>
+<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Serve status and camera</button>
+<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Start Wi-Fi and server</button>
+
+</div>
+
+<div class="explanation" id="explanation">
+<h3>1. Load the libraries</h3>
+<p>The program loads the camera, Wi-Fi, web server, I²C, SH1106 OLED and ESP32 servo libraries required by the experiment.</p>
+</div>
+
+<details>
+<summary>Explore more: gesture mapping</summary>
+<p><strong>PALM</strong> moves the servo to <strong>0°</strong>.</p>
+<p><strong>FIST</strong> moves the servo to <strong>90°</strong>.</p>
+<p><strong>THUMB / THUMBS / THUMB_UP</strong> moves the servo to <strong>180°</strong>.</p>
+</details>
+
+<details>
+<summary>Check your understanding</summary>
+<ul>
+<li>Which GPIO controls the servo? <strong>GPIO 13</strong></li>
+<li>Which GPIO is OLED SDA? <strong>GPIO 14</strong></li>
+<li>Which GPIO is OLED SCL? <strong>GPIO 15</strong></li>
+<li>What are the two operating modes? <strong>AUTO and MANUAL</strong></li>
+</ul>
+</details>
+
+</article>
+
+</div>
+
+<p class="tip">
+<strong>Try it:</strong>
+Test MANUAL mode first, then run the Python MediaPipe program and switch to AUTO mode to control the servo with hand gestures.
+</p>
+
+</div>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+    <p>The dashboard displays the current operating mode, gesture and servo position.</p>
+    <p>Open Palm maps to PALM and moves the servo to 0°.</p>
+    <p>Closed Fist maps to FIST and moves the servo to 90°.</p>
+    <p>Thumb Up maps to THUMBS and moves the servo to 180°.</p>
+    <p>In AUTO mode the commands come from the PC-side MediaPipe program, while MANUAL mode uses dashboard buttons.</p>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+    <p>The ESP32-CAM AI GESTURE INTERFACE successfully provides both automatic AI gesture control and manual browser control of the servo while displaying system status on the OLED.</p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+    <ul>
+        <li>Using ESP32-CAM as a network camera and web server.</li>
+        <li>Connecting a SH1106 OLED using GPIO 14 and GPIO 15.</li>
+        <li>Controlling an SG90 servo on GPIO 13.</li>
+        <li>Sending commands to the ESP32-CAM using HTTP endpoints.</li>
+        <li>Using AUTO and MANUAL operating modes.</li>
+        <li>Mapping MediaPipe gestures to servo positions.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+<strong>ESP32-CAM Experiment</strong><br>
+ESP32-CAM AI GESTURE INTERFACE
+</footer>
+
+<textarea id="esp32-program" style="display:none;">
+#include "esp_camera.h"
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <U8g2lib.h>
+#include <ESP32Servo.h>
+
+// =======================================================
+// WIFI
+// =======================================================
+
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+// =======================================================
+// OLED - SH1106 128x64 I2C
+// =======================================================
+
+#define OLED_SDA 14
+#define OLED_SCL 15
+
+U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
+    U8G2_R0,
+    U8X8_PIN_NONE,
+    OLED_SCL,
+    OLED_SDA
+);
+
+// =======================================================
+// SERVO
+// =======================================================
+
+#define SERVO_PIN 13
+
+Servo gestureServo;
+
+int servoAngle = 0;
+String currentGesture = "NONE";
+String currentMode = "MANUAL";
+
+// =======================================================
+// WEB SERVER
+// =======================================================
+
+WebServer server(80);
+
+// =======================================================
+// AI THINKER ESP32-CAM PINS
+// =======================================================
+
+#define PWDN_GPIO_NUM 32
+#define RESET_GPIO_NUM -1
+#define XCLK_GPIO_NUM 0
+#define SIOD_GPIO_NUM 26
+#define SIOC_GPIO_NUM 27
+#define Y9_GPIO_NUM 35
+#define Y8_GPIO_NUM 34
+#define Y7_GPIO_NUM 39
+#define Y6_GPIO_NUM 36
+#define Y5_GPIO_NUM 21
+#define Y4_GPIO_NUM 19
+#define Y3_GPIO_NUM 18
+#define Y2_GPIO_NUM 5
+#define VSYNC_GPIO_NUM 25
+#define HREF_GPIO_NUM 23
+#define PCLK_GPIO_NUM 22
+
+// =======================================================
+// OLED DISPLAY
+// =======================================================
+
+void showOLED(
+    String title,
+    String line1,
+    String line2
+)
+{
+    oled.clearBuffer();
+
+    oled.setFont(
+        u8g2_font_6x10_tf
+    );
+
+    oled.drawStr(
+        5,
+        10,
+        "ESP32-CAM GESTURE"
+    );
+
+    oled.drawLine(
+        0,
+        13,
+        127,
+        13
+    );
+
+    oled.setFont(
+        u8g2_font_helvB14_tf
+    );
+
+    oled.drawStr(
+        5,
+        33,
+        title.c_str()
+    );
+
+    oled.setFont(
+        u8g2_font_6x10_tf
+    );
+
+    oled.drawStr(
+        5,
+        48,
+        line1.c_str()
+    );
+
+    oled.drawStr(
+        5,
+        61,
+        line2.c_str()
+    );
+
+    oled.sendBuffer();
+}
+
+// =======================================================
+// SERVO GESTURE CONTROL
+// =======================================================
+
+void setGesture(String gesture)
+{
+    gesture.toUpperCase();
+
+    if(
+        gesture == "PALM"
+    )
+    {
+        currentGesture = "PALM";
+        servoAngle = 0;
+
+        gestureServo.write(
+            0
+        );
+
+        showOLED(
+            "PALM",
+            "Servo Position",
+            "0 degrees"
+        );
+    }
+    else if(
+        gesture == "FIST"
+    )
+    {
+        currentGesture = "FIST";
+        servoAngle = 90;
+
+        gestureServo.write(
+            90
+        );
+
+        showOLED(
+            "FIST",
+            "Servo Position",
+            "90 degrees"
+        );
+    }
+    else if(
+        gesture == "THUMB" ||
+        gesture == "THUMBS" ||
+        gesture == "THUMB_UP"
+    )
+    {
+        currentGesture = "THUMB";
+        servoAngle = 180;
+
+        gestureServo.write(
+            180
+        );
+
+        showOLED(
+            "THUMB",
+            "Servo Position",
+            "180 degrees"
+        );
+    }
+}
+
+// =======================================================
+// CAMERA INITIALIZATION
+// =======================================================
+
+bool initCamera()
+{
+    camera_config_t config;
+
+    config.ledc_channel = LEDC_CHANNEL_0;
+    config.ledc_timer = LEDC_TIMER_0;
+
+    config.pin_d0 = Y2_GPIO_NUM;
+    config.pin_d1 = Y3_GPIO_NUM;
+    config.pin_d2 = Y4_GPIO_NUM;
+    config.pin_d3 = Y5_GPIO_NUM;
+    config.pin_d4 = Y6_GPIO_NUM;
+    config.pin_d5 = Y7_GPIO_NUM;
+    config.pin_d6 = Y8_GPIO_NUM;
+    config.pin_d7 = Y9_GPIO_NUM;
+
+    config.pin_xclk = XCLK_GPIO_NUM;
+    config.pin_pclk = PCLK_GPIO_NUM;
+    config.pin_vsync = VSYNC_GPIO_NUM;
+    config.pin_href = HREF_GPIO_NUM;
+    config.pin_sccb_sda = SIOD_GPIO_NUM;
+    config.pin_sccb_scl = SIOC_GPIO_NUM;
+    config.pin_pwdn = PWDN_GPIO_NUM;
+    config.pin_reset = RESET_GPIO_NUM;
+
+    config.xclk_freq_hz = 20000000;
+    config.pixel_format = PIXFORMAT_JPEG;
+
+    if(
+        psramFound()
+    )
+    {
+        config.frame_size = FRAMESIZE_VGA;
+        config.jpeg_quality = 10;
+        config.fb_count = 2;
+    }
+    else
+    {
+        config.frame_size = FRAMESIZE_QVGA;
+        config.jpeg_quality = 12;
+        config.fb_count = 1;
+    }
+
+    esp_err_t err =
+    esp_camera_init(
+        &config
+    );
+
+    if(
+        err != ESP_OK
+    )
+    {
+        Serial.printf(
+            "Camera initialization failed: 0x%x\n",
+            err
+        );
+
+        return false;
+    }
+
+    sensor_t* sensor =
+    esp_camera_sensor_get();
+
+    if(
+        sensor != nullptr
+    )
+    {
+        sensor->set_vflip(
+            sensor,
+            1
+        );
+
+        sensor->set_hmirror(
+            sensor,
+            0
+        );
+    }
+
+    return true;
+}
+
+// =======================================================
+// CAMERA CAPTURE
+// =======================================================
+
+void handleCapture()
+{
+    camera_fb_t* fb =
+    esp_camera_fb_get();
+
+    if(
+        fb == nullptr
+    )
+    {
+        server.send(
+            500,
+            "text/plain",
+            "Camera capture failed"
+        );
+
+        return;
+    }
+
+    server.setContentLength(
+        fb->len
+    );
+
+    server.send(
+        200,
+        "image/jpeg",
+        ""
+    );
+
+    WiFiClient client =
+    server.client();
+
+    client.write(
+        fb->buf,
+        fb->len
+    );
+
+    esp_camera_fb_return(
+        fb
+    );
+}
+
+// =======================================================
+// CHANGE MODE
+// =======================================================
+
+void handleMode()
+{
+    if(
+        !server.hasArg("m")
+    )
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Missing mode"
+        );
+
+        return;
+    }
+
+    String mode =
+    server.arg("m");
+
+    mode.toUpperCase();
+
+    if(
+        mode != "AUTO" &&
+        mode != "MANUAL"
+    )
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Invalid mode"
+        );
+
+        return;
+    }
+
+    currentMode = mode;
+
+    if(
+        currentMode == "AUTO"
+    )
+    {
+        showOLED(
+            "AUTO",
+            "AI Gesture Mode",
+            "Waiting..."
+        );
+    }
+    else
+    {
+        showOLED(
+            "MANUAL",
+            "Dashboard Control",
+            "Ready"
+        );
+    }
+
+    server.send(
+        200,
+        "text/plain",
+        currentMode
+    );
+}
+
+// =======================================================
+// MANUAL DASHBOARD COMMAND
+// =======================================================
+
+void handleManual()
+{
+    if(
+        !server.hasArg("g")
+    )
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Missing gesture"
+        );
+
+        return;
+    }
+
+    if(
+        currentMode != "MANUAL"
+    )
+    {
+        server.send(
+            403,
+            "text/plain",
+            "Switch to MANUAL mode first"
+        );
+
+        return;
+    }
+
+    String gesture =
+    server.arg("g");
+
+    setGesture(
+        gesture
+    );
+
+    server.send(
+        200,
+        "text/plain",
+        "OK"
+    );
+}
+
+// =======================================================
+// AI COMMAND
+// =======================================================
+
+void handleAI()
+{
+    if(
+        !server.hasArg("g")
+    )
+    {
+        server.send(
+            400,
+            "text/plain",
+            "Missing gesture"
+        );
+
+        return;
+    }
+
+    if(
+        currentMode != "AUTO"
+    )
+    {
+        server.send(
+            403,
+            "text/plain",
+            "Switch to AUTO mode first"
+        );
+
+        return;
+    }
+
+    String gesture =
+    server.arg("g");
+
+    setGesture(
+        gesture
+    );
+
+    server.send(
+        200,
+        "text/plain",
+        "OK"
+    );
+}
+
+// =======================================================
+// STATUS
+// =======================================================
+
+void handleStatus()
+{
+    String json = "{";
+
+    json += "\"mode\":\"";
+    json += currentMode;
+    json += "\",";
+
+    json += "\"gesture\":\"";
+    json += currentGesture;
+    json += "\",";
+
+    json += "\"servo\":";
+    json += String(
+        servoAngle
+    );
+
+    json += "}";
+
+    server.send(
+        200,
+        "application/json",
+        json
+    );
+}
+
+// =======================================================
+// DASHBOARD
+// =======================================================
+
+void handleRoot()
+{
+    String html = R"rawliteral(
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32-CAM AI Gesture Interface</title>
+<style>
+body{font-family:Arial;background:#0f172a;color:white;text-align:center;padding:20px;}
+button{padding:12px 18px;margin:6px;border:0;border-radius:8px;cursor:pointer;}
+img{max-width:100%;border-radius:12px;margin-top:15px;}
+</style>
+</head>
+<body>
+<h1>ESP32-CAM AI Gesture Interface</h1>
+
+<button onclick="fetch('/mode?m=AUTO')">AUTO MODE</button>
+<button onclick="fetch('/mode?m=MANUAL')">MANUAL MODE</button>
+
+<br>
+
+<button onclick="fetch('/manual?g=PALM')">OPEN PALM</button>
+<button onclick="fetch('/manual?g=FIST')">FIST</button>
+<button onclick="fetch('/manual?g=THUMB')">THUMB UP</button>
+
+<br>
+
+<img id="camera" src="/capture">
+
+<script>
+setInterval(function(){
+    document.getElementById('camera').src='/capture?t='+Date.now();
+},1500);
+</script>
+
+</body>
+</html>
+)rawliteral";
+
+    server.send(
+        200,
+        "text/html",
+        html
+    );
+}
+
+// =======================================================
+// SETUP
+// =======================================================
+
+void setup()
+{
+    Serial.begin(
+        115200
+    );
+
+    delay(
+        1000
+    );
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+    oled.begin();
+
+    oled.setI2CAddress(
+        0x3C * 2
+    );
+
+    showOLED(
+        "STARTING",
+        "ESP32-CAM",
+        "Please wait..."
+    );
+
+    gestureServo.setPeriodHertz(
+        50
+    );
+
+    gestureServo.attach(
+        SERVO_PIN,
+        500,
+        2400
+    );
+
+    gestureServo.write(
+        0
+    );
+
+    if(
+        !initCamera()
+    )
+    {
+        showOLED(
+            "CAM ERROR",
+            "Camera failed",
+            "Check camera"
+        );
+
+        while(
+            true
+        )
+        {
+            delay(
+                1000
+            );
+        }
+    }
+
+    WiFi.mode(
+        WIFI_STA
+    );
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+    int attempts = 0;
+
+    while(
+        WiFi.status() != WL_CONNECTED &&
+        attempts < 30
+    )
+    {
+        delay(
+            500
+        );
+
+        attempts++;
+    }
+
+    if(
+        WiFi.status() == WL_CONNECTED
+    )
+    {
+        showOLED(
+            "ONLINE",
+            "WiFi connected",
+            "Manual mode"
+        );
+    }
+    else
+    {
+        showOLED(
+            "WIFI ERROR",
+            "Connection failed",
+            "Check WiFi"
+        );
+    }
+
+    server.on(
+        "/",
+        handleRoot
+    );
+
+    server.on(
+        "/capture",
+        handleCapture
+    );
+
+    server.on(
+        "/mode",
+        handleMode
+    );
+
+    server.on(
+        "/manual",
+        handleManual
+    );
+
+    server.on(
+        "/ai",
+        handleAI
+    );
+
+    server.on(
+        "/status",
+        handleStatus
+    );
+
+    server.begin();
+
+    showOLED(
+        "READY",
+        "MANUAL mode",
+        "Dashboard ready"
+    );
+}
+
+// =======================================================
+// LOOP
+// =======================================================
+
+void loop()
+{
+    server.handleClient();
+
+    delay(
+        5
+    );
+}
+</textarea>
+
+<script>
+const program=document.getElementById("esp32-program").value.trim();
+const lines=program.split("\n");
+
+const steps=[
+{title:"Load the libraries",search:'#include "esp_camera.h"',text:"The program loads camera, Wi-Fi, web server, I²C, SH1106 OLED and ESP32 servo libraries."},
+{title:"Set OLED and servo pins",search:"#define OLED_SDA 14",text:"OLED SDA uses GPIO 14, OLED SCL uses GPIO 15 and the SG90 servo signal uses GPIO 13."},
+{title:"Map gestures to angles",search:"void setGesture",text:"PALM moves the servo to 0°, FIST to 90°, and THUMB / THUMBS / THUMB_UP to 180°."},
+{title:"Initialize camera",search:"bool initCamera()",text:"This function configures the AI-Thinker ESP32-CAM pins and starts the OV2640 camera in JPEG mode."},
+{title:"Switch AUTO / MANUAL",search:"void handleMode()",text:"The /mode endpoint changes between AUTO AI control and MANUAL dashboard control."},
+{title:"Handle manual commands",search:"void handleManual()",text:"The /manual endpoint accepts gesture commands only while MANUAL mode is selected."},
+{title:"Handle AI commands",search:"void handleAI()",text:"The /ai endpoint accepts gesture commands from the Python MediaPipe program only while AUTO mode is selected."},
+{title:"Serve status and camera",search:"void handleStatus()",text:"The ESP32-CAM exposes system status as JSON and provides a JPEG image through the /capture endpoint."},
+{title:"Start Wi-Fi and server",search:"void setup()",text:"setup() initializes the OLED, servo, camera, Wi-Fi connection and web server routes."}
+];
+
+function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function displayCode(){
+    let output="";
+    lines.forEach(function(line,index){
+        output+='<span class="code-line" id="line-'+(index+1)+'"><span class="line-number">'+(index+1)+'</span><span>'+escapeHtml(line)+'</span></span>';
+    });
+    document.getElementById("code-lines").innerHTML=output;
+}
+
+function showStep(index){
+    const step=steps[index];
+    const buttons=document.querySelectorAll(".step");
+    buttons.forEach(function(button){button.classList.remove("active");});
+    buttons[index].classList.add("active");
+
+    document.querySelectorAll(".code-line").forEach(function(line){line.classList.remove("selected");});
+
+    let foundLine=-1;
+    for(let i=0;i<lines.length;i++){
+        if(lines[i].includes(step.search)){foundLine=i;break;}
+    }
+
+    if(foundLine>=0){
+        for(let i=foundLine;i<Math.min(foundLine+12,lines.length);i++){
+            document.getElementById("line-"+(i+1)).classList.add("selected");
+        }
+        const selectedLine=document.getElementById("line-"+(foundLine+1));
+        document.getElementById("code-body").scrollTo({top:selectedLine.offsetTop-20,behavior:"smooth"});
+    }
+
+    document.getElementById("explanation").innerHTML='<h3>'+(index+1)+'. '+step.title+'</h3><p>'+step.text+'</p>';
+}
+
+function copyCode(){
+    navigator.clipboard.writeText(program).then(function(){
+        const button=document.querySelector(".copy-button");
+        button.innerText="Copied!";
+        setTimeout(function(){button.innerText="Copy Code";},1500);
+    });
+}
+
+displayCode();
+showStep(0);
+</script>
+
+</body>
+</html>
