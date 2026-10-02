@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Controlled Servo System</title>
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;} ul,ol{padding-left:24px;} li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;} table{width:100%;min-width:620px;border-collapse:collapse;} th,td{padding:12px;border:1px solid #ddd;text-align:left;} th{background:#2563eb;color:white;} tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px;}
+.code-lesson{color:#142e3a;} .eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px !important;margin:0 0 8px !important;color:#1e3a8a !important;border:0 !important;padding:0 !important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;} .code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;} .guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;} .guide>p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;} .step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;} .step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;} .explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;} .explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;} .guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;} .guide details p,.guide details li{color:#526875;font-size:15px;} .guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;} footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Raspberry Pi Experiment</h1>
+    <p>Voice Controlled Servo System</p>
+</header>
+
+<nav>
+<a href="../index.html">← R-Pi Experiments</a>
+<a href="#aim">Aim</a>
+<a href="#components">Components</a>
+<a href="#connections">Connections</a>
+<a href="#circuit">Circuit</a>
+<a href="#working">Working</a>
+<a href="#procedure">Procedure</a>
+<a href="#code">Code</a>
+<a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To build a Raspberry Pi based voice controlled servo system that records spoken commands using a USB microphone, converts the speech into text and moves an SG90 servo to programmed positions.</p>
+</section>
+
+<section class="section">
+<h2>About the Experiment</h2>
+<p>The Raspberry Pi 4 records a short voice command through a USB microphone using ALSA <code>arecord</code>.</p>
+<p>SpeechRecognition converts the recorded WAV audio into text using Google Speech Recognition.</p>
+<p>The Python program compares the recognized text with supported commands and uses <code>lgpio</code> PWM on GPIO18 to control the SG90 servo.</p>
+</section>
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img
+            src="Raspberry Pi 4 Model B.png"
+            alt="Raspberry Pi 4 Model B">
+
+            <h4>
+                Raspberry Pi 4 Model B (×1)
+            </h4>
+
+            <p>
+                Runs speech recognition,
+                command processing and servo control.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="Servo Motor.png"
+            alt="SG90 Servo Motor">
+
+            <h4>
+                SG90 Servo Motor (×1)
+            </h4>
+
+            <p>
+                Moves to the programmed angle
+                for each recognized voice command.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="USB Microphone.png"
+            alt="USB Microphone">
+
+            <h4>
+                USB Microphone (×1)
+            </h4>
+
+            <p>
+                Captures spoken commands
+                for the Raspberry Pi.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="Raspberry Pi Power Supply.png"
+            alt="Raspberry Pi Power Supply">
+
+            <h4>
+                Raspberry Pi Power Supply (×1)
+            </h4>
+
+            <p>
+                Provides power
+                to the Raspberry Pi.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Connect the servo
+                to the Raspberry Pi GPIO header.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="section" id="connections">
+<h2>Circuit Connections</h2>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Connection</th>
+<th>Raspberry Pi Connection</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>SG90 Servo</td><td>Signal — Orange/Yellow</td><td>GPIO18 / Physical Pin 12</td></tr>
+<tr><td>SG90 Servo</td><td>GND — Brown/Black</td><td>GND</td></tr>
+<tr><td>SG90 Servo</td><td>VCC — Red</td><td>5V</td></tr>
+<tr><td>USB Microphone</td><td>USB</td><td>Any Raspberry Pi USB Port</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="Voice Controlled Servo System Circuit.png"
+    alt="Voice Controlled Servo System Circuit">
+
+</section>
+
+<section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">
+VOICE<br>
+↓<br>
+USB MICROPHONE<br>
+↓<br>
+ALSA / arecord<br>
+↓<br>
+WAV FILE<br>
+↓<br>
+SpeechRecognition<br>
+↓<br>
+TEXT COMMAND<br>
+↓<br>
+COMMAND MATCHING<br>
+↓<br>
+lgpio PWM<br>
+↓<br>
+SG90 SERVO
+</div>
+</section>
+
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol>
+<li>Connect the SG90 signal wire to GPIO18 / physical pin 12.</li>
+<li>Connect the SG90 ground and 5V connections as shown in the supplied circuit diagram.</li>
+<li>Connect the USB microphone to any Raspberry Pi USB port.</li>
+<li>Power ON the Raspberry Pi.</li>
+<li>Create the project folder <code>~/voice_servo</code>.</li>
+<li>Create and activate the <code>servo_env</code> Python virtual environment.</li>
+<li>Install <code>SpeechRecognition</code> and <code>lgpio</code>, and make sure ALSA <code>arecord</code> and FLAC are available.</li>
+<li>Use <code>arecord -l</code> to verify the USB microphone and confirm the configured device.</li>
+<li>Save the final program as <code>voice_servo.py</code>.</li>
+<li>Run <code>python voice_servo.py</code>.</li>
+<li>Speak OPEN, CLOSE, LEFT, RIGHT, CENTER/CENTRE or STOP and observe the servo response.</li>
+</ol>
+</section>
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section class="section" id="code">
+
+<div class="code-lesson">
+
+<p class="eyebrow">
+    Raspberry Pi Experiment · Code Review
+</p>
+
+<h2 class="lesson-title">
+    Explore the Code
+</h2>
+
+<p class="intro">
+    Voice Controlled Servo System · Select a step to see
+    what each part of the Python program does.
+</p>
+
+<div class="code-layout">
+
+<article class="code-panel">
+
+<div class="code-top">
+
+    <span class="filename">
+        voice_servo.py
+    </span>
+
+    <button
+    class="copy-button"
+    onclick="copyCode()">
+
+        Copy Code
+
+    </button>
+
+</div>
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+</article>
+
+<article class="guide">
+
+<h2>
+    Understand it step by step
+</h2>
+
+<p>
+    Choose a step.
+    The matching code will light up on the left.
+</p>
+
+<div class="steps">
+<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load the libraries</button>
+<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set servo and microphone</button>
+<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Prepare GPIO</button>
+<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Move the servo</button>
+<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Record voice</button>
+<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Recognize speech</button>
+<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Set start position</button>
+<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Process commands</button>
+<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Stop and clean up</button>
+</div>
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+    1. Load the libraries
+</h3>
+
+<p>
+    The program loads SpeechRecognition, lgpio,
+    subprocess, time and os.
+</p>
+
+</div>
+
+<details>
+<summary>
+    Explore more: voice command mapping
+</summary>
+<p><strong>OPEN</strong> → 150°</p>
+<p><strong>CLOSE</strong> → 0°</p>
+<p><strong>LEFT</strong> → 45°</p>
+<p><strong>RIGHT</strong> → 135°</p>
+<p><strong>CENTER / CENTRE</strong> → 90°</p>
+<p><strong>STOP</strong> → exits the program.</p>
+</details>
+
+<details>
+<summary>
+    Check your understanding
+</summary>
+<ul>
+<li>Which GPIO controls the servo? <strong>GPIO18 / Physical Pin 12</strong></li>
+<li>Which ALSA microphone device is configured? <strong>plughw:3,0</strong></li>
+<li>How long is each voice recording? <strong>4 seconds</strong></li>
+<li>What angle does CENTER select? <strong>90°</strong></li>
+<li>What command stops the program? <strong>STOP</strong></li>
+</ul>
+</details>
+
+</article>
+
+</div>
+
+<p class="tip">
+<strong>Try it:</strong>
+Run <code>python voice_servo.py</code>, wait for <code>Listening...</code>,
+speak one supported command and watch the servo move to the programmed angle.
+</p>
+
+</div>
+
+</section>
+
+<section class="section">
+<h2>Expected Output</h2>
+<p>The terminal displays <strong>Listening...</strong>, then <strong>Recognizing...</strong>, followed by the recognized voice command.</p>
+<p>OPEN moves the servo to 150°.</p>
+<p>CLOSE moves the servo to 0°.</p>
+<p>LEFT moves the servo to 45°.</p>
+<p>RIGHT moves the servo to 135°.</p>
+<p>CENTER / CENTRE moves the servo to 90°.</p>
+<p>STOP exits the program.</p>
+</section>
+
+<section class="section" id="result">
+<h2>Result</h2>
+<p>The Voice Controlled Servo System successfully records voice commands through a USB microphone, converts the speech into text and controls an SG90 servo through GPIO18 using lgpio PWM.</p>
+</section>
+
+<section class="section">
+<h2>What You Learn</h2>
+<ul>
+<li>Connecting and testing a USB microphone with Raspberry Pi.</li>
+<li>Recording audio using ALSA <code>arecord</code>.</li>
+<li>Converting recorded speech into text using SpeechRecognition.</li>
+<li>Processing voice commands in Python.</li>
+<li>Generating 50 Hz servo PWM with <code>lgpio</code>.</li>
+<li>Mapping spoken commands to servo angles.</li>
+</ul>
+</section>
+
+</main>
+
+<footer>
+<strong>R-Pi Experiment</strong>
+<br>
+Voice Controlled Servo System
+</footer>
+
+<script>
+const program="import speech_recognition as sr\nimport lgpio\nimport subprocess\nimport time\nimport os\n\n# ==========================================\n# SETTINGS\n# ==========================================\n\nSERVO_PIN = 18\n\n# USB microphone\nMIC_DEVICE = \"plughw:3,0\"\n\n# Temporary recording file\nAUDIO_FILE = \"/tmp/voice_command.wav\"\n\n# ==========================================\n# GPIO SETUP\n# ==========================================\n\nh = lgpio.gpiochip_open(0)\nlgpio.gpio_claim_output(h, SERVO_PIN)\n\n# ==========================================\n# SERVO CONTROL\n# ==========================================\n\ndef servo_angle(angle):\n\n    angle = max(0, min(150, angle))\n\n    # 0° = 1000 us\n    # 150° = 2000 us\n    pulse = 1000 + int((angle / 150) * 1000)\n\n    # 50 Hz PWM\n    duty = (pulse / 20000) * 100\n\n    print(f\"Servo moving to {angle} degrees\")\n\n    lgpio.tx_pwm(\n        h,\n        SERVO_PIN,\n        50,\n        duty\n    )\n\n    time.sleep(1)\n\n# ==========================================\n# RECORD VOICE USING ALSA\n# ==========================================\n\ndef record_voice():\n\n    print()\n    print(\"Listening...\")\n\n    command = [\n        \"arecord\",\n        \"-D\", MIC_DEVICE,\n        \"-f\", \"S16_LE\",\n        \"-r\", \"8000\",\n        \"-c\", \"1\",\n        \"-d\", \"4\",\n        AUDIO_FILE\n    ]\n\n    try:\n\n        subprocess.run(\n            command,\n            stdout=subprocess.DEVNULL,\n            stderr=subprocess.DEVNULL,\n            check=True\n        )\n\n        return True\n\n    except subprocess.CalledProcessError:\n\n        print(\"Microphone recording failed.\")\n        return False\n\n# ==========================================\n# SPEECH RECOGNITION\n# ==========================================\n\ndef recognize_voice():\n\n    recognizer = sr.Recognizer()\n\n    try:\n\n        with sr.AudioFile(AUDIO_FILE) as source:\n\n            audio = recognizer.record(source)\n\n        print(\"Recognizing...\")\n\n        command = recognizer.recognize_google(audio)\n\n        command = command.lower().strip()\n\n        print(\"You said:\", command)\n\n        return command\n\n    except sr.UnknownValueError:\n\n        print(\"Could not understand the voice.\")\n        return \"\"\n\n    except sr.RequestError as e:\n\n        print(\"Speech recognition error:\", e)\n        return \"\"\n\n    except Exception as e:\n\n        print(\"Recognition error:\", e)\n        return \"\"\n\n# ==========================================\n# START POSITION\n# ==========================================\n\nservo_angle(90)\n\n# ==========================================\n# DISPLAY\n# ==========================================\n\nprint()\nprint(\"======================================\")\nprint(\" VOICE CONTROLLED SERVO\")\nprint(\"======================================\")\nprint()\nprint(\"Available Commands:\")\nprint()\nprint(\" OPEN\")\nprint(\" CLOSE\")\nprint(\" LEFT\")\nprint(\" RIGHT\")\nprint(\" CENTER\")\nprint(\" STOP\")\nprint()\nprint(\"======================================\")\n\n# ==========================================\n# MAIN LOOP\n# ==========================================\n\ntry:\n\n    while True:\n\n        # Record voice\n        success = record_voice()\n\n        if not success:\n            time.sleep(1)\n            continue\n\n        # Convert voice to text\n        command = recognize_voice()\n\n        if not command:\n            continue\n\n        # ==================================\n        # OPEN\n        # ==================================\n\n        if \"open\" in command:\n            servo_angle(150)\n\n        # ==================================\n        # CLOSE\n        # ==================================\n\n        elif \"close\" in command:\n            servo_angle(0)\n\n        # ==================================\n        # LEFT\n        # ==================================\n\n        elif \"left\" in command:\n            servo_angle(45)\n\n        # ==================================\n        # RIGHT\n        # ==================================\n\n        elif \"right\" in command:\n            servo_angle(135)\n\n        # ==================================\n        # CENTER\n        # ==================================\n\n        elif \"center\" in command or \"centre\" in command:\n            servo_angle(90)\n\n        # ==================================\n        # STOP\n        # ==================================\n\n        elif \"stop\" in command:\n\n            print(\"Stopping system...\")\n            break\n\n        # ==================================\n        # UNKNOWN\n        # ==================================\n\n        else:\n\n            print(\"Command not recognized.\")\n\n# ==========================================\n# EXIT\n# ==========================================\n\nexcept KeyboardInterrupt:\n\n    print()\n    print(\"Program stopped by user.\")\n\nfinally:\n\n    # Stop servo PWM\n    lgpio.tx_pwm(\n        h,\n        SERVO_PIN,\n        0,\n        0\n    )\n\n    lgpio.gpiochip_close(h)\n\n    # Remove temporary file\n    if os.path.exists(AUDIO_FILE):\n        os.remove(AUDIO_FILE)\n\n    print(\"Servo released.\")";
+const lines=program.split("\n");
+const steps=[{"title":"Load the libraries","search":"import speech_recognition as sr","text":"The program loads SpeechRecognition, lgpio, subprocess, time and os for voice recognition, GPIO control, audio recording, timing and file cleanup."},{"title":"Set servo and microphone","search":"SERVO_PIN = 18","text":"GPIO18 is selected for the SG90 control signal. The USB microphone uses ALSA device plughw:3,0 and commands are saved temporarily as a WAV file."},{"title":"Prepare GPIO","search":"lgpio.gpiochip_open(0)","text":"The Raspberry Pi GPIO chip is opened and GPIO18 is prepared as an output."},{"title":"Move the servo","search":"def servo_angle(angle):","text":"The selected angle is converted to a servo pulse and sent as 50 Hz PWM using lgpio."},{"title":"Record voice","search":"def record_voice():","text":"ALSA arecord captures a four-second mono voice command at 8000 Hz from the USB microphone."},{"title":"Recognize speech","search":"def recognize_voice():","text":"SpeechRecognition reads the WAV file and Google Speech Recognition converts the recorded voice into text."},{"title":"Set start position","search":"servo_angle(90)","text":"When the program starts, the SG90 is moved to the center position at 90 degrees."},{"title":"Process commands","search":"if \"open\" in command:","text":"The recognized command is matched with OPEN, CLOSE, LEFT, RIGHT or CENTER/CENTRE and the servo moves to the programmed angle."},{"title":"Stop and clean up","search":"elif \"stop\" in command:","text":"STOP exits the main loop. The program then stops PWM, closes the GPIO chip and removes the temporary audio file."}];
+
+function escapeHtml(text){
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+}
+
+function displayCode(){
+    let output="";
+    lines.forEach(function(line,index){
+        output +=
+        '<span class="code-line" id="line-'+(index+1)+'">' +
+        '<span class="line-number">'+(index+1)+'</span>' +
+        '<span>'+escapeHtml(line)+'</span>' +
+        '</span>';
+    });
+    document.getElementById("code-lines").innerHTML=output;
+}
+
+function showStep(index){
+    const step=steps[index];
+
+    const buttons=document.querySelectorAll(".step");
+    buttons.forEach(function(button){
+        button.classList.remove("active");
+    });
+    buttons[index].classList.add("active");
+
+    document.querySelectorAll(".code-line").forEach(function(line){
+        line.classList.remove("selected");
+    });
+
+    let foundLine=-1;
+
+    for(let i=0;i<lines.length;i++){
+        if(lines[i].includes(step.search)){
+            foundLine=i;
+            break;
+        }
+    }
+
+    if(foundLine>=0){
+        for(let i=foundLine;i<Math.min(foundLine+14,lines.length);i++){
+            const line=document.getElementById("line-"+(i+1));
+            if(line){
+                line.classList.add("selected");
+            }
+        }
+
+        const selectedLine=document.getElementById("line-"+(foundLine+1));
+
+        if(selectedLine){
+            document.getElementById("code-body").scrollTo({
+                top:selectedLine.offsetTop-20,
+                behavior:"smooth"
+            });
+        }
+    }
+
+    document.getElementById("explanation").innerHTML =
+        "<h3>"+(index+1)+". "+step.title+"</h3>" +
+        "<p>"+step.text+"</p>";
+}
+
+function copyCode(){
+    navigator.clipboard.writeText(program).then(function(){
+        const button=document.querySelector(".copy-button");
+        button.innerText="Copied!";
+        setTimeout(function(){
+            button.innerText="Copy Code";
+        },1500);
+    });
+}
+
+displayCode();
+showStep(0);
+</script>
+
+</body>
+</html>
