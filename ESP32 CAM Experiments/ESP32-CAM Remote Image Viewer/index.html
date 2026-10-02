@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ESP32-CAM Remote Image Viewer</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+.code-layout{
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+.code-panel{
+    background:white;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.filename{
+    color:white;
+
+    font:bold 14px/1.4
+    Consolas, Monaco, monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+.code-body{
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas, Monaco, monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+.code-line:hover{
+    background:#f8fbff;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+.line-number{
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+.token-comment{
+    color:#64748b;
+}
+
+.token-keyword{
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+.token-number{
+    color:#b45309;
+}
+
+.token-string{
+    color:#047857;
+}
+
+.guide{
+    background:white;
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+
+    font-size:15px;
+}
+
+.steps{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.step{
+    border:
+    1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+.step:hover{
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+.step.active{
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+.step-number{
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+.explanation{
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+.explanation h3{
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+.explanation p{
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+.guide details{
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+.guide details p,
+.guide details li{
+    color:#526875;
+
+    font-size:15px;
+}
+
+.guide code{
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+.tip{
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+@media(max-width:850px){
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:520px){
+    .steps{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<header class="header">
+    <h1>ESP32-CAM Experiment</h1>
+    <p>ESP32-CAM Remote Image Viewer</p>
+</header>
+
+<nav>
+    <a href="../index.html">← ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To view the ESP32-CAM remotely through Wi-Fi, display a live camera stream in a browser, capture still images and show system status on an OLED.
+    </p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>
+        The ESP32-CAM creates a Wi-Fi camera monitoring system that can be opened from a web browser on the same network.
+    </p>
+    <p>
+        Port 80 serves the dashboard, capture and status routes, while port 81 provides the live MJPEG camera stream.
+    </p>
+    <p>
+        The 1.3-inch SH1106 OLED displays startup, Wi-Fi and IP-address information so the system can be monitored locally as well as remotely.
+    </p>
+</section>
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+            src="ESP32-CAM.png"
+            alt="AI-Thinker ESP32-CAM">
+
+            <h4>
+                AI-Thinker ESP32-CAM with OV2640 (×1)
+            </h4>
+
+            <p>
+                Main Wi-Fi camera controller used for live streaming and image capture.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="OLED.png"
+            alt="OLED SH1106">
+
+            <h4>
+                1.3" I²C SH1106 OLED 128×64 (×1)
+            </h4>
+
+            <p>
+                Displays startup, Wi-Fi and IP-address information.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="USB-TTL Programmer.png"
+            alt="USB-to-TTL Programmer">
+
+            <h4>
+                USB-to-TTL / FTDI Programmer (×1)
+            </h4>
+
+            <p>
+                Used to upload and debug the ESP32-CAM program.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to organize the external connections.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for the OLED and programming connections.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Pin</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>USB-TTL</td><td>5V</td><td>5V</td></tr>
+                <tr><td>USB-TTL</td><td>GND</td><td>GND</td></tr>
+                <tr><td>USB-TTL</td><td>TX</td><td>U0R / GPIO 3</td></tr>
+                <tr><td>USB-TTL</td><td>RX</td><td>U0T / GPIO 1</td></tr>
+                <tr><td>Programming Mode</td><td>GPIO 0</td><td>GND during upload only</td></tr>
+                <tr><td>OLED</td><td>VCC</td><td>3.3V</td></tr>
+                <tr><td>OLED</td><td>GND</td><td>GND</td></tr>
+                <tr><td>OLED</td><td>SDA</td><td>GPIO 13</td></tr>
+                <tr><td>OLED</td><td>SCL</td><td>GPIO 14</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="ESP32-CAM Remote Image Viewer Circuit.png"
+    alt="ESP32-CAM Remote Image Viewer Circuit">
+
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+    <div class="flow">
+        ESP32-CAM Starts<br>↓<br>
+        OLED and Camera Initialize<br>↓<br>
+        ESP32-CAM Connects to Wi-Fi<br>↓<br>
+        Dashboard Starts on Port 80<br>↓<br>
+        MJPEG Stream Starts on Port 81<br>↓<br>
+        Browser Displays Live Camera Feed<br>↓<br>
+        User Captures or Refreshes an Image<br>↓<br>
+        Status and Uptime Update in the Dashboard
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+    <ol>
+        <li>Connect the USB-to-TTL programmer: 5V to 5V, GND to GND, TX to U0R / GPIO 3 and RX to U0T / GPIO 1.</li>
+        <li>Connect GPIO 0 to GND only while uploading the program.</li>
+        <li>Connect the SH1106 OLED VCC to 3.3V, GND to GND, SDA to GPIO 13 and SCL to GPIO 14.</li>
+        <li>Enter the Wi-Fi details in the program.</li>
+        <li>Upload the program to the AI-Thinker ESP32-CAM.</li>
+        <li>Remove GPIO 0 from GND and press RESET.</li>
+        <li>Open Serial Monitor at 115200 baud and note the ESP32-CAM IP address.</li>
+        <li>Open the IP address in a web browser on the same Wi-Fi network.</li>
+        <li>Confirm that the live camera feed appears and test Capture Image, Refresh Stream and Fullscreen.</li>
+    </ol>
+</section>
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section class="section" id="code">
+
+<div class="code-lesson">
+
+<p class="eyebrow">
+    ESP32 Experiment · Code Review
+</p>
+
+<h2 class="lesson-title">
+    Explore the Code
+</h2>
+
+<p class="intro">
+    ESP32-CAM Remote Image Viewer · Select a step to see
+    what each part of the ESP32 program does.
+</p>
+
+<div class="code-layout">
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+<div class="code-top">
+
+    <span class="filename">
+        ESP32_CAM_Remote_Image_Viewer.ino
+    </span>
+
+    <button
+    class="copy-button"
+    onclick="copyCode()">
+
+        Copy Code
+
+    </button>
+
+</div>
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+</article>
+
+<!-- EXPLANATION PANEL -->
+
+<article class="guide">
+
+<h2>
+    Understand it step by step
+</h2>
+
+<p>
+    Choose a step.
+    The matching code will light up on the left.
+</p>
+
+<div class="steps">
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">01</span>
+
+Load the libraries
+
+</button>
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">02</span>
+
+Set Wi-Fi details
+
+</button>
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">03</span>
+
+Prepare the OLED
+
+</button>
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">04</span>
+
+Configure the servers
+
+</button>
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">05</span>
+
+Initialize the camera
+
+</button>
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">06</span>
+
+Build the dashboard
+
+</button>
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">07</span>
+
+Capture a JPEG
+
+</button>
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">08</span>
+
+Create the live stream
+
+</button>
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">09</span>
+
+Start Wi-Fi and services
+
+</button>
+
+</div>
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+    1. Load the libraries
+</h3>
+
+<p>
+    The program loads the Wi-Fi, web server, camera,
+    I²C and U8g2 OLED libraries used by the experiment.
+</p>
+
+</div>
+
+<details>
+<summary>
+    Explore more: ports 80 and 81
+</summary>
+<p><code>WebServer server(80)</code> serves the dashboard, capture and status routes.</p>
+<p><code>WiFiServer streamServer(81)</code> serves the live MJPEG camera stream.</p>
+<p>The browser combines both services so the user can watch live video and capture still images from one interface.</p>
+</details>
+
+<details>
+<summary>
+    Check your understanding
+</summary>
+<ul>
+<li>Which GPIO is OLED SDA? <strong>GPIO 13</strong></li>
+<li>Which GPIO is OLED SCL? <strong>GPIO 14</strong></li>
+<li>Which port serves the dashboard? <strong>Port 80</strong></li>
+<li>Which port serves the live camera stream? <strong>Port 81</strong></li>
+</ul>
+</details>
+
+</article>
+
+</div>
+
+<p class="tip">
+<strong>Try it:</strong>
+Upload the program, open Serial Monitor at 115200 baud, note the IP address and open it in a browser. Test the live stream, capture button and fullscreen view.
+</p>
+
+</div>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+    <p>The browser dashboard displays the ESP32-CAM live camera feed.</p>
+    <p>Port 81 supplies the MJPEG stream while port 80 serves the dashboard, capture and status routes.</p>
+    <p>The Capture Image control returns a still JPEG that can be previewed in the dashboard.</p>
+    <p>The OLED shows startup, Wi-Fi connection and the ESP32-CAM IP address.</p>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+    <p>
+        The ESP32-CAM Remote Image Viewer successfully provides wireless live video, remote still-image capture and system-status monitoring from a web browser.
+    </p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+    <ul>
+        <li>Streaming MJPEG video from an ESP32-CAM.</li>
+        <li>Using separate web and stream servers on ports 80 and 81.</li>
+        <li>Capturing JPEG images from the OV2640 camera.</li>
+        <li>Using a 1.3-inch SH1106 OLED with GPIO 13 and GPIO 14.</li>
+        <li>Displaying Wi-Fi and IP-address information on an OLED.</li>
+        <li>Building a browser-based remote camera monitoring interface.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+<strong>ESP32-CAM Experiment</strong><br>
+ESP32-CAM Remote Image Viewer
+</footer>
+
+<textarea id="esp32-program" style="display:none;">
+#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include "esp_camera.h"
+#include &lt;Wire.h&gt;
+#include &lt;U8g2lib.h&gt;
+// =====================================================
+// WIFI
+// =====================================================
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
+// =====================================================
+// OLED
+// =====================================================
+// 1.3" SH1106 OLED
+U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
+  U8G2_R0,
+  U8X8_PIN_NONE,
+  14,   // SCL
+  13    // SDA
+);
+// If you have SSD1306, use this instead:
+//
+// U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(
+//   U8G2_R0,
+//   U8X8_PIN_NONE,
+//   14,
+//   13
+// );
+// =====================================================
+// SERVERS
+// =====================================================
+// Port 80 = Dashboard / Capture / Status
+WebServer server(80);
+// Port 81 = Live MJPEG stream
+WiFiServer streamServer(81);
+// =====================================================
+// AI THINKER ESP32-CAM PINOUT
+// =====================================================
+#define PWDN_GPIO_NUM     32
+#define RESET_GPIO_NUM    -1
+#define XCLK_GPIO_NUM      0
+#define SIOD_GPIO_NUM     26
+#define SIOC_GPIO_NUM     27
+#define Y9_GPIO_NUM       35
+#define Y8_GPIO_NUM       34
+#define Y7_GPIO_NUM       39
+#define Y6_GPIO_NUM       36
+#define Y5_GPIO_NUM       21
+#define Y4_GPIO_NUM       19
+#define Y3_GPIO_NUM       18
+#define Y2_GPIO_NUM        5
+#define VSYNC_GPIO_NUM    25
+#define HREF_GPIO_NUM     23
+#define PCLK_GPIO_NUM     22
+// =====================================================
+// OLED
+// =====================================================
+void showOLED(
+  String line1,
+  String line2,
+  String line3
+) {
+  oled.clearBuffer();
+  oled.setFont(
+    u8g2_font_6x10_tf
+  );
+  oled.drawStr(
+    0,
+    12,
+    line1.c_str()
+  );
+  oled.drawStr(
+    0,
+    30,
+    line2.c_str()
+  );
+  oled.drawStr(
+    0,
+    48,
+    line3.c_str()
+  );
+  oled.sendBuffer();
+}
+// =====================================================
+// CAMERA INIT
+// =====================================================
+bool initCamera() {
+  camera_config_t config;
+  config.ledc_channel = LEDC_CHANNEL_0;
+  config.ledc_timer = LEDC_TIMER_0;
+  config.pin_d0 = Y2_GPIO_NUM;
+  config.pin_d1 = Y3_GPIO_NUM;
+  config.pin_d2 = Y4_GPIO_NUM;
+  config.pin_d3 = Y5_GPIO_NUM;
+  config.pin_d4 = Y6_GPIO_NUM;
+  config.pin_d5 = Y7_GPIO_NUM;
+  config.pin_d6 = Y8_GPIO_NUM;
+  config.pin_d7 = Y9_GPIO_NUM;
+  config.pin_xclk = XCLK_GPIO_NUM;
+  config.pin_pclk = PCLK_GPIO_NUM;
+  config.pin_vsync = VSYNC_GPIO_NUM;
+  config.pin_href = HREF_GPIO_NUM;
+  config.pin_sscb_sda = SIOD_GPIO_NUM;
+  config.pin_sscb_scl = SIOC_GPIO_NUM;
+  config.pin_pwdn = PWDN_GPIO_NUM;
+  config.pin_reset = RESET_GPIO_NUM;
+  config.xclk_freq_hz = 20000000;
+  config.pixel_format = PIXFORMAT_JPEG;
+  if (psramFound()) {
+    config.frame_size = FRAMESIZE_VGA;
+    config.jpeg_quality = 10;
+    config.fb_count = 2;
+  } else {
+    config.frame_size = FRAMESIZE_QVGA;
+    config.jpeg_quality = 12;
+    config.fb_count = 1;
+  }
+  esp_err_t err =
+    esp_camera_init(&amp;config);
+  if (err != ESP_OK) {
+    Serial.printf(
+      "Camera init failed: 0x%x\n",
+      err
+    );
+    return false;
+  }
+  sensor_t *sensor =
+    esp_camera_sensor_get();
+  sensor-&gt;set_framesize(
+    sensor,
+    FRAMESIZE_VGA
+  );
+  return true;
+}// =====================================================
+// ATTRACTIVE DASHBOARD
+// =====================================================
+const char MAIN_PAGE[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"&gt;
+&lt;title&gt;ESP32-CAM Remote Viewer&lt;/title&gt;
+&lt;style&gt;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+body{
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+    background:
+    radial-gradient(
+        circle at top left,
+        #172b55 0%,
+        #08101f 45%,
+        #030712 100%
+    );
+    color:#ffffff;
+    min-height:100vh;
+    padding:18px;
+}
+.container{
+    max-width:1400px;
+    margin:auto;
+}
+/* =====================================================
+HEADER
+===================================================== */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 24px;
+    border-radius:22px;
+    background:
+    linear-gradient(
+        135deg,
+        rgba(30,50,90,.90),
+        rgba(15,23,42,.90)
+    );
+    border:1px solid
+    rgba(255,255,255,.12);
+    box-shadow:
+    0 20px 60px
+    rgba(0,0,0,.35);
+    margin-bottom:18px;
+}
+.brand{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+.camera-logo{
+    width:65px;
+    height:65px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:18px;
+    font-size:34px;
+    background:
+    linear-gradient(
+        135deg,
+        #00c6ff,
+        #0066ff,
+        #7c3aed
+    );
+    box-shadow:
+    0 0 30px
+    rgba(0,150,255,.35);
+}
+.title{
+    font-size:28px;
+    font-weight:800;
+}
+.subtitle{
+    color:#aab8d4;
+    margin-top:5px;
+    font-size:14px;
+}
+.connection{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 18px;
+    border-radius:14px;
+    background:
+    rgba(0,255,150,.08);
+    border:1px solid
+    rgba(0,255,150,.25);
+}
+.green-dot{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:#00e676;
+    box-shadow:
+    0 0 14px #00e676;
+}
+/* =====================================================
+MAIN GRID
+===================================================== */
+.main-grid{
+    display:grid;
+    grid-template-columns:
+    minmax(0,2fr)
+    minmax(300px,1fr);
+    gap:18px;
+}
+/* =====================================================
+CARD
+===================================================== */
+.card{
+    background:
+    rgba(15,23,42,.82);
+    border:
+    1px solid
+    rgba(255,255,255,.11);
+    border-radius:22px;
+    padding:18px;
+    box-shadow:
+    0 20px 50px
+    rgba(0,0,0,.28);
+}
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+.card-title{
+    font-size:19px;
+    font-weight:700;
+}
+.card-subtitle{
+    color:#91a1bf;
+    font-size:12px;
+    margin-top:4px;
+}
+/* =====================================================
+LIVE CAMERA
+===================================================== */
+.camera-container{
+    background:#000;
+    border-radius:18px;
+    overflow:hidden;
+    position:relative;
+    border:
+    1px solid
+    rgba(255,255,255,.12);
+}
+.camera-container img{
+    width:100%;
+    display:block;
+    min-height:300px;
+    max-height:620px;
+    object-fit:contain;
+    background:#000;
+}
+.live-badge{
+    position:absolute;
+    top:14px;
+    left:14px;
+    z-index:5;
+    padding:8px 13px;
+    border-radius:20px;
+    background:#ff1744;
+    box-shadow:
+    0 0 18px
+    rgba(255,23,68,.55);
+    font-size:12px;
+    font-weight:bold;
+}
+.live-dot{
+    display:inline-block;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:white;
+    margin-right:6px;
+}
+/* =====================================================
+BUTTONS
+===================================================== */
+.actions{
+    display:grid;
+    grid-template-columns:
+    repeat(3,1fr);
+    gap:10px;
+    margin-top:14px;
+}
+button{
+    border:none;
+    color:white;
+    cursor:pointer;
+    padding:15px 10px;
+    border-radius:14px;
+    font-size:14px;
+    font-weight:bold;
+    transition:.2s;
+}
+button:hover{
+    transform:
+    translateY(-2px);
+    filter:brightness(1.1);
+}
+.capture-btn{
+    background:
+    linear-gradient(
+        135deg,
+        #00d084,
+        #00a86b
+    );
+}
+.refresh-btn{
+    background:
+    linear-gradient(
+        135deg,
+        #008cff,
+        #3158ff
+    );
+}
+.fullscreen-btn{
+    background:
+    linear-gradient(
+        135deg,
+        #8b5cf6,
+        #6366f1
+    );
+}
+/* =====================================================
+LATEST CAPTURE
+===================================================== */
+.capture-card{
+    margin-top:18px;
+    display:none;
+}
+.capture-preview{
+    background:#020617;
+    border-radius:16px;
+    padding:10px;
+    text-align:center;
+}
+.capture-preview img{
+    max-width:100%;
+    max-height:420px;
+    border-radius:12px;
+}
+.capture-actions{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+}
+.download-btn{
+    background:
+    linear-gradient(
+        135deg,
+        #f59e0b,
+        #ea580c
+    );
+    flex:1;
+}
+.close-btn{
+    background:#374151;
+    flex:1;
+}
+/* =====================================================
+STATUS
+===================================================== */
+.status-box{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:16px;
+    border-radius:15px;
+    background:
+    rgba(0,200,120,.09);
+    border:
+    1px solid
+    rgba(0,255,150,.25);
+    margin-bottom:18px;
+}
+.status-icon{
+    width:42px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#00d084;
+    font-size:20px;
+    box-shadow:
+    0 0 20px
+    rgba(0,208,132,.35);
+}
+.status-text{
+    font-weight:bold;
+}
+.status-small{
+    color:#91a1bf;
+    font-size:12px;
+    margin-top:3px;
+}
+/* =====================================================
+INFO
+===================================================== */
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    padding:14px 4px;
+    border-bottom:
+    1px solid
+    rgba(255,255,255,.07);
+}
+.info-label{
+    color:#91a1bf;
+}
+.info-value{
+    font-weight:bold;
+    text-align:right;
+}
+.online{
+    color:#00e676;
+}
+/* =====================================================
+QUICK ACTIONS
+===================================================== */
+.quick-title{
+    margin-top:20px;
+    margin-bottom:12px;
+    font-size:18px;
+    font-weight:bold;
+}
+.quick-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+.quick{
+    padding:16px;
+    border-radius:14px;
+    text-align:center;
+    background:
+    rgba(255,255,255,.06);
+    border:
+    1px solid
+    rgba(255,255,255,.08);
+}
+.quick:hover{
+    background:
+    rgba(255,255,255,.10);
+}
+/* =====================================================
+FOOTER
+===================================================== */
+.footer{
+    margin-top:18px;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    color:#71809d;
+    font-size:12px;
+    background:
+    rgba(15,23,42,.6);
+    border:
+    1px solid
+    rgba(255,255,255,.07);
+}
+/* =====================================================
+MOBILE
+===================================================== */
+@media(max-width:850px){
+    body{
+        padding:10px;
+    }
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+    .main-grid{
+        grid-template-columns:1fr;
+    }
+}
+@media(max-width:550px){
+    .title{
+        font-size:21px;
+    }
+    .actions{
+        grid-template-columns:1fr;
+    }
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="container"&gt;
+&lt;!-- HEADER --&gt;
+&lt;div class="header"&gt;
+    &lt;div class="brand"&gt;
+        &lt;div class="camera-logo"&gt;
+            📷
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;div class="title"&gt;
+                ESP32-CAM Remote Viewer
+            &lt;/div&gt;
+            &lt;div class="subtitle"&gt;
+                Live • Capture • Monitor • Simple &amp; Fast
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="connection"&gt;
+        &lt;div class="green-dot"&gt;&lt;/div&gt;
+        &lt;span&gt;
+            Connected
+        &lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- MAIN --&gt;
+&lt;div class="main-grid"&gt;
+&lt;!-- LEFT --&gt;
+&lt;div&gt;
+&lt;div class="card"&gt;
+    &lt;div class="card-header"&gt;
+        &lt;div&gt;
+            &lt;div class="card-title"&gt;
+                📹 Live Camera Feed
+            &lt;/div&gt;
+            &lt;div class="card-subtitle"&gt;
+                Real-time view from ESP32-CAM
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="live-badge"&gt;
+            &lt;span class="live-dot"&gt;&lt;/span&gt;
+            LIVE
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="camera-container"&gt;
+        &lt;img
+            id="liveStream"
+            src=""
+            alt="ESP32-CAM Live Stream"&gt;
+    &lt;/div&gt;
+    &lt;div class="actions"&gt;
+        &lt;button
+            class="capture-btn"
+            onclick="captureImage()"&gt;
+            📸 Capture Image
+        &lt;/button&gt;
+        &lt;button
+            class="refresh-btn"
+            onclick="refreshStream()"&gt;
+            🔄 Refresh Stream
+        &lt;/button&gt;
+        &lt;button
+            class="fullscreen-btn"
+            onclick="fullscreenCamera()"&gt;
+            ⛶ Fullscreen
+        &lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- CAPTURED IMAGE --&gt;
+&lt;div
+    class="card capture-card"
+    id="captureCard"&gt;
+    &lt;div class="card-header"&gt;
+        &lt;div&gt;
+            &lt;div class="card-title"&gt;
+                🖼️ Latest Capture
+            &lt;/div&gt;
+            &lt;div class="card-subtitle"&gt;
+                Snapshot captured from ESP32-CAM
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="capture-preview"&gt;
+        &lt;img
+            id="captureImage"
+            src=""
+            alt="Captured Image"&gt;
+    &lt;/div&gt;
+    &lt;div class="capture-actions"&gt;
+        &lt;button
+            class="download-btn"
+            onclick="downloadCapture()"&gt;
+            ⬇️ Download Image
+        &lt;/button&gt;
+        &lt;button
+            class="close-btn"
+            onclick="closeCapture()"&gt;
+            ✕ Close
+        &lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- RIGHT --&gt;
+&lt;div&gt;
+&lt;!-- STATUS --&gt;
+&lt;div class="card"&gt;
+    &lt;div class="card-title"&gt;
+        📊 System Status
+    &lt;/div&gt;
+    &lt;br&gt;
+    &lt;div class="status-box"&gt;
+        &lt;div class="status-icon"&gt;
+            ✓
+        &lt;/div&gt;
+        &lt;div&gt;
+            &lt;div class="status-text"&gt;
+                Camera Online
+            &lt;/div&gt;
+            &lt;div class="status-small"&gt;
+                System is running smoothly
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="info-row"&gt;
+        &lt;span class="info-label"&gt;
+            📡 Wi-Fi
+        &lt;/span&gt;
+        &lt;span
+            class="info-value online"&gt;
+            Connected
+        &lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="info-row"&gt;
+        &lt;span class="info-label"&gt;
+            🌐 IP Address
+        &lt;/span&gt;
+        &lt;span
+            class="info-value"
+            id="ip"&gt;
+            Loading...
+        &lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="info-row"&gt;
+        &lt;span class="info-label"&gt;
+            📷 Camera Module
+        &lt;/span&gt;
+        &lt;span class="info-value"&gt;
+            AI-Thinker
+        &lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="info-row"&gt;
+        &lt;span class="info-label"&gt;
+            🖼️ Resolution
+        &lt;/span&gt;
+        &lt;span class="info-value"&gt;
+            VGA 640×480
+        &lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="info-row"&gt;
+        &lt;span class="info-label"&gt;
+            ⏱️ Uptime
+        &lt;/span&gt;
+        &lt;span
+            class="info-value"
+            id="uptime"&gt;
+            0 s
+        &lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="info-row"&gt;
+        &lt;span class="info-label"&gt;
+            ⚡ Stream Port
+        &lt;/span&gt;
+        &lt;span class="info-value"&gt;
+            81
+        &lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- QUICK ACTIONS --&gt;
+&lt;div class="card"&gt;
+    &lt;div class="quick-title"&gt;
+        ⚡ Quick Actions
+    &lt;/div&gt;
+    &lt;div class="quick-grid"&gt;
+        &lt;div
+            class="quick"
+            onclick="captureImage()"&gt;
+            📸&lt;br&gt;
+            &lt;b&gt;Capture&lt;/b&gt;
+        &lt;/div&gt;
+        &lt;div
+            class="quick"
+            onclick="refreshStream()"&gt;
+            🔄&lt;br&gt;
+            &lt;b&gt;Refresh&lt;/b&gt;
+        &lt;/div&gt;
+        &lt;div
+            class="quick"
+            onclick="fullscreenCamera()"&gt;
+            ⛶&lt;br&gt;
+            &lt;b&gt;Fullscreen&lt;/b&gt;
+        &lt;/div&gt;
+        &lt;div
+            class="quick"
+            onclick="location.reload()"&gt;
+            ⚙️&lt;br&gt;
+            &lt;b&gt;Reload&lt;/b&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="footer"&gt;
+    ESP32-CAM Remote Image Viewer
+    &amp;nbsp;•&amp;nbsp;
+    Wireless Camera Monitoring System
+    &amp;nbsp;•&amp;nbsp;
+    Embedded Vision
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;script&gt;
+// =====================================================
+// START STREAM
+// =====================================================
+function startStream(){
+    const stream =
+        document.getElementById(
+            "liveStream"
+        );
+    stream.src =
+        "http://" +
+        window.location.hostname +
+        ":81/stream";
+}
+// =====================================================
+// REFRESH STREAM
+// =====================================================
+function refreshStream(){
+    const stream =
+        document.getElementById(
+            "liveStream"
+        );
+    stream.src = "";
+    setTimeout(
+        startStream,
+        200
+    );
+}
+// =====================================================
+// CAPTURE IMAGE
+// =====================================================
+function captureImage(){
+    const button =
+        document.querySelector(
+            ".capture-btn"
+        );
+    button.innerHTML =
+        "⏳ Capturing...";
+    button.disabled = true;
+    fetch("/capture?time=" +
+        Date.now())
+    .then(response =&gt; {
+        if(!response.ok){
+            throw new Error(
+                "Capture failed"
+            );
+        }
+        return response.blob();
+    })
+    .then(blob =&gt; {
+        const imageURL =
+            URL.createObjectURL(
+                blob
+            );
+        document.getElementById(
+            "captureImage"
+        ).src = imageURL;
+        document.getElementById(
+            "captureCard"
+        ).style.display = "block";
+        window.scrollTo({
+            top:
+            document.getElementById(
+                "captureCard"
+            ).offsetTop - 20,
+            behavior:"smooth"
+        });
+    })
+    .catch(error =&gt; {
+        alert(
+            "Camera capture failed. Please try again."
+        );
+        console.log(error);
+    })
+    .finally(() =&gt; {
+        button.innerHTML =
+            "📸 Capture Image";
+        button.disabled = false;
+    });
+}
+// =====================================================
+// DOWNLOAD CAPTURE
+// =====================================================
+function downloadCapture(){
+    const image =
+        document.getElementById(
+            "captureImage"
+        );
+    if(!image.src){
+        return;
+    }
+    const link =
+        document.createElement("a");
+    link.href =
+        image.src;
+    link.download =
+        "ESP32-CAM_" +
+        Date.now() +
+        ".jpg";
+    link.click();
+}
+// =====================================================
+// CLOSE CAPTURE
+// =====================================================
+function closeCapture(){
+    document.getElementById(
+        "captureCard"
+    ).style.display =
+        "none";
+}
+// =====================================================
+// FULLSCREEN
+// =====================================================
+function fullscreenCamera(){
+    const camera =
+        document.querySelector(
+            ".camera-container"
+        );
+    if(camera.requestFullscreen){
+        camera.requestFullscreen();
+    }
+}
+// =====================================================
+// STATUS
+// =====================================================
+function updateStatus(){
+    fetch(
+        "/status?time=" +
+        Date.now()
+    )
+    .then(response =&gt;
+        response.json()
+    )
+    .then(data =&gt; {
+        document.getElementById(
+            "ip"
+        ).innerText =
+            data.ip;
+        document.getElementById(
+            "uptime"
+        ).innerText =
+            data.uptime + " s";
+    })
+    .catch(() =&gt; {});
+}
+// =====================================================
+// START
+// =====================================================
+startStream();
+updateStatus();
+setInterval(
+    updateStatus,
+    1000
+);
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+)rawliteral";
+// =====================================================
+// DASHBOARD
+// =====================================================
+void handleRoot() {
+  server.send_P(
+    200,
+    "text/html; charset=utf-8",
+    MAIN_PAGE
+  );
+}
+// =====================================================
+// CAPTURE
+// =====================================================
+void handleCapture() {
+  Serial.println(
+    "Capture requested..."
+  );
+  camera_fb_t *fb =
+    esp_camera_fb_get();
+  if (!fb) {
+    Serial.println(
+      "Capture failed!"
+    );
+    server.send(
+      500,
+      "text/plain",
+      "Camera capture failed"
+    );
+    return;
+  }
+  Serial.printf(
+    "Captured: %u bytes\n",
+    fb-&gt;len
+  );
+  server.sendHeader(
+    "Cache-Control",
+    "no-cache, no-store, must-revalidate"
+  );
+  server.sendHeader(
+    "Pragma",
+    "no-cache"
+  );
+  server.sendHeader(
+    "Expires",
+    "0"
+  );
+  server.send_P(
+    200,
+    "image/jpeg",
+    (const char*)fb-&gt;buf,
+    fb-&gt;len
+  );
+  esp_camera_fb_return(fb);
+}
+// =====================================================
+// STATUS
+// =====================================================
+void handleStatus() {
+  String json = "{";
+  json += "\"ip\":\"";
+  json += WiFi.localIP().toString();
+  json += "\",";
+  json += "\"uptime\":";
+  json += String(
+    millis() / 1000
+  );
+  json += "}";
+  server.send(
+    200,
+    "application/json",
+    json
+  );
+}
+// =====================================================
+// STREAM SERVER
+// =====================================================
+void handleStreamClient(
+  WiFiClient &amp;client
+) {
+  client.print(
+    "HTTP/1.1 200 OK\r\n"
+    "Content-Type: multipart/x-mixed-replace; boundary=frame\r\n"
+    "Cache-Control: no-cache\r\n"
+    "Access-Control-Allow-Origin: *\r\n"
+    "Connection: close\r\n"
+    "\r\n"
+  );
+  unsigned long lastFrame = 0;
+  while (
+    client.connected()
+  ) {
+    // Limit stream FPS
+    if(
+      millis() -
+      lastFrame &lt;
+      100
+    ) {
+      delay(1);
+      continue;
+    }
+    lastFrame =
+      millis();
+    camera_fb_t *fb =
+      esp_camera_fb_get();
+    if(!fb){
+      Serial.println(
+        "Stream capture failed"
+      );
+      break;
+    }
+    client.printf(
+      "--frame\r\n"
+      "Content-Type: image/jpeg\r\n"
+      "Content-Length: %u\r\n"
+      "\r\n",
+      fb-&gt;len
+    );
+    client.write(
+      fb-&gt;buf,
+      fb-&gt;len
+    );
+    client.print(
+      "\r\n"
+    );
+    esp_camera_fb_return(
+      fb
+    );
+    delay(1);
+  }
+  client.stop();
+}
+// =====================================================
+// SETUP
+// =====================================================
+void setup() {
+  Serial.begin(
+    115200
+  );
+  delay(1000);
+  Serial.println();
+  Serial.println(
+    "======================================"
+  );
+  Serial.println(
+    "       ESP32-CAM REMOTE VIEWER"
+  );
+  Serial.println(
+    "======================================"
+  );
+  // ===================================================
+  // OLED
+  // ===================================================
+  Wire.begin(
+    13,
+    14
+  );
+  oled.begin();
+  showOLED(
+    "ESP32-CAM",
+    "Starting...",
+    ""
+  );
+  // ===================================================
+  // CAMERA
+  // ===================================================
+  Serial.println(
+    "Initializing camera..."
+  );
+  if(!initCamera()) {
+    showOLED(
+      "CAMERA ERROR",
+      "Check camera",
+      "connection"
+    );
+    while(true){
+      delay(1000);
+    }
+  }
+  Serial.println(
+    "Camera initialized!"
+  );
+  // ===================================================
+  // WIFI
+  // ===================================================
+  showOLED(
+    "WiFi",
+    "Connecting...",
+    ""
+  );
+  WiFi.mode(
+    WIFI_STA
+  );
+  WiFi.begin(
+    ssid,
+    password
+  );
+  Serial.print(
+    "Connecting to WiFi"
+  );
+  int count = 0;
+  while(
+    WiFi.status()
+    !=
+    WL_CONNECTED
+    &amp;&amp;
+    count &lt; 40
+  ){
+    delay(500);
+    Serial.print(".");
+    count++;
+  }
+  Serial.println();
+  if(
+    WiFi.status()
+    !=
+    WL_CONNECTED
+  ){    Serial.println(
+      "WiFi connection failed!"
+    );
+    showOLED(
+      "WiFi ERROR",
+      "Check SSID",
+      "Password"
+    );
+    return;
+  }
+  // ===================================================
+  // IP
+  // ===================================================
+  String ip =
+    WiFi.localIP().toString();
+  Serial.println(
+    "WiFi Connected!"
+  );
+  Serial.print(
+    "IP Address: "
+  );
+  Serial.println(
+    ip
+  );
+  // ===================================================
+  // OLED ONLINE
+  // ===================================================
+  oled.clearBuffer();
+  oled.setFont(
+    u8g2_font_6x10_tf
+  );
+  oled.drawStr(
+    0,
+    12,
+    "CAMERA ONLINE"
+  );
+  oled.drawStr(
+    0,
+    29,
+    "WiFi CONNECTED"
+  );
+  oled.drawStr(
+    0,
+    46,
+    ip.c_str()
+  );
+  oled.sendBuffer();
+  // ===================================================
+  // WEB SERVER
+  // ===================================================
+  server.on(
+    "/",
+    HTTP_GET,
+    handleRoot
+  );
+  server.on(
+    "/capture",
+    HTTP_GET,
+    handleCapture
+  );
+  server.on(
+    "/status",
+    HTTP_GET,
+    handleStatus
+  );
+  server.begin();
+  // ===================================================
+  // STREAM SERVER
+  // ===================================================
+  streamServer.begin();
+  streamServer.setNoDelay(
+    true
+  );
+  Serial.println(
+    "Dashboard server: PORT 80"
+  );
+  Serial.println(
+    "Camera stream: PORT 81"
+  );
+  Serial.println(
+    "======================================"
+  );
+  Serial.print(
+    "Dashboard: http://"
+  );
+  Serial.println(
+    ip
+  );
+  Serial.print(
+    "Stream: http://"
+  );
+  Serial.print(
+    ip
+  );
+  Serial.println(
+    ":81/stream"
+  );
+  Serial.println(
+    "======================================"
+  );
+}
+// =====================================================
+// LOOP
+// =====================================================
+void loop() {
+  // Dashboard
+  server.handleClient();
+  // Stream
+  WiFiClient client =
+    streamServer.available();
+  if(client){
+    Serial.println(
+      "Stream client connected"
+    );
+    handleStreamClient(
+      client
+    );
+    Serial.println(
+      "Stream client disconnected"
+    );
+  }
+  delay(1);
+}
+</textarea>
+
+<script>
+const program = document.getElementById("esp32-program").value.trim();
+const lines = program.split("\n");
+const stepData = [
+{title:'Load the libraries',search:'#include <WiFi.h>',text:'The program loads the Wi-Fi, web server, ESP32-CAM, I²C and U8g2 OLED libraries.'},
+{title:'Set Wi-Fi details',search:'const char* ssid',text:'The Wi-Fi network name and password are set here. Replace the placeholders with the network used for the experiment.'},
+{title:'Prepare the OLED',search:'U8G2_SH1106_128X64_NONAME_F_HW_I2C oled',text:'The SH1106 OLED uses GPIO 13 for SDA and GPIO 14 for SCL.'},
+{title:'Configure the servers',search:'WebServer server(80)',text:'Port 80 serves the dashboard, capture and status routes, while port 81 is reserved for the live MJPEG stream.'},
+{title:'Initialize the camera',search:'bool initCamera()',text:'This function configures the AI-Thinker ESP32-CAM pins, JPEG format, frame size and frame buffers.'},
+{title:'Build the dashboard',search:'const char MAIN_PAGE[] PROGMEM',text:'The embedded HTML dashboard provides the live camera feed, capture controls, status information and quick actions.'},
+{title:'Capture a JPEG',search:'void handleCapture()',text:'The capture route gets a camera frame and returns it to the browser as a JPEG image.'},
+{title:'Create the live stream',search:'void handleStreamClient(',text:'The stream function repeatedly captures JPEG frames and sends them as an MJPEG stream to the browser.'},
+{title:'Start Wi-Fi and services',search:'void setup()',text:'Setup starts the OLED and camera, connects to Wi-Fi, registers the dashboard routes and starts both port 80 and port 81 services.'}
+];
+
+function escapeHtml(text){
+    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function displayCode(){
+    let output="";
+    lines.forEach(function(line,index){
+        output += '<span class="code-line" id="line-' + (index+1) + '">' +
+                  '<span class="line-number">' + (index+1) + '</span>' +
+                  '<span>' + escapeHtml(line) + '</span></span>';
+    });
+    document.getElementById("code-lines").innerHTML=output;
+}
+
+function showStep(index){
+    const data=stepData[index];
+    const buttons=document.querySelectorAll(".step");
+    buttons.forEach(button=>button.classList.remove("active"));
+    if(buttons[index]) buttons[index].classList.add("active");
+
+    document.querySelectorAll(".code-line").forEach(line=>line.classList.remove("selected"));
+    let found=-1;
+    for(let i=0;i<lines.length;i++){
+        if(lines[i].includes(data.search)){found=i;break;}
+    }
+    if(found>=0){
+        for(let i=found;i<Math.min(found+12,lines.length);i++){
+            document.getElementById("line-"+(i+1)).classList.add("selected");
+        }
+        const selected=document.getElementById("line-"+(found+1));
+        document.getElementById("code-body").scrollTo({top:selected.offsetTop-20,behavior:"smooth"});
+    }
+    document.getElementById("explanation").innerHTML=
+        "<h3>"+(index+1)+". "+data.title+"</h3><p>"+data.text+"</p>";
+}
+
+function copyCode(){
+    navigator.clipboard.writeText(program).then(function(){
+        const button=document.querySelector(".copy-button");
+        button.innerText="Copied!";
+        setTimeout(function(){button.innerText="Copy Code";},1500);
+    });
+}
+
+displayCode();
+showStep(0);
+</script>
+
+</body>
+</html>
