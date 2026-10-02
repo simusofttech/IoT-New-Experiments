@@ -1,52 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>ESP32-CAM Experiments</title>
 
-<style>
-*{box-sizing:border-box}
 
-html{scroll-behavior:smooth}
+<style>
+
+
+/* ===============================
+   BASIC PAGE STYLE
+================================ */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
 
 body{
     margin:0;
-    font-family:Arial,Helvetica,sans-serif;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
     background:#f4f7fb;
+
     color:#222;
+
     line-height:1.6;
 }
 
+
+/* ===============================
+   HEADER
+================================ */
+
 .header{
     background:#2563eb;
+
     color:white;
+
     text-align:center;
+
     padding:42px 20px;
 }
 
 .header h1{
     margin:0 0 8px;
+
     font-size:34px;
 }
 
 .header p{
     margin:0;
+
     font-size:17px;
 }
 
+
+/* ===============================
+   NAVIGATION
+================================ */
+
 nav{
-    background:#fff;
-    border-bottom:1px solid #ddd;
+    background:#ffffff;
+
+    border-bottom:
+    1px solid #ddd;
+
     padding:13px 20px;
+
     position:sticky;
+
     top:0;
+
     z-index:10;
 }
 
 nav a{
     color:#1e3a8a;
+
     text-decoration:none;
+
     font-weight:bold;
 }
 
@@ -54,30 +101,54 @@ nav a:hover{
     color:#2563eb;
 }
 
+
+/* ===============================
+   MAIN CONTAINER
+================================ */
+
 .container{
-    width:95%;
-    max-width:1500px;
-    margin:42px auto;
+    width:94%;
+
+    max-width:1400px;
+
+    margin:40px auto;
 }
+
+
+/* ===============================
+   PAGE HEADING
+================================ */
 
 .section-heading{
     text-align:center;
-    margin-bottom:34px;
+
+    margin-bottom:35px;
 }
 
 .section-heading h2{
     margin:0 0 8px;
+
     color:#1e3a8a;
+
     font-size:30px;
 }
 
 .section-heading p{
     margin:0;
+
     color:#64748b;
+
+    font-size:16px;
 }
 
-.experiment-grid{
 
+/* ===============================
+   EXPERIMENT GRID
+
+   4 CARDS PER ROW
+================================ */
+
+.experiment-grid{
     width:100%;
 
     display:grid;
@@ -91,131 +162,278 @@ nav a:hover{
 }
 
 
+/* ===============================
+   EXPERIMENT CARD
+================================ */
+
 .experiment-card{
-    background:#fff;
-    border:1px solid #e2e8f0;
-    border-radius:12px;
-    padding:22px 18px;
-    box-shadow:0 5px 16px rgba(0,0,0,.07);
-    transition:transform .25s ease,box-shadow .25s ease;
+    width:100%;
+
+    min-width:0;
+
+    background:#ffffff;
+
+    border:
+    1px solid #e2e8f0;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 4px 14px
+        rgba(0,0,0,0.10);
+
     display:flex;
+
     flex-direction:column;
-    min-height:210px;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
 }
 
 .experiment-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 12px 26px rgba(0,0,0,.12);
+    transform:
+        translateY(-5px);
+
+    box-shadow:
+        0 12px 28px
+        rgba(0,0,0,.14);
 }
 
-.experiment-card h3{
-    margin:0 0 10px;
+
+/* ===============================
+   THUMBNAIL
+================================ */
+
+.experiment-thumbnail{
+    width:100%;
+
+    height:190px;
+
+    object-fit:cover;
+
+    object-position:center;
+
+    display:block;
+
+    flex-shrink:0;
+}
+
+
+/* ===============================
+   CARD CONTENT
+================================ */
+
+.experiment-content{
+    padding:
+        18px 20px 20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    flex:1;
+}
+
+
+/* TITLE */
+
+.experiment-content h3{
+    margin:
+        0 0 15px;
+
     color:#1e3a8a;
+
     font-size:18px;
+
     line-height:1.35;
 }
 
-.experiment-card p{
-    margin:0 0 20px;
-    color:#64748b;
-    font-size:14px;
-    line-height:1.6;
-    flex-grow:1;
-}
 
+/* ===============================
+   BUTTON
+================================ */
+
+.btn,
 .open-btn{
     display:inline-block;
-    width:max-content;
-    padding:10px 17px;
+
+    width:fit-content;
+
+    margin-top:auto;
+
+    padding:
+        10px 16px;
+
     background:#2563eb;
-    color:#fff;
+
+    color:white;
+
     text-decoration:none;
+
     border-radius:7px;
+
+    font-size:13px;
+
     font-weight:bold;
-    font-size:14px;
 }
 
+.btn:hover,
 .open-btn:hover{
     background:#1d4ed8;
 }
 
-.empty-message{
-    background:#fff;
-    border:1px dashed #cbd5e1;
-    border-radius:12px;
-    padding:35px 20px;
-    text-align:center;
-    color:#64748b;
-    grid-column:1/-1;
-}
 
-.empty-message strong{
-    display:block;
-    margin-bottom:8px;
-    color:#1e3a8a;
-    font-size:20px;
-}
+/* ===============================
+   FOOTER
+================================ */
 
 footer{
-    margin-top:50px;
+    margin-top:55px;
+
     background:#0f172a;
+
     color:#cbd5e1;
+
     text-align:center;
+
     padding:24px 20px;
+
     font-size:14px;
 }
 
-footer strong{color:white}
-
-@media(max-width:1200px){
-    .experiment-grid{grid-template-columns:repeat(4,1fr)}
+footer strong{
+    color:white;
 }
 
-@media(max-width:950px){
-    .experiment-grid{grid-template-columns:repeat(3,1fr)}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+/* Tablet */
+
+@media(max-width:1000px){
+
+    .experiment-grid{
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+    }
+
 }
 
-@media(max-width:700px){
-    .experiment-grid{grid-template-columns:repeat(2,1fr)}
+
+/* Mobile */
+
+@media(max-width:600px){
+
+    .container{
+        width:92%;
+    }
+
+    .experiment-grid{
+        grid-template-columns:1fr;
+
+        gap:20px;
+    }
+
+    .experiment-thumbnail{
+        height:auto;
+
+        aspect-ratio:
+        274 / 190;
+    }
+
+    .header h1{
+        font-size:29px;
+    }
+
 }
 
-@media(max-width:500px){
-    .experiment-grid{grid-template-columns:1fr}
-    .header h1{font-size:29px}
-    .container{width:94%}
-}
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- ===============================
+     HEADER
+================================ -->
+
 <header class="header">
-    <h1>ESP32-CAM Experiments</h1>
-    <p>Select an experiment to view the complete practical.</p>
+
+    <h1>
+        ESP32-CAM Experiments
+    </h1>
+
+    <p>
+        Select an experiment to view
+        the complete practical.
+    </p>
+
 </header>
 
+
+<!-- ===============================
+     NAVIGATION
+================================ -->
+
 <nav>
-    <a href="../index.html">← Back to IoT Experiments</a>
+
+    <a href="../index.html">
+
+        ← Back to IoT Experiments
+
+    </a>
+
 </nav>
+
+
+<!-- ===============================
+     MAIN CONTENT
+================================ -->
 
 <main class="container">
 
-    <section class="section-heading">
-        <h2>Available Experiments</h2>
-        <p>
-            Open any experiment to view components, connections,
-            working, procedure and ESP32-CAM code.
-        </p>
-    </section>
 
-    <section class="experiment-grid">
+<!-- ===============================
+     PAGE HEADING
+================================ -->
 
-     <!-- ESP32 IoT Machine Condition Monitor -->
+<section class="section-heading">
+
+    <h2>
+        Available Experiments
+    </h2>
+
+    <p>
+        Open any experiment to view components,
+        connections, working, procedure
+        and ESP32 code.
+    </p>
+
+</section>
+
+
+<!-- ===============================
+     EXPERIMENT GRID
+================================ -->
+
+<section class="experiment-grid">
+
+
+<!-- ==================================
+     ESP32 IoT Machine Condition Monitor
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-IoT-Machine-Condition-Monitor.png"
+        src="ESP32 IoT Machine Condition Monitor.png"
         alt="ESP32 IoT Machine Condition Monitor"
         class="experiment-thumbnail"
     >
@@ -238,12 +456,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wireless Servo Position Memory -->
+<!-- ==================================
+     Wireless Servo Position Memory
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="Wireless-Servo-Position-Memory.png"
+        src="Wireless Servo Position Memory.png"
         alt="Wireless Servo Position Memory"
         class="experiment-thumbnail"
     >
@@ -266,13 +486,15 @@ footer strong{color:white}
 </div>
 
 
-<!-- ESP32 Mini Pan -->
+<!-- ==================================
+     ESP32 Mini Pan-Tilt Camera Mount
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-Mini-Pan.png"
-        alt="ESP32 Mini Pan"
+        src="ESP32 Mini Pan-Tilt Camera Mount.png"
+        alt="ESP32 Mini Pan-Tilt Camera Mount"
         class="experiment-thumbnail"
     >
 
@@ -294,12 +516,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wireless RFID Token Generator -->
+<!-- ==================================
+     Wireless RFID Token Generator
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="Wireless-RFID-Token-Generator.png"
+        src="Wireless RFID Token Generator.png"
         alt="Wireless RFID Token Generator"
         class="experiment-thumbnail"
     >
@@ -322,12 +546,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- ESP32 Wireless Environmental Dashboard -->
+<!-- ==================================
+     ESP32 Wireless Environmental Dashboard
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-Wireless-Environmental-Dashboard.png"
+        src="ESP32 Wireless Environmental Dashboard.png"
         alt="ESP32 Wireless Environmental Dashboard"
         class="experiment-thumbnail"
     >
@@ -350,12 +576,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- ESP32 Wireless Automated Inspection Gate -->
+<!-- ==================================
+     ESP32 Wireless Automated Inspection Gate
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-Wireless-Automated-Inspection-Gate.png"
+        src="ESP32 Wireless Automated Inspection Gate.png"
         alt="ESP32 Wireless Automated Inspection Gate"
         class="experiment-thumbnail"
     >
@@ -378,12 +606,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wi-Fi LED Web Controller -->
+<!-- ==================================
+     Wi-Fi LED Web Controller
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-LED-Web-Controller.png"
+        src="Wi-Fi LED Web Controller.png"
         alt="Wi-Fi LED Web Controller"
         class="experiment-thumbnail"
     >
@@ -406,12 +636,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wi-Fi Digital Clock -->
+<!-- ==================================
+     Wi-Fi Digital Clock
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-Digital-Clock.png"
+        src="Wi-Fi Digital Clock.png"
         alt="Wi-Fi Digital Clock"
         class="experiment-thumbnail"
     >
@@ -421,7 +653,7 @@ footer strong{color:white}
         <h3>
             Wi-Fi Digital Clock
         </h3>
-        
+
         <a
             class="open-btn"
             href="Wi-Fi Digital Clock/index.html"
@@ -434,12 +666,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wi-Fi Light Intensity Monitor -->
+<!-- ==================================
+     Wi-Fi Light Intensity Monitor
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-Light-Intensity-Monitor.png"
+        src="Wi-Fi Light Intensity Monitor.png"
         alt="Wi-Fi Light Intensity Monitor"
         class="experiment-thumbnail"
     >
@@ -462,12 +696,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wi-Fi Countdown Timer -->
+<!-- ==================================
+     Wi-Fi Countdown Timer
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-Countdown-Timer.png"
+        src="Wi-Fi Countdown Timer.png"
         alt="Wi-Fi Countdown Timer"
         class="experiment-thumbnail"
     >
@@ -490,12 +726,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wi-Fi IR Remote Decoder -->
+<!-- ==================================
+     Wi-Fi IR Remote Decoder
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-IR-Remote-Decoder.png"
+        src="Wi-Fi IR Remote Decoder.png"
         alt="Wi-Fi IR Remote Decoder"
         class="experiment-thumbnail"
     >
@@ -518,12 +756,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wi-Fi Humidity Display -->
+<!-- ==================================
+     Wi-Fi Humidity Display
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-Humidity-Display.png"
+        src="Wi-Fi Humidity Display.png"
         alt="Wi-Fi Humidity Display"
         class="experiment-thumbnail"
     >
@@ -546,12 +786,14 @@ footer strong{color:white}
 </div>
 
 
-<!-- Wi-Fi Relay Control Panel -->
+<!-- ==================================
+     Wi-Fi Relay Control Panel
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-Relay-Control-Panel.png"
+        src="Wi-Fi Relay Control Panel.png"
         alt="Wi-Fi Relay Control Panel"
         class="experiment-thumbnail"
     >
@@ -573,12 +815,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32 Potentiometer Web Monitor -->
+
+<!-- ==================================
+     ESP32 Potentiometer Web Monitor
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-Potentiometer-Web-Monitor.png"
+        src="ESP32 Potentiometer Web Monitor.png"
         alt="ESP32 Potentiometer Web Monitor"
         class="experiment-thumbnail"
     >
@@ -600,12 +845,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32 Touch Button Interface -->
+
+<!-- ==================================
+     ESP32 Touch Button Interface
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-Touch-Button-Interface.png"
+        src="ESP32 Touch Button Interface.png"
         alt="ESP32 Touch Button Interface"
         class="experiment-thumbnail"
     >
@@ -627,12 +875,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- Wi-Fi LED Matrix Message Board -->
+
+<!-- ==================================
+     Wi-Fi LED Matrix Message Board
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi LED Matrix Message Board.png"
+        src="Wi-Fi LED Matrix Message Board.png"
         alt="Wi-Fi LED Matrix Message Board"
         class="experiment-thumbnail"
     >
@@ -654,12 +905,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32 Dual-LED Status Dashboard -->
+
+<!-- ==================================
+     ESP32 Dual-LED Status Dashboard
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-Dual-LED-Status-Dashboard.png"
+        src="ESP32 Dual-LED Status Dashboard.png"
         alt="ESP32 Dual-LED Status Dashboard"
         class="experiment-thumbnail"
     >
@@ -681,12 +935,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32 Dual-Sensor Data Logger -->
+
+<!-- ==================================
+     ESP32 Dual-Sensor Data Logger
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-Dual-Sensor-Data-Logger.png"
+        src="ESP32 Dual-Sensor Data Logger.png"
         alt="ESP32 Dual-Sensor Data Logger"
         class="experiment-thumbnail"
     >
@@ -708,12 +965,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- Wi-Fi Gas Sensor Data Logger -->
+
+<!-- ==================================
+     Wi-Fi Gas Sensor Data Logger
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-Gas-Sensor-Data-Logger.png"
+        src="Wi-Fi Gas Sensor Data Logger.png"
         alt="Wi-Fi Gas Sensor Data Logger"
         class="experiment-thumbnail"
     >
@@ -735,12 +995,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32 Digital Parking Bay Indicator -->
+
+<!-- ==================================
+     ESP32 Digital Parking Bay Indicator
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-Digital-Parking-Bay-Indicator.png"
+        src="ESP32 Digital Parking Bay Indicator.png"
         alt="ESP32 Digital Parking Bay Indicator"
         class="experiment-thumbnail"
     >
@@ -762,12 +1025,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- Wireless Stepper Position Controller -->
+
+<!-- ==================================
+     Wireless Stepper Position Controller
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="Wireless-Stepper-Position-Controller.png"
+        src="Wireless Stepper Position Controller.png"
         alt="Wireless Stepper Position Controller"
         class="experiment-thumbnail"
     >
@@ -789,12 +1055,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32 RFID Web Identification System -->
+
+<!-- ==================================
+     ESP32 RFID Web Identification System
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="RFID-Web-Identification.png"
+        src="ESP32 RFID Web Identification System.png"
         alt="ESP32 RFID Web Identification System"
         class="experiment-thumbnail"
     >
@@ -804,11 +1073,6 @@ footer strong{color:white}
         <h3>
             ESP32 RFID Web Identification System
         </h3>
-
-        <p>
-            Identifies RFID cards and displays the user,
-            card UID and access status on an ESP32 web dashboard.
-        </p>
 
         <a
             class="open-btn"
@@ -821,12 +1085,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- Wi-Fi Digital Dice -->
+
+<!-- ==================================
+     Wi-Fi Digital Dice
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="WiFi-Digital-Dice.png"
+        src="Wi-Fi Digital Dice.png"
         alt="Wi-Fi Digital Dice"
         class="experiment-thumbnail"
     >
@@ -836,11 +1103,6 @@ footer strong{color:white}
         <h3>
             Wi-Fi Digital Dice
         </h3>
-
-        <p>
-            Generates random dice values and displays
-            the result using an ESP32 Wi-Fi system.
-        </p>
 
         <a
             class="open-btn"
@@ -853,12 +1115,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32-CAM Wi-Fi Photo Booth -->
+
+<!-- ==================================
+     ESP32-CAM Wi-Fi Photo Booth
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-CAM-Wi-Fi-Photo-Booth.png"
+        src="ESP32-CAM Wi-Fi Photo Booth.png"
         alt="ESP32-CAM Wi-Fi Photo Booth"
         class="experiment-thumbnail"
     >
@@ -880,12 +1145,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32-CAM AI GESTURE INTERFACE -->
+
+<!-- ==================================
+     ESP32-CAM AI GESTURE INTERFACE
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-CAM-AI-GESTURE-INTERFACE.png"
+        src="ESP32-CAM AI GESTURE INTERFACE.png"
         alt="ESP32-CAM AI GESTURE INTERFACE"
         class="experiment-thumbnail"
     >
@@ -907,12 +1175,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32-CAM Face Recognition Access -->
+
+<!-- ==================================
+     ESP32-CAM Face Recognition Access
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-CAM-Face-Recognition-Access.png"
+        src="ESP32-CAM Face Recognition Access.png"
         alt="ESP32-CAM Face Recognition Access"
         class="experiment-thumbnail"
     >
@@ -934,12 +1205,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32-CAM Remote Image Viewer -->
+
+<!-- ==================================
+     ESP32-CAM Remote Image Viewer
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-CAM-Remote-Image-Viewer.png"
+        src="ESP32-CAM Remote Image Viewer.png"
         alt="ESP32-CAM Remote Image Viewer"
         class="experiment-thumbnail"
     >
@@ -961,12 +1235,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32-CAM Motion Snapshot System -->
+
+<!-- ==================================
+     ESP32-CAM Motion Snapshot System
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-CAM-Motion-Snapshot-System.png"
+        src="ESP32-CAM Motion Snapshot System.png"
         alt="ESP32-CAM Motion Snapshot System"
         class="experiment-thumbnail"
     >
@@ -988,12 +1265,15 @@ footer strong{color:white}
 
 </div>
 
-<!-- ESP32-CAM LIGHT-ACTIVATED CAMERA -->
+
+<!-- ==================================
+     ESP32-CAM LIGHT-ACTIVATED CAMERA
+=================================== -->
 
 <div class="experiment-card">
 
     <img
-        src="ESP32-CAM-LIGHT-ACTIVATED-CAMERA.png"
+        src="ESP32-CAM LIGHT-ACTIVATED CAMERA.png"
         alt="ESP32-CAM LIGHT-ACTIVATED CAMERA"
         class="experiment-thumbnail"
     >
@@ -1015,6 +1295,30 @@ footer strong{color:white}
 
 </div>
 
-</div>
-    
-</div>
+
+</section>
+
+
+</main>
+
+
+<!-- ===============================
+     FOOTER
+================================ -->
+
+<footer>
+
+    <strong>
+        ESP32-CAM Experiments
+    </strong>
+
+    <br>
+
+    IoT Practical Learning
+
+</footer>
+
+
+</body>
+
+</html>
