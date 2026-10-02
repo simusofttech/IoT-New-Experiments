@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+ESP32-CAM LIGHT-ACTIVATED CAMERA
+</title>
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+
+    margin-bottom:24px;
+    padding:28px;
+
+    border:1px solid #ddd;
+    border-radius:10px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+    font-size:25px;
+
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow{
+    text-align:center;
+
+    font-weight:bold;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    line-height:2;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION LAYOUT */
+
+.code-layout{
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+    background:white;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px rgba(37,99,235,.10);
+}
+
+
+/* CODE TOP BAR */
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.filename{
+    color:white;
+
+    font:bold 14px/1.4
+    Consolas, Monaco, monospace;
+}
+
+
+/* COPY BUTTON */
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+
+/* CODE AREA */
+
+.code-body{
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas, Monaco, monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+.code-line:hover{
+    background:#f8fbff;
+}
+
+
+/* SELECTED CODE */
+
+.code-line.selected{
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+/* LINE NUMBER */
+
+.line-number{
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* CODE COLOURS */
+
+.token-comment{
+    color:#64748b;
+}
+
+.token-keyword{
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+.token-number{
+    color:#b45309;
+}
+
+.token-string{
+    color:#047857;
+}
+
+
+/* =========================
+   EXPLANATION PANEL
+========================= */
+
+.guide{
+    background:white;
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+/* STEP BUTTONS */
+
+.steps{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.step{
+    border:
+    1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+.step:hover{
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+.step.active{
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+.step-number{
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+/* EXPLANATION BOX */
+
+.explanation{
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+.explanation h3{
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+.explanation p{
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+/* MORE INFO */
+
+.guide details{
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+.guide details p,
+.guide details li{
+    color:#526875;
+
+    font-size:15px;
+}
+
+.guide code{
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+/* TIP */
+
+.tip{
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+        height:450px;
+    }
+}
+
+@media(max-width:600px){
+
+    .header{
+        padding:35px 15px;
+    }
+
+    .header h1{
+        font-size:28px;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .section{
+        padding:21px 18px;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <h1>ESP32-CAM Experiment</h1>
+
+    <p>ESP32-CAM LIGHT-ACTIVATED CAMERA</p>
+
+</header>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =========================
+     AIM
+========================= -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To monitor ambient light using an LDR
+        voltage divider and automatically capture
+        a JPEG image with the ESP32-CAM when the
+        light level changes significantly.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section class="section">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The ESP32-CAM reads the ambient light level
+        through an LDR and 10KΩ resistor voltage divider
+        connected to GPIO 2.
+    </p>
+
+    <p>
+        The ADC reading is converted into an approximate
+        light percentage. When the measured light changes
+        by 15 percentage points from the reference value,
+        the OV2640 camera captures a JPEG image.
+    </p>
+
+    <p>
+        The OLED displays the current light percentage,
+        monitoring status and capture count. Wi-Fi is not
+        used in this Experiment because GPIO 2 is an ADC2 input.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="ESP32-CAM.png"
+            alt="AI-Thinker ESP32-CAM with OV2640">
+
+            <h4>
+                AI-Thinker ESP32-CAM with OV2640 (×1)
+            </h4>
+
+            <p>
+                Main controller and camera
+                used to capture JPEG images.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="LDR.png"
+            alt="LDR">
+
+            <h4>
+                LDR (×1)
+            </h4>
+
+            <p>
+                Detects changes in
+                ambient light level.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="10K Ohm Resistor.png"
+            alt="10K Ohm Resistor">
+
+            <h4>
+                10KΩ Resistor (×1)
+            </h4>
+
+            <p>
+                Forms the voltage divider
+                with the LDR.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="OLED.png"
+            alt="OLED SSD1306">
+
+            <h4>
+                0.96" OLED SSD1306 I²C (×1)
+            </h4>
+
+            <p>
+                Displays the light level,
+                monitoring status and capture count.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="USB-TTL Programmer.png"
+            alt="USB-to-TTL Programmer">
+
+            <h4>
+                USB-to-TTL Programmer (×1)
+            </h4>
+
+            <p>
+                Used to upload the program
+                to the ESP32-CAM.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the circuit.
+            </p>
+
+        </div>
+
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for electrical connections.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CONNECTIONS
+========================= -->
+
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+
+    <h3>LDR Voltage Divider</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+
+                <tr>
+                    <th>Component</th>
+                    <th>Pin</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>LDR</td>
+                    <td>One Leg</td>
+                    <td>3.3V</td>
+                </tr>
+
+                <tr>
+                    <td>LDR</td>
+                    <td>Other Leg</td>
+                    <td>GPIO 2</td>
+                </tr>
+
+                <tr>
+                    <td>10KΩ Resistor</td>
+                    <td>One Leg</td>
+                    <td>GPIO 2</td>
+                </tr>
+
+                <tr>
+                    <td>10KΩ Resistor</td>
+                    <td>Other Leg</td>
+                    <td>GND</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <h3>OLED to ESP32-CAM</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>OLED Pin</th>
+                    <th>ESP32-CAM Pin</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO 13</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO 14</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <h3>USB-to-TTL Programmer</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>USB-TTL Pin</th>
+                    <th>ESP32-CAM Pin</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>+5V</td>
+                    <td>5V</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>TX</td>
+                    <td>U0R / GPIO 3</td>
+                </tr>
+
+                <tr>
+                    <td>RX</td>
+                    <td>U0T / GPIO 1</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="note">
+
+        <strong>LDR Input:</strong>
+        GPIO 2
+
+        <br>
+
+        <strong>OLED SDA:</strong>
+        GPIO 13
+
+        <br>
+
+        <strong>OLED SCL:</strong>
+        GPIO 14
+
+        <br>
+
+        <strong>OLED Address:</strong>
+        0x3C
+
+        <br>
+
+        <strong>Light Change Trigger:</strong>
+        15 percentage points
+
+        <br>
+
+        <strong>Check Interval:</strong>
+        1 second
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="ESP32-CAM LIGHT-ACTIVATED CAMERA Circuit.png"
+    alt="ESP32-CAM LIGHT-ACTIVATED CAMERA Circuit">
+
+</section>
+
+
+<!-- =========================
+     WORKING
+========================= -->
+
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        Ambient Light Reaches LDR
+
+        <br>↓<br>
+
+        LDR + 10KΩ Voltage Divider
+
+        <br>↓<br>
+
+        GPIO 2 Reads ADC Value
+
+        <br>↓<br>
+
+        ADC is Mapped to Light Percentage
+
+        <br>↓<br>
+
+        Current Value is Compared with Reference
+
+        <br>↓<br>
+
+        Change Reaches 15 Percentage Points
+
+        <br>↓<br>
+
+        OV2640 Captures JPEG Image
+
+        <br>↓<br>
+
+        OLED Shows CAPTURE! and Count
+
+        <br>↓<br>
+
+        Reference Value Updates
+
+        <br>↓<br>
+
+        Monitoring Continues
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PROCEDURE
+========================= -->
+
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Connect USB-TTL +5V to ESP32-CAM 5V.
+        </li>
+
+        <li>
+            Connect USB-TTL GND to ESP32-CAM GND.
+        </li>
+
+        <li>
+            Connect USB-TTL TX to U0R / GPIO 3
+            and RX to U0T / GPIO 1.
+        </li>
+
+        <li>
+            Connect GPIO 0 to GND only during upload.
+        </li>
+
+        <li>
+            Connect one LDR leg to 3.3V
+            and the other leg to GPIO 2.
+        </li>
+
+        <li>
+            Connect one 10KΩ resistor leg to GPIO 2
+            and the other leg to GND.
+        </li>
+
+        <li>
+            Connect OLED VCC to 3.3V
+            and OLED GND to GND.
+        </li>
+
+        <li>
+            Connect OLED SDA to GPIO 13.
+        </li>
+
+        <li>
+            Connect OLED SCL to GPIO 14.
+        </li>
+
+        <li>
+            Select AI Thinker ESP32-CAM
+            in Arduino IDE.
+        </li>
+
+        <li>
+            Install Adafruit GFX and
+            Adafruit SSD1306 libraries.
+        </li>
+
+        <li>
+            Upload the program at 115200 baud.
+        </li>
+
+        <li>
+            Remove GPIO 0 from GND after upload
+            and press RESET.
+        </li>
+
+        <li>
+            Open Serial Monitor at 115200 baud.
+        </li>
+
+        <li>
+            Change the light level around the LDR
+            and observe the capture response.
+        </li>
+
+    </ol>
+
+</section>
+
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section class="section" id="code">
+
+<div class="code-lesson">
+
+
+<p class="eyebrow">
+    ESP32 Experiment · Code Review
+</p>
+
+
+<h2 class="lesson-title">
+    Explore the Code
+</h2>
+
+
+<p class="intro">
+    ESP32-CAM LIGHT-ACTIVATED CAMERA · Select a step to see
+    what each part of the ESP32 program does.
+</p>
+
+
+<div class="code-layout">
+
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+
+<div class="code-top">
+
+    <span class="filename">
+        ESP32_CAM_Light_Activated_Camera.ino
+    </span>
+
+    <button
+    class="copy-button"
+    onclick="copyCode()">
+
+        Copy Code
+
+    </button>
+
+</div>
+
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+
+</article>
+
+
+<!-- EXPLANATION PANEL -->
+
+<article class="guide">
+
+
+<h2>
+    Understand it step by step
+</h2>
+
+
+<p>
+    Choose a step.
+    The matching code will light up on the left.
+</p>
+
+
+<div class="steps">
+
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">01</span>
+
+Load the libraries
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">02</span>
+
+Set OLED and LDR pins
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">03</span>
+
+Set light threshold
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">04</span>
+
+Show OLED status
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">05</span>
+
+Initialize camera
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">06</span>
+
+Capture image
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">07</span>
+
+Prepare the system
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">08</span>
+
+Read light level
+
+</button>
+
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">09</span>
+
+Detect light change
+
+</button>
+
+
+</div>
+
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+    1. Load the libraries
+</h3>
+
+<p>
+    The program loads the camera,
+    I²C, graphics and OLED libraries
+    needed by the Experiment.
+</p>
+
+</div>
+
+
+<details>
+
+<summary>
+    Explore more: light detection
+</summary>
+
+<p>
+    <code>GPIO 2</code>
+    reads the LDR voltage divider.
+</p>
+
+<p>
+    The reading is mapped to
+    an approximate 0–100% light value.
+</p>
+
+<p>
+    A change of
+    <strong>15 percentage points</strong>
+    triggers an image capture.
+</p>
+
+</details>
+
+
+<details>
+
+<summary>
+    Check your understanding
+</summary>
+
+<ul>
+
+<li>
+Which GPIO is used for the LDR?
+<strong>GPIO 2</strong>
+</li>
+
+<li>
+Which pins are used for OLED I²C?
+<strong>GPIO 13 and GPIO 14</strong>
+</li>
+
+<li>
+How often is the LDR checked?
+<strong>Every 1 second</strong>
+</li>
+
+<li>
+What happens when the threshold is reached?
+<strong>The OV2640 captures a JPEG image.</strong>
+</li>
+
+</ul>
+
+</details>
+
+
+</article>
+
+
+</div>
+
+
+<p class="tip">
+
+<strong>Try it:</strong>
+
+Change the light level around the LDR
+and watch the OLED and Serial Monitor
+when the light-change threshold is reached.
+
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+<h2>Expected Output</h2>
+
+<p>
+    The OLED displays LIGHT ACTIVATED CAMERA,
+    the current approximate light percentage,
+    monitoring status and capture count.
+</p>
+
+<p>
+    The LDR is checked every 1 second and
+    the current value is compared with the
+    stored reference light value.
+</p>
+
+<p>
+    When the light changes by 15 percentage points,
+    the camera captures a JPEG frame and the OLED
+    briefly displays CAPTURE! with the updated count.
+</p>
+
+<p>
+    The JPEG frame is held temporarily in RAM
+    and is not permanently saved in this version.
+</p>
+
+</section>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section
+class="section"
+id="result">
+
+<h2>Result</h2>
+
+<p>
+    The ESP32-CAM LIGHT-ACTIVATED CAMERA
+    Experiment was successfully implemented using
+    an AI-Thinker ESP32-CAM, LDR voltage divider
+    and SSD1306 OLED display.
+</p>
+
+<p>
+    The system continuously monitors ambient light
+    and automatically captures a JPEG image whenever
+    the configured light-change threshold is reached.
+</p>
+
+</section>
+
+
+<!-- =========================
+     LEARNING
+========================= -->
+
+<section class="section">
+
+<h2>What You Learn</h2>
+
+<ul>
+
+<li>
+Reading an LDR with ESP32-CAM GPIO 2.
+</li>
+
+<li>
+Building an LDR and 10KΩ voltage divider.
+</li>
+
+<li>
+Mapping ADC values to an approximate percentage.
+</li>
+
+<li>
+Using an SSD1306 OLED over I²C.
+</li>
+
+<li>
+Using GPIO 13 and GPIO 14 for OLED communication.
+</li>
+
+<li>
+Initializing the AI-Thinker OV2640 camera.
+</li>
+
+<li>
+Capturing JPEG frames with ESP32-CAM.
+</li>
+
+<li>
+Detecting threshold-based changes in sensor readings.
+</li>
+
+<li>
+Using a timed 1-second sensor-check interval.
+</li>
+
+</ul>
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+<strong>
+ESP32-CAM Experiment
+</strong>
+
+<br>
+
+ESP32-CAM LIGHT-ACTIVATED CAMERA
+
+</footer>
+
+
+<!-- =========================================
+     ESP32 PROGRAM
+========================================= -->
+
+<script type="text/plain" id="esp32-program">
+
+#include "esp_camera.h"
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+#define OLED_SDA 13
+#define OLED_SCL 14
+#define OLED_ADDR 0x3C
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    -1
+);
+
+#define LDR_PIN 2
+#define CHANGE_THRESHOLD 15
+#define CHECK_INTERVAL 1000
+
+#define PWDN_GPIO_NUM 32
+#define RESET_GPIO_NUM -1
+#define XCLK_GPIO_NUM 0
+#define SIOD_GPIO_NUM 26
+#define SIOC_GPIO_NUM 27
+#define Y9_GPIO_NUM 35
+#define Y8_GPIO_NUM 34
+#define Y7_GPIO_NUM 39
+#define Y6_GPIO_NUM 36
+#define Y5_GPIO_NUM 21
+#define Y4_GPIO_NUM 19
+#define Y3_GPIO_NUM 18
+#define Y2_GPIO_NUM 5
+#define VSYNC_GPIO_NUM 25
+#define HREF_GPIO_NUM 23
+#define PCLK_GPIO_NUM 22
+
+int previousLight = 0;
+int currentLight = 0;
+int captureCount = 0;
+
+unsigned long lastCheck = 0;
+
+
+// =====================================================
+// STARTUP DISPLAY
+// =====================================================
+
+void showStartup()
+{
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(2);
+
+    display.setCursor(
+        8,
+        0
+    );
+
+    display.println(
+        "LIGHT CAM"
+    );
+
+    display.setTextSize(1);
+
+    display.setCursor(
+        20,
+        28
+    );
+
+    display.println(
+        "ESP32-CAM"
+    );
+
+    display.setCursor(
+        15,
+        42
+    );
+
+    display.println(
+        "Initializing..."
+    );
+
+    display.display();
+}
+
+
+// =====================================================
+// NORMAL OLED STATUS
+// =====================================================
+
+void showStatus()
+{
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(1);
+
+    display.setCursor(
+        0,
+        0
+    );
+
+    display.println(
+        "LIGHT ACTIVATED CAMERA"
+    );
+
+    display.drawLine(
+        0,
+        12,
+        127,
+        12,
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(2);
+
+    display.setCursor(
+        0,
+        18
+    );
+
+    display.print("L:");
+    display.print(currentLight);
+    display.print("%");
+
+    display.setTextSize(1);
+
+    display.setCursor(
+        0,
+        42
+    );
+
+    display.println(
+        "Monitoring..."
+    );
+
+    display.setCursor(
+        0,
+        55
+    );
+
+    display.print(
+        "Captures: "
+    );
+
+    display.print(
+        captureCount
+    );
+
+    display.display();
+}
+
+
+// =====================================================
+// CAPTURE OLED MESSAGE
+// =====================================================
+
+void showCapture()
+{
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(2);
+
+    display.setCursor(
+        12,
+        5
+    );
+
+    display.println(
+        "CAPTURE!"
+    );
+
+    display.setTextSize(1);
+
+    display.setCursor(
+        15,
+        32
+    );
+
+    display.println(
+        "Light changed"
+    );
+
+    display.setCursor(
+        15,
+        47
+    );
+
+    display.print(
+        "Count: "
+    );
+
+    display.print(
+        captureCount
+    );
+
+    display.display();
+}
+
+
+// =====================================================
+// CAMERA INITIALIZATION
+// =====================================================
+
+bool initCamera()
+{
+    camera_config_t config;
+
+    config.ledc_channel =
+    LEDC_CHANNEL_0;
+
+    config.ledc_timer =
+    LEDC_TIMER_0;
+
+    config.pin_d0 =
+    Y2_GPIO_NUM;
+
+    config.pin_d1 =
+    Y3_GPIO_NUM;
+
+    config.pin_d2 =
+    Y4_GPIO_NUM;
+
+    config.pin_d3 =
+    Y5_GPIO_NUM;
+
+    config.pin_d4 =
+    Y6_GPIO_NUM;
+
+    config.pin_d5 =
+    Y7_GPIO_NUM;
+
+    config.pin_d6 =
+    Y8_GPIO_NUM;
+
+    config.pin_d7 =
+    Y9_GPIO_NUM;
+
+    config.pin_xclk =
+    XCLK_GPIO_NUM;
+
+    config.pin_pclk =
+    PCLK_GPIO_NUM;
+
+    config.pin_vsync =
+    VSYNC_GPIO_NUM;
+
+    config.pin_href =
+    HREF_GPIO_NUM;
+    config.pin_sscb_sda =
+    SIOD_GPIO_NUM;
+
+    config.pin_sscb_scl =
+    SIOC_GPIO_NUM;
+
+    config.pin_pwdn =
+    PWDN_GPIO_NUM;
+
+    config.pin_reset =
+    RESET_GPIO_NUM;
+
+    config.xclk_freq_hz =
+    20000000;
+
+    config.pixel_format =
+    PIXFORMAT_JPEG;
+
+    config.frame_size =
+    FRAMESIZE_QQVGA;
+
+    config.jpeg_quality = 20;
+
+    config.fb_count = 1;
+
+    esp_err_t err =
+    esp_camera_init(
+        &config
+    );
+
+    if(
+        err != ESP_OK
+    )
+    {
+        Serial.print(
+            "Camera init failed: 0x"
+        );
+
+        Serial.println(
+            err,
+            HEX
+        );
+
+        return false;
+    }
+
+    return true;
+}
+
+
+// =====================================================
+// CAPTURE IMAGE
+// =====================================================
+
+void captureImage()
+{
+    Serial.println();
+
+    Serial.println(
+        "=============================="
+    );
+
+    Serial.println(
+        "LIGHT CHANGE DETECTED"
+    );
+
+    Serial.println(
+        "CAPTURING IMAGE..."
+    );
+
+    Serial.println(
+        "=============================="
+    );
+
+    camera_fb_t *fb =
+    esp_camera_fb_get();
+
+    if(!fb)
+    {
+        Serial.println(
+            "Camera capture FAILED!"
+        );
+
+        return;
+    }
+
+    captureCount++;
+
+    Serial.println(
+        "Image captured successfully!"
+    );
+
+    Serial.print(
+        "Image size: "
+    );
+
+    Serial.print(
+        fb->len
+    );
+
+    Serial.println(
+        " bytes"
+    );
+
+    Serial.print(
+        "Capture number: "
+    );
+
+    Serial.println(
+        captureCount
+    );
+
+    esp_camera_fb_return(
+        fb
+    );
+
+    showCapture();
+
+    delay(1200);
+}
+
+
+// =====================================================
+// SETUP
+// =====================================================
+
+void setup()
+{
+    Serial.begin(115200);
+
+    delay(1000);
+
+    Serial.println();
+
+    Serial.println(
+        "=============================="
+    );
+
+    Serial.println(
+        "ESP32-CAM LIGHT CAMERA"
+    );
+
+    Serial.println(
+        "=============================="
+    );
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+    if(
+        !display.begin(
+            SSD1306_SWITCHCAPVCC,
+            OLED_ADDR
+        )
+    )
+    {
+        Serial.println(
+            "OLED initialization FAILED!"
+        );
+
+        while(true)
+        {
+            delay(1000);
+        }
+    }
+
+    showStartup();
+
+    delay(1500);
+
+    pinMode(
+        LDR_PIN,
+        INPUT
+    );
+
+    Serial.println(
+        "Initializing camera..."
+    );
+
+    if(!initCamera())
+    {
+        Serial.println(
+            "Camera initialization FAILED!"
+        );
+
+        display.clearDisplay();
+
+        display.setTextColor(
+            SSD1306_WHITE
+        );
+
+        display.setTextSize(2);
+
+        display.setCursor(
+            5,
+            10
+        );
+
+        display.println(
+            "CAM ERROR"
+        );
+
+        display.setTextSize(1);
+
+        display.setCursor(
+            8,
+            40
+        );
+
+        display.println(
+            "Check camera"
+        );
+
+        display.display();
+
+        while(true)
+        {
+            delay(1000);
+        }
+    }
+
+    Serial.println(
+        "Camera initialized successfully!"
+    );
+
+    Serial.println(
+        "System ready."
+    );
+
+    int raw =
+    analogRead(
+        LDR_PIN
+    );
+
+    previousLight =
+    map(
+        raw,
+        0,
+        4095,
+        0,
+        100
+    );
+
+    currentLight =
+    previousLight;
+
+    Serial.print(
+        "Initial light: "
+    );
+
+    Serial.print(
+        currentLight
+    );
+
+    Serial.println(
+        "%"
+    );
+
+    showStatus();
+}
+
+
+// =====================================================
+// LOOP
+// =====================================================
+
+void loop()
+{
+    if(
+        millis() - lastCheck >=
+        CHECK_INTERVAL
+    )
+    {
+        lastCheck =
+        millis();
+
+        int rawValue =
+        analogRead(
+            LDR_PIN
+        );
+
+        currentLight =
+        map(
+            rawValue,
+            0,
+            4095,
+            0,
+            100
+        );
+
+        int difference =
+        abs(
+            currentLight -
+            previousLight
+        );
+
+        Serial.print(
+            "Light: "
+        );
+
+        Serial.print(
+            currentLight
+        );
+
+        Serial.print(
+            "% | Reference: "
+        );
+
+        Serial.print(
+            previousLight
+        );
+
+        Serial.print(
+            "% | Change: "
+        );
+
+        Serial.print(
+            difference
+        );
+
+        Serial.println(
+            "%"
+        );
+
+        if(
+            difference >=
+            CHANGE_THRESHOLD
+        )
+        {
+            captureImage();
+
+            previousLight =
+            currentLight;
+        }
+
+        showStatus();
+    }
+}
+
+
+</script>
+
+
+<!-- =========================================
+     EXPLORE CODE JAVASCRIPT
+========================================= -->
+
+<script>
+
+
+/* GET ESP32 CODE */
+
+const program =
+document
+.getElementById("esp32-program")
+.textContent
+.trim();
+
+
+const lines =
+program.split("\n");
+
+
+/* =========================
+   CODE STEP INFORMATION
+========================= */
+
+const steps = [
+
+{
+    title:"Load the libraries",
+
+    search:'#include "esp_camera.h"',
+
+    text:
+    "The program loads the camera, I²C, graphics and OLED libraries needed by the Experiment."
+},
+
+{
+    title:"Set OLED and LDR pins",
+
+    search:"#define OLED_SDA 13",
+
+    text:
+    "GPIO 13 is used for OLED SDA, GPIO 14 for OLED SCL and GPIO 2 for the LDR voltage divider."
+},
+
+{
+    title:"Set light threshold",
+
+    search:"#define CHANGE_THRESHOLD 15",
+
+    text:
+    "The capture threshold is 15 percentage points and the LDR is checked every 1000 milliseconds."
+},
+
+{
+    title:"Show OLED status",
+
+    search:"void showStatus()",
+
+    text:
+    "This function displays the current light percentage, monitoring state and capture count on the OLED."
+},
+
+{
+    title:"Initialize camera",
+
+    search:"bool initCamera()",
+
+    text:
+    "This function applies the AI-Thinker ESP32-CAM pin configuration and starts the OV2640 in JPEG mode."
+},
+
+{
+    title:"Capture image",
+
+    search:"void captureImage()",
+
+    text:
+    "This function requests a JPEG frame, prints its size, increments the capture count and then returns the camera frame buffer."
+},
+
+{
+    title:"Prepare the system",
+
+    search:"void setup()",
+
+    text:
+    "The setup function starts Serial, initializes the OLED, prepares GPIO 2, initializes the camera and stores the first light reading as the reference."
+},
+
+{
+    title:"Read light level",
+
+    search:"int rawValue =",
+
+    text:
+    "The loop reads GPIO 2 and maps the 0–4095 ADC value to an approximate 0–100% light percentage."
+},
+
+{
+    title:"Detect light change",
+
+    search:"difference >=",
+
+    text:
+    "When the difference between the current and reference light values reaches the threshold, the ESP32-CAM captures an image and updates the reference."
+}
+
+];
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text)
+{
+    return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+}
+
+
+/* =========================
+   DISPLAY CODE
+========================= */
+
+function displayCode()
+{
+    let output = "";
+
+
+    lines.forEach(
+        function(line,index)
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+            (index + 1) +
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+        }
+    );
+
+
+    document
+    .getElementById(
+        "code-lines"
+    )
+    .innerHTML = output;
+}
+
+
+/* =========================
+   SHOW STEP
+========================= */
+
+function showStep(index)
+{
+    const step =
+    steps[index];
+
+
+    const buttons =
+    document.querySelectorAll(
+        ".step"
+    );
+
+
+    buttons.forEach(
+        function(button)
+        {
+            button
+            .classList
+            .remove("active");
+        }
+    );
+
+
+    buttons[index]
+    .classList
+    .add("active");
+
+
+    const codeLines =
+    document.querySelectorAll(
+        ".code-line"
+    );
+
+
+    codeLines.forEach(
+        function(line)
+        {
+            line
+            .classList
+            .remove("selected");
+        }
+    );
+
+
+    let foundLine = -1;
+
+
+    for(
+        let i = 0;
+        i < lines.length;
+        i++
+    )
+    {
+        if(
+            lines[i]
+            .includes(step.search)
+        )
+        {
+            foundLine = i;
+
+            break;
+        }
+    }
+
+
+    if(foundLine >= 0)
+    {
+        for(
+            let i = foundLine;
+            i < Math.min(
+                foundLine + 10,
+                lines.length
+            );
+            i++
+        )
+        {
+            document
+            .getElementById(
+                "line-" + (i + 1)
+            )
+            .classList
+            .add("selected");
+        }
+
+
+        const selectedLine =
+        document.getElementById(
+            "line-" +
+            (foundLine + 1)
+        );
+
+
+        document
+        .getElementById(
+            "code-body"
+        )
+        .scrollTo({
+
+            top:
+            selectedLine.offsetTop - 20,
+
+            behavior:"smooth"
+
+        });
+    }
+
+
+    document
+    .getElementById(
+        "explanation"
+    )
+    .innerHTML =
+
+    "<h3>" +
+
+    (index + 1) +
+    ". " +
+    step.title +
+
+    "</h3>" +
+
+    "<p>" +
+
+    step.text +
+
+    "</p>";
+}
+
+
+/* =========================
+   COPY ESP32 CODE
+========================= */
+
+function copyCode()
+{
+    navigator
+    .clipboard
+    .writeText(program)
+    .then(
+        function()
+        {
+            const button =
+            document.querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+                function()
+                {
+                    button.innerText =
+                    "Copy Code";
+                },
+                1500
+            );
+        }
+    );
+}
+
+
+/* START */
+
+displayCode();
+
+showStep(0);
+
+
+</script>
+
+
+</body>
+</html>
