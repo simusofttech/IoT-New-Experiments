@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ESP32-CAM Motion Snapshot System</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+.code-layout{
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+.code-panel{
+    background:white;
+
+    border:
+    1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.filename{
+    color:white;
+
+    font:bold 14px/1.4
+    Consolas, Monaco, monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.copy-button:hover{
+    background:#eff6ff;
+}
+
+.code-body{
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas, Monaco, monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+.code-line:hover{
+    background:#f8fbff;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+.line-number{
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+.token-comment{
+    color:#64748b;
+}
+
+.token-keyword{
+    color:#1d4ed8;
+    font-weight:bold;
+}
+
+.token-number{
+    color:#b45309;
+}
+
+.token-string{
+    color:#047857;
+}
+
+.guide{
+    background:white;
+
+    border:
+    1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+
+    font-size:15px;
+}
+
+.steps{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+.step{
+    border:
+    1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+.step:hover{
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+.step.active{
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+.step-number{
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+.explanation{
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+.explanation h3{
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+.explanation p{
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+.guide details{
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+.guide details p,
+.guide details li{
+    color:#526875;
+
+    font-size:15px;
+}
+
+.guide code{
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+.tip{
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+@media(max-width:850px){
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:520px){
+    .steps{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<header class="header">
+    <h1>ESP32-CAM Experiment</h1>
+    <p>ESP32-CAM Motion Snapshot System</p>
+</header>
+
+<nav>
+    <a href="../index.html">← ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To detect motion using an HC-SR501 PIR sensor and automatically capture a snapshot using the ESP32-CAM, while providing buzzer, OLED and Wi-Fi web-dashboard feedback.
+    </p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>
+        The HC-SR501 PIR sensor detects movement and sends its output to GPIO 13 of the ESP32-CAM.
+    </p>
+    <p>
+        When motion is detected, the buzzer connected to GPIO 12 gives an alert and the OV2640 camera captures a JPEG snapshot.
+    </p>
+    <p>
+        The latest image is stored in memory and can be viewed from a Wi-Fi web dashboard. The OLED displays Wi-Fi, motion and capture status.
+    </p>
+</section>
+
+<!-- =========================
+     COMPONENTS
+========================= -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+            src="ESP32-CAM.png"
+            alt="AI-Thinker ESP32-CAM">
+
+            <h4>
+                AI-Thinker ESP32-CAM (×1)
+            </h4>
+
+            <p>
+                Main controller with Wi-Fi and camera interface.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="HC-SR501 PIR Motion Sensor Module.png"
+            alt="PIR Motion Sensor HC-SR501">
+
+            <h4>
+                PIR Motion Sensor HC-SR501 (×1)
+            </h4>
+
+            <p>
+                Detects motion in front of the camera.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Buzzer.png"
+            alt="Buzzer">
+
+            <h4>
+                Buzzer (×1)
+            </h4>
+
+            <p>
+                Provides an audible alert when motion is detected.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="OLED.png"
+            alt="OLED SSD1306">
+
+            <h4>
+                1.3" I²C OLED SSD1306 128×64 (×1)
+            </h4>
+
+            <p>
+                Displays Wi-Fi, motion and capture status.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="USB-TTL Programmer.png"
+            alt="USB-to-TTL Programmer">
+
+            <h4>
+                USB-to-TTL Programmer (×1)
+            </h4>
+
+            <p>
+                Used to upload and debug the ESP32-CAM program.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard">
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the circuit.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires">
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for electrical connections.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Component</th><th>Pin</th><th>ESP32-CAM Connection</th></tr></thead>
+            <tbody>
+                <tr><td>OLED</td><td>VCC</td><td>3.3V</td></tr>
+                <tr><td>OLED</td><td>GND</td><td>GND</td></tr>
+                <tr><td>OLED</td><td>SDA</td><td>GPIO 14</td></tr>
+                <tr><td>OLED</td><td>SCL</td><td>GPIO 15</td></tr>
+                <tr><td>PIR Sensor</td><td>VCC</td><td>5V</td></tr>
+                <tr><td>PIR Sensor</td><td>GND</td><td>GND</td></tr>
+                <tr><td>PIR Sensor</td><td>OUT</td><td>GPIO 13</td></tr>
+                <tr><td>Buzzer</td><td>+</td><td>GPIO 12</td></tr>
+                <tr><td>Buzzer</td><td>−</td><td>GND</td></tr>
+                <tr><td>USB-TTL</td><td>5V</td><td>5V</td></tr>
+                <tr><td>USB-TTL</td><td>GND</td><td>GND</td></tr>
+                <tr><td>USB-TTL</td><td>TX</td><td>U0R / GPIO 3</td></tr>
+                <tr><td>USB-TTL</td><td>RX</td><td>U0T / GPIO 1</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- =========================
+     CIRCUIT
+========================= -->
+
+<section
+class="section"
+id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="ESP32-CAM Motion Snapshot System Circuit.png"
+    alt="ESP32-CAM Motion Snapshot System Circuit">
+
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+    <div class="flow">
+        ESP32-CAM Starts<br>↓<br>
+        OLED, PIR, Buzzer and Camera Initialize<br>↓<br>
+        ESP32-CAM Connects to Wi-Fi<br>↓<br>
+        System Waits for PIR Motion<br>↓<br>
+        Motion Detected<br>↓<br>
+        Buzzer Alerts<br>↓<br>
+        OV2640 Captures Snapshot<br>↓<br>
+        Latest JPEG Stored in Memory<br>↓<br>
+        Browser Displays Latest Snapshot
+    </div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+    <ol>
+        <li>Connect OLED VCC to 3.3V, GND to GND, SDA to GPIO 14 and SCL to GPIO 15.</li>
+        <li>Connect the HC-SR501 PIR sensor VCC to 5V, GND to GND and OUT to GPIO 13.</li>
+        <li>Connect the buzzer positive pin to GPIO 12 and negative pin to GND.</li>
+        <li>Connect the USB-to-TTL programmer: 5V to 5V, GND to GND, TX to U0R / GPIO 3 and RX to U0T / GPIO 1.</li>
+        <li>Connect GPIO 0 to GND only while uploading the program.</li>
+        <li>Upload the program, remove GPIO 0 from GND and press RST.</li>
+        <li>Open Serial Monitor at 115200 baud and note the IP address.</li>
+        <li>Open the IP address in a browser to access the snapshot dashboard.</li>
+        <li>Move in front of the PIR sensor and observe the buzzer, OLED and automatic image capture.</li>
+        <li>Use the Capture Now button to test a manual snapshot.</li>
+    </ol>
+</section>
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+
+<section class="section" id="code">
+
+<div class="code-lesson">
+
+<p class="eyebrow">
+    ESP32 Experiment · Code Review
+</p>
+
+<h2 class="lesson-title">
+    Explore the Code
+</h2>
+
+<p class="intro">
+    ESP32-CAM Motion Snapshot System · Select a step to see
+    what each part of the ESP32 program does.
+</p>
+
+<div class="code-layout">
+
+<!-- CODE PANEL -->
+
+<article class="code-panel">
+
+<div class="code-top">
+
+    <span class="filename">
+        ESP32_CAM_Motion_Snapshot_System.ino
+    </span>
+
+    <button
+    class="copy-button"
+    onclick="copyCode()">
+
+        Copy Code
+
+    </button>
+
+</div>
+
+<div
+class="code-body"
+id="code-body">
+
+<code id="code-lines"></code>
+
+</div>
+
+</article>
+
+<!-- EXPLANATION PANEL -->
+
+<article class="guide">
+
+<h2>
+    Understand it step by step
+</h2>
+
+<p>
+    Choose a step.
+    The matching code will light up on the left.
+</p>
+
+<div class="steps">
+
+<button
+class="step active"
+onclick="showStep(0)">
+
+<span class="step-number">01</span>
+
+Load the libraries
+
+</button>
+
+<button
+class="step"
+onclick="showStep(1)">
+
+<span class="step-number">02</span>
+
+Set Wi-Fi details
+
+</button>
+
+<button
+class="step"
+onclick="showStep(2)">
+
+<span class="step-number">03</span>
+
+Prepare OLED, PIR and buzzer
+
+</button>
+
+<button
+class="step"
+onclick="showStep(3)">
+
+<span class="step-number">04</span>
+
+Initialize the camera
+
+</button>
+
+<button
+class="step"
+onclick="showStep(4)">
+
+<span class="step-number">05</span>
+
+Capture a snapshot
+
+</button>
+
+<button
+class="step"
+onclick="showStep(5)">
+
+<span class="step-number">06</span>
+
+Build the web dashboard
+
+</button>
+
+<button
+class="step"
+onclick="showStep(6)">
+
+<span class="step-number">07</span>
+
+Handle browser controls
+
+</button>
+
+<button
+class="step"
+onclick="showStep(7)">
+
+<span class="step-number">08</span>
+
+Start Wi-Fi and server
+
+</button>
+
+<button
+class="step"
+onclick="showStep(8)">
+
+<span class="step-number">09</span>
+
+Detect motion
+
+</button>
+
+</div>
+
+<div
+class="explanation"
+id="explanation">
+
+<h3>
+    1. Load the libraries
+</h3>
+
+<p>
+    The program loads the ESP32-CAM, Wi-Fi,
+    web server, I²C, graphics and OLED libraries.
+</p>
+
+</div>
+
+<details>
+<summary>
+    Explore more: setup and loop
+</summary>
+<p><code>setup()</code> runs once when the ESP32-CAM starts.</p>
+<p>It prepares the PIR sensor, buzzer, OLED, camera, Wi-Fi connection and web server.</p>
+<p><code>loop()</code> runs continuously.</p>
+<p>It handles browser requests and checks the PIR sensor for new motion events.</p>
+</details>
+
+<details>
+<summary>
+    Check your understanding
+</summary>
+<ul>
+<li>Which GPIO receives the PIR signal? <strong>GPIO 13</strong></li>
+<li>Which GPIO controls the buzzer? <strong>GPIO 12</strong></li>
+<li>Which pins are used for OLED I²C? <strong>GPIO 14 and GPIO 15</strong></li>
+<li>What happens when motion is detected? <strong>The buzzer alerts and the ESP32-CAM captures a snapshot.</strong></li>
+</ul>
+</details>
+
+</article>
+
+</div>
+
+<p class="tip">
+<strong>Try it:</strong>
+Move in front of the PIR sensor, then open the ESP32-CAM IP address in your browser and check the latest captured snapshot.
+</p>
+
+</div>
+
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+    <p>The OLED shows startup, Wi-Fi and motion/capture messages.</p>
+    <p>When the PIR sensor detects motion, the buzzer sounds and the camera captures a snapshot.</p>
+    <p>The web dashboard displays the latest stored snapshot and provides a manual Capture Now control.</p>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+    <p>
+        The ESP32-CAM Motion Snapshot System successfully detects motion, gives a buzzer alert, captures a JPEG snapshot and makes the latest image available through a Wi-Fi web dashboard.
+    </p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+    <ul>
+        <li>Interfacing an HC-SR501 PIR sensor with ESP32-CAM.</li>
+        <li>Controlling a buzzer using GPIO 12.</li>
+        <li>Using an I²C OLED on GPIO 14 and GPIO 15.</li>
+        <li>Capturing JPEG images with the OV2640 camera.</li>
+        <li>Storing the latest image in memory.</li>
+        <li>Building a Wi-Fi snapshot dashboard.</li>
+        <li>Using automatic motion capture and manual browser capture.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+<strong>ESP32-CAM Experiment</strong><br>
+ESP32-CAM Motion Snapshot System
+</footer>
+
+<textarea id="esp32-program" style="display:none;">
+#include "esp_camera.h"
+#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+
+// =====================================================
+//                     Wi-Fi
+// =====================================================
+
+const char* WIFI_SSID = "YOUR_WIFI_NAME";
+const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
+
+WebServer server(80);
+
+// =====================================================
+//                     OLED
+// =====================================================
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+#define OLED_SDA 14
+#define OLED_SCL 15
+#define OLED_ADDR 0x3C
+
+Adafruit_SSD1306 display(
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  &amp;Wire,
+  -1
+);
+
+// =====================================================
+//                     PIR + BUZZER
+// =====================================================
+
+#define PIR_PIN 13
+#define BUZZER_PIN 12
+
+// =====================================================
+//                AI-THINKER ESP32-CAM
+// =====================================================
+
+#define PWDN_GPIO_NUM     32
+#define RESET_GPIO_NUM    -1
+#define XCLK_GPIO_NUM      0
+#define SIOD_GPIO_NUM     26
+#define SIOC_GPIO_NUM     27
+
+#define Y9_GPIO_NUM       35
+#define Y8_GPIO_NUM       34
+#define Y7_GPIO_NUM       39
+#define Y6_GPIO_NUM       36
+#define Y5_GPIO_NUM       21
+#define Y4_GPIO_NUM       19
+#define Y3_GPIO_NUM       18
+#define Y2_GPIO_NUM        5
+
+#define VSYNC_GPIO_NUM    25
+#define HREF_GPIO_NUM     23
+#define PCLK_GPIO_NUM     22
+
+// =====================================================
+//                  GLOBAL VARIABLES
+// =====================================================
+
+uint8_t* latestImage = nullptr;
+size_t latestImageSize = 0;
+
+bool imageAvailable = false;
+bool motionDetected = false;
+
+unsigned long lastMotionTime = 0;
+
+const unsigned long MOTION_COOLDOWN = 5000;
+
+// =====================================================
+//                     OLED
+// =====================================================
+
+void showOLED(
+  String line1,
+  String line2 = "",
+  String line3 = ""
+) {
+
+  display.clearDisplay();
+
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setTextSize(1);
+
+  display.setCursor(0, 0);
+  display.println(line1);
+
+  display.setCursor(0, 22);
+  display.println(line2);
+  display.setCursor(0, 44);
+  display.println(line3);
+
+  display.display();
+}
+
+// =====================================================
+//                     BUZZER
+// =====================================================
+
+void buzzerAlert() {
+
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(150);
+
+  digitalWrite(BUZZER_PIN, LOW);
+  delay(100);
+
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(150);
+
+  digitalWrite(BUZZER_PIN, LOW);
+}
+
+// =====================================================
+//                 CAMERA INITIALIZATION
+// =====================================================
+
+bool initializeCamera() {
+
+  camera_config_t config;
+
+  config.ledc_channel = LEDC_CHANNEL_0;
+  config.ledc_timer = LEDC_TIMER_0;
+
+  config.pin_d0 = Y2_GPIO_NUM;
+  config.pin_d1 = Y3_GPIO_NUM;
+  config.pin_d2 = Y4_GPIO_NUM;
+  config.pin_d3 = Y5_GPIO_NUM;
+  config.pin_d4 = Y6_GPIO_NUM;
+  config.pin_d5 = Y7_GPIO_NUM;
+  config.pin_d6 = Y8_GPIO_NUM;
+  config.pin_d7 = Y9_GPIO_NUM;
+
+  config.pin_xclk = XCLK_GPIO_NUM;
+  config.pin_pclk = PCLK_GPIO_NUM;
+
+  config.pin_vsync = VSYNC_GPIO_NUM;
+  config.pin_href = HREF_GPIO_NUM;
+
+  config.pin_sccb_sda = SIOD_GPIO_NUM;
+  config.pin_sccb_scl = SIOC_GPIO_NUM;
+
+  config.pin_pwdn = PWDN_GPIO_NUM;
+  config.pin_reset = RESET_GPIO_NUM;
+
+  config.xclk_freq_hz = 20000000;
+
+  config.pixel_format = PIXFORMAT_JPEG;
+
+  if (psramFound()) {
+
+    config.frame_size = FRAMESIZE_VGA;
+
+    config.jpeg_quality = 10;
+
+    config.fb_count = 2;
+
+    config.fb_location = CAMERA_FB_IN_PSRAM;
+
+    config.grab_mode = CAMERA_GRAB_LATEST;
+
+  } else {
+
+    config.frame_size = FRAMESIZE_QVGA;
+
+    config.jpeg_quality = 12;
+
+    config.fb_count = 1;
+
+    config.fb_location = CAMERA_FB_IN_DRAM;
+
+    config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
+  }
+
+  Serial.println();
+  Serial.println("Initializing camera...");
+
+  esp_err_t err = esp_camera_init(&amp;config);
+
+  if (err != ESP_OK) {
+
+    Serial.print("Camera initialization failed: 0x");
+    Serial.println(err, HEX);
+
+    return false;
+  }
+
+  Serial.println("Camera initialization SUCCESS");
+
+  sensor_t* sensor = esp_camera_sensor_get();
+
+  if (sensor != nullptr) {
+
+    sensor-&gt;set_vflip(sensor, 0);
+    sensor-&gt;set_hmirror(sensor, 0);
+  }
+
+  return true;
+}
+
+// =====================================================
+//                  CAPTURE SNAPSHOT
+// =====================================================
+
+bool captureSnapshot() {
+
+  Serial.println();
+  Serial.println("Taking snapshot...");
+
+  camera_fb_t* fb = esp_camera_fb_get();
+
+  if (!fb) {
+
+    Serial.println("Camera capture FAILED");
+
+    return false;
+  }
+
+  Serial.print("Snapshot OK | Size: ");
+  Serial.print(fb-&gt;len);
+  Serial.println(" bytes");
+
+  // Free previous image
+  if (latestImage != nullptr) {
+
+    free(latestImage);
+
+    latestImage = nullptr;
+    latestImageSize = 0;
+  }
+
+  // Allocate memory
+  latestImage = (uint8_t*)malloc(fb-&gt;len);
+
+  if (latestImage == nullptr) {
+
+    Serial.println("ERROR: Image memory allocation failed");
+
+    esp_camera_fb_return(fb);
+
+    return false;
+  }
+
+  // Copy image
+  memcpy(latestImage, fb-&gt;buf, fb-&gt;len);
+
+  latestImageSize = fb-&gt;len;
+
+  imageAvailable = true;
+
+  // Return camera buffer
+  esp_camera_fb_return(fb);
+
+  Serial.println("Image stored successfully.");
+
+  return true;
+}
+
+// =====================================================
+//                    WEB PAGE
+// =====================================================
+
+void handleRoot() {
+
+  String html = R"rawliteral(
+
+&lt;!DOCTYPE html&gt;
+
+&lt;html&gt;
+
+&lt;head&gt;
+
+&lt;meta charset="UTF-8"&gt;
+
+&lt;meta name="viewport"
+content="width=device-width,initial-scale=1"&gt;
+
+&lt;title&gt;ESP32-CAM Security Monitor&lt;/title&gt;
+
+&lt;style&gt;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+
+  margin: 0;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  background:
+  linear-gradient(
+    135deg,
+    #07111f,
+    #101b2d,
+    #07111f
+  );
+
+  color: white;
+
+  min-height: 100vh;
+
+}
+
+.header {
+
+  padding: 25px;
+
+  text-align: center;
+
+  background:
+  rgba(0,0,0,0.35);
+
+  border-bottom:
+  1px solid rgba(255,255,255,0.08);
+
+}
+
+.header h1 {
+
+  margin: 0;
+
+  font-size: 28px;
+
+}
+
+.header p {
+
+  margin-top: 8px;
+
+  color: #9caac0;
+
+}
+
+.status {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 10px;
+
+  padding: 7px 14px;
+
+  border-radius: 30px;
+
+  background: rgba(0,220,130,0.12);
+
+  color: #00e88a;
+
+}
+
+.dot {
+
+  width: 9px;
+
+  height: 9px;
+
+  background: #00e88a;
+
+  border-radius: 50%;
+
+  box-shadow: 0 0 12px #00e88a;
+
+}
+
+.container {
+
+  max-width: 1100px;
+
+  margin: auto;
+
+  padding: 25px;
+
+}
+
+.cards {
+
+  display: grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(210px,1fr));
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+
+}
+
+.card {
+
+  background:
+  rgba(255,255,255,0.06);
+
+  border:
+  1px solid rgba(255,255,255,0.08);
+
+  border-radius: 18px;
+
+  padding: 20px;
+
+  backdrop-filter: blur(10px);
+
+}
+
+.card-title {
+
+  color: #91a0b7;
+
+  font-size: 13px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+
+}
+
+.card-value {
+
+  font-size: 20px;
+
+  margin-top: 8px;
+
+  font-weight: bold;
+
+}
+
+.camera {
+
+  background:
+  rgba(255,255,255,0.06);
+
+  border:
+  1px solid rgba(255,255,255,0.08);
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+}
+
+.camera h2 {
+
+  margin-top: 0;
+
+}
+
+.image-box {
+
+  width: 100%;
+
+  min-height: 300px;
+
+  background: #02060b;
+
+  border-radius: 15px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+}
+
+.image-box img {
+
+  width: 100%;
+
+  max-height: 600px;
+
+  object-fit: contain;
+
+  border-radius: 12px;
+
+}
+
+.no-image {
+
+  color: #68768c;
+
+  text-align: center;
+
+}
+
+.buttons {
+
+  display: flex;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+
+  margin-top: 20px;
+
+}
+
+button {
+
+  border: none;
+
+  padding: 13px 22px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-size: 15px;
+
+  font-weight: bold;
+
+}
+
+.capture {
+
+  background: #00c878;
+
+  color: #00150c;
+
+}
+
+.refresh {
+
+  background: #243248;
+
+  color: white;
+
+}
+
+button:hover {
+
+  opacity: 0.85;
+
+}
+
+.footer {
+
+  text-align: center;
+
+  color: #65748b;
+
+  padding: 25px;
+
+  font-size: 13px;
+
+}
+
+&lt;/style&gt;
+
+&lt;/head&gt;
+
+&lt;body&gt;
+
+&lt;div class="header"&gt;
+
+&lt;h1&gt;📷 ESP32-CAM Security Monitor&lt;/h1&gt;
+
+&lt;p&gt;Wi-Fi Motion Snapshot System&lt;/p&gt;
+
+&lt;div class="status"&gt;
+
+&lt;span class="dot"&gt;&lt;/span&gt;
+
+SYSTEM ONLINE
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="container"&gt;
+
+&lt;div class="cards"&gt;
+
+&lt;div class="card"&gt;
+
+&lt;div class="card-title"&gt;Device&lt;/div&gt;
+
+&lt;div class="card-value"&gt;ESP32-CAM&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+
+&lt;div class="card-title"&gt;Network&lt;/div&gt;
+
+&lt;div class="card-value"&gt;Connected&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+
+&lt;div class="card-title"&gt;IP Address&lt;/div&gt;
+
+&lt;div class="card-value"&gt;)rawliteral";
+
+  html += WiFi.localIP().toString();
+
+  html += R"rawliteral(
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+
+&lt;div class="card-title"&gt;Security&lt;/div&gt;
+
+&lt;div class="card-value"&gt;Motion Active&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="camera"&gt;
+
+&lt;h2&gt;📸 Latest Snapshot&lt;/h2&gt;
+
+&lt;div class="image-box"&gt;
+
+)rawliteral";
+
+  if (imageAvailable) {
+
+    html += R"rawliteral(
+
+&lt;img id="photo"
+src="/image?t=)rawliteral";
+
+    html += String(millis());
+
+    html += R"rawliteral("
+alt="Latest Snapshot"&gt;
+
+)rawliteral";
+
+  } else {
+
+    html += R"rawliteral(
+
+&lt;div class="no-image"&gt;
+
+&lt;h3&gt;No snapshot available&lt;/h3&gt;
+
+&lt;p&gt;Waiting for motion detection...&lt;/p&gt;
+
+&lt;/div&gt;
+
+)rawliteral";
+  }
+
+  html += R"rawliteral(
+
+&lt;/div&gt;
+
+&lt;div class="buttons"&gt;
+
+&lt;button class="capture"
+onclick="capturePhoto()"&gt;
+
+📸 Capture Now
+
+&lt;/button&gt;
+
+&lt;button class="refresh"
+onclick="location.reload()"&gt;
+
+🔄 Refresh
+
+&lt;/button&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="footer"&gt;
+
+ESP32-CAM Motion Snapshot System
+
+&lt;/div&gt;
+
+&lt;script&gt;
+
+function capturePhoto() {
+
+  fetch('/capture')
+
+  .then(() =&gt; {
+
+    setTimeout(() =&gt; {
+
+      location.reload();
+
+    }, 1000);
+
+  });
+
+}
+
+&lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;
+
+)rawliteral";
+
+  server.send(200, "text/html", html);
+}
+
+// =====================================================
+//                    SEND IMAGE
+// =====================================================
+
+void handleImage() {
+
+  if (!imageAvailable ||
+      latestImage == nullptr) {
+
+    server.send(
+      404,
+      "text/plain",
+      "No image available"
+    );
+
+    return;
+  }
+
+  server.sendHeader(
+    "Cache-Control",
+    "no-cache, no-store, must-revalidate"
+  );
+
+  server.setContentLength(latestImageSize);
+
+  server.send(
+    200,
+    "image/jpeg",
+    ""
+  );
+
+  WiFiClient client = server.client();
+
+  client.write(
+    latestImage,
+    latestImageSize
+  );
+}
+
+// =====================================================
+//                  MANUAL CAPTURE
+// =====================================================
+
+void handleCapture() {
+
+  bool success = captureSnapshot();
+
+  if (success) {
+
+    showOLED(
+      "MANUAL CAPTURE",
+      "Photo saved",
+      "Open browser"
+    );
+
+    server.send(
+      200,
+      "text/plain",
+      "Snapshot captured successfully"
+    );
+
+  } else {
+
+    server.send(
+      500,
+      "text/plain",
+      "Camera capture failed"
+    );
+  }
+}
+
+// =====================================================
+//                  WIFI CONNECTION
+// =====================================================
+
+void connectWiFi() {
+
+  Serial.println();
+  Serial.println("Connecting to Wi-Fi...");
+
+  showOLED(
+    "Connecting WiFi",
+    WIFI_SSID,
+    "Please wait..."
+  );
+
+  WiFi.mode(WIFI_STA);
+
+  WiFi.begin(
+    WIFI_SSID,
+    WIFI_PASSWORD
+  );
+
+  int attempts = 0;
+
+  while (
+    WiFi.status() != WL_CONNECTED &amp;&amp;
+    attempts &lt; 30
+  ) {
+
+    delay(500);
+
+    Serial.print(".");
+
+    attempts++;
+  }
+
+  Serial.println();
+
+  if (WiFi.status() == WL_CONNECTED) {
+
+    Serial.println("Wi-Fi connected!");
+
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
+
+    showOLED(
+      "WiFi Connected",
+      WiFi.localIP().toString(),
+      "System Ready"
+    );
+
+  } else {
+
+    Serial.println("Wi-Fi connection FAILED");
+
+    showOLED(
+      "WiFi Failed",
+      "Check SSID",
+      "Check Password"
+    );
+  }
+}
+
+// =====================================================
+//                        SETUP
+// =====================================================
+
+void setup() {
+
+  Serial.begin(115200);
+
+  delay(2000);
+
+  Serial.println();
+  Serial.println("================================");
+  Serial.println("     ESP32-CAM MOTION SNAPSHOT");
+  Serial.println("================================");
+
+  // PIR
+  pinMode(PIR_PIN, INPUT);
+
+  // Buzzer
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN, LOW);
+
+  // OLED
+  Wire.begin(
+    OLED_SDA,
+    OLED_SCL
+  );
+
+  if (!display.begin(
+        SSD1306_SWITCHCAPVCC,
+        OLED_ADDR
+      )) {
+
+    Serial.println("OLED not detected!");
+  } else {
+
+    showOLED(
+      "ESP32-CAM",
+      "Starting...",
+      "Please wait"
+    );
+  }
+
+  // PSRAM check
+  if (psramFound()) {
+
+    Serial.println("PSRAM detected.");
+
+    Serial.print("PSRAM Size: ");
+    Serial.println(ESP.getPsramSize());
+
+  } else {
+
+    Serial.println("PSRAM not detected.");
+  }
+
+  // Camera
+  if (!initializeCamera()) {
+
+    showOLED(
+      "CAMERA ERROR",
+      "Initialization",
+      "Failed"
+    );
+
+    while (true) {
+
+      delay(1000);
+    }
+  }
+
+  // Wi-Fi
+  connectWiFi();
+
+  // Web routes
+  server.on(
+    "/",
+    HTTP_GET,
+    handleRoot
+  );
+
+  server.on(
+    "/image",
+    HTTP_GET,
+    handleImage
+  );
+
+  server.on(
+    "/capture",
+    HTTP_GET,
+    handleCapture
+  );
+
+  server.begin();
+
+  Serial.println();
+  Serial.println("Web server started.");
+
+  if (WiFi.status() == WL_CONNECTED) {
+
+    Serial.print("Open browser: http://");
+    Serial.println(WiFi.localIP());
+  }
+
+  showOLED(
+    "SYSTEM READY",
+    "Waiting motion",
+    "PIR ACTIVE"
+  );
+}
+
+// =====================================================
+//                        LOOP
+// =====================================================
+
+void loop() {
+
+  server.handleClient();
+
+  int pirState = digitalRead(PIR_PIN);
+
+  if (
+    pirState == HIGH &amp;&amp;
+    !motionDetected &amp;&amp;
+    millis() - lastMotionTime &gt; MOTION_COOLDOWN
+  ) {
+
+    motionDetected = true;
+
+    lastMotionTime = millis();
+
+    Serial.println();
+    Serial.println("================================");
+    Serial.println("       MOTION DETECTED!");
+    Serial.println("================================");
+
+    showOLED(
+      "!!! MOTION !!!",
+      "Capturing...",
+      "Please wait"
+    );
+
+    buzzerAlert();
+
+    bool success = captureSnapshot();
+
+    if (success) {
+
+      Serial.println("Motion snapshot saved.");
+
+      showOLED(
+        "MOTION CAPTURED",
+        "Photo ready",
+        "Open browser"
+      );
+
+    } else {
+
+      Serial.println("Snapshot failed.");
+
+      showOLED(
+        "CAPTURE ERROR",
+        "Camera failed",
+        "Try again"
+      );
+    }
+  }
+
+  // Reset after PIR goes LOW
+  if (pirState == LOW) {
+
+    motionDetected = false;
+  }
+
+  delay(50);
+}
+</textarea>
+
+<script>
+const program = document.getElementById("esp32-program").value.trim();
+const lines = program.split("\n");
+const stepData = [{title:'Load the libraries',search:'#include "esp_camera.h"',text:'The program loads the ESP32-CAM, Wi-Fi, web server, I²C, graphics and OLED libraries.'},
+{title:'Set Wi-Fi details',search:'const char* WIFI_SSID',text:'The Wi-Fi network name and password are set here. Replace the placeholders with the network used for the experiment.'},
+{title:'Prepare OLED, PIR and buzzer',search:'#define OLED_SDA 14',text:'The OLED uses GPIO 14 and GPIO 15, the PIR sensor uses GPIO 13 and the buzzer uses GPIO 12.'},
+{title:'Initialize the camera',search:'bool initializeCamera()',text:'This function configures the AI-Thinker ESP32-CAM pins, JPEG format, frame size and PSRAM settings.'},
+{title:'Capture a snapshot',search:'bool captureSnapshot()',text:'A JPEG frame is captured and copied into memory so the latest image can be served to the browser.'},
+{title:'Build the web dashboard',search:'void handleRoot()',text:'The ESP32-CAM creates a web page that shows device status, the latest snapshot, and a Capture Now button.'},
+{title:'Handle browser controls',search:'void handleCapture()',text:'The browser can request a manual capture, and the ESP32-CAM returns the latest JPEG image through the web server.'},
+{title:'Start Wi-Fi and server',search:'void connectWiFi()',text:'The ESP32-CAM connects to Wi-Fi, displays the IP address, and starts the web server routes.'},
+{title:'Detect motion',search:'void loop()',text:'The main loop reads the PIR sensor. A new motion event triggers the buzzer, captures a snapshot, and updates the OLED.'}];
+
+function escapeHtml(text){
+    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function displayCode(){
+    let output="";
+    lines.forEach(function(line,index){
+        output += '<span class="code-line" id="line-' + (index+1) + '">' +
+                  '<span class="line-number">' + (index+1) + '</span>' +
+                  '<span>' + escapeHtml(line) + '</span></span>';
+    });
+    document.getElementById("code-lines").innerHTML=output;
+}
+
+function showStep(index){
+    const data=stepData[index];
+    const buttons=document.querySelectorAll(".step");
+    buttons.forEach(button=>button.classList.remove("active"));
+    if(buttons[index]) buttons[index].classList.add("active");
+
+    document.querySelectorAll(".code-line").forEach(line=>line.classList.remove("selected"));
+    let found=-1;
+    for(let i=0;i<lines.length;i++){
+        if(lines[i].includes(data.search)){found=i;break;}
+    }
+    if(found>=0){
+        for(let i=found;i<Math.min(found+12,lines.length);i++){
+            document.getElementById("line-"+(i+1)).classList.add("selected");
+        }
+        const selected=document.getElementById("line-"+(found+1));
+        document.getElementById("code-body").scrollTo({top:selected.offsetTop-20,behavior:"smooth"});
+    }
+    document.getElementById("explanation").innerHTML=
+        "<h3>"+(index+1)+". "+data.title+"</h3><p>"+data.text+"</p>";
+}
+
+function copyCode(){
+    navigator.clipboard.writeText(program).then(function(){
+        const button=document.querySelector(".copy-button");
+        button.innerText="Copied!";
+        setTimeout(function(){button.innerText="Copy Code";},1500);
+    });
+}
+
+displayCode();
+showStep(0);
+</script>
+
+</body>
