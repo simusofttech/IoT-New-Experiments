@@ -275,86 +275,195 @@ People Counting System
 </footer>
 
 <script>
-const program="import cv2\nimport threading\nimport time\nfrom ultralytics import YOLO\nfrom flask import Flask, Response, render_template_string\nfrom luma.core.interface.serial import i2c\nfrom luma.oled.device import sh1106\nfrom PIL import Image, ImageDraw, ImageFont\nCAMERA_INDEX = 0\nMODEL_PATH = \"models/yolo11n.pt\"\nCONFIDENCE = 0.40\nOLED_ADDRESS = 0x3C\nFRAME_WIDTH = 640\nFRAME_HEIGHT = 480\nprint(\"Loading YOLO model...\")\nmodel = YOLO(MODEL_PATH)\nprint(\"YOLO model loaded\")\ncamera = cv2.VideoCapture(CAMERA_INDEX)\ncamera.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)\ncamera.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)\ncamera.set(cv2.CAP_PROP_BUFFERSIZE, 1)\nif not camera.isOpened():\n print(\"ERROR: USB camera not detected\")\n raise SystemExit\nprint(\"USB camera connected\")\nserial = i2c(port=1, address=OLED_ADDRESS)\noled = sh1106(serial)\nfont = ImageFont.load_default()\ndef update_oled(count, status=\"ACTIVE\"):\n image = Image.new(\"1\", (128, 64))\n draw = ImageDraw.Draw(image)\n draw.rectangle((0, 0, 127, 63), outline=0, fill=0)Page 6\n draw.text((18, 3), \"PEOPLE COUNTER\", font=font, fill=255)\n draw.text((45, 22), str(count), font=font, fill=255)\n draw.text((35, 39), \"PEOPLE\", font=font, fill=255)\n draw.text((30, 54), status, font=font, fill=255)\n oled.display(image)\npeople_count = 0\nsystem_status = \"STARTING\"\nlatest_frame = None\nrunning = True\ndata_lock = threading.Lock()\nlast_oled_update = 0\ndef detection_loop():\n global people_count\n global system_status\n global latest_frame\n global running\n global last_oled_update\n while running:\n ret, frame = camera.read()\n if not ret:\n system_status = \"CAM ERROR\"\n time.sleep(0.1)\n continue\n results = model(\n frame,\n conf=CONFIDENCE,\n classes=[0],\n imgsz=320,\n verbose=False\n )\n count = 0\n annotated_frame = frame.copy()\n for result in results:\n if result.boxes is not None:\n count = len(result.boxes)\n annotated_frame = result.plot()\n people_count = count\n system_status = \"ACTIVE\"\n now = time.time()\n if now - last_oled_update >= 0.5:\n update_oled(people_count, system_status)\n last_oled_update = now\n cv2.putText(\n annotated_frame,\n f\"PEOPLE: {people_count}\",\n (20, 40),\n cv2.FONT_HERSHEY_SIMPLEX,\n 1,\n (0, 255, 0),\n 2\n )\n cv2.putText(Page 7\n annotated_frame,\n \"YOLO ACTIVE\",\n (20, 75),\n cv2.FONT_HERSHEY_SIMPLEX,\n 0.7,\n (0, 255, 0),\n 2\n )\n ok, buffer = cv2.imencode(\".jpg\", annotated_frame)\n if ok:\n with data_lock:\n latest_frame = buffer.tobytes()\napp = Flask(__name__)\nHTML_PAGE = \"\"\"\n<!DOCTYPE html>\n<html>\n<head>\n<title>AI People Counting System</title>\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<style>\nbody {\n margin: 0;\n background: #111827;\n color: white;\n font-family: Arial, sans-serif;\n text-align: center;\n}\n.header {\n padding: 20px;\n background: #1f2937;\n}\n.header h1 { margin: 0; }\n.container {\n max-width: 900px;\n margin: auto;\n padding: 20px;\n}\n.count-box {\n background: #2563eb;\n border-radius: 15px;\n padding: 25px;\n margin-bottom: 20px;\n}\n.count {\n font-size: 60px;\n font-weight: bold;\n}\n.status {\n font-size: 18px;\n margin-top: 10px;\n}\n.camera-box {\n background: #1f2937;\n padding: 15px;\n border-radius: 15px;\n}\n.camera-box img {\n width: 100%;\n max-width: 640px;\n border-radius: 10px;\n}\n.footer {Page 8\n margin-top: 20px;\n color: #9ca3af;\n}\n</style>\n</head>\n<body>\n<div class=\"header\">\n<h1>AI PEOPLE COUNTING SYSTEM</h1>\n<p>Raspberry Pi 4 + USB Camera + YOLO11n</p>\n</div>\n<div class=\"container\">\n<div class=\"count-box\">\n<h2>CURRENT PEOPLE</h2>\n<div class=\"count\" id=\"count\">0</div>\n<div class=\"status\">Camera: ONLINE</div>\n<div class=\"status\">YOLO: ACTIVE</div>\n</div>\n<div class=\"camera-box\">\n<h2>LIVE CAMERA</h2>\n<img src=\"/video\" alt=\"Live camera\">\n</div>\n<div class=\"footer\">\nRaspberry Pi 4 AI People Counting System\n</div>\n</div>\n<script>\nfunction updateCount() {\n fetch(\"/count\")\n .then(response => response.json())\n .then(data => {\n document.getElementById(\"count\").innerText = data.count;\n })\n .catch(error => console.log(error));\n}\nsetInterval(updateCount, 500);\nupdateCount();\n</script>\n</body>\n</html>\n\"\"\"\n@app.route(\"/\")\ndef index():\n return render_template_string(HTML_PAGE)\n@app.route(\"/count\")\ndef count():\n return {\"count\": people_count}\n@app.route(\"/video\")\ndef video():\n def generate():\n while True:\n with data_lock:\n frame = latest_framePage 9\n if frame is not None:\n yield (\n b\"--frame\\r\\n\"\n b\"Content-Type: image/jpeg\\r\\n\\r\\n\"\n + frame\n+ b\"\\r\\n\"\n )\n time.sleep(0.03)\n return Response(\n generate(),\n mimetype=\"multipart/x-mixed-replace; boundary=frame\"\n )\ndetection_worker = threading.Thread(\n target=detection_loop,\n daemon=True\n)\ndetection_worker.start()\nupdate_oled(0, \"STARTING\")\nprint(\"\")\nprint(\"======================================\")\nprint(\" AI PEOPLE COUNTING SYSTEM\")\nprint(\"======================================\")\nprint(\"Camera : USB Camera\")\nprint(\"Model : YOLO11n\")\nprint(\"OLED : SH1106 / 0x3C\")\nprint(\"Web : Port 5000\")\nprint(\"\")\nprint(\"Use: http://<RASPBERRY_PI_IP>:5000\")\nprint(\"Press CTRL+C to stop\")\nprint(\"\")\ntry:\n app.run(\n host=\"0.0.0.0\",\n port=5000,\n threaded=True\n )\nfinally:\n running = False\n camera.release()\n update_oled(0, \"STOPPED\")Page 10";
-const lines=program.split("\n");
-const steps=[{"title":"Load the libraries","search":"import cv2","text":"The program imports OpenCV, YOLO, Flask, OLED libraries, Pillow, threading and time."},{"title":"Set camera and OLED values","search":"CAMERA_INDEX = 0","text":"Camera index, YOLO model path, confidence, OLED I²C address and 640 × 480 frame size are configured."},{"title":"Load YOLO11n","search":"model = YOLO","text":"The pretrained YOLO11n model is loaded for person detection."},{"title":"Open USB camera","search":"camera = cv2.VideoCapture","text":"The USB camera is opened and configured for 640 × 480 capture."},{"title":"Initialize OLED","search":"serial = i2c","text":"The SH1106 OLED is initialized on I²C address 0x3C."},{"title":"Update OLED count","search":"def update_oled","text":"The display shows PEOPLE COUNTER, the current people count and system status."},{"title":"Detect people","search":"def detection_loop","text":"YOLO is restricted to class 0 (person), counts the current visible detections and draws bounding boxes."},{"title":"Serve dashboard","search":"@app.route(\"/\")","text":"Flask serves the current people count and live video stream."},{"title":"Start the system","search":"app.run","text":"The Flask server starts on port 5000 while the detection thread updates the OLED and web dashboard."}];
+const program="import cv2\nimport threading\nimport time\nfrom ultralytics import YOLO\nfrom flask import Flask, Response, render_template_string\nfrom luma.core.interface.serial import i2c\nfrom luma.oled.device import sh1106\nfrom PIL import Image, ImageDraw, ImageFont\nCAMERA_INDEX = 0\nMODEL_PATH = \"models/yolo11n.pt\"\nCONFIDENCE = 0.40\nOLED_ADDRESS = 0x3C\nFRAME_WIDTH = 640\nFRAME_HEIGHT = 480\nprint(\"Loading YOLO model...\")\nmodel = YOLO(MODEL_PATH)\nprint(\"YOLO model loaded\")\ncamera = cv2.VideoCapture(CAMERA_INDEX)\ncamera.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)\ncamera.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)\ncamera.set(cv2.CAP_PROP_BUFFERSIZE, 1)\nif not camera.isOpened():\n print(\"ERROR: USB camera not detected\")\n raise SystemExit\nprint(\"USB camera connected\")\nserial = i2c(port=1, address=OLED_ADDRESS)\noled = sh1106(serial)\nfont = ImageFont.load_default()\ndef update_oled(count, status=\"ACTIVE\"):\n image = Image.new(\"1\", (128, 64))\n draw = ImageDraw.Draw(image)\n draw.rectangle((0, 0, 127, 63), outline=0, fill=0)Page 6\n draw.text((18, 3), \"PEOPLE COUNTER\", font=font, fill=255)\n draw.text((45, 22), str(count), font=font, fill=255)\n draw.text((35, 39), \"PEOPLE\", font=font, fill=255)\n draw.text((30, 54), status, font=font, fill=255)\n oled.display(image)\npeople_count = 0\nsystem_status = \"STARTING\"\nlatest_frame = None\nrunning = True\ndata_lock = threading.Lock()\nlast_oled_update = 0\ndef detection_loop():\n global people_count\n global system_status\n global latest_frame\n global running\n global last_oled_update\n while running:\n ret, frame = camera.read()\n if not ret:\n system_status = \"CAM ERROR\"\n time.sleep(0.1)\n continue\n results = model(\n frame,\n conf=CONFIDENCE,\n classes=[0],\n imgsz=320,\n verbose=False\n )\n count = 0\n annotated_frame = frame.copy()\n for result in results:\n if result.boxes is not None:\n count = len(result.boxes)\n annotated_frame = result.plot()\n people_count = count\n system_status = \"ACTIVE\"\n now = time.time()\n if now - last_oled_update >= 0.5:\n update_oled(people_count, system_status)\n last_oled_update = now\n cv2.putText(\n annotated_frame,\n f\"PEOPLE: {people_count}\",\n (20, 40),\n cv2.FONT_HERSHEY_SIMPLEX,\n 1,\n (0, 255, 0),\n 2\n )\n cv2.putText(Page 7\n annotated_frame,\n \"YOLO ACTIVE\",\n (20, 75),\n cv2.FONT_HERSHEY_SIMPLEX,\n 0.7,\n (0, 255, 0),\n 2\n )\n ok, buffer = cv2.imencode(\".jpg\", annotated_frame)\n if ok:\n with data_lock:\n latest_frame = buffer.tobytes()\napp = Flask(__name__)\nHTML_PAGE = \"\"\"\n<!DOCTYPE html>\n<html>\n<head>\n<title>AI People Counting System</title>\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<style>\nbody {\n margin: 0;\n background: #111827;\n color: white;\n font-family: Arial, sans-serif;\n text-align: center;\n}\n.header {\n padding: 20px;\n background: #1f2937;\n}\n.header h1 { margin: 0; }\n.container {\n max-width: 900px;\n margin: auto;\n padding: 20px;\n}\n.count-box {\n background: #2563eb;\n border-radius: 15px;\n padding: 25px;\n margin-bottom: 20px;\n}\n.count {\n font-size: 60px;\n font-weight: bold;\n}\n.status {\n font-size: 18px;\n margin-top: 10px;\n}\n.camera-box {\n background: #1f2937;\n padding: 15px;\n border-radius: 15px;\n}\n.camera-box img {\n width: 100%;\n max-width: 640px;\n border-radius: 10px;\n}\n.footer {Page 8\n margin-top: 20px;\n color: #9ca3af;\n}\n</style>\n</head>\n<body>\n<div class=\"header\">\n<h1>AI PEOPLE COUNTING SYSTEM</h1>\n<p>Raspberry Pi 4 + USB Camera + YOLO11n</p>\n</div>\n<div class=\"container\">\n<div class=\"count-box\">\n<h2>CURRENT PEOPLE</h2>\n<div class=\"count\" id=\"count\">0</div>\n<div class=\"status\">Camera: ONLINE</div>\n<div class=\"status\">YOLO: ACTIVE</div>\n</div>\n<div class=\"camera-box\">\n<h2>LIVE CAMERA</h2>\n<img src=\"/video\" alt=\"Live camera\">\n</div>\n<div class=\"footer\">\nRaspberry Pi 4 AI People Counting System\n</div>\n</div>\n<script>
+
+const program = "import cv2\nimport threading\nimport time\nfrom ultralytics import YOLO\nfrom flask import Flask, Response, render_template_string\nfrom luma.core.interface.serial import i2c\nfrom luma.oled.device import sh1106\nfrom PIL import Image, ImageDraw, ImageFont\nCAMERA_INDEX = 0\nMODEL_PATH = \"models/yolo11n.pt\"\nCONFIDENCE = 0.40\nOLED_ADDRESS = 0x3C\nFRAME_WIDTH = 640\nFRAME_HEIGHT = 480\nprint(\"Loading YOLO model...\")\nmodel = YOLO(MODEL_PATH)\nprint(\"YOLO model loaded\")\ncamera = cv2.VideoCapture(CAMERA_INDEX)\ncamera.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)\ncamera.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)\ncamera.set(cv2.CAP_PROP_BUFFERSIZE, 1)\nif not camera.isOpened():\n print(\"ERROR: USB camera not detected\")\n raise SystemExit\nprint(\"USB camera connected\")\nserial = i2c(port=1, address=OLED_ADDRESS)\noled = sh1106(serial)\nfont = ImageFont.load_default()\ndef update_oled(count, status=\"ACTIVE\"):\n image = Image.new(\"1\", (128, 64))\n draw = ImageDraw.Draw(image)\n draw.rectangle((0, 0, 127, 63), outline=0, fill=0)\n draw.text((18, 3), \"PEOPLE COUNTER\", font=font, fill=255)\n draw.text((45, 22), str(count), font=font, fill=255)\n draw.text((35, 39), \"PEOPLE\", font=font, fill=255)\n draw.text((30, 54), status, font=font, fill=255)\n oled.display(image)\npeople_count = 0\nsystem_status = \"STARTING\"\nlatest_frame = None\nrunning = True\ndata_lock = threading.Lock()\nlast_oled_update = 0\ndef detection_loop():\n global people_count\n global system_status\n global latest_frame\n global running\n global last_oled_update\n while running:\n ret, frame = camera.read()\n if not ret:\n system_status = \"CAM ERROR\"\n time.sleep(0.1)\n continue\n results = model(\n frame,\n conf=CONFIDENCE,\n classes=[0],\n imgsz=320,\n verbose=False\n )\n count = 0\n annotated_frame = frame.copy()\n for result in results:\n if result.boxes is not None:\n count = len(result.boxes)\n annotated_frame = result.plot()\n people_count = count\n system_status = \"ACTIVE\"\n now = time.time()\n if now - last_oled_update >= 0.5:\n update_oled(people_count, system_status)\n last_oled_update = now\n cv2.putText(\n annotated_frame,\n f\"PEOPLE: {people_count}\",\n (20, 40),\n cv2.FONT_HERSHEY_SIMPLEX,\n 1,\n (0, 255, 0),\n 2\n )\n cv2.putText(\n annotated_frame,\n \"YOLO ACTIVE\",\n (20, 75),\n cv2.FONT_HERSHEY_SIMPLEX,\n 0.7,\n (0, 255, 0),\n 2\n )\n ok, buffer = cv2.imencode(\".jpg\", annotated_frame)\n if ok:\n with data_lock:\n latest_frame = buffer.tobytes()\napp = Flask(__name__)\nHTML_PAGE = \"\"\"\n<!DOCTYPE html>\n<html>\n<head>\n<title>AI People Counting System</title>\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<style>\nbody {\n margin: 0;\n background: #111827;\n color: white;\n font-family: Arial, sans-serif;\n text-align: center;\n}\n.header {\n padding: 20px;\n background: #1f2937;\n}\n.header h1 { margin: 0; }\n.container {\n max-width: 900px;\n margin: auto;\n padding: 20px;\n}\n.count-box {\n background: #2563eb;\n border-radius: 15px;\n padding: 25px;\n margin-bottom: 20px;\n}\n.count {\n font-size: 60px;\n font-weight: bold;\n}\n.status {\n font-size: 18px;\n margin-top: 10px;\n}\n.camera-box {\n background: #1f2937;\n padding: 15px;\n border-radius: 15px;\n}\n.camera-box img {\n width: 100%;\n max-width: 640px;\n border-radius: 10px;\n}\n.footer {\n margin-top: 20px;\n color: #9ca3af;\n}\n</style>\n</head>\n<body>\n<div class=\"header\">\n<h1>AI PEOPLE COUNTING SYSTEM</h1>\n<p>Raspberry Pi 4 + USB Camera + YOLO11n</p>\n</div>\n<div class=\"container\">\n<div class=\"count-box\">\n<h2>CURRENT PEOPLE</h2>\n<div class=\"count\" id=\"count\">0</div>\n<div class=\"status\">Camera: ONLINE</div>\n<div class=\"status\">YOLO: ACTIVE</div>\n</div>\n<div class=\"camera-box\">\n<h2>LIVE CAMERA</h2>\n<img src=\"/video\" alt=\"Live camera\">\n</div>\n<div class=\"footer\">\nRaspberry Pi 4 AI People Counting System\n</div>\n</div>\n<script>\nfunction updateCount() {\n fetch(\"/count\")\n .then(response => response.json())\n .then(data => {\n document.getElementById(\"count\").innerText = data.count;\n })\n .catch(error => console.log(error));\n}\nsetInterval(updateCount, 500);\nupdateCount();\n</script>\n</body>\n</html>\n\"\"\"\n@app.route(\"/\")\ndef index():\n return render_template_string(HTML_PAGE)\n@app.route(\"/count\")\ndef count():\n return {\"count\": people_count}\n@app.route(\"/video\")\ndef video():\n def generate():\n while True:\n with data_lock:\n frame = latest_frame\n if frame is not None:\n yield (\n b\"--frame\\r\\n\"\n b\"Content-Type: image/jpeg\\r\\n\\r\\n\"\n + frame\n+ b\"\\r\\n\"\n )\n time.sleep(0.03)\n return Response(\n generate(),\n mimetype=\"multipart/x-mixed-replace; boundary=frame\"\n )\ndetection_worker = threading.Thread(\n target=detection_loop,\n daemon=True\n)\ndetection_worker.start()\nupdate_oled(0, \"STARTING\")\nprint(\"\")\nprint(\"======================================\")\nprint(\" AI PEOPLE COUNTING SYSTEM\")\nprint(\"======================================\")\nprint(\"Camera : USB Camera\")\nprint(\"Model : YOLO11n\")\nprint(\"OLED : SH1106 / 0x3C\")\nprint(\"Web : Port 5000\")\nprint(\"\")\nprint(\"Use: http://<RASPBERRY_PI_IP>:5000\")\nprint(\"Press CTRL+C to stop\")\nprint(\"\")\ntry:\n app.run(\n host=\"0.0.0.0\",\n port=5000,\n threaded=True\n )\nfinally:\n running = False\n camera.release()\n update_oled(0, \"STOPPED\")";
+
+const lines = program.split("\n");
+
+const steps = [{"title": "Load the libraries", "start": "import cv2", "end": "from PIL import Image, ImageDraw, ImageFont", "text": "The program imports OpenCV, YOLO, Flask, OLED libraries, Pillow, threading and time."}, {"title": "Set camera and OLED values", "start": "CAMERA_INDEX = 0", "end": "FRAME_HEIGHT = 480", "text": "Camera index, YOLO model path, confidence threshold, OLED I\u00b2C address and 640 \u00d7 480 frame size are configured."}, {"title": "Load YOLO11n", "start": "print(\"Loading YOLO model...\")", "end": "print(\"YOLO model loaded\")", "text": "The pretrained YOLO11n model is loaded for person detection."}, {"title": "Open USB camera", "start": "camera = cv2.VideoCapture(CAMERA_INDEX)", "end": "print(\"USB camera connected\")", "text": "The USB camera is opened and configured for 640 \u00d7 480 capture."}, {"title": "Initialize OLED", "start": "serial = i2c(port=1, address=OLED_ADDRESS)", "end": "font = ImageFont.load_default()", "text": "The SH1106 OLED is initialized on I\u00b2C address 0x3C."}, {"title": "Update OLED count", "start": "def update_oled(count, status=\"ACTIVE\"):", "end": "oled.display(image)", "text": "The display shows PEOPLE COUNTER, the current people count and system status."}, {"title": "Detect people", "start": "def detection_loop():", "end": "latest_frame = buffer.tobytes()", "text": "YOLO is restricted to class 0 (person), counts the current visible detections and draws bounding boxes."}, {"title": "Serve dashboard", "start": "app = Flask(__name__)", "end": "mimetype=\"multipart/x-mixed-replace; boundary=frame\"", "text": "Flask serves the current people count and live video stream."}, {"title": "Start the system", "start": "detection_worker = threading.Thread(", "end": "update_oled(0, \"STOPPED\")", "text": "The detection thread starts, the OLED is initialized, and the Flask server runs on port 5000 until the program stops."}];
+
 
 function escapeHtml(text){
+
     return text
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;");
+
 }
 
+
 function displayCode(){
-    let output="";
+
+    let output = "";
+
     lines.forEach(function(line,index){
+
         output +=
         '<span class="code-line" id="line-'+(index+1)+'">' +
         '<span class="line-number">'+(index+1)+'</span>' +
         '<span>'+escapeHtml(line)+'</span>' +
         '</span>';
+
     });
-    document.getElementById("code-lines").innerHTML=output;
+
+    document.getElementById("code-lines").innerHTML = output;
+
 }
+
+
+function findLine(searchText,startIndex=0){
+
+    for(let i=startIndex;i<lines.length;i++){
+
+        if(lines[i].includes(searchText)){
+
+            return i;
+
+        }
+
+    }
+
+    return -1;
+
+}
+
 
 function showStep(index){
-    const step=steps[index];
 
-    const buttons=document.querySelectorAll(".step");
+    const step = steps[index];
+
+
+    /* ACTIVE STEP BUTTON */
+
+    const buttons = document.querySelectorAll(".step");
+
     buttons.forEach(function(button){
+
         button.classList.remove("active");
+
     });
-    buttons[index].classList.add("active");
+
+    if(buttons[index]){
+
+        buttons[index].classList.add("active");
+
+    }
+
+
+    /* REMOVE OLD HIGHLIGHT */
 
     document.querySelectorAll(".code-line").forEach(function(line){
+
         line.classList.remove("selected");
+
     });
 
-    let foundLine=-1;
 
-    for(let i=0;i<lines.length;i++){
-        if(lines[i].includes(step.search)){
-            foundLine=i;
-            break;
-        }
+    /* FIND THE START AND END OF THE REAL CODE BLOCK */
+
+    const startLine = findLine(step.start);
+
+    if(startLine === -1){
+
+        console.warn("Start marker not found:",step.start);
+
+        return;
+
     }
 
-    if(foundLine>=0){
-        for(let i=foundLine;i<Math.min(foundLine+14,lines.length);i++){
-            const line=document.getElementById("line-"+(i+1));
-            if(line){
-                line.classList.add("selected");
-            }
-        }
+    let endLine = findLine(step.end,startLine);
 
-        const selectedLine=document.getElementById("line-"+(foundLine+1));
+    if(endLine === -1){
 
-        if(selectedLine){
-            document.getElementById("code-body").scrollTo({
-                top:selectedLine.offsetTop-20,
-                behavior:"smooth"
-            });
-        }
+        endLine = startLine;
+
     }
+
+
+    /* BLUE HIGHLIGHT */
+
+    for(let i=startLine;i<=endLine;i++){
+
+        const line = document.getElementById("line-"+(i+1));
+
+        if(line){
+
+            line.classList.add("selected");
+
+        }
+
+    }
+
+
+    /* SCROLL TO THE SELECTED BLOCK */
+
+    const selectedLine =
+    document.getElementById("line-"+(startLine+1));
+
+    const codeBody =
+    document.getElementById("code-body");
+
+    if(selectedLine && codeBody){
+
+        codeBody.scrollTo({
+
+            top:
+            selectedLine.offsetTop
+            -
+            codeBody.offsetTop
+            -
+            20,
+
+            behavior:"smooth"
+
+        });
+
+    }
+
+
+    /* UPDATE EXPLANATION */
 
     document.getElementById("explanation").innerHTML =
-        "<h3>"+(index+1)+". "+step.title+"</h3>" +
-        "<p>"+step.text+"</p>";
+
+        "<h3>" +
+        (index+1) +
+        ". " +
+        step.title +
+        "</h3>" +
+
+        "<p>" +
+        step.text +
+        "</p>";
+
 }
+
 
 function copyCode(){
+
     navigator.clipboard.writeText(program).then(function(){
-        const button=document.querySelector(".copy-button");
-        button.innerText="Copied!";
+
+        const button =
+        document.querySelector(".copy-button");
+
+        button.innerText = "Copied!";
+
         setTimeout(function(){
-            button.innerText="Copy Code";
+
+            button.innerText = "Copy Code";
+
         },1500);
+
     });
+
 }
 
+
 displayCode();
+
 showStep(0);
+
 </script>
 
 </body>
