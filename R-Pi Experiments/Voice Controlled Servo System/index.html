@@ -417,86 +417,194 @@ Voice Controlled Servo System
 </footer>
 
 <script>
-const program="import speech_recognition as sr\nimport lgpio\nimport subprocess\nimport time\nimport os\n\n# ==========================================\n# SETTINGS\n# ==========================================\n\nSERVO_PIN = 18\n\n# USB microphone\nMIC_DEVICE = \"plughw:3,0\"\n\n# Temporary recording file\nAUDIO_FILE = \"/tmp/voice_command.wav\"\n\n# ==========================================\n# GPIO SETUP\n# ==========================================\n\nh = lgpio.gpiochip_open(0)\nlgpio.gpio_claim_output(h, SERVO_PIN)\n\n# ==========================================\n# SERVO CONTROL\n# ==========================================\n\ndef servo_angle(angle):\n\n    angle = max(0, min(150, angle))\n\n    # 0° = 1000 us\n    # 150° = 2000 us\n    pulse = 1000 + int((angle / 150) * 1000)\n\n    # 50 Hz PWM\n    duty = (pulse / 20000) * 100\n\n    print(f\"Servo moving to {angle} degrees\")\n\n    lgpio.tx_pwm(\n        h,\n        SERVO_PIN,\n        50,\n        duty\n    )\n\n    time.sleep(1)\n\n# ==========================================\n# RECORD VOICE USING ALSA\n# ==========================================\n\ndef record_voice():\n\n    print()\n    print(\"Listening...\")\n\n    command = [\n        \"arecord\",\n        \"-D\", MIC_DEVICE,\n        \"-f\", \"S16_LE\",\n        \"-r\", \"8000\",\n        \"-c\", \"1\",\n        \"-d\", \"4\",\n        AUDIO_FILE\n    ]\n\n    try:\n\n        subprocess.run(\n            command,\n            stdout=subprocess.DEVNULL,\n            stderr=subprocess.DEVNULL,\n            check=True\n        )\n\n        return True\n\n    except subprocess.CalledProcessError:\n\n        print(\"Microphone recording failed.\")\n        return False\n\n# ==========================================\n# SPEECH RECOGNITION\n# ==========================================\n\ndef recognize_voice():\n\n    recognizer = sr.Recognizer()\n\n    try:\n\n        with sr.AudioFile(AUDIO_FILE) as source:\n\n            audio = recognizer.record(source)\n\n        print(\"Recognizing...\")\n\n        command = recognizer.recognize_google(audio)\n\n        command = command.lower().strip()\n\n        print(\"You said:\", command)\n\n        return command\n\n    except sr.UnknownValueError:\n\n        print(\"Could not understand the voice.\")\n        return \"\"\n\n    except sr.RequestError as e:\n\n        print(\"Speech recognition error:\", e)\n        return \"\"\n\n    except Exception as e:\n\n        print(\"Recognition error:\", e)\n        return \"\"\n\n# ==========================================\n# START POSITION\n# ==========================================\n\nservo_angle(90)\n\n# ==========================================\n# DISPLAY\n# ==========================================\n\nprint()\nprint(\"======================================\")\nprint(\" VOICE CONTROLLED SERVO\")\nprint(\"======================================\")\nprint()\nprint(\"Available Commands:\")\nprint()\nprint(\" OPEN\")\nprint(\" CLOSE\")\nprint(\" LEFT\")\nprint(\" RIGHT\")\nprint(\" CENTER\")\nprint(\" STOP\")\nprint()\nprint(\"======================================\")\n\n# ==========================================\n# MAIN LOOP\n# ==========================================\n\ntry:\n\n    while True:\n\n        # Record voice\n        success = record_voice()\n\n        if not success:\n            time.sleep(1)\n            continue\n\n        # Convert voice to text\n        command = recognize_voice()\n\n        if not command:\n            continue\n\n        # ==================================\n        # OPEN\n        # ==================================\n\n        if \"open\" in command:\n            servo_angle(150)\n\n        # ==================================\n        # CLOSE\n        # ==================================\n\n        elif \"close\" in command:\n            servo_angle(0)\n\n        # ==================================\n        # LEFT\n        # ==================================\n\n        elif \"left\" in command:\n            servo_angle(45)\n\n        # ==================================\n        # RIGHT\n        # ==================================\n\n        elif \"right\" in command:\n            servo_angle(135)\n\n        # ==================================\n        # CENTER\n        # ==================================\n\n        elif \"center\" in command or \"centre\" in command:\n            servo_angle(90)\n\n        # ==================================\n        # STOP\n        # ==================================\n\n        elif \"stop\" in command:\n\n            print(\"Stopping system...\")\n            break\n\n        # ==================================\n        # UNKNOWN\n        # ==================================\n\n        else:\n\n            print(\"Command not recognized.\")\n\n# ==========================================\n# EXIT\n# ==========================================\n\nexcept KeyboardInterrupt:\n\n    print()\n    print(\"Program stopped by user.\")\n\nfinally:\n\n    # Stop servo PWM\n    lgpio.tx_pwm(\n        h,\n        SERVO_PIN,\n        0,\n        0\n    )\n\n    lgpio.gpiochip_close(h)\n\n    # Remove temporary file\n    if os.path.exists(AUDIO_FILE):\n        os.remove(AUDIO_FILE)\n\n    print(\"Servo released.\")";
-const lines=program.split("\n");
-const steps=[{"title":"Load the libraries","search":"import speech_recognition as sr","text":"The program loads SpeechRecognition, lgpio, subprocess, time and os for voice recognition, GPIO control, audio recording, timing and file cleanup."},{"title":"Set servo and microphone","search":"SERVO_PIN = 18","text":"GPIO18 is selected for the SG90 control signal. The USB microphone uses ALSA device plughw:3,0 and commands are saved temporarily as a WAV file."},{"title":"Prepare GPIO","search":"lgpio.gpiochip_open(0)","text":"The Raspberry Pi GPIO chip is opened and GPIO18 is prepared as an output."},{"title":"Move the servo","search":"def servo_angle(angle):","text":"The selected angle is converted to a servo pulse and sent as 50 Hz PWM using lgpio."},{"title":"Record voice","search":"def record_voice():","text":"ALSA arecord captures a four-second mono voice command at 8000 Hz from the USB microphone."},{"title":"Recognize speech","search":"def recognize_voice():","text":"SpeechRecognition reads the WAV file and Google Speech Recognition converts the recorded voice into text."},{"title":"Set start position","search":"servo_angle(90)","text":"When the program starts, the SG90 is moved to the center position at 90 degrees."},{"title":"Process commands","search":"if \"open\" in command:","text":"The recognized command is matched with OPEN, CLOSE, LEFT, RIGHT or CENTER/CENTRE and the servo moves to the programmed angle."},{"title":"Stop and clean up","search":"elif \"stop\" in command:","text":"STOP exits the main loop. The program then stops PWM, closes the GPIO chip and removes the temporary audio file."}];
+
+const program = "import speech_recognition as sr\nimport lgpio\nimport subprocess\nimport time\nimport os\n\n# ==========================================\n# SETTINGS\n# ==========================================\n\nSERVO_PIN = 18\n\n# USB microphone\nMIC_DEVICE = \"plughw:3,0\"\n\n# Temporary recording file\nAUDIO_FILE = \"/tmp/voice_command.wav\"\n\n# ==========================================\n# GPIO SETUP\n# ==========================================\n\nh = lgpio.gpiochip_open(0)\nlgpio.gpio_claim_output(h, SERVO_PIN)\n\n# ==========================================\n# SERVO CONTROL\n# ==========================================\n\ndef servo_angle(angle):\n\n    angle = max(0, min(150, angle))\n\n    # 0\u00b0 = 1000 us\n    # 150\u00b0 = 2000 us\n    pulse = 1000 + int((angle / 150) * 1000)\n\n    # 50 Hz PWM\n    duty = (pulse / 20000) * 100\n\n    print(f\"Servo moving to {angle} degrees\")\n\n    lgpio.tx_pwm(\n        h,\n        SERVO_PIN,\n        50,\n        duty\n    )\n\n    time.sleep(1)\n\n# ==========================================\n# RECORD VOICE USING ALSA\n# ==========================================\n\ndef record_voice():\n\n    print()\n    print(\"Listening...\")\n\n    command = [\n        \"arecord\",\n        \"-D\", MIC_DEVICE,\n        \"-f\", \"S16_LE\",\n        \"-r\", \"8000\",\n        \"-c\", \"1\",\n        \"-d\", \"4\",\n        AUDIO_FILE\n    ]\n\n    try:\n\n        subprocess.run(\n            command,\n            stdout=subprocess.DEVNULL,\n            stderr=subprocess.DEVNULL,\n            check=True\n        )\n\n        return True\n\n    except subprocess.CalledProcessError:\n\n        print(\"Microphone recording failed.\")\n        return False\n\n# ==========================================\n# SPEECH RECOGNITION\n# ==========================================\n\ndef recognize_voice():\n\n    recognizer = sr.Recognizer()\n\n    try:\n\n        with sr.AudioFile(AUDIO_FILE) as source:\n\n            audio = recognizer.record(source)\n\n        print(\"Recognizing...\")\n\n        command = recognizer.recognize_google(audio)\n\n        command = command.lower().strip()\n\n        print(\"You said:\", command)\n\n        return command\n\n    except sr.UnknownValueError:\n\n        print(\"Could not understand the voice.\")\n        return \"\"\n\n    except sr.RequestError as e:\n\n        print(\"Speech recognition error:\", e)\n        return \"\"\n\n    except Exception as e:\n\n        print(\"Recognition error:\", e)\n        return \"\"\n\n# ==========================================\n# START POSITION\n# ==========================================\n\nservo_angle(90)\n\n# ==========================================\n# DISPLAY\n# ==========================================\n\nprint()\nprint(\"======================================\")\nprint(\" VOICE CONTROLLED SERVO\")\nprint(\"======================================\")\nprint()\nprint(\"Available Commands:\")\nprint()\nprint(\" OPEN\")\nprint(\" CLOSE\")\nprint(\" LEFT\")\nprint(\" RIGHT\")\nprint(\" CENTER\")\nprint(\" STOP\")\nprint()\nprint(\"======================================\")\n\n# ==========================================\n# MAIN LOOP\n# ==========================================\n\ntry:\n\n    while True:\n\n        # Record voice\n        success = record_voice()\n\n        if not success:\n            time.sleep(1)\n            continue\n\n        # Convert voice to text\n        command = recognize_voice()\n\n        if not command:\n            continue\n\n        # ==================================\n        # OPEN\n        # ==================================\n\n        if \"open\" in command:\n            servo_angle(150)\n\n        # ==================================\n        # CLOSE\n        # ==================================\n\n        elif \"close\" in command:\n            servo_angle(0)\n\n        # ==================================\n        # LEFT\n        # ==================================\n\n        elif \"left\" in command:\n            servo_angle(45)\n\n        # ==================================\n        # RIGHT\n        # ==================================\n\n        elif \"right\" in command:\n            servo_angle(135)\n\n        # ==================================\n        # CENTER\n        # ==================================\n\n        elif \"center\" in command or \"centre\" in command:\n            servo_angle(90)\n\n        # ==================================\n        # STOP\n        # ==================================\n\n        elif \"stop\" in command:\n\n            print(\"Stopping system...\")\n            break\n\n        # ==================================\n        # UNKNOWN\n        # ==================================\n\n        else:\n\n            print(\"Command not recognized.\")\n\n# ==========================================\n# EXIT\n# ==========================================\n\nexcept KeyboardInterrupt:\n\n    print()\n    print(\"Program stopped by user.\")\n\nfinally:\n\n    # Stop servo PWM\n    lgpio.tx_pwm(\n        h,\n        SERVO_PIN,\n        0,\n        0\n    )\n\n    lgpio.gpiochip_close(h)\n\n    # Remove temporary file\n    if os.path.exists(AUDIO_FILE):\n        os.remove(AUDIO_FILE)\n\n    print(\"Servo released.\")";
+
+const lines = program.split("\n");
+
+const steps = [{"title": "Load the libraries", "start": "import speech_recognition as sr", "end": "import os", "text": "The program loads SpeechRecognition, lgpio, subprocess, time and os for voice recognition, GPIO control, audio recording, timing and file cleanup."}, {"title": "Set servo and microphone", "start": "SERVO_PIN = 18", "end": "AUDIO_FILE = \"/tmp/voice_command.wav\"", "text": "GPIO18 is selected for the SG90 control signal. The USB microphone uses ALSA device plughw:3,0 and commands are saved temporarily as a WAV file."}, {"title": "Prepare GPIO", "start": "h = lgpio.gpiochip_open(0)", "end": "lgpio.gpio_claim_output(h, SERVO_PIN)", "text": "The Raspberry Pi GPIO chip is opened and GPIO18 is prepared as an output."}, {"title": "Move the servo", "start": "def servo_angle(angle):", "end": "time.sleep(1)", "text": "The selected angle is converted to a servo pulse and sent as 50 Hz PWM using lgpio."}, {"title": "Record voice", "start": "def record_voice():", "end": "return False", "text": "ALSA arecord captures a four-second mono voice command at 8000 Hz from the USB microphone."}, {"title": "Recognize speech", "start": "def recognize_voice():", "end": "return \"\"", "text": "SpeechRecognition reads the WAV file and Google Speech Recognition converts the recorded voice into text."}, {"title": "Set start position", "start": "servo_angle(90)", "end": "print(\"======================================\")", "text": "When the program starts, the SG90 is moved to the center position at 90 degrees and the available commands are displayed."}, {"title": "Process commands", "start": "if \"open\" in command:", "end": "print(\"Command not recognized.\")", "text": "The recognized command is matched with OPEN, CLOSE, LEFT, RIGHT or CENTER/CENTRE and the servo moves to the programmed angle."}, {"title": "Stop and clean up", "start": "elif \"stop\" in command:", "end": "print(\"Servo released.\")", "text": "STOP exits the main loop. The program then stops PWM, closes the GPIO chip and removes the temporary audio file."}];
+
 
 function escapeHtml(text){
+
     return text
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;");
+
 }
 
+
 function displayCode(){
-    let output="";
+
+    let output = "";
+
     lines.forEach(function(line,index){
+
         output +=
         '<span class="code-line" id="line-'+(index+1)+'">' +
         '<span class="line-number">'+(index+1)+'</span>' +
         '<span>'+escapeHtml(line)+'</span>' +
         '</span>';
+
     });
-    document.getElementById("code-lines").innerHTML=output;
+
+    document.getElementById("code-lines").innerHTML = output;
+
 }
+
+
+function findLine(searchText,startIndex=0){
+
+    for(let i=startIndex;i<lines.length;i++){
+
+        if(lines[i].includes(searchText)){
+
+            return i;
+
+        }
+
+    }
+
+    return -1;
+
+}
+
 
 function showStep(index){
-    const step=steps[index];
 
-    const buttons=document.querySelectorAll(".step");
+    const step = steps[index];
+
+
+    /* ACTIVE STEP BUTTON */
+
+    const buttons = document.querySelectorAll(".step");
+
     buttons.forEach(function(button){
+
         button.classList.remove("active");
+
     });
-    buttons[index].classList.add("active");
+
+    if(buttons[index]){
+
+        buttons[index].classList.add("active");
+
+    }
+
+
+    /* REMOVE OLD HIGHLIGHT */
 
     document.querySelectorAll(".code-line").forEach(function(line){
+
         line.classList.remove("selected");
+
     });
 
-    let foundLine=-1;
 
-    for(let i=0;i<lines.length;i++){
-        if(lines[i].includes(step.search)){
-            foundLine=i;
-            break;
-        }
+    /* FIND START AND END OF THE ACTUAL CODE BLOCK */
+
+    const startLine = findLine(step.start);
+
+    if(startLine === -1){
+
+        console.warn("Start marker not found:", step.start);
+
+        return;
+
     }
 
-    if(foundLine>=0){
-        for(let i=foundLine;i<Math.min(foundLine+14,lines.length);i++){
-            const line=document.getElementById("line-"+(i+1));
-            if(line){
-                line.classList.add("selected");
-            }
-        }
+    let endLine = findLine(step.end,startLine);
 
-        const selectedLine=document.getElementById("line-"+(foundLine+1));
+    if(endLine === -1){
 
-        if(selectedLine){
-            document.getElementById("code-body").scrollTo({
-                top:selectedLine.offsetTop-20,
-                behavior:"smooth"
-            });
-        }
+        endLine = startLine;
+
     }
+
+
+    /* BLUE HIGHLIGHT */
+
+    for(let i=startLine;i<=endLine;i++){
+
+        const line = document.getElementById("line-"+(i+1));
+
+        if(line){
+
+            line.classList.add("selected");
+
+        }
+
+    }
+
+
+    /* SCROLL TO SELECTED CODE */
+
+    const selectedLine =
+    document.getElementById("line-"+(startLine+1));
+
+    const codeBody =
+    document.getElementById("code-body");
+
+    if(selectedLine && codeBody){
+
+        codeBody.scrollTo({
+
+            top:
+            selectedLine.offsetTop
+            -
+            codeBody.offsetTop
+            -
+            20,
+
+            behavior:"smooth"
+
+        });
+
+    }
+
+
+    /* UPDATE EXPLANATION */
 
     document.getElementById("explanation").innerHTML =
-        "<h3>"+(index+1)+". "+step.title+"</h3>" +
-        "<p>"+step.text+"</p>";
+
+        "<h3>" +
+        (index+1) +
+        ". " +
+        step.title +
+        "</h3>" +
+
+        "<p>" +
+        step.text +
+        "</p>";
+
 }
+
 
 function copyCode(){
+
     navigator.clipboard.writeText(program).then(function(){
-        const button=document.querySelector(".copy-button");
-        button.innerText="Copied!";
+
+        const button =
+        document.querySelector(".copy-button");
+
+        button.innerText = "Copied!";
+
         setTimeout(function(){
-            button.innerText="Copy Code";
+
+            button.innerText = "Copy Code";
+
         },1500);
+
     });
+
 }
 
+
 displayCode();
+
 showStep(0);
+
 </script>
 
 </body>
