@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+DHT22 Temperature & Humidity Monitor with SQLite Database
+</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+.section h3{
+    color:#1e3a8a;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:white;
+    padding:10px;
+}
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+    font-weight:bold;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+    margin:0 0 8px !important;
+    color:#1e3a8a !important;
+    border:0 !important;
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+    margin:0 0 22px;
+}
+
+.code-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);
+    gap:20px;
+    align-items:start;
+}
+
+.code-panel{
+    background:white;
+    border:1px solid #bfdbfe;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    padding:15px 20px;
+    background:#2563eb;
+    color:white;
+}
+
+.filename{
+    color:white;
+    font:bold 14px/1.4 Consolas,Monaco,monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+    background:white;
+    color:#2563eb;
+    border-radius:8px;
+    padding:8px 14px;
+    min-height:40px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.code-body{
+    height:600px;
+    overflow:auto;
+    background:white;
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+    min-width:max-content;
+    min-height:24px;
+    padding-right:22px;
+    white-space:pre;
+    font:13px/24px Consolas,Monaco,monospace;
+    color:#1e293b;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+    box-shadow:inset 4px 0 #2563eb;
+}
+
+.line-number{
+    user-select:none;
+    min-width:52px;
+    text-align:right;
+    padding-right:15px;
+    color:#64748b;
+}
+
+.guide{
+    background:white;
+    border:1px solid #dce6e9;
+    border-radius:14px;
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+    padding:0;
+    margin:0 0 8px;
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+    font-size:15px;
+}
+
+.steps{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+    margin:16px 0;
+}
+
+.step{
+    border:1px solid #dce6e9;
+    border-radius:9px;
+    padding:10px;
+    min-height:65px;
+    background:white;
+    text-align:left;
+    font-size:13px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    color:#1e3a8a;
+}
+
+.step.active{
+    background:#eff6ff;
+    border-color:#60a5fa;
+}
+
+.step-number{
+    color:#2563eb;
+    font-size:12px;
+    flex-shrink:0;
+}
+
+.explanation{
+    background:#eff6ff;
+    border-radius:9px;
+    padding:16px;
+    min-height:130px;
+}
+
+.explanation h3{
+    font-size:17px;
+    margin:0 0 7px;
+    color:#1e3a8a;
+}
+
+.explanation p{
+    margin:0;
+    color:#526875;
+    font-size:15px;
+}
+
+.guide details{
+    border-top:1px solid #dce6e9;
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+    color:#2563eb;
+    font-weight:bold;
+    padding:13px 0;
+}
+
+.tip{
+    background:#eff6ff;
+    color:#234e87;
+    padding:14px 17px;
+    border-radius:9px;
+    margin-top:20px;
+    font-size:14px;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+@media(max-width:850px){
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>
+        Raspberry Pi Experiment
+    </h1>
+
+    <p>
+        DHT22 Temperature & Humidity Monitor with SQLite Database
+    </p>
+
+</header>
+
+<nav>
+
+    <a href="../index.html">
+        ← R-Pi Experiments
+    </a>
+
+    <a href="#aim">
+        Aim
+    </a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+<main class="container">
+
+<section
+class="section"
+id="aim"
+>
+
+    <h2>
+        Aim
+    </h2>
+
+    <p>
+        To read temperature and humidity from a DHT22 sensor using Raspberry Pi 4B, save timestamped readings in SQLite, generate a temperature graph on shutdown, display a database summary, and announce the all-time maximum temperature.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        About the Experiment
+    </h2>
+
+    <p>
+        The DHT22 sensor is connected to GPIO17.
+        The Raspberry Pi reads temperature and humidity
+        every five seconds.
+    </p>
+
+    <p>
+        Each valid reading is stored in
+        <code>sensor_data.db</code>
+        with its timestamp.
+        When the program stops,
+        it generates
+        <code>temperature_graph.png</code>,
+        prints a database summary
+        and speaks the all-time maximum temperature
+        using eSpeak-NG.
+    </p>
+
+</section>
+
+<section
+class="section"
+id="components"
+>
+
+    <h2>
+        Components Required
+    </h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+            src="Raspberry Pi 4 Model B.png"
+            alt="Raspberry Pi 4 Model B (×1)"
+            >
+
+            <h4>
+                Raspberry Pi 4 Model B (×1)
+            </h4>
+
+            <p>
+                Reads the DHT22 sensor and manages the SQLite database.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="DHT22 Temperature Humidity Sensor.png"
+            alt="DHT22 Temperature & Humidity Sensor (×1)"
+            >
+
+            <h4>
+                DHT22 Temperature & Humidity Sensor (×1)
+            </h4>
+
+            <p>
+                Measures temperature and relative humidity.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Raspberry Pi Power Supply.png"
+            alt="Raspberry Pi Power Supply (×1)"
+            >
+
+            <h4>
+                Raspberry Pi Power Supply (×1)
+            </h4>
+
+            <p>
+                Provides stable power to the Raspberry Pi.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires"
+            >
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Connect the DHT22 module to the GPIO header.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section
+class="section"
+id="connections"
+>
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Component</th>
+                    <th>Pin / Wire</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>DHT22</td>
+                    <td>VCC</td>
+                    <td>3.3 V / Physical Pin 1</td>
+                </tr>
+
+                <tr>
+                    <td>DHT22</td>
+                    <td>DATA / OUT</td>
+                    <td>GPIO17 / Physical Pin 11</td>
+                </tr>
+
+                <tr>
+                    <td>DHT22</td>
+                    <td>GND</td>
+                    <td>GND / Physical Pin 6</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section
+class="section"
+id="circuit"
+>
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="SQLite Sensor Database Circuit.jpg"
+    alt="DHT22 Temperature & Humidity Monitor with SQLite Database Circuit"
+    >
+
+</section>
+
+<section
+class="section"
+id="working"
+>
+
+    <h2>
+        Working Principle
+    </h2>
+
+    <div class="flow">
+
+        DHT22 Sensor
+        <br>
+        ↓
+        <br>
+
+        GPIO17
+        <br>
+        ↓
+        <br>
+
+        Raspberry Pi 4B
+        <br>
+        ↓
+        <br>
+
+        Temperature + Humidity
+        <br>
+        ↓
+        <br>
+
+        SQLite Database
+        <br>
+        ↓
+        <br>
+
+        Graph + Summary + Voice Announcement
+
+    </div>
+
+</section>
+
+<section
+class="section"
+id="procedure"
+>
+
+    <h2>
+        Procedure
+    </h2>
+
+    <ol>
+
+        <li>
+            Connect DHT22 VCC to Raspberry Pi 3.3 V / Physical Pin 1.
+        </li>
+
+        <li>
+            Connect DHT22 DATA to GPIO17 / Physical Pin 11.
+        </li>
+
+        <li>
+            Connect DHT22 GND to Raspberry Pi GND / Physical Pin 6.
+        </li>
+
+        <li>
+            Create <code>~/Desktop/SQLite_Sensor_Database</code> and activate the virtual environment described in the SOP.
+        </li>
+
+        <li>
+            Install <code>adafruit-circuitpython-dht</code> and <code>matplotlib</code>.
+        </li>
+
+        <li>
+            Save the program as <code>main.py</code>.
+        </li>
+
+        <li>
+            Run <code>python main.py</code>.
+        </li>
+
+        <li>
+            Observe temperature and humidity readings printed every five seconds.
+        </li>
+
+        <li>
+            Press <code>Ctrl+C</code> to stop monitoring.
+        </li>
+
+        <li>
+            Open <code>temperature_graph.png</code> to view the stored temperature history.
+        </li>
+
+
+    </ol>
+
+</section>
+
+<section
+class="section"
+id="code"
+>
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Raspberry Pi Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Select a step.
+            The matching code block will highlight in blue.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        main.py
+                    </span>
+
+                    <button
+                    class="copy-button"
+                    onclick="copyCode()"
+                    >
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                class="code-body"
+                id="code-body"
+                >
+
+                    <code id="code-lines"></code>
+
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step.
+                    The matching code will light up on the left.
+                </p>
+
+                <div class="steps">
+
+<button
+class="step active"
+onclick="showStep(0)"
+>
+    <span class="step-number">
+        01
+    </span>
+    Load the libraries
+</button>
+
+<button
+class="step"
+onclick="showStep(1)"
+>
+    <span class="step-number">
+        02
+    </span>
+    Set project values
+</button>
+
+<button
+class="step"
+onclick="showStep(2)"
+>
+    <span class="step-number">
+        03
+    </span>
+    Create the SQLite database
+</button>
+
+<button
+class="step"
+onclick="showStep(3)"
+>
+    <span class="step-number">
+        04
+    </span>
+    Prepare speech output
+</button>
+
+<button
+class="step"
+onclick="showStep(4)"
+>
+    <span class="step-number">
+        05
+    </span>
+    Find the all-time maximum
+</button>
+
+<button
+class="step"
+onclick="showStep(5)"
+>
+    <span class="step-number">
+        06
+    </span>
+    Generate the temperature graph
+</button>
+
+<button
+class="step"
+onclick="showStep(6)"
+>
+    <span class="step-number">
+        07
+    </span>
+    Display database summary
+</button>
+
+<button
+class="step"
+onclick="showStep(7)"
+>
+    <span class="step-number">
+        08
+    </span>
+    Read and store DHT22 data
+</button>
+
+<button
+class="step"
+onclick="showStep(8)"
+>
+    <span class="step-number">
+        09
+    </span>
+    Stop and create final output
+</button>
+                </div>
+
+                <div
+                class="explanation"
+                id="explanation"
+                >
+
+                    <h3>
+                        1. Load the libraries
+                    </h3>
+
+                    <p>
+                        The program loads SQLite, DHT22, Matplotlib, date/time and text-to-speech support.
+                    </p>
+
+                </div>
+
+                <details>
+
+                    <summary>
+                        Explore more
+                    </summary>
+
+                    <p>
+        The SQLite database file is
+        <code>sensor_data.db</code>.
+        Each record stores timestamp,
+        temperature and humidity.
+    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Check your understanding
+                    </summary>
+
+                    <ul>
+        <li>
+            Which GPIO reads the DHT22 DATA signal?
+            <strong>GPIO17</strong>
+        </li>
+        <li>
+            How often is the sensor sampled?
+            <strong>Every 5 seconds</strong>
+        </li>
+        <li>
+            What database file is created?
+            <strong>sensor_data.db</strong>
+        </li>
+    </ul>
+
+                </details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">
+
+            <strong>
+                Try it:
+            </strong>
+
+            Let the system collect several readings, press Ctrl+C, and then open temperature_graph.png to see the stored temperature trend.
+
+        </p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Expected Output
+    </h2>
+
+    <p>
+        The terminal shows timestamped temperature and humidity readings.
+        The values are stored in
+        <code>sensor_data.db</code>.
+    </p>
+
+    <p>
+        When monitoring stops,
+        the program creates
+        <code>temperature_graph.png</code>,
+        prints the summary
+        and announces the all-time maximum temperature.
+    </p>
+
+</section>
+
+<section
+class="section"
+id="result"
+>
+
+    <h2>
+        Result
+    </h2>
+
+    <p>
+        The system successfully reads DHT22 temperature and humidity data, stores the readings in SQLite, produces a temperature-history graph, and reports the all-time maximum temperature when monitoring stops.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        What You Learn
+    </h2>
+
+    <ul>
+
+        <li>
+            Reading a DHT22 sensor from Raspberry Pi GPIO17.
+        </li>
+
+        <li>
+            Storing timestamped sensor readings in SQLite.
+        </li>
+
+        <li>
+            Creating and querying an SQLite table.
+        </li>
+
+        <li>
+            Generating a Matplotlib graph from saved data.
+        </li>
+
+        <li>
+            Calculating database summary values.
+        </li>
+
+        <li>
+            Using eSpeak-NG for text-to-speech output.
+        </li>
+
+
+    </ul>
+
+</section>
+
+</main>
+
+<footer>
+
+    <strong>
+        R-Pi Experiment
+    </strong>
+
+    <br>
+
+    DHT22 Temperature & Humidity Monitor with SQLite Database
+
+</footer>
+
+<script>
+
+const program =
+"import sqlite3\nimport time\nimport subprocess\nfrom datetime import datetime\nfrom pathlib import Path\n\nimport board\nimport adafruit_dht\nimport matplotlib\n\nmatplotlib.use(\"Agg\")\n\nimport matplotlib.pyplot as plt\n\nPROJECT_DIR = Path(__file__).resolve().parent\nDATABASE_FILE = PROJECT_DIR / \"sensor_data.db\"\nGRAPH_FILE = PROJECT_DIR / \"temperature_graph.png\"\nSAMPLE_INTERVAL = 5\nDHT_PIN = board.D17\n\ndef create_database():\n    connection = sqlite3.connect(\n        DATABASE_FILE\n    )\n\n    try:\n        cursor = connection.cursor()\n\n        cursor.execute(\"\"\"\n        CREATE TABLE IF NOT EXISTS readings (\n            id INTEGER PRIMARY KEY AUTOINCREMENT,\n            timestamp TEXT NOT NULL,\n            temperature REAL NOT NULL,\n            humidity REAL NOT NULL\n        )\n        \"\"\")\n\n        cursor.execute(\"\"\"\n        CREATE INDEX IF NOT EXISTS\n        idx_readings_timestamp\n        ON readings(timestamp)\n        \"\"\")\n\n        connection.commit()\n\n    finally:\n        connection.close()\n\n    print(\n        f\"Database ready: {DATABASE_FILE}\"\n    )\n\ndef speak(message):\n    print(\n        f\"Speech announcement: {message}\"\n    )\n\n    try:\n        subprocess.run(\n            [\n                \"espeak-ng\",\n                message\n            ],\n            check=False,\n            timeout=60\n        )\n\n    except FileNotFoundError:\n        print(\n            \"Speech announcement skipped: espeak-ng is not installed.\"\n        )\n\n    except subprocess.TimeoutExpired:\n        print(\n            \"Speech announcement timed out.\"\n        )\n\n    except Exception as error:\n        print(\n            f\"Could not play speech: {error}\"\n        )\n\ndef announce_all_time_maximum():\n    connection = sqlite3.connect(\n        DATABASE_FILE\n    )\n\n    try:\n        cursor = connection.cursor()\n\n        cursor.execute(\"\"\"\n        SELECT timestamp, temperature\n        FROM readings\n        ORDER BY temperature DESC, timestamp ASC\n        LIMIT 1\n        \"\"\")\n\n        result = cursor.fetchone()\n\n    finally:\n        connection.close()\n\n    if result is None:\n        print(\n            \"No temperature readings are available.\"\n        )\n\n        speak(\n            \"No temperature readings are available.\"\n        )\n\n        return\n\n    timestamp_text, maximum_temperature = result\n\n    try:\n        recorded_datetime = datetime.fromisoformat(\n            timestamp_text\n        )\n\n        full_datetime = recorded_datetime.strftime(\n            \"%B %d, %Y, at %I:%M %p\"\n        )\n\n        short_time = recorded_datetime.strftime(\n            \"%I:%M %p\"\n        )\n\n    except ValueError:\n        full_datetime = timestamp_text\n        short_time = timestamp_text\n\n    maximum_temperature = float(\n        maximum_temperature\n    )\n\n    print(\n        \"\\nAll-Time Maximum Temperature\"\n    )\n\n    print(\n        f\"Temperature: {maximum_temperature:.1f} °C\"\n    )\n\n    print(\n        f\"Recorded at: {full_datetime}\"\n    )\n\n    message = (\n        f\"Maximum temperature: \"\n        f\"{maximum_temperature:.1f} degrees. \"\n        f\"Recorded at {short_time}.\"\n    )\n\n    speak(\n        message\n    )\n\ndef generate_graph():\n    connection = sqlite3.connect(\n        DATABASE_FILE\n    )\n\n    try:\n        cursor = connection.cursor()\n\n        cursor.execute(\"\"\"\n        SELECT timestamp, temperature\n        FROM readings\n        ORDER BY timestamp ASC\n        \"\"\")\n\n        rows = cursor.fetchall()\n\n    finally:\n        connection.close()\n\n    if not rows:\n        print(\n            \"No data available to generate a graph.\"\n        )\n\n        return\n\n    timestamps = []\n    temperatures = []\n\n    for timestamp_text, temperature in rows:\n        try:\n            timestamp = datetime.fromisoformat(\n                timestamp_text\n            )\n\n        except ValueError:\n            timestamp = timestamp_text\n\n        timestamps.append(\n            timestamp\n        )\n\n        temperatures.append(\n            temperature\n        )\n\n    plt.figure(\n        figsize=(12, 6)\n    )\n\n    plt.plot(\n        timestamps,\n        temperatures,\n        marker=\"o\",\n        linestyle=\"-\"\n    )\n\n    plt.title(\n        \"All-Time Temperature Readings\"\n    )\n\n    plt.xlabel(\n        \"Date and Time\"\n    )\n\n    plt.ylabel(\n        \"Temperature (°C)\"\n    )\n\n    plt.grid(\n        True\n    )\n\n    plt.xticks(\n        rotation=45\n    )\n\n    plt.tight_layout()\n\n    plt.savefig(\n        GRAPH_FILE\n    )\n\n    plt.close()\n\n    print(\n        f\"Temperature graph saved: {GRAPH_FILE}\"\n    )\n\ndef display_summary():\n    connection = sqlite3.connect(\n        DATABASE_FILE\n    )\n\n    try:\n        cursor = connection.cursor()\n\n        cursor.execute(\"\"\"\n        SELECT\n            COUNT(*),\n            MAX(temperature),\n            AVG(humidity)\n        FROM readings\n        \"\"\")\n\n        total_readings, maximum_temperature, average_humidity = (\n            cursor.fetchone()\n        )\n\n    finally:\n        connection.close()\n\n    print(\n        \"\\nDatabase Summary\"\n    )\n\n    print(\n        f\"Total readings: {total_readings}\"\n    )\n\n    if maximum_temperature is not None:\n        print(\n            f\"Maximum temperature: {maximum_temperature:.1f} °C\"\n        )\n\n    if average_humidity is not None:\n        print(\n            f\"Average humidity: {average_humidity:.1f} %\"\n        )\n\ndef main():\n    create_database()\n\n    print(\n        \"\\nStarting DHT22 Temperature and Humidity Monitor\"\n    )\n\n    print(\n        \"Press Ctrl+C to stop monitoring.\"\n    )\n\n    dht_device = adafruit_dht.DHT22(\n        DHT_PIN,\n        use_pulseio=False\n    )\n\n    try:\n        while True:\n            try:\n                temperature = dht_device.temperature\n                humidity = dht_device.humidity\n\n                if (\n                    temperature is not None\n                    and\n                    humidity is not None\n                ):\n                    timestamp = datetime.now().isoformat(\n                        timespec=\"seconds\"\n                    )\n\n                    connection = sqlite3.connect(\n                        DATABASE_FILE\n                    )\n\n                    try:\n                        cursor = connection.cursor()\n\n                        cursor.execute(\"\"\"\n                        INSERT INTO readings\n                        (\n                            timestamp,\n                            temperature,\n                            humidity\n                        )\n                        VALUES (?, ?, ?)\n                        \"\"\",\n                        (\n                            timestamp,\n                            temperature,\n                            humidity\n                        ))\n\n                        connection.commit()\n\n                    finally:\n                        connection.close()\n\n                    print(\n                        f\"{timestamp} | \"\n                        f\"Temperature: {temperature:.1f} °C | \"\n                        f\"Humidity: {humidity:.1f} %\"\n                    )\n\n                else:\n                    print(\n                        \"Sensor returned an empty reading.\"\n                    )\n\n            except RuntimeError as error:\n                print(\n                    f\"Sensor read error: {error}\"\n                )\n\n            time.sleep(\n                SAMPLE_INTERVAL\n            )\n\n    except KeyboardInterrupt:\n        print(\n            \"\\n\\nMonitoring stopped by user.\"\n        )\n\n    finally:\n        print(\n            \"Closing DHT22 sensor...\"\n        )\n\n        try:\n            dht_device.exit()\n\n        except Exception as error:\n            print(\n                f\"Sensor cleanup message: {error}\"\n            )\n\n        print(\n            \"\\nGenerating temperature graph...\"\n        )\n\n        generate_graph()\n\n        display_summary()\n\n        print(\n            \"\\nAnnouncing all-time maximum temperature...\"\n        )\n\n        announce_all_time_maximum()\n\n        print(\n            \"\\nProgram stopped.\"\n        )\n\nif __name__ == \"__main__\":\n    main()";
+
+const lines =
+program.split("\n");
+
+const steps =
+[
+    {
+        "title": "Load the libraries",
+        "start": "import sqlite3",
+        "end": "import matplotlib.pyplot as plt",
+        "text": "The program loads SQLite, DHT22, Matplotlib, date/time and text-to-speech support."
+    },
+    {
+        "title": "Set project values",
+        "start": "PROJECT_DIR =",
+        "end": "DHT_PIN = board.D17",
+        "text": "The database, graph file, five-second sample interval and DHT22 GPIO17 connection are configured."
+    },
+    {
+        "title": "Create the SQLite database",
+        "start": "def create_database():",
+        "end": "print(",
+        "text": "The readings table and timestamp index are created if they do not already exist."
+    },
+    {
+        "title": "Prepare speech output",
+        "start": "def speak(message):",
+        "end": "def announce_all_time_maximum():",
+        "text": "eSpeak-NG is called through subprocess so the program can speak the final maximum-temperature announcement."
+    },
+    {
+        "title": "Find the all-time maximum",
+        "start": "def announce_all_time_maximum():",
+        "end": "def generate_graph():",
+        "text": "The database is searched for the highest recorded temperature and its recording time."
+    },
+    {
+        "title": "Generate the temperature graph",
+        "start": "def generate_graph():",
+        "end": "def display_summary():",
+        "text": "All stored temperatures are read from SQLite and saved as temperature_graph.png using Matplotlib."
+    },
+    {
+        "title": "Display database summary",
+        "start": "def display_summary():",
+        "end": "def main():",
+        "text": "The program reports total readings, maximum temperature and average humidity."
+    },
+    {
+        "title": "Read and store DHT22 data",
+        "start": "dht_device = adafruit_dht.DHT22(",
+        "end": "time.sleep(",
+        "text": "Temperature and humidity are read every five seconds and each valid reading is stored in sensor_data.db."
+    },
+    {
+        "title": "Stop and create final output",
+        "start": "except KeyboardInterrupt:",
+        "end": "main()",
+        "text": "Ctrl+C stops monitoring, closes the sensor, creates the graph, prints the summary and announces the all-time maximum temperature."
+    }
+];
+
+
+function escapeHtml(text){
+
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+
+}
+
+
+function displayCode(){
+
+    let output = "";
+
+    lines.forEach(
+        function(line,index){
+
+            output +=
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+
+                '</span>';
+
+        }
+    );
+
+    document
+    .getElementById("code-lines")
+    .innerHTML =
+    output;
+
+}
+
+
+function findLine(
+    searchText,
+    startIndex = 0
+){
+
+    for(
+        let i = startIndex;
+        i < lines.length;
+        i++
+    ){
+
+        if(
+            lines[i]
+            .includes(searchText)
+        ){
+
+            return i;
+
+        }
+
+    }
+
+    return -1;
+
+}
+
+
+function showStep(index){
+
+    const step =
+    steps[index];
+
+    const buttons =
+    document.querySelectorAll(".step");
+
+    buttons.forEach(
+        function(button){
+
+            button
+            .classList
+            .remove("active");
+
+        }
+    );
+
+    if(
+        buttons[index]
+    ){
+
+        buttons[index]
+        .classList
+        .add("active");
+
+    }
+
+    document
+    .querySelectorAll(".code-line")
+    .forEach(
+        function(line){
+
+            line
+            .classList
+            .remove("selected");
+
+        }
+    );
+
+    const startLine =
+    findLine(
+        step.start
+    );
+
+    if(
+        startLine === -1
+    ){
+
+        console.warn(
+            "Start marker not found:",
+            step.start
+        );
+
+        return;
+
+    }
+
+    let endLine =
+    findLine(
+        step.end,
+        startLine
+    );
+
+    if(
+        endLine === -1
+    ){
+
+        endLine =
+        startLine;
+
+    }
+
+    for(
+        let i = startLine;
+        i <= endLine;
+        i++
+    ){
+
+        const line =
+        document.getElementById(
+            "line-" +
+            (i + 1)
+        );
+
+        if(line){
+
+            line
+            .classList
+            .add("selected");
+
+        }
+
+    }
+
+    const selectedLine =
+    document.getElementById(
+        "line-" +
+        (startLine + 1)
+    );
+
+    const codeBody =
+    document.getElementById(
+        "code-body"
+    );
+
+    if(
+        selectedLine &&
+        codeBody
+    ){
+
+        codeBody.scrollTo({
+
+            top:
+                selectedLine.offsetTop
+                -
+                codeBody.offsetTop
+                -
+                20,
+
+            behavior:
+                "smooth"
+
+        });
+
+    }
+
+    document
+    .getElementById("explanation")
+    .innerHTML =
+
+        "<h3>" +
+        (index + 1) +
+        ". " +
+        step.title +
+        "</h3>" +
+
+        "<p>" +
+        step.text +
+        "</p>";
+
+}
+
+
+function copyCode(){
+
+    navigator
+    .clipboard
+    .writeText(program)
+    .then(
+        function(){
+
+            const button =
+            document.querySelector(
+                ".copy-button"
+            );
+
+            button.innerText =
+            "Copied!";
+
+            setTimeout(
+                function(){
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+                1500
+            );
+
+        }
+    );
+
+}
+
+
+displayCode();
+
+showStep(0);
+
+</script>
+
+</body>
+
+</html>
