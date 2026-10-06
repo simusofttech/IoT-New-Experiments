@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+DIGITAL IR REMOTE LED CONTROLLER
+</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.7;
+}
+
+.header{
+    background:#2563eb;
+    color:white;
+    text-align:center;
+    padding:42px 20px;
+}
+
+.header h1{
+    margin:0 0 8px;
+    font-size:34px;
+}
+
+.header p{
+    margin:0;
+    font-size:17px;
+}
+
+nav{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:18px;
+    padding:13px 15px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+nav a{
+    text-decoration:none;
+    color:#1e3a8a;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.container{
+    width:90%;
+    max-width:1050px;
+    margin:35px auto;
+}
+
+.section{
+    background:white;
+    margin-bottom:24px;
+    padding:28px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.section h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#1e3a8a;
+    font-size:25px;
+    border-bottom:2px solid #dbeafe;
+    padding-bottom:8px;
+}
+
+ul,
+ol{
+    padding-left:24px;
+}
+
+li{
+    margin-bottom:8px;
+}
+
+.components-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.component-card{
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:20px;
+    text-align:center;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img{
+    width:100%;
+    height:120px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.component-card h4{
+    color:#1e3a8a;
+    margin:0 0 8px;
+    font-size:18px;
+}
+
+.component-card p{
+    color:#475569;
+    font-size:14px;
+    margin:0;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:12px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.flow{
+    text-align:center;
+    font-weight:bold;
+    color:#1e3a8a;
+    font-size:18px;
+    line-height:2;
+}
+
+.note{
+    margin-top:18px;
+    padding:14px 16px;
+    background:#eff6ff;
+    border-left:5px solid #2563eb;
+    border-radius:6px;
+}
+
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:white;
+    padding:10px;
+}
+
+.code-lesson{
+    color:#142e3a;
+}
+
+.eyebrow{
+    color:#2563eb;
+    font-weight:bold;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin:0 0 4px;
+}
+
+.lesson-title{
+    font-size:32px !important;
+    margin:0 0 8px !important;
+    color:#1e3a8a !important;
+    border:0 !important;
+    padding:0 !important;
+}
+
+.intro{
+    color:#526875;
+    margin:0 0 22px;
+}
+
+.code-layout{
+    display:grid;
+    grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);
+    gap:20px;
+    align-items:start;
+}
+
+.code-panel{
+    background:white;
+    border:1px solid #bfdbfe;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:12px;
+    padding:15px 20px;
+    background:#2563eb;
+    color:white;
+}
+
+.filename{
+    color:white;
+    font:bold 14px/1.4 Consolas,Monaco,monospace;
+}
+
+.copy-button{
+    border:1px solid white;
+    background:white;
+    color:#2563eb;
+    border-radius:8px;
+    padding:8px 14px;
+    min-height:40px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.code-body{
+    height:600px;
+    overflow:auto;
+    background:white;
+    padding:16px 0;
+}
+
+.code-line{
+    display:flex;
+    min-width:max-content;
+    min-height:24px;
+    padding-right:22px;
+    white-space:pre;
+    font:13px/24px Consolas,Monaco,monospace;
+    color:#1e293b;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.code-line.selected{
+    background:#dbeafe;
+    box-shadow:inset 4px 0 #2563eb;
+}
+
+.line-number{
+    user-select:none;
+    min-width:52px;
+    text-align:right;
+    padding-right:15px;
+    color:#64748b;
+}
+
+.guide{
+    background:white;
+    border:1px solid #dce6e9;
+    border-radius:14px;
+    padding:22px;
+}
+
+.guide h2{
+    border:0;
+    padding:0;
+    margin:0 0 8px;
+    font-size:21px;
+}
+
+.guide > p{
+    color:#526875;
+    font-size:15px;
+}
+
+.steps{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+    margin:16px 0;
+}
+
+.step{
+    border:1px solid #dce6e9;
+    border-radius:9px;
+    padding:10px;
+    min-height:65px;
+    background:white;
+    text-align:left;
+    font-size:13px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    color:#1e3a8a;
+}
+
+.step.active{
+    background:#eff6ff;
+    border-color:#60a5fa;
+}
+
+.step-number{
+    color:#2563eb;
+    font-size:12px;
+    flex-shrink:0;
+}
+
+.explanation{
+    background:#eff6ff;
+    border-radius:9px;
+    padding:16px;
+    min-height:130px;
+}
+
+.explanation h3{
+    font-size:17px;
+    margin:0 0 7px;
+    color:#1e3a8a;
+}
+
+.explanation p{
+    margin:0;
+    color:#526875;
+    font-size:15px;
+}
+
+.guide details{
+    border-top:1px solid #dce6e9;
+    margin-top:15px;
+}
+
+.guide summary{
+    cursor:pointer;
+    color:#2563eb;
+    font-weight:bold;
+    padding:13px 0;
+}
+
+.tip{
+    background:#eff6ff;
+    color:#234e87;
+    padding:14px 17px;
+    border-radius:9px;
+    margin-top:20px;
+    font-size:14px;
+}
+
+footer{
+    text-align:center;
+    padding:25px 20px;
+    background:#0f172a;
+    color:#cbd5e1;
+    font-size:14px;
+}
+
+footer strong{
+    color:white;
+}
+
+@media(max-width:850px){
+
+    .code-layout{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>
+        Arduino Experiment
+    </h1>
+
+    <p>
+        DIGITAL IR REMOTE LED CONTROLLER
+    </p>
+
+</header>
+
+<nav>
+
+    <a href="../index.html">
+        ← Arduino Experiments
+    </a>
+
+    <a href="#aim">
+        Aim
+    </a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+<main class="container">
+
+<section
+class="section"
+id="aim"
+>
+
+    <h2>
+        Aim
+    </h2>
+
+    <p>
+        To control three LEDs using an Arduino UNO R3,
+        a VS1838B IR receiver and an IR remote.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        About the Experiment
+    </h2>
+
+    <p>
+        The Arduino receives commands from the IR remote
+        through the 1838B IR receiver connected to digital pin D2.
+    </p>
+
+    <p>
+        Different remote buttons select the Green,
+        Red and Yellow LEDs or switch all three LEDs
+        ON or OFF.
+        The received command and current status are also
+        shown in the Serial Monitor at 9600 baud.
+    </p>
+
+</section>
+
+<section
+class="section"
+id="components"
+>
+
+    <h2>
+        Components Required
+    </h2>
+
+    <div class="components-grid">
+
+
+        <div class="component-card">
+
+            <img
+            src="Arduino UNO.png"
+            alt="Arduino UNO R3 (×1)"
+            >
+
+            <h4>
+                Arduino UNO R3 (×1)
+            </h4>
+
+            <p>
+                Main controller for the experiment.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="IR Remote Control.png"
+            alt="IR Remote (×1)"
+            >
+
+            <h4>
+                IR Remote (×1)
+            </h4>
+
+            <p>
+                Sends infrared control commands.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="VS1838B IR Receiver.png"
+            alt="1838B IR Receiver (×1)"
+            >
+
+            <h4>
+                1838B IR Receiver (×1)
+            </h4>
+
+            <p>
+                Receives the remote's infrared commands.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Red LED.png"
+            alt="Red LED (×1)"
+            >
+
+            <h4>
+                Red LED (×1)
+            </h4>
+
+            <p>
+                Red output indicator.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Green LED.png"
+            alt="Green LED (×1)"
+            >
+
+            <h4>
+                Green LED (×1)
+            </h4>
+
+            <p>
+                Green output indicator.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Yellow LED.png"
+            alt="Yellow LED (×1)"
+            >
+
+            <h4>
+                Yellow LED (×1)
+            </h4>
+
+            <p>
+                Yellow output indicator.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="220 Ohm Resistor.png"
+            alt="220Ω Resistor (×3)"
+            >
+
+            <h4>
+                220Ω Resistor (×3)
+            </h4>
+
+            <p>
+                Limits current through each LED.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Jumper Wires.png"
+            alt="Jumper Wires"
+            >
+
+            <h4>
+                Jumper Wires
+            </h4>
+
+            <p>
+                Used for circuit connections.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+            src="Breadboard.png"
+            alt="Breadboard (×1)"
+            >
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble the practical circuit.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section
+class="section"
+id="connections"
+>
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Component
+                    </th>
+
+                    <th>
+                        Pin / Connection
+                    </th>
+
+                    <th>
+                        Arduino UNO R3
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>1838B IR Receiver</td>
+                    <td>VCC</td>
+                    <td>5V</td>
+                </tr>
+
+                <tr>
+                    <td>1838B IR Receiver</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>1838B IR Receiver</td>
+                    <td>OUT</td>
+                    <td>D2</td>
+                </tr>
+
+                <tr>
+                    <td>Green LED</td>
+                    <td>Anode (+) through 220Ω resistor</td>
+                    <td>D8</td>
+                </tr>
+
+                <tr>
+                    <td>Red LED</td>
+                    <td>Anode (+) through 220Ω resistor</td>
+                    <td>D9</td>
+                </tr>
+
+                <tr>
+                    <td>Yellow LED</td>
+                    <td>Anode (+) through 220Ω resistor</td>
+                    <td>D10</td>
+                </tr>
+
+                <tr>
+                    <td>All LEDs</td>
+                    <td>Cathode (−)</td>
+                    <td>GND</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section
+class="section"
+id="circuit"
+>
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+    class="circuit-img"
+    src="DIGITAL IR REMOTE LED CONTROLLER Circuit.png"
+    alt="DIGITAL IR REMOTE LED CONTROLLER Circuit"
+    >
+
+</section>
+
+<section
+class="section"
+id="working"
+>
+
+    <h2>
+        Working Principle
+    </h2>
+
+    <div class="flow">
+
+        IR Remote
+        <br>
+        ↓
+        <br>
+
+        VS1838B IR Receiver
+        <br>
+        ↓
+        <br>
+
+        Arduino UNO R3
+        <br>
+        ↓
+        <br>
+
+        Decode Remote Command
+        <br>
+        ↓
+        <br>
+
+        Button 1 → Green LED
+        <br>
+
+        Button 2 → All LEDs ON
+        <br>
+
+        Button 3 → All LEDs OFF
+        <br>
+
+        Button 5 → Red LED
+        <br>
+
+        Button 6 → Yellow LED
+
+    </div>
+
+</section>
+
+<section
+class="section"
+id="procedure"
+>
+
+    <h2>
+        Procedure
+    </h2>
+
+    <ol>
+
+        <li>
+            Assemble the IR receiver,
+            three LEDs,
+            three 220Ω resistors
+            and jumper wires on the breadboard.
+        </li>
+
+        <li>
+            Connect the IR receiver VCC to 5V,
+            GND to GND
+            and OUT to D2.
+        </li>
+
+        <li>
+            Connect the Green LED through 220Ω to D8,
+            Red LED through 220Ω to D9
+            and Yellow LED through 220Ω to D10.
+        </li>
+
+        <li>
+            Connect all LED cathodes to common GND.
+        </li>
+
+        <li>
+            Open Arduino IDE
+            and select Arduino Uno.
+        </li>
+
+        <li>
+            Install the
+            <strong>IRremote</strong>
+            library.
+        </li>
+
+        <li>
+            Create
+            <code>Digital_IR_Remote_LED_Controller.ino</code>
+            and upload the program.
+        </li>
+
+        <li>
+            Open Serial Monitor at
+            <strong>9600 baud</strong>.
+        </li>
+
+        <li>
+            Point the IR remote toward the receiver
+            and test Buttons 1, 2, 3, 5 and 6.
+        </li>
+
+    </ol>
+
+    <div class="note">
+
+        <strong>
+            Important:
+        </strong>
+
+        The SOP uses
+        <code>0x1F</code>
+        for
+        <code>CMD_YELLOW</code>
+        as a value to replace if necessary.
+        Press Button 6,
+        read its actual command in Serial Monitor
+        and update the value if your remote is different.
+
+    </div>
+
+</section>
+
+<section
+class="section"
+id="code"
+>
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Arduino Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Select a step.
+            The matching Arduino code will highlight in blue.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        Digital_IR_Remote_LED_Controller.ino
+                    </span>
+
+                    <button
+                    class="copy-button"
+                    onclick="copyCode()"
+                    >
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                class="code-body"
+                id="code-body"
+                >
+
+                    <code id="code-lines"></code>
+
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step.
+                    The matching code will light up on the left.
+                </p>
+
+                <div class="steps">
+
+
+                    <button
+                    class="step active"
+                    onclick="showStep(0)"
+                    >
+                        <span class="step-number">
+                            01
+                        </span>
+
+                        Load the IR library
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(1)"
+                    >
+                        <span class="step-number">
+                            02
+                        </span>
+
+                        Set remote commands
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(2)"
+                    >
+                        <span class="step-number">
+                            03
+                        </span>
+
+                        Configure the outputs
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(3)"
+                    >
+                        <span class="step-number">
+                            04
+                        </span>
+
+                        Show the control guide
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(4)"
+                    >
+                        <span class="step-number">
+                            05
+                        </span>
+
+                        Read an IR command
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(5)"
+                    >
+                        <span class="step-number">
+                            06
+                        </span>
+
+                        Control the green LED
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(6)"
+                    >
+                        <span class="step-number">
+                            07
+                        </span>
+
+                        Turn all LEDs ON
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(7)"
+                    >
+                        <span class="step-number">
+                            08
+                        </span>
+
+                        Turn all LEDs OFF
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(8)"
+                    >
+                        <span class="step-number">
+                            09
+                        </span>
+
+                        Select Red or Yellow
+
+                    </button>
+
+                    <button
+                    class="step"
+                    onclick="showStep(9)"
+                    >
+                        <span class="step-number">
+                            10
+                        </span>
+
+                        Resume IR reception
+
+                    </button>
+
+                </div>
+
+                <div
+                class="explanation"
+                id="explanation"
+                >
+
+                    <h3>
+                        1. Load the IR library
+                    </h3>
+
+                    <p>
+                        The IRremote library is loaded and the receiver plus three LED pins are assigned.
+                    </p>
+
+                </div>
+
+                <details>
+
+                    <summary>
+                        Explore more: IR commands
+                    </summary>
+
+                    <p>
+                        Different IR remotes can send different command values.
+                        If a button does not perform the expected action,
+                        read the command shown in Serial Monitor
+                        and update the matching
+                        <code>CMD_...</code>
+                        value.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Check your understanding
+                    </summary>
+
+                    <ul>
+
+                        <li>
+                            Which Arduino pin receives the IR signal?
+                            <strong>D2</strong>
+                        </li>
+
+                        <li>
+                            Which pin controls the Green LED?
+                            <strong>D8</strong>
+                        </li>
+
+                        <li>
+                            Which button turns all LEDs OFF?
+                            <strong>Button 3</strong>
+                        </li>
+
+                    </ul>
+
+                </details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">
+
+            <strong>
+                Try it:
+            </strong>
+
+            Press each programmed button
+            and compare the LED response
+            with the command value printed in Serial Monitor.
+
+        </p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Expected Output
+    </h2>
+
+    <p>
+        Button 1 turns the Green LED ON.
+        Button 2 turns all three LEDs ON.
+        Button 3 turns all three LEDs OFF.
+        Button 5 turns the Red LED ON.
+        Button 6 turns the Yellow LED ON.
+    </p>
+
+    <p>
+        The received command and the current LED status
+        are displayed in Serial Monitor at 9600 baud.
+    </p>
+
+</section>
+
+<section
+class="section"
+id="result"
+>
+
+    <h2>
+        Result
+    </h2>
+
+    <p>
+        The Digital IR Remote LED Controller successfully
+        receives IR remote commands through the 1838B receiver
+        and controls the Green,
+        Red and Yellow LEDs according to the selected button.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        What You Learn
+    </h2>
+
+    <ul>
+
+        <li>
+            How an IR remote communicates with an IR receiver.
+        </li>
+
+        <li>
+            How to use the IRremote Arduino library.
+        </li>
+
+        <li>
+            How to decode remote button commands.
+        </li>
+
+        <li>
+            How to control multiple LEDs from digital output pins.
+        </li>
+
+        <li>
+            How to use Serial Monitor to verify IR command values.
+        </li>
+
+    </ul>
+
+</section>
+
+</main>
+
+<footer>
+
+    <strong>
+        Arduino Experiment
+    </strong>
+
+    <br>
+
+    DIGITAL IR REMOTE LED CONTROLLER
+
+</footer>
+
+<script>
+
+const program =
+"// ==========================================\n// DIGITAL IR REMOTE LED CONTROLLER\n// Arduino UNO R3\n// ==========================================\n#include <IRremote.hpp>\n\n#define IR_RECEIVE_PIN 2\n#define GREEN_LED 8\n#define RED_LED 9\n#define YELLOW_LED 10\n\n// Replace these with the command values confirmed\n// from your remote if they differ.\n#define CMD_GREEN 0x0D\n#define CMD_ALL_ON 0x0E\n#define CMD_ALL_OFF 0x0A\n#define CMD_RED 0x1B\n#define CMD_YELLOW 0x1F // Replace with Button 6 command\n\nvoid setup() {\n\n  Serial.begin(9600);\n\n  pinMode(GREEN_LED, OUTPUT);\n  pinMode(RED_LED, OUTPUT);\n  pinMode(YELLOW_LED, OUTPUT);\n\n  digitalWrite(GREEN_LED, LOW);\n  digitalWrite(RED_LED, LOW);\n  digitalWrite(YELLOW_LED, LOW);\n\n  IrReceiver.begin(\n    IR_RECEIVE_PIN,\n    ENABLE_LED_FEEDBACK\n  );\n\n  Serial.println(\"==============================\");\n  Serial.println(\" DIGITAL IR LED CONTROLLER\");\n  Serial.println(\"==============================\");\n  Serial.println(\"1 = GREEN\");\n  Serial.println(\"2 = ALL ON\");\n  Serial.println(\"3 = ALL OFF\");\n  Serial.println(\"5 = RED\");\n  Serial.println(\"6 = YELLOW\");\n\n}\n\nvoid loop() {\n\n  if (IrReceiver.decode()) {\n\n    uint8_t command =\n      IrReceiver.decodedIRData.command;\n\n    if (command != 0) {\n\n      Serial.print(\"Command: 0x\");\n      Serial.println(command, HEX);\n\n      if (command == CMD_GREEN) {\n\n        digitalWrite(GREEN_LED, HIGH);\n        digitalWrite(RED_LED, LOW);\n        digitalWrite(YELLOW_LED, LOW);\n\n        Serial.println(\n          \"STATUS : GREEN LED ON\"\n        );\n\n      }\n\n      else if (command == CMD_ALL_ON) {\n\n        digitalWrite(GREEN_LED, HIGH);\n        digitalWrite(RED_LED, HIGH);\n        digitalWrite(YELLOW_LED, HIGH);\n\n        Serial.println(\n          \"STATUS : ALL LEDs ON\"\n        );\n\n      }\n\n      else if (command == CMD_ALL_OFF) {\n\n        digitalWrite(GREEN_LED, LOW);\n        digitalWrite(RED_LED, LOW);\n        digitalWrite(YELLOW_LED, LOW);\n\n        Serial.println(\n          \"STATUS : ALL LEDs OFF\"\n        );\n\n      }\n\n      else if (command == CMD_RED) {\n\n        digitalWrite(GREEN_LED, LOW);\n        digitalWrite(RED_LED, HIGH);\n        digitalWrite(YELLOW_LED, LOW);\n\n        Serial.println(\n          \"STATUS : RED LED ON\"\n        );\n\n      }\n\n      else if (command == CMD_YELLOW) {\n\n        digitalWrite(GREEN_LED, LOW);\n        digitalWrite(RED_LED, LOW);\n        digitalWrite(YELLOW_LED, HIGH);\n\n        Serial.println(\n          \"STATUS : YELLOW LED ON\"\n        );\n\n      }\n\n    }\n\n    IrReceiver.resume();\n\n  }\n\n}";
+
+const lines =
+program.split("\n");
+
+const steps =
+[
+    {
+        "title": "Load the IR library",
+        "start": "#include <IRremote.hpp>",
+        "end": "#define YELLOW_LED 10",
+        "text": "The IRremote library is loaded and the receiver plus three LED pins are assigned."
+    },
+    {
+        "title": "Set remote commands",
+        "start": "#define CMD_GREEN 0x0D",
+        "end": "#define CMD_YELLOW 0x1F",
+        "text": "The command values for Green, All ON, All OFF, Red and Yellow are defined. Button 6 may need its value replaced after checking Serial Monitor."
+    },
+    {
+        "title": "Configure the outputs",
+        "start": "void setup() {",
+        "end": "ENABLE_LED_FEEDBACK",
+        "text": "Serial communication starts at 9600 baud, the LED pins become outputs, all LEDs start OFF, and the IR receiver begins on D2."
+    },
+    {
+        "title": "Show the control guide",
+        "start": "Serial.println(\"==============================\");",
+        "end": "Serial.println(\"6 = YELLOW\");",
+        "text": "The Serial Monitor displays the button-to-action guide."
+    },
+    {
+        "title": "Read an IR command",
+        "start": "void loop() {",
+        "end": "IrReceiver.decodedIRData.command;",
+        "text": "The loop waits for an IR message and stores the decoded command value."
+    },
+    {
+        "title": "Control the green LED",
+        "start": "if (command == CMD_GREEN) {",
+        "end": "\"STATUS : GREEN LED ON\"",
+        "text": "Button 1 turns the Green LED ON and keeps Red and Yellow OFF."
+    },
+    {
+        "title": "Turn all LEDs ON",
+        "start": "else if (command == CMD_ALL_ON) {",
+        "end": "\"STATUS : ALL LEDs ON\"",
+        "text": "Button 2 turns Green, Red and Yellow LEDs ON together."
+    },
+    {
+        "title": "Turn all LEDs OFF",
+        "start": "else if (command == CMD_ALL_OFF) {",
+        "end": "\"STATUS : ALL LEDs OFF\"",
+        "text": "Button 3 turns all three LEDs OFF."
+    },
+    {
+        "title": "Select Red or Yellow",
+        "start": "else if (command == CMD_RED) {",
+        "end": "\"STATUS : YELLOW LED ON\"",
+        "text": "Button 5 selects the Red LED. Button 6 selects the Yellow LED."
+    },
+    {
+        "title": "Resume IR reception",
+        "start": "IrReceiver.resume();",
+        "end": "IrReceiver.resume();",
+        "text": "After handling a command, the receiver is resumed so it can accept the next button press."
+    }
+];
+
+
+function escapeHtml(text){
+
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+
+}
+
+
+function displayCode(){
+
+    let output = "";
+
+    lines.forEach(
+        function(line,index){
+
+            output +=
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+
+                '</span>';
+
+        }
+    );
+
+    document
+    .getElementById("code-lines")
+    .innerHTML =
+    output;
+
+}
+
+
+function findLine(
+    searchText,
+    startIndex = 0
+){
+
+    for(
+        let i = startIndex;
+        i < lines.length;
+        i++
+    ){
+
+        if(
+            lines[i]
+            .includes(searchText)
+        ){
+
+            return i;
+
+        }
+
+    }
+
+    return -1;
+
+}
+
+
+function showStep(index){
+
+    const step =
+    steps[index];
+
+    const buttons =
+    document.querySelectorAll(".step");
+
+    buttons.forEach(
+        function(button){
+
+            button
+            .classList
+            .remove("active");
+
+        }
+    );
+
+    if(
+        buttons[index]
+    ){
+
+        buttons[index]
+        .classList
+        .add("active");
+
+    }
+
+    document
+    .querySelectorAll(".code-line")
+    .forEach(
+        function(line){
+
+            line
+            .classList
+            .remove("selected");
+
+        }
+    );
+
+    const startLine =
+    findLine(
+        step.start
+    );
+
+    if(
+        startLine === -1
+    ){
+
+        return;
+
+    }
+
+    let endLine =
+    findLine(
+        step.end,
+        startLine
+    );
+
+    if(
+        endLine === -1
+    ){
+
+        endLine =
+        startLine;
+
+    }
+
+    for(
+        let i = startLine;
+        i <= endLine;
+        i++
+    ){
+
+        const line =
+        document.getElementById(
+            "line-" +
+            (i + 1)
+        );
+
+        if(line){
+
+            line
+            .classList
+            .add("selected");
+
+        }
+
+    }
+
+    const selectedLine =
+    document.getElementById(
+        "line-" +
+        (startLine + 1)
+    );
+
+    const codeBody =
+    document.getElementById(
+        "code-body"
+    );
+
+    if(
+        selectedLine &&
+        codeBody
+    ){
+
+        codeBody.scrollTo({
+
+            top:
+                selectedLine.offsetTop
+                -
+                codeBody.offsetTop
+                -
+                20,
+
+            behavior:
+                "smooth"
+
+        });
+
+    }
+
+    document
+    .getElementById("explanation")
+    .innerHTML =
+
+        "<h3>" +
+        (index + 1) +
+        ". " +
+        step.title +
+        "</h3>" +
+
+        "<p>" +
+        step.text +
+        "</p>";
+
+}
+
+
+function copyCode(){
+
+    navigator
+    .clipboard
+    .writeText(program)
+    .then(
+        function(){
+
+            const button =
+            document.querySelector(
+                ".copy-button"
+            );
+
+            button.innerText =
+            "Copied!";
+
+            setTimeout(
+                function(){
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+                1500
+            );
+
+        }
+    );
+
+}
+
+
+displayCode();
+
+showStep(0);
+
+</script>
+
+</body>
+
+</html>
