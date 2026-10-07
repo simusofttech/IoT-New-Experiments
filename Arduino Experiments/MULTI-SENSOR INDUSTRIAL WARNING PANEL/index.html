@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MULTI-SENSOR INDUSTRIAL WARNING PANEL</title>
+<style>
+
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
+.component-card p{color:#475569;font-size:14px;margin:0}
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:620px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
+.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px}
+.note{background:#eff6ff;border-left:5px solid #2563eb;padding:14px 16px;border-radius:6px;margin-top:18px}
+.code-lesson{color:#142e3a}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important}
+.intro{color:#526875;margin:0 0 22px}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px}
+.guide>p{color:#526875;font-size:15px}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a}
+.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a}
+.explanation p{margin:0;color:#526875;font-size:15px}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}
+footer strong{color:white}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr}}
+@media(max-width:600px){.steps{grid-template-columns:1fr}}
+
+
+</style>
+</head>
+<body>
+
+<header class="header">
+    <h1>Arduino Experiment</h1>
+    <p>MULTI-SENSOR INDUSTRIAL WARNING PANEL</p>
+</header>
+
+<nav>
+    <a href="../index.html">← Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>To combine gas, vibration, temperature and humidity monitoring into one Arduino-based industrial warning panel.</p>
+</section>
+
+<section class="section">
+    <h2>About the Experiment</h2>
+    <p>The Arduino reads MQ-2 gas level on A0, vibration on D2, and DHT11 temperature/humidity on D4.</p>
+<p>During normal conditions the green LED remains ON. Gas, vibration, high temperature, or a DHT11 error activates the red LED and buzzer while the 16×2 I2C LCD shows the warning.</p>
+</section>
+
+<section class="section" id="components">
+    <h2>Components Required</h2>
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png" alt="Arduino UNO R3 (×1)">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>Main controller.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="MQ-2 Gas Sensor.png" alt="MQ-2 Gas Sensor (×1)">
+            <h4>MQ-2 Gas Sensor (×1)</h4>
+            <p>Measures gas/smoke level.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Vibration Sensor Module.png" alt="Vibration Sensor (×1)">
+            <h4>Vibration Sensor (×1)</h4>
+            <p>Detects vibration.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="DHT11.png" alt="DHT11 Temperature & Humidity Sensor (×1)">
+            <h4>DHT11 Temperature & Humidity Sensor (×1)</h4>
+            <p>Measures temperature and humidity.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="LCD 16X2 I2C.png" alt="16×2 I2C LCD (×1)">
+            <h4>16×2 I2C LCD (×1)</h4>
+            <p>Displays status and warnings.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Buzzer.png" alt="Buzzer (×1)">
+            <h4>Buzzer (×1)</h4>
+            <p>Audible warning.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Red LED.png" alt="Red LED (×1)">
+            <h4>Red LED (×1)</h4>
+            <p>Warning indicator.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Green LED.png" alt="Green LED (×1)">
+            <h4>Green LED (×1)</h4>
+            <p>Normal-state indicator.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="220 Ohm Resistor.png" alt="220Ω Resistor (×2)">
+            <h4>220Ω Resistor (×2)</h4>
+            <p>LED current limiting.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Circuit interconnections.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard (×1)">
+            <h4>Breadboard (×1)</h4>
+            <p>Used to assemble the circuit.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Component</th><th>Pin / Connection</th><th>Arduino UNO R3</th></tr></thead>
+            <tbody>
+<tr><td>MQ-2</td><td>AO</td><td>A0</td></tr>
+<tr><td>MQ-2</td><td>VCC / GND</td><td>5V / GND</td></tr>
+<tr><td>Vibration Sensor</td><td>DO</td><td>D2</td></tr>
+<tr><td>DHT11</td><td>DATA</td><td>D4</td></tr>
+<tr><td>16×2 I2C LCD</td><td>SDA / SCL</td><td>A4 / A5</td></tr>
+<tr><td>Buzzer</td><td>+</td><td>D8</td></tr>
+<tr><td>Red LED</td><td>Anode through 220Ω</td><td>D9</td></tr>
+<tr><td>Green LED</td><td>Anode through 220Ω</td><td>D10</td></tr>
+<tr><td>All powered modules</td><td>GND</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="section" id="circuit">
+    <h2>Circuit Diagram</h2>
+    <img class="circuit-img" src="MULTI-SENSOR INDUSTRIAL WARNING PANEL Circuit.svg" alt="MULTI-SENSOR INDUSTRIAL WARNING PANEL Circuit">
+</section>
+
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+    <div class="flow">MQ-2 + Vibration + DHT11<br>↓<br>Arduino UNO R3<br>↓<br>Threshold evaluation<br>↓<br>Normal → Green LED + SYSTEM NORMAL<br>↓<br>Alert → Red LED + Buzzer + LCD warning</div>
+</section>
+
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+    <ol>
+        <li>Connect MQ-2 AO to A0, VCC to 5V and GND to GND.</li>
+        <li>Connect vibration sensor DO to D2.</li>
+        <li>Connect DHT11 DATA to D4. A bare 4-pin DHT11 requires a 10kΩ pull-up between VCC and DATA.</li>
+        <li>Connect I2C LCD SDA to A4 and SCL to A5.</li>
+        <li>Connect buzzer to D8, red LED to D9 and green LED to D10 through 220Ω resistors.</li>
+        <li>Install DHT sensor library, Adafruit Unified Sensor and LiquidCrystal I2C.</li>
+        <li>Upload the program and open Serial Monitor at 9600 baud.</li>
+        <li>Allow the MQ-2 to warm up, then test vibration and safe controlled threshold conditions.</li>
+    </ol>
+</section>
+
+<section class="section" id="code">
+    <div class="code-lesson">
+        <p class="eyebrow">Arduino Experiment · Code Review</p>
+        <h2 class="lesson-title">Explore the Code</h2>
+        <p class="intro">MULTI-SENSOR INDUSTRIAL WARNING PANEL · Select a step to highlight the matching code lines.</p>
+
+        <div class="code-layout">
+            <article class="code-panel">
+                <div class="code-top">
+                    <span class="filename">Multi_Sensor_Industrial_Warning_Panel.ino</span>
+                    <button class="copy-button" onclick="copyCode()">Copy Code</button>
+                </div>
+                <div class="code-body" id="code-body">
+                    <code id="code-lines"></code>
+                </div>
+            </article>
+
+            <article class="guide">
+                <h2>Understand it step by step</h2>
+                <p>Choose a step. The matching code will light up on the left.</p>
+                <div class="steps">
+
+                    <button class="step active" onclick="showStep(0)">
+                        <span class="step-number">01</span>
+                        Load libraries
+                    </button>
+
+                    <button class="step" onclick="showStep(1)">
+                        <span class="step-number">02</span>
+                        Set pins and thresholds
+                    </button>
+
+                    <button class="step" onclick="showStep(2)">
+                        <span class="step-number">03</span>
+                        Initialize system
+                    </button>
+
+                    <button class="step" onclick="showStep(3)">
+                        <span class="step-number">04</span>
+                        Read all sensors
+                    </button>
+
+                    <button class="step" onclick="showStep(4)">
+                        <span class="step-number">05</span>
+                        Handle DHT error
+                    </button>
+
+                    <button class="step" onclick="showStep(5)">
+                        <span class="step-number">06</span>
+                        Evaluate alerts
+                    </button>
+
+                    <button class="step" onclick="showStep(6)">
+                        <span class="step-number">07</span>
+                        Display warnings
+                    </button>
+
+                    <button class="step" onclick="showStep(7)">
+                        <span class="step-number">08</span>
+                        Show normal state
+                    </button>
+                </div>
+
+                <div class="explanation" id="explanation">
+                    <h3>1. Load libraries</h3>
+                    <p>The sketch loads I2C LCD and DHT11 support.</p>
+                </div>
+
+                <details>
+                    <summary>Explore more</summary>
+                    <p>The SOP uses gasThreshold = 400 and temperatureThreshold = 40.0°C as starting values. Calibrate them for the actual sensors and environment.</p>
+                </details>
+
+                <details>
+                    <summary>Check your understanding</summary>
+                    <ul>
+                        <li>Which analog pin reads MQ-2? <strong>A0</strong></li>
+                        <li>Which pin reads vibration? <strong>D2</strong></li>
+                        <li>Which pins connect the I2C LCD? <strong>A4 SDA and A5 SCL</strong></li>
+                    </ul>
+                </details>
+            </article>
+        </div>
+
+        <p class="tip"><strong>Try it:</strong> Let the MQ-2 warm up before judging gas readings.</p>
+    </div>
+</section>
+
+<section class="section">
+    <h2>Expected Output</h2>
+    <p>Normal conditions show SYSTEM NORMAL with the green LED ON. Any gas, vibration or high-temperature condition activates the red LED, buzzer and an LCD warning.</p>
+</section>
+
+<section class="section" id="result">
+    <h2>Result</h2>
+    <p>The completed system operates as a basic educational multi-sensor industrial warning panel.</p>
+</section>
+
+<section class="section">
+    <h2>What You Learn</h2>
+    <ul>
+        <li>Multi-sensor integration</li>
+        <li>Analog and digital sensing</li>
+        <li>I2C LCD communication</li>
+        <li>Threshold-based alarms</li>
+        <li>DHT11 temperature/humidity measurement</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>Arduino Experiment</strong><br>
+    MULTI-SENSOR INDUSTRIAL WARNING PANEL
+</footer>
+
+<script>
+const program="#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n#include <DHT.h>\n\n#define MQ2_PIN A0\n#define VIBRATION_PIN 2\n#define DHT_PIN 4\n#define BUZZER_PIN 8\n#define RED_LED 9\n#define GREEN_LED 10\n#define DHTTYPE DHT11\n\nDHT dht(DHT_PIN, DHTTYPE);\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nint gasThreshold = 400;\nfloat temperatureThreshold = 40.0;\n\nvoid setup() {\n  Serial.begin(9600);\n\n  pinMode(MQ2_PIN, INPUT);\n  pinMode(VIBRATION_PIN, INPUT);\n  pinMode(BUZZER_PIN, OUTPUT);\n  pinMode(RED_LED, OUTPUT);\n  pinMode(GREEN_LED, OUTPUT);\n\n  dht.begin();\n\n  lcd.init();\n  lcd.backlight();\n\n  digitalWrite(BUZZER_PIN, LOW);\n  digitalWrite(RED_LED, LOW);\n  digitalWrite(GREEN_LED, HIGH);\n\n  lcd.setCursor(0, 0);\n  lcd.print(\"Industrial\");\n  lcd.setCursor(0, 1);\n  lcd.print(\"Warning Panel\");\n\n  delay(2000);\n  lcd.clear();\n}\n\nvoid loop() {\n  int gasValue = analogRead(MQ2_PIN);\n  int vibration = digitalRead(VIBRATION_PIN);\n  float temperature = dht.readTemperature();\n  float humidity = dht.readHumidity();\n\n  if (isnan(temperature) || isnan(humidity)) {\n    lcd.clear();\n    lcd.setCursor(0, 0);\n    lcd.print(\"DHT11 Error\");\n\n    digitalWrite(RED_LED, HIGH);\n    digitalWrite(GREEN_LED, LOW);\n    digitalWrite(BUZZER_PIN, HIGH);\n\n    delay(1000);\n    return;\n  }\n\n  Serial.print(\"Gas: \");\n  Serial.print(gasValue);\n  Serial.print(\" | Vibration: \");\n  Serial.print(vibration);\n  Serial.print(\" | Temp: \");\n  Serial.print(temperature);\n  Serial.print(\" C | Humidity: \");\n  Serial.print(humidity);\n  Serial.println(\" %\");\n\n  bool gasAlert = gasValue > gasThreshold;\n  bool vibrationAlert = vibration == HIGH;\n  bool temperatureAlert = temperature > temperatureThreshold;\n\n  if (gasAlert || vibrationAlert || temperatureAlert) {\n    digitalWrite(RED_LED, HIGH);\n    digitalWrite(GREEN_LED, LOW);\n    digitalWrite(BUZZER_PIN, HIGH);\n\n    lcd.clear();\n\n    if (gasAlert) {\n      lcd.setCursor(0, 0);\n      lcd.print(\"!! GAS ALERT !!\");\n      lcd.setCursor(0, 1);\n      lcd.print(\"Gas: \");\n      lcd.print(gasValue);\n    }\n    else if (vibrationAlert) {\n      lcd.setCursor(0, 0);\n      lcd.print(\"VIBRATION ALERT\");\n      lcd.setCursor(0, 1);\n      lcd.print(\"Check Machine\");\n    }\n    else if (temperatureAlert) {\n      lcd.setCursor(0, 0);\n      lcd.print(\"HIGH TEMP ALERT\");\n      lcd.setCursor(0, 1);\n      lcd.print(\"Temp: \");\n      lcd.print(temperature, 1);\n      lcd.print(\" C\");\n    }\n  }\n  else {\n    digitalWrite(RED_LED, LOW);\n    digitalWrite(GREEN_LED, HIGH);\n    digitalWrite(BUZZER_PIN, LOW);\n\n    lcd.clear();\n    lcd.setCursor(0, 0);\n    lcd.print(\"SYSTEM NORMAL\");\n    lcd.setCursor(0, 1);\n    lcd.print(\"T:\");\n    lcd.print(temperature, 1);\n    lcd.print(\"C H:\");\n    lcd.print(humidity, 0);\n    lcd.print(\"%\");\n  }\n\n  delay(1000);\n}";
+const lines=program.split("\n");
+const steps=[{"title":"Load libraries","start":"#include <Wire.h>","end":"#include <DHT.h>","text":"The sketch loads I2C LCD and DHT11 support."},{"title":"Set pins and thresholds","start":"#define MQ2_PIN A0","end":"float temperatureThreshold = 40.0;","text":"Sensor/output pins and gas/temperature limits are defined."},{"title":"Initialize system","start":"void setup() {","end":"lcd.clear();","text":"Serial, sensors, LCD, LEDs and buzzer are initialized."},{"title":"Read all sensors","start":"void loop() {","end":"float humidity = dht.readHumidity();","text":"Gas, vibration, temperature and humidity are sampled."},{"title":"Handle DHT error","start":"if (isnan(temperature) || isnan(humidity)) {","end":"return;","text":"A DHT11 error produces an immediate warning state."},{"title":"Evaluate alerts","start":"bool gasAlert = gasValue > gasThreshold;","end":"bool temperatureAlert = temperature > temperatureThreshold;","text":"The program compares current readings against warning conditions."},{"title":"Display warnings","start":"if (gasAlert || vibrationAlert || temperatureAlert) {","end":"}","text":"A warning turns on the red LED and buzzer and displays the active condition."},{"title":"Show normal state","start":"else {","end":"delay(1000);","text":"When all readings are normal, the green LED is ON and the LCD shows temperature and humidity."}];
+
+function escapeHtml(text){
+    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function displayCode(){
+    document.getElementById("code-lines").innerHTML=lines.map(function(line,index){
+        return '<span class="code-line" id="line-'+(index+1)+'"><span class="line-number">'+(index+1)+'</span><span>'+escapeHtml(line)+'</span></span>';
+    }).join("");
+}
+function findLine(searchText,startIndex){
+    startIndex=startIndex||0;
+    for(let i=startIndex;i<lines.length;i++){
+        if(lines[i].includes(searchText)) return i;
+    }
+    return -1;
+}
+function showStep(index){
+    const step=steps[index];
+    const buttons=document.querySelectorAll(".step");
+    buttons.forEach(b=>b.classList.remove("active"));
+    if(buttons[index]) buttons[index].classList.add("active");
+    document.querySelectorAll(".code-line").forEach(l=>l.classList.remove("selected"));
+
+    const startLine=findLine(step.start,0);
+    if(startLine===-1) return;
+    let endLine=findLine(step.end,startLine);
+    if(endLine===-1) endLine=startLine;
+
+    for(let i=startLine;i<=endLine;i++){
+        const line=document.getElementById("line-"+(i+1));
+        if(line) line.classList.add("selected");
+    }
+
+    const selected=document.getElementById("line-"+(startLine+1));
+    const body=document.getElementById("code-body");
+    if(selected && body){
+        body.scrollTo({top:selected.offsetTop-body.offsetTop-20,behavior:"smooth"});
+    }
+
+    document.getElementById("explanation").innerHTML=
+        "<h3>"+(index+1)+". "+step.title+"</h3><p>"+step.text+"</p>";
+}
+function copyCode(){
+    navigator.clipboard.writeText(program).then(function(){
+        const button=document.querySelector(".copy-button");
+        button.innerText="Copied!";
+        setTimeout(()=>button.innerText="Copy Code",1500);
+    });
+}
+displayCode();
+showStep(0);
+</script>
+
+</body>
+</html>
