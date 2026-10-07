@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Classroom Automation</title>
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;} ul,ol{padding-left:24px;} li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;} table{width:100%;min-width:620px;border-collapse:collapse;} th,td{padding:12px;border:1px solid #ddd;text-align:left;} th{background:#2563eb;color:white;} tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px;}
+.code-lesson{color:#142e3a;} .eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px !important;margin:0 0 8px !important;color:#1e3a8a !important;border:0 !important;padding:0 !important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;} .code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;} .guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;} .guide>p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;} .step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;} .step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;} .explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;} .explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;} .guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;} .guide details p,.guide details li{color:#526875;font-size:15px;} .guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;} footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header class="header">
+<h1>Smart Classroom Automation</h1>
+<p>Raspberry Pi classroom monitoring and automatic light/fan control</p>
+</header>
+
+<nav>
+<a href="../index.html">← R-Pi Experiments</a>
+<a href="#aim">Aim</a>
+<a href="#components">Components</a>
+<a href="#connections">Connections</a>
+<a href="#circuit">Circuit</a>
+<a href="#working">Working</a>
+<a href="#procedure">Procedure</a>
+<a href="#code">Code</a>
+<a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To build a Raspberry Pi based smart classroom system that detects classroom presence using a USB webcam, monitors temperature using DHT11, automatically controls a light and 5V fan, and displays system status on a 16×2 I2C LCD.</p>
+</section>
+
+<section class="section">
+<h2>About the Experiment</h2>
+<p>The Smart Classroom Automation experiment uses Raspberry Pi 4B, a USB webcam with YuNet detection, DHT11, 16×2 I2C LCD, two relay channels, buzzer and push button.</p>
+<p>No person forces the light and fan OFF. When a person is present, the light turns ON. The fan turns ON at 25.5 °C or above and OFF at 24.5 °C or below. The buzzer gives a short event beep.</p>
+</section>
+
+<section class="section" id="components">
+<h2>Components Required</h2>
+<div class="components-grid">
+<div class="component-card">
+<img src="../Object Sorting System/Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B (×1)">
+<h4>Raspberry Pi 4 Model B (×1)</h4>
+<p>Main controller.</p>
+</div>
+<div class="component-card">
+<img src="../Object Sorting System/USB Camera.png" alt="USB Webcam (×1)">
+<h4>USB Webcam (×1)</h4>
+<p>Detects classroom presence.</p>
+</div>
+<div class="component-card">
+<img src="../../Arduino Experiments/Humidity-Based Warning System/DHT11.png" alt="DHT11 Sensor (×1)">
+<h4>DHT11 Sensor (×1)</h4>
+<p>Measures temperature.</p>
+</div>
+<div class="component-card">
+<img src="../../Arduino Experiments/Automatic Pet Feeder/LCD 16X2 I2C.png" alt="16×2 I2C LCD (×1)">
+<h4>16×2 I2C LCD (×1)</h4>
+<p>Displays classroom status.</p>
+</div>
+<div class="component-card">
+<img src="../../ESP32 CAM Experiments/Wi-Fi Relay Control Panel/1-Channel Relay Module.png" alt="1-Channel Relay Module (×2)">
+<h4>1-Channel Relay Module (×2)</h4>
+<p>Controls light and fan.</p>
+</div>
+<div class="component-card">
+<img src="../../ESP32 CAM Experiments/ESP32 IoT Machine Condition Monitor/Buzzer.png" alt="Buzzer (×1)">
+<h4>Buzzer (×1)</h4>
+<p>Provides a short notification beep.</p>
+</div>
+<div class="component-card">
+<img src="../../ESP32 CAM Experiments/Wi-Fi Digital Dice/Push Button.png" alt="Push Button (×1)">
+<h4>Push Button (×1)</h4>
+<p>Manual acknowledgement/reset.</p>
+</div>
+<div class="component-card">
+<img src="5V Fan.png" alt="5V DC Fan (×1)">
+<h4>5V DC Fan (×1)</h4>
+<p>Ventilation output controlled through relay.</p>
+</div>
+<div class="component-card">
+<img src="../../ESP32 CAM Experiments/ESP32 IoT Machine Condition Monitor/Jumper Wires.png" alt="Jumper Wires">
+<h4>Jumper Wires</h4>
+<p>Used for connections.</p>
+</div>
+<div class="component-card">
+<img src="../../ESP32 CAM Experiments/ESP32 IoT Machine Condition Monitor/Breadboard.png" alt="Breadboard (×1)">
+<h4>Breadboard (×1)</h4>
+<p>Prototyping base.</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="connections">
+<h2>Circuit Connections</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Component</th><th>Connection</th><th>Raspberry Pi</th></tr></thead>
+<tbody>
+<tr><td>USB Webcam</td><td>USB</td><td>/dev/video0</td></tr>
+<tr><td>DHT11</td><td>DATA</td><td>GPIO4 / Pin 7</td></tr>
+<tr><td>16×2 I2C LCD</td><td>SDA</td><td>GPIO2 / Pin 3</td></tr>
+<tr><td>16×2 I2C LCD</td><td>SCL</td><td>GPIO3 / Pin 5</td></tr>
+<tr><td>Light Relay</td><td>IN</td><td>GPIO27 / Pin 13</td></tr>
+<tr><td>Fan Relay</td><td>IN</td><td>GPIO25 / Pin 22</td></tr>
+<tr><td>Buzzer</td><td>Signal</td><td>GPIO24 / Pin 18</td></tr>
+<tr><td>Push Button</td><td>Signal</td><td>GPIO18 / Pin 12</td></tr>
+<tr><td>5V Fan</td><td>Power</td><td>External 5V through relay</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="section" id="circuit">
+<h2>Circuit Diagram</h2>
+<img class="circuit-img" src="Smart Classroom Automation Circuit.png" alt="Smart Classroom Automation Circuit">
+</section>
+
+<section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">
+USB Webcam
+<br>↓<br>
+YuNet Presence Detection
+<br>↓<br>
+No Person → Light OFF + Fan OFF
+<br>↓<br>
+Person Present → Light ON
+<br>↓<br>
+DHT11 Temperature Check
+<br>↓<br>
+≥25.5 °C → Fan ON
+<br>
+≤24.5 °C → Fan OFF
+<br>↓<br>
+LCD Status + Short Buzzer Beep
+</div>
+</section>
+
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol>
+<li>Connect the DHT11, I2C LCD, two relay modules, buzzer and push button using the table above.</li>
+<li>Connect the 5V fan through the fan relay. Do not power the fan directly from a GPIO pin.</li>
+<li>Connect the USB webcam to the Raspberry Pi.</li>
+<li>Enable I2C and verify LCD address 0x27.</li>
+<li>Create the SmartClassroom Python virtual environment and install the required packages.</li>
+<li>Place the YuNet model in the project models folder.</li>
+<li>Save the program below as main.py.</li>
+<li>Run main.py and verify empty-room operation.</li>
+<li>Place a person in front of the webcam and verify automatic light control.</li>
+<li>Test the DHT11 temperature threshold and fan relay.</li>
+<li>Press the push button to acknowledge/reset the current event state.</li>
+</ol>
+</section>
+
+<section class="section" id="code">
+<div class="code-lesson">
+<p class="eyebrow">Raspberry Pi Experiment · Code Review</p>
+<h2 class="lesson-title">Explore the Code</h2>
+<p class="intro">Smart Classroom Automation · Select a step to see the matching code lines.</p>
+
+<div class="code-layout">
+<article class="code-panel">
+<div class="code-top">
+<span class="filename">main.py</span>
+<button class="copy-button" onclick="copyCode()">Copy Code</button>
+</div>
+<div class="code-body" id="code-body"><code id="code-lines"></code></div>
+</article>
+
+<article class="guide">
+<h2>Understand it step by step</h2>
+<p>Choose a step. The matching code will light up on the left.</p>
+
+<div class="steps">
+<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Import libraries</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set hardware</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Configure GPIO</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Initialize modules</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Control outputs</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Temperature logic</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>Open webcam</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Run automation</button><button class="step" onclick="showStep(8)"><span class="step-number">09</span>Clean up</button>
+</div>
+
+<div class="explanation" id="explanation">
+<h3>1. Import libraries</h3>
+<p>Loads camera, GPIO, DHT11 and LCD libraries.</p>
+</div>
+
+<details>
+<summary>Explore more: fan hysteresis</summary>
+<p>The fan switches ON at 25.5 °C or above and OFF at 24.5 °C or below, preventing rapid switching near one temperature.</p>
+</details>
+
+<details>
+<summary>Check your understanding</summary>
+<ul>
+<li>Light relay: <strong>GPIO27</strong></li>
+<li>Fan relay: <strong>GPIO25</strong></li>
+<li>DHT11: <strong>GPIO4</strong></li>
+<li>Push button: <strong>GPIO18</strong></li>
+</ul>
+</details>
+</article>
+</div>
+
+<p class="tip"><strong>Try it:</strong> Test the empty-classroom state first, then person detection, then the temperature-controlled fan.</p>
+</div>
+</section>
+
+<section class="section">
+<h2>Expected Output</h2>
+<p>When the classroom is empty, the LCD shows Classroom Empty and the temperature while light and fan are OFF. When a person is detected, the light turns ON. The fan responds to DHT11 temperature thresholds and the buzzer gives a short event beep.</p>
+</section>
+
+<section class="section" id="result">
+<h2>Result</h2>
+<p>The Smart Classroom Automation experiment integrates presence detection, temperature sensing, LCD status, relay-based light/fan control, buzzer notification and push-button acknowledgement.</p>
+</section>
+
+<section class="section">
+<h2>What You Learn</h2>
+<ul>
+<li>USB webcam interfacing with Raspberry Pi.</li>
+<li>YuNet presence detection.</li>
+<li>DHT11 temperature sensing.</li>
+<li>I2C LCD interfacing.</li>
+<li>Relay-based light and fan control.</li>
+<li>Temperature threshold and hysteresis logic.</li>
+<li>Push-button reset input.</li>
+<li>Safe GPIO and camera cleanup.</li>
+</ul>
+</section>
+
+</main>
+
+<footer><strong>Smart Classroom Automation</strong></footer>
+
+<script>
+const program="import time\nimport cv2\nimport RPi.GPIO as GPIO\nimport board\nimport adafruit_dht\nfrom RPLCD.i2c import CharLCD\n\nCAMERA = \"/dev/video0\"\nYUNET_MODEL = \"/home/pi/SmartClassroom/models/face_detection_yunet_2026may.onnx\"\n\nLIGHT_PIN = 27\nFAN_PIN = 25\nBUZZER_PIN = 24\nBUTTON_PIN = 18\nDHT_PIN = board.D4\n\nFAN_ON_TEMP = 25.5\nFAN_OFF_TEMP = 24.5\n\nGPIO.setmode(GPIO.BCM)\nGPIO.setup(LIGHT_PIN, GPIO.OUT, initial=GPIO.HIGH)\nGPIO.setup(FAN_PIN, GPIO.OUT, initial=GPIO.HIGH)\nGPIO.setup(BUZZER_PIN, GPIO.OUT, initial=GPIO.LOW)\nGPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)\n\ndht = adafruit_dht.DHT11(DHT_PIN, use_pulseio=False)\n\nlcd = CharLCD(\n    i2c_expander=\"PCF8574\",\n    address=0x27,\n    port=1,\n    cols=16,\n    rows=2,\n    charmap=\"A00\"\n)\n\ndetector = cv2.FaceDetectorYN.create(\n    YUNET_MODEL, \"\", (320, 320), 0.6, 0.3, 5000\n)\n\nfan_state = False\nprevious_presence = False\n\ndef set_light(on):\n    GPIO.output(LIGHT_PIN, GPIO.LOW if on else GPIO.HIGH)\n\ndef set_fan(on):\n    global fan_state\n    fan_state = bool(on)\n    GPIO.output(FAN_PIN, GPIO.LOW if fan_state else GPIO.HIGH)\n\ndef beep():\n    GPIO.output(BUZZER_PIN, GPIO.HIGH)\n    time.sleep(0.08)\n    GPIO.output(BUZZER_PIN, GPIO.LOW)\n\ndef read_temperature():\n    try:\n        return dht.temperature\n    except Exception:\n        return None\n\ndef update_fan(temperature, person_present):\n    if not person_present:\n        set_fan(False)\n        return\n\n    if temperature is None:\n        return\n\n    if temperature >= FAN_ON_TEMP:\n        set_fan(True)\n    elif temperature <= FAN_OFF_TEMP:\n        set_fan(False)\n\ndef show_lcd(line1, line2):\n    lcd.clear()\n    lcd.write_string(line1[:16])\n    lcd.cursor_pos = (1, 0)\n    lcd.write_string(line2[:16])\n\ncap = cv2.VideoCapture(CAMERA, cv2.CAP_V4L2)\ncap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)\ncap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)\n\nif not cap.isOpened():\n    raise RuntimeError(\"Could not open USB webcam\")\n\ntry:\n    show_lcd(\"Smart Classroom\", \"Starting...\")\n\n    while True:\n        ret, frame = cap.read()\n\n        if not ret:\n            continue\n\n        h, w = frame.shape[:2]\n        detector.setInputSize((w, h))\n        _, faces = detector.detect(frame)\n\n        person_present = faces is not None and len(faces) > 0\n        temperature = read_temperature()\n\n        if not person_present:\n            set_light(False)\n            set_fan(False)\n\n            temp_text = \"--.-C\" if temperature is None else f\"{temperature:.1f}C\"\n            show_lcd(\"Classroom Empty\", temp_text)\n\n        else:\n            set_light(True)\n            update_fan(temperature, True)\n\n            temp_text = \"--.-C\" if temperature is None else f\"{temperature:.1f}C\"\n            show_lcd(\"Person Present\", temp_text)\n\n        if person_present and not previous_presence:\n            beep()\n\n        previous_presence = person_present\n\n        if GPIO.input(BUTTON_PIN) == GPIO.LOW:\n            previous_presence = False\n            time.sleep(0.2)\n\nfinally:\n    set_light(False)\n    set_fan(False)\n    GPIO.output(BUZZER_PIN, GPIO.LOW)\n    cap.release()\n    cv2.destroyAllWindows()\n    lcd.clear()\n    dht.exit()\n    GPIO.cleanup()";
+const lines=program.split("\n");
+const steps=[{"title":"Import libraries","start":"import time","end":"from RPLCD.i2c import CharLCD","text":"Loads camera, GPIO, DHT11 and LCD libraries."},{"title":"Set hardware","start":"CAMERA =","end":"FAN_OFF_TEMP = 24.5","text":"Defines webcam, GPIO pins and temperature thresholds."},{"title":"Configure GPIO","start":"GPIO.setmode","end":"GPIO.setup(BUTTON_PIN","text":"Configures relay outputs, buzzer and push button."},{"title":"Initialize modules","start":"dht = adafruit_dht.DHT11","end":"fan_state = False","text":"Initializes the sensor, LCD and YuNet detector."},{"title":"Control outputs","start":"def set_light","end":"GPIO.output(BUZZER_PIN, GPIO.LOW)","text":"Defines light, fan and buzzer helper functions."},{"title":"Temperature logic","start":"def read_temperature","end":"set_fan(False)","text":"Reads temperature and controls the fan using hysteresis."},{"title":"Open webcam","start":"cap = cv2.VideoCapture","end":"raise RuntimeError","text":"Opens the USB webcam using V4L2."},{"title":"Run automation","start":"while True:","end":"time.sleep(0.2)","text":"Detects presence and automatically controls light, fan, LCD and buzzer."},{"title":"Clean up","start":"finally:","end":"GPIO.cleanup()","text":"Safely turns off outputs and releases hardware resources."}];
+
+function escapeHtml(text){
+return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function displayCode(){
+document.getElementById("code-lines").innerHTML=
+lines.map(function(line,index){
+return '<span class="code-line" id="line-'+(index+1)+'">'+
+'<span class="line-number">'+(index+1)+'</span>'+
+'<span>'+escapeHtml(line)+'</span>'+
+'</span>';
+}).join("");
+}
+
+function findLine(searchText,startIndex){
+startIndex=startIndex||0;
+for(let i=startIndex;i<lines.length;i++){
+if(lines[i].includes(searchText)){return i;}
+}
+return -1;
+}
+
+function showStep(index){
+const step=steps[index];
+
+document.querySelectorAll(".step").forEach(function(button){
+button.classList.remove("active");
+});
+
+const buttons=document.querySelectorAll(".step");
+if(buttons[index]){buttons[index].classList.add("active");}
+
+document.querySelectorAll(".code-line").forEach(function(line){
+line.classList.remove("selected");
+});
+
+const startLine=findLine(step.start,0);
+if(startLine===-1){return;}
+
+let endLine=findLine(step.end,startLine);
+if(endLine===-1){endLine=startLine;}
+
+for(let i=startLine;i<=endLine;i++){
+const line=document.getElementById("line-"+(i+1));
+if(line){line.classList.add("selected");}
+}
+
+const selected=document.getElementById("line-"+(startLine+1));
+const body=document.getElementById("code-body");
+
+if(selected&&body){
+body.scrollTo({
+top:selected.offsetTop-body.offsetTop-20,
+behavior:"smooth"
+});
+}
+
+document.getElementById("explanation").innerHTML=
+"<h3>"+(index+1)+". "+step.title+"</h3><p>"+step.text+"</p>";
+}
+
+function copyCode(){
+navigator.clipboard.writeText(program).then(function(){
+const button=document.querySelector(".copy-button");
+button.innerText="Copied!";
+setTimeout(function(){button.innerText="Copy Code";},1500);
+});
+}
+
+displayCode();
+showStep(0);
+</script>
+
+</body>
+</html>
