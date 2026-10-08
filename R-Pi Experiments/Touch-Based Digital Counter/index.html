@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Touch-Based Digital Counter</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:white;
+    padding:10px;
+}
+.code-lesson{color:#142e3a;}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;}
+.guide>p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;}
+.step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;}
+.explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;}
+.guide details p,.guide details li{color:#526875;font-size:15px;}
+.guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+.result-box{background:#eff6ff;border-left:4px solid #2563eb;padding:16px;border-radius:8px;color:#234e87;}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>
+        Touch-Based Digital Counter
+    </h1>
+
+    <p>
+        Touch the sensor to increase a four-digit counter
+    </p>
+</header>
+
+<nav>
+    <a href="../index.html">
+        ← R-Pi Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+
+<section
+    class="section"
+    id="aim">
+
+    <h2>
+        Aim
+    </h2>
+
+    <p>
+        To design a touch-based digital counter using a Raspberry Pi 4B, a touch sensor, and a 4-digit 7-segment display. Each touch increases the counter value, which is displayed from 0000 to 9999.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        About the Experiment
+    </h2>
+
+    <p>
+        The Raspberry Pi reads the TTP223 touch sensor on GPIO23. A new touch increases the counter by one.
+    </p>
+
+    <p>
+        The four-digit 7-segment display is refreshed using multiplexing so the current count remains visible in four-digit format.
+    </p>
+
+</section>
+
+<section
+    class="section"
+    id="components">
+
+    <h2>
+        Components Required
+    </h2>
+
+    <div class="components-grid">
+
+<div class="component-card">
+    <img
+        src="Raspberry Pi 4 Model B.png"
+        alt="Raspberry Pi 4B (×1)">
+    <h4>
+        Raspberry Pi 4B (×1)
+    </h4>
+    <p>
+        Main controller for touch detection and display control.
+    </p>
+</div>
+
+<div class="component-card">
+    <img
+        src="Touch Sensor.png"
+        alt="TTP223 Touch Sensor Module (×1)">
+    <h4>
+        TTP223 Touch Sensor Module (×1)
+    </h4>
+    <p>
+        Detects each touch used to increase the counter.
+    </p>
+</div>
+
+<div class="component-card">
+    <img
+        src="4-Digit 7-Segment Display.png"
+        alt="SUNR056CC4DO81825 4-Digit 7-Segment Display (×1)">
+    <h4>
+        SUNR056CC4DO81825 4-Digit 7-Segment Display (×1)
+    </h4>
+    <p>
+        Displays the counter value from 0000 to 9999.
+    </p>
+</div>
+
+<div class="component-card">
+    <img
+        src="220 Ohm Resistor.png"
+        alt="220Ω Resistor (×8)">
+    <h4>
+        220Ω Resistor (×8)
+    </h4>
+    <p>
+        Current-limiting resistors for the display segments.
+    </p>
+</div>
+
+<div class="component-card">
+    <img
+        src="Breadboard.png"
+        alt="Breadboard (×1)">
+    <h4>
+        Breadboard (×1)
+    </h4>
+    <p>
+        Used to assemble the circuit.
+    </p>
+</div>
+
+<div class="component-card">
+    <img
+        src="Jumper Wires.png"
+        alt="Jumper Wires">
+    <h4>
+        Jumper Wires
+    </h4>
+    <p>
+        Used for GPIO, power and ground connections.
+    </p>
+</div>
+
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="connections">
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Component / Signal</th>
+                    <th>Physical Pin / Terminal</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>7-Segment Segment A</td>
+                    <td>Pin 29</td>
+                    <td>GPIO5</td>
+                </tr>
+                <tr>
+                    <td>7-Segment Segment B</td>
+                    <td>Pin 31</td>
+                    <td>GPIO6</td>
+                </tr>
+                <tr>
+                    <td>7-Segment Segment C</td>
+                    <td>Pin 33</td>
+                    <td>GPIO13</td>
+                </tr>
+                <tr>
+                    <td>7-Segment Segment D</td>
+                    <td>Pin 35</td>
+                    <td>GPIO19</td>
+                </tr>
+                <tr>
+                    <td>7-Segment Segment E</td>
+                    <td>Pin 37</td>
+                    <td>GPIO26</td>
+                </tr>
+                <tr>
+                    <td>7-Segment Segment F</td>
+                    <td>Pin 36</td>
+                    <td>GPIO16</td>
+                </tr>
+                <tr>
+                    <td>7-Segment Segment G</td>
+                    <td>Pin 38</td>
+                    <td>GPIO20</td>
+                </tr>
+                <tr>
+                    <td>7-Segment Decimal Point (DP)</td>
+                    <td>Pin 40</td>
+                    <td>GPIO21</td>
+                </tr>
+                <tr>
+                    <td>DIG1</td>
+                    <td>Pin 32</td>
+                    <td>GPIO12</td>
+                </tr>
+                <tr>
+                    <td>DIG2</td>
+                    <td>Pin 11</td>
+                    <td>GPIO17</td>
+                </tr>
+                <tr>
+                    <td>DIG3</td>
+                    <td>Pin 13</td>
+                    <td>GPIO27</td>
+                </tr>
+                <tr>
+                    <td>DIG4</td>
+                    <td>Pin 15</td>
+                    <td>GPIO22</td>
+                </tr>
+                <tr>
+                    <td>TTP223 VCC</td>
+                    <td>Pin 2</td>
+                    <td>5V</td>
+                </tr>
+                <tr>
+                    <td>TTP223 GND</td>
+                    <td>Pin 6</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>TTP223 OUT</td>
+                    <td>Pin 16</td>
+                    <td>GPIO23</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+        class="circuit-img"
+        src="Touch-Based Digital Counter Circuit.png"
+        alt="Touch-Based Digital Counter Circuit">
+
+</section>
+
+<section
+    class="section"
+    id="working">
+
+    <h2>
+        Working Principle
+    </h2>
+
+    <div class="flow">
+        TTP223 Touch Sensor
+<br>↓<br>
+GPIO23
+<br>↓<br>
+Increase Counter
+<br>↓<br>
+Multiplex Four Digits
+<br>↓<br>
+Display 0000–9999
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="procedure">
+
+    <h2>
+        Procedure
+    </h2>
+
+    <ol>
+
+        <li>
+            Connect the TTP223 and 4-digit 7-segment display according to the circuit connection table.
+        </li>
+
+        <li>
+            Use the eight 220Ω resistors with the display segment lines.
+        </li>
+
+        <li>
+            Run <code>sudo apt update</code>.
+        </li>
+
+        <li>
+            Install the GPIO package using <code>sudo apt install python3-rpi.gpio</code>.
+        </li>
+
+        <li>
+            Create <code>touch_counter.py</code>.
+        </li>
+
+        <li>
+            Copy the complete Python program from the Explore the Code section.
+        </li>
+
+        <li>
+            Run the program using <code>python3 touch_counter.py</code>.
+        </li>
+
+        <li>
+            Touch the TTP223 sensor and verify that every new touch increases the counter.
+        </li>
+
+        <li>
+            Press <code>Ctrl+C</code> to stop the program.
+        </li>
+
+    </ol>
+
+</section>
+
+<section
+    class="section"
+    id="code">
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Raspberry Pi Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Touch-Based Digital Counter · Select a step to see what each part of the Python program does.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        touch_counter.py
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        onclick="copyCode()">
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                    class="code-body"
+                    id="code-body">
+
+                    <code id="code-lines"></code>
+
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step. The matching code will light up on the left.
+                </p>
+
+                <div class="steps">
+
+<button class="step active" onclick="showStep(0)">
+    <span class="step-number">01</span>
+    Load libraries
+</button>
+<button class="step" onclick="showStep(1)">
+    <span class="step-number">02</span>
+    Set segment pins
+</button>
+<button class="step" onclick="showStep(2)">
+    <span class="step-number">03</span>
+    Set digit pins
+</button>
+<button class="step" onclick="showStep(3)">
+    <span class="step-number">04</span>
+    Configure GPIO
+</button>
+<button class="step" onclick="showStep(4)">
+    <span class="step-number">05</span>
+    Define digit patterns
+</button>
+<button class="step" onclick="showStep(5)">
+    <span class="step-number">06</span>
+    Display one digit
+</button>
+<button class="step" onclick="showStep(6)">
+    <span class="step-number">07</span>
+    Display four digits
+</button>
+<button class="step" onclick="showStep(7)">
+    <span class="step-number">08</span>
+    Detect touch
+</button>
+<button class="step" onclick="showStep(8)">
+    <span class="step-number">09</span>
+    Refresh and clean up
+</button>
+
+                </div>
+
+                <div
+                    class="explanation"
+                    id="explanation">
+
+                    <h3>
+                        1. Load libraries
+                    </h3>
+
+                    <p>
+                        Loads the GPIO and timing libraries.
+                    </p>
+
+                </div>
+
+                <details>
+
+                    <summary>
+                        Explore more
+                    </summary>
+
+                    <p>
+                        The Raspberry Pi rapidly switches between DIG1, DIG2, DIG3 and DIG4. This multiplexing makes the four digits appear continuously visible.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Check your understanding
+                    </summary>
+
+                    <ul>
+
+                        <li>
+                            Which GPIO reads the TTP223 output? <strong>GPIO23.</strong>
+                        </li>
+
+                        <li>
+                            What happens after 9999? <strong>The counter resets to 0.</strong>
+                        </li>
+
+                        <li>
+                            What is the debounce delay? <strong>0.15 seconds.</strong>
+                        </li>
+
+                    </ul>
+
+                </details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">
+            <strong>Tip:</strong>
+            Touch and release the sensor before the next count so that the program detects a new LOW-to-HIGH transition.
+        </p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Expected Output
+    </h2>
+
+    <p>
+        The counter starts at <strong>0000</strong>.
+    </p>
+
+    <p>
+        Each new touch increases the displayed value by one.
+    </p>
+
+    <p>
+        After <strong>9999</strong>, the count returns to <strong>0000</strong>.
+    </p>
+
+</section>
+
+<section
+    class="section"
+    id="result">
+
+    <h2>
+        Result
+    </h2>
+
+    <div class="result-box">
+        The Raspberry Pi successfully detects touches from the TTP223 sensor and displays the incrementing count on the 4-digit 7-segment display.
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        What You Learn
+    </h2>
+
+    <ul>
+
+        <li>
+            Reading capacitive touch input with Raspberry Pi GPIO.
+        </li>
+
+        <li>
+            Driving a 4-digit 7-segment display.
+        </li>
+
+        <li>
+            Using multiplexing to display multiple digits.
+        </li>
+
+        <li>
+            Implementing touch detection and debounce.
+        </li>
+
+        <li>
+            Formatting a number as four digits.
+        </li>
+
+        <li>
+            Using GPIO cleanup safely.
+        </li>
+
+    </ul>
+
+</section>
+
+</main>
+
+<footer>
+    <strong>
+        Touch-Based Digital Counter
+    </strong>
+</footer>
+
+<script>
+
+const program="import RPi.GPIO as GPIO\nimport time\n\n# TOUCH-BASED DIGITAL COUNTER\n# Raspberry Pi 4B\n# TTP223 + 4-Digit 7-Segment Display\n\nGPIO.setmode(GPIO.BCM)\nGPIO.setwarnings(False)\n\nA = 5\nB = 6\nC = 13\nD = 19\nE = 26\nF = 16\nG = 20\nDP = 21\n\nsegments = [A, B, C, D, E, F, G, DP]\n\nDIG1 = 12\nDIG2 = 17\nDIG3 = 27\nDIG4 = 22\n\ndigits = [DIG1, DIG2, DIG3, DIG4]\n\nTOUCH = 23\n\nfor pin in segments:\n    GPIO.setup(pin, GPIO.OUT)\n    GPIO.output(pin, GPIO.LOW)\n\nfor pin in digits:\n    GPIO.setup(pin, GPIO.OUT)\n    GPIO.output(pin, GPIO.LOW)\n\nGPIO.setup(\n    TOUCH,\n    GPIO.IN,\n    pull_up_down=GPIO.PUD_DOWN\n)\n\nnumber_pattern = {\n    0: [1, 1, 1, 1, 1, 1, 0],\n    1: [0, 1, 1, 0, 0, 0, 0],\n    2: [1, 1, 0, 1, 1, 0, 1],\n    3: [1, 1, 1, 1, 0, 0, 1],\n    4: [0, 1, 1, 0, 0, 1, 1],\n    5: [1, 0, 1, 1, 0, 1, 1],\n    6: [1, 0, 1, 1, 1, 1, 1],\n    7: [1, 1, 1, 0, 0, 0, 0],\n    8: [1, 1, 1, 1, 1, 1, 1],\n    9: [1, 1, 1, 1, 0, 1, 1]\n}\n\ndef show_digit(number, digit_pin):\n    for pin in digits:\n        GPIO.output(pin, GPIO.LOW)\n\n    pattern = number_pattern[number]\n\n    for i in range(7):\n        GPIO.output(\n            segments[i],\n            pattern[i]\n        )\n\n    GPIO.output(\n        digit_pin,\n        GPIO.HIGH\n    )\n\n    time.sleep(0.002)\n\n    GPIO.output(\n        digit_pin,\n        GPIO.LOW\n    )\n\ndef display_number(\n    number,\n    duration=0.02\n):\n    number = number % 10000\n\n    value = f\"{number:04d}\"\n\n    start_time = time.time()\n\n    while (\n        time.time() -\n        start_time <\n        duration\n    ):\n        for i in range(4):\n            show_digit(\n                int(value[i]),\n                digits[i]\n            )\n\ncount = 0\n\nlast_touch = GPIO.LOW\n\nprint(\n    \"Touch-Based Digital Counter Started\"\n)\n\nprint(\n    \"Touch the sensor to increase the count.\"\n)\n\nprint(\n    \"Press Ctrl+C to stop.\"\n)\n\ntry:\n    while True:\n        touch = GPIO.input(\n            TOUCH\n        )\n\n        if (\n            touch == GPIO.HIGH\n            and\n            last_touch == GPIO.LOW\n        ):\n            count += 1\n\n            if count > 9999:\n                count = 0\n\n            print(\n                \"Count:\",\n                count\n            )\n\n            time.sleep(0.15)\n\n        last_touch = touch\n\n        display_number(\n            count,\n            0.015\n        )\n\nexcept KeyboardInterrupt:\n    print(\n        \"\\nProgram stopped.\"\n    )\n\nfinally:\n    GPIO.cleanup()\n\n    print(\n        \"GPIO cleaned up.\"\n    )";
+
+const lines=program.split("\n");
+
+const steps=[{"title":"Load libraries","start":"import RPi.GPIO as GPIO","end":"import time","text":"Loads the GPIO and timing libraries."},{"title":"Set segment pins","start":"A = 5","end":"segments = [A, B, C, D, E, F, G, DP]","text":"Defines the Raspberry Pi GPIO pins connected to the display segments."},{"title":"Set digit pins","start":"DIG1 = 12","end":"digits = [DIG1, DIG2, DIG3, DIG4]","text":"Defines the four digit-select GPIO pins."},{"title":"Configure GPIO","start":"for pin in segments:","end":"pull_up_down=GPIO.PUD_DOWN","text":"Configures the display pins as outputs and the touch sensor as an input."},{"title":"Define digit patterns","start":"number_pattern = {","end":"9: [1, 1, 1, 1, 0, 1, 1]","text":"Stores the seven-segment patterns used to draw digits 0 to 9."},{"title":"Display one digit","start":"def show_digit","end":"digit_pin,","text":"Controls the segments and enables one display digit at a time."},{"title":"Display four digits","start":"def display_number","end":"digits[i]","text":"Formats the counter as four digits and multiplexes the display."},{"title":"Detect touch","start":"touch = GPIO.input","end":"time.sleep(0.15)","text":"Detects a new touch, increments the counter and debounces the touch input."},{"title":"Refresh and clean up","start":"last_touch = touch","end":"GPIO cleaned up.","text":"Continuously refreshes the display and cleans up GPIO when the program stops."}];
+
+function escapeHtml(text)
+{
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+}
+
+function displayCode()
+{
+    document.getElementById("code-lines").innerHTML=
+        lines.map(function(line,index)
+        {
+            return '<span class="code-line" id="line-'+(index+1)+'">'+
+                '<span class="line-number">'+(index+1)+'</span>'+
+                '<span>'+escapeHtml(line)+'</span>'+
+                '</span>';
+        }).join("");
+}
+
+function findLine(searchText,startIndex)
+{
+    startIndex=startIndex||0;
+
+    for(let i=startIndex;i<lines.length;i++)
+    {
+        if(lines[i].includes(searchText))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function showStep(index)
+{
+    const step=steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button)
+        {
+            button.classList.remove("active");
+        });
+
+    const buttons=
+        document.querySelectorAll(".step");
+
+    if(buttons[index])
+    {
+        buttons[index]
+            .classList
+            .add("active");
+    }
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line)
+        {
+            line.classList.remove("selected");
+        });
+
+    const startLine=
+        findLine(
+            step.start,
+            0
+        );
+
+    if(startLine===-1)
+    {
+        return;
+    }
+
+    let endLine=
+        findLine(
+            step.end,
+            startLine
+        );
+
+    if(endLine===-1)
+    {
+        endLine=startLine;
+    }
+
+    for(let i=startLine;i<=endLine;i++)
+    {
+        const line=
+            document.getElementById(
+                "line-"+(i+1)
+            );
+
+        if(line)
+        {
+            line.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const selected=
+        document.getElementById(
+            "line-"+(startLine+1)
+        );
+
+    const body=
+        document.getElementById(
+            "code-body"
+        );
+
+    if(selected&&body)
+    {
+        body.scrollTo(
+        {
+            top:
+                selected.offsetTop-
+                body.offsetTop-
+                20,
+            behavior:"smooth"
+        });
+    }
+
+    document.getElementById(
+        "explanation"
+    ).innerHTML=
+        "<h3>"+
+        (index+1)+
+        ". "+
+        step.title+
+        "</h3><p>"+
+        step.text+
+        "</p>";
+}
+
+function copyCode()
+{
+    navigator.clipboard
+        .writeText(program)
+        .then(function()
+        {
+            const button=
+                document.querySelector(
+                    ".copy-button"
+                );
+
+            button.innerText=
+                "Copied!";
+
+            setTimeout(
+                function()
+                {
+                    button.innerText=
+                        "Copy Code";
+                },
+                1500
+            );
+        });
+}
+
+displayCode();
+showStep(0);
+
+</script>
+
+</body>
+</html>
