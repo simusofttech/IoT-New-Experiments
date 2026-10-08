@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Digital Notice Board</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:white;
+    padding:10px;
+}
+.code-lesson{color:#142e3a;}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;}
+.guide>p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;}
+.step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;}
+.explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;}
+.guide details p,.guide details li{color:#526875;font-size:15px;}
+.guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+.result-box{background:#eff6ff;border-left:4px solid #2563eb;padding:16px;border-radius:8px;color:#234e87;}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>
+        Smart Digital Notice Board
+    </h1>
+
+    <p>
+        Display and manage school announcements through a local web application
+    </p>
+</header>
+
+<nav>
+    <a href="../index.html">
+        ← R-Pi Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To build a browser-based school notice board using Raspberry Pi 4B, Flask, and SQLite for displaying and managing announcements.</p>
+</section>
+<section class="section" id="about">
+<h2>About the Experiment</h2>
+<p>A Flask web application displays school announcements with a live date and time. Teachers can add, edit, and delete notices through an administration page. Notices are stored locally in <code>notices.db</code>.</p><p>Notices rotate every 8 seconds, the display refreshes every 30 seconds, and expired notices are hidden from the public view.</p>
+</section>
+<section
+    class="section"
+    id="components">
+
+    <h2>
+        Components Required
+    </h2>
+
+    <div class="components-grid">
+<div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Hosts the Flask application, notice display, and SQLite database.</p></div>
+</div>
+
+</section>
+
+<section
+    class="section"
+    id="connections">
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Component / Signal</th>
+                    <th>Physical Pin / Terminal</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+<tr><td>Raspberry Pi 4B HDMI0</td><td>Micro-HDMI port (HDMI0)</td><td>HDMI monitor/TV via suitable cable</td></tr>
+<tr><td>Raspberry Pi power</td><td>USB-C power input</td><td>Compatible supply for normal operation</td></tr>
+<tr><td>Notice board access</td><td>Wi-Fi or Ethernet</td><td>Same trusted local network for admin access</td></tr>
+</tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+        class="circuit-img"
+        src="Smart Digital Notice Board Circuit.png"
+        alt="Smart Digital Notice Board Circuit">
+
+</section>
+
+<section
+    class="section"
+    id="working"><section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">Raspberry Pi → Flask Web Server → SQLite Database<br>↓<br>Public Display / Admin Page → Add, Edit, Delete Notices</div><p>The public display reads active notices, rotates cards every 8 seconds and refreshes every 30 seconds. The admin page manages notices stored in SQLite.</p>
+</section>
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol><li>Set up Raspberry Pi OS and connect the Pi to a display using HDMI0.</li><li>Open a terminal and create a folder: <code>mkdir -p ~/Smart_Digital_Notice_Board</code>.</li><li>Enter the folder: <code>cd ~/Smart_Digital_Notice_Board</code>.</li><li>Create a virtual environment: <code>python3 -m venv venv</code>.</li><li>Activate it: <code>source venv/bin/activate</code>.</li><li>Install Flask: <code>python -m pip install Flask</code>.</li><li>Save the complete code shown below as <code>main.py</code>.</li><li>Start the app: <code>python main.py</code>.</li><li>Open <code>http://127.0.0.1:5000/</code> for notices and <code>http://127.0.0.1:5000/admin</code> to manage them.</li><li>Verify notice rotation, expiry dates and database persistence; stop the server with Ctrl+C.</li></ol>
+</section>
+<section
+    class="section"
+    id="code">
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Raspberry Pi Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Smart Digital Notice Board · Select a step to see what each part of the Python program does.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        main.py
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        onclick="copyCode()">
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                    class="code-body"
+                    id="code-body">
+
+                    <code id="code-lines"></code>
+
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step. The matching code will light up on the left.
+                </p>
+
+                <div class="steps">
+
+<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Import libraries</button>
+<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configure app</button>
+<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Open database</button>
+<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Initialize database</button>
+<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Filter active notices</button>
+<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Build public display</button>
+<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Build admin page</button>
+<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Handle web routes</button>
+<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Start Flask</button>
+</div>
+
+                <div
+                    class="explanation"
+                    id="explanation">
+
+                    <h3>
+                        1. Load libraries
+                    </h3>
+
+                    <p>
+                        Loads Flask, SQLite, path and date tools.
+                    </p>
+
+                </div>
+
+                <details><summary>Explore more</summary><p>SQLite stores notices in <code>notices.db</code> next to <code>main.py</code>. The public page hides expired notices but the admin page still lists them.</p></details><details><summary>Check your understanding</summary><ul><li>Which library runs the web server? <strong>Flask.</strong></li><li>What file stores notices? <strong>notices.db.</strong></li><li>How often do notice cards rotate? <strong>Every 8 seconds.</strong></li></ul></details>
+
+            </article>
+
+        </div>
+
+        <p class="tip"><strong>Tip:</strong> The reference admin page has no authentication. Use it only on a trusted local network; do not expose port 5000 publicly.</p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Expected Output<section class="section" id="output">
+<h2>Expected Output</h2>
+<p>The monitor displays the school heading, live date/time and rotating notice cards. Staff can add, edit or delete notices at <code>/admin</code>. Notices remain saved in <code>notices.db</code> after the browser closes or the Pi restarts.</p>
+</section>
+<section
+    class="section"
+    id="result"><section class="section" id="result">
+<h2>Result</h2>
+<div class="result-box">The Raspberry Pi hosts a digital notice board with a public display, browser-based notice management, and persistent SQLite storage.</div>
+</section>
+<section class="section" id="learn">
+<h2>What You Learn</h2>
+<ul><li>Running a Flask web server on Raspberry Pi.</li><li>Storing and retrieving records with SQLite.</li><li>Building an admin interface to manage notices.</li><li>Using HTML, CSS and JavaScript for dynamic browser displays.</li><li>Managing local network access and application data.</li></ul>
+</section>
+</main>
+
+<footer>
+    <strong>
+        Smart Digital Notice Board
+    </strong>
+</footer>
+
+<script>
+
+const program="from flask import Flask, request, redirect, url_for, render_template_string, abort\nimport sqlite3\nfrom pathlib import Path\nfrom datetime import date\n\n\napp = Flask(__name__)\nDB_PATH = Path(__file__).resolve().parent / \"notices.db\"\nCATEGORIES = [\"School Announcement\", \"Important Reminder\", \"Event\",\n            \"Holiday\", \"Exam\", \"General Announcement\"]\n\n\n\n\ndef connect_db():\n  db = sqlite3.connect(DB_PATH)\n  db.row_factory = sqlite3.Row\n  return db\n\n\n\n\ndef initialize_database():\n  with connect_db() as db:\n     db.execute(\"\"\"\n       CREATE TABLE IF NOT EXISTS notices (\n             id INTEGER PRIMARY KEY AUTOINCREMENT,\n             category TEXT NOT NULL,\n             title TEXT NOT NULL,\n             message TEXT NOT NULL,\n             expiry_date TEXT\n       )\n     \"\"\")\n     if db.execute(\"SELECT COUNT(*) FROM notices\").fetchone()[0] == 0:\n       db.executemany(\"\"\"\n             INSERT INTO notices(category,title,message,expiry_date)\n             VALUES(?,?,?,?)\n       \"\"\", [\n             (\"School Announcement\", \"Morning Assembly\",\n             \"All students must attend the morning assembly at 8:30 AM.\", None),\n             (\"Important Reminder\", \"Bring Your ID Card\",\n             \"Students should carry their school ID card every day.\", None),\n             (\"Event\", \"Science Exhibition\",\n             \"Prepare your models for the upcoming science exhibition.\", None)\n       ])\n\n\n\n\ndef get_notices(active_only=False):\n  with connect_db() as db:\n     if active_only:\n       today = date.today().isoformat()\n       rows = db.execute(\"\"\"\n\n           SELECT * FROM notices\n           WHERE expiry_date IS NULL OR expiry_date='' OR expiry_date>=?\n           ORDER BY id DESC\n        \"\"\", (today,)).fetchall()\n     else:\n        rows = db.execute(\"SELECT * FROM notices ORDER BY id DESC\").fetchall()\n  return [dict(row) for row in rows]\n\n\n\n\ndef get_notice(notice_id):\n  with connect_db() as db:\n      row = db.execute(\"SELECT * FROM notices WHERE id=?\", (notice_id,)).fetchone()\n  return dict(row) if row else None\n\n\n\n\nDISPLAY = r\"\"\"\n<!doctype html><html lang=\"en\"><head>\n<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Smart Digital Notice Board</title>\n<style>\n*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f1f4f8;color:#17345d}\nheader{background:linear-gradient(110deg,#071b55,#123f91);color:white;text-align:center;padding:24px 18px}\nheader h1{margin:0;font-size:clamp(24px,3vw,42px)}header p{margin:10px 0 0}\n.topbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#174b9c;color:white;padding:12px 22px}\nmain{max-width:1200px;margin:26px auto;padding:0 20px}\n.notice{display:none;background:white;border-left:8px solid #2672d8;border-radius:12px;padding:28px 32px;margin:18px 0;min-height:250px}\n.notice.active{display:block}.category{color:#2672d8;font-weight:bold;text-transform:uppercase;letter-spacing:1px}\n.notice h2{font-size:clamp(26px,3vw,42px)}.message{font-size:clamp(19px,2vw,29px);line-height:1.45;white-space:pre-wrap}\n.meta{color:#78869a;margin-top:20px}.empty{background:white;padding:30px;border-radius:10px}\n</style></head><body>\n<header><h1>SUNRISE PUBLIC SCHOOL</h1><p>SMART DIGITAL NOTICE BOARD</p></header>\n<div class=\"topbar\"><span id=\"today\"></span><span id=\"clock\"></span></div>\n<main><h2>Today's Announcements</h2>\n{% if notices %}\n{% for notice in notices %}\n<section class=\"notice\"><div class=\"category\">{{ notice.category }}</div>\n<h2>{{ notice.title }}</h2><div class=\"message\">{{ notice.message }}</div>\n{% if notice.expiry_date %}<div class=\"meta\">Valid until: {{ notice.expiry_date }}</div>{% endif %}\n</section>\n{% endfor %}\n{% else %}<div class=\"empty\">There are no active notices at the moment.</div>{% endif %}\n</main>\n<script>\nfunction tick(){const n=new Date();\ndocument.getElementById(\"today\").textContent=n.toLocaleDateString(undefined,{weekday:\"long\",day:\"numeric\",month:\"long\",year:\"numeric\"});\ndocument.getElementById(\"clock\").textContent=n.toLocaleTimeString(undefined,{hour:\"numeric\",minute:\"2-digit\",second:\"2-digit\"});}\ntick();setInterval(tick,1000);\nconst cards=[...document.querySelectorAll(\".notice\")];\nif(cards.length){let i=0;cards[0].classList.add(\"active\");\nif(cards.length>1)setInterval(()=>{cards[i].classList.remove(\"active\");i=(i+1)%cards.length;cards[i].classList.add(\"active\");},8000);}\nsetInterval(()=>location.reload(),30000);\n</script></body></html>\n\"\"\"\n\n\nADMIN = r\"\"\"\n<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Notice Admin</title>\n<style>\nbody{margin:0;padding:24px;font-family:Arial,sans-serif;background:#f1f4f8;color:#17345d}\n.container{max-width:1000px;margin:auto}.card{background:white;padding:22px;border-radius:12px;margin:18px 0}\nlabel{display:block;font-weight:bold;margin:14px 0 6px}\ninput,select,textarea{width:100%;padding:11px;border:1px solid #bdc8d8;border-radius:6px;font:inherit}\n\ntextarea{min-height:100px}button,.button{display:inline-block;padding:10px 16px;border:0;border-radius:6px;background:#174b9c;color:white;text-\ndecoration:none;cursor:pointer;margin-top:12px}\n.delete{background:#b42318}table{width:100%;border-collapse:collapse}td,th{text-align:left;border-bottom:1px solid #dce3ed;padding:10px;vertical-\nalign:top}th{background:#eaf0fa}\n</style></head><body><div class=\"container\"><h1>Notice Board Admin</h1>\n<p><a href=\"{{ url_for('home') }}\">Open display page</a></p>\n<section class=\"card\"><h2>{{ \"Edit Notice\" if notice else \"Add New Notice\" }}</h2>\n<form method=\"post\" action=\"{{ url_for('edit_notice', notice_id=notice.id) if notice else url_for('add_notice') }}\">\n<label>Category</label><select name=\"category\" required>\n{% for item in categories %}<option value=\"{{ item }}\" {% if notice and notice.category==item %}selected{% endif %}>{{ item }}</option>{% endfor %}\n</select>\n<label>Notice Title</label><input name=\"title\" maxlength=\"120\" required value=\"{{ notice.title if notice else '' }}\">\n<label>Notice Message</label><textarea name=\"message\" required>{{ notice.message if notice else '' }}</textarea>\n<label>Expiry Date (optional)</label><input type=\"date\" name=\"expiry_date\" value=\"{{ notice.expiry_date if notice and notice.expiry_date else '' }}\">\n<p>Notice is hidden from the display after its expiry date.</p>\n<button type=\"submit\">{{ \"Update Notice\" if notice else \"Add Notice\" }}</button>\n{% if notice %}<a class=\"button\" href=\"{{ url_for('admin') }}\">Cancel</a>{% endif %}\n</form></section>\n<section class=\"card\"><h2>Saved Notices</h2>\n{% if notices %}<table><tr><th>Title / Message</th><th>Category</th><th>Expiry</th><th>Actions</th></tr>\n{% for item in notices %}<tr><td><b>{{ item.title }}</b><br>{{ item.message }}</td><td>{{ item.category }}</td>\n<td>{{ item.expiry_date or \"No expiry\" }}</td><td>\n<a class=\"button\" href=\"{{ url_for('edit_notice',notice_id=item.id) }}\">Edit</a>\n<form method=\"post\" action=\"{{ url_for('delete_notice',notice_id=item.id) }}\" onsubmit=\"return confirm('Delete this notice?');\">\n<button class=\"delete\">Delete</button></form></td></tr>{% endfor %}</table>\n{% else %}<p>No saved notices.</p>{% endif %}\n</section></div></body></html>\n\"\"\"\n\n\n\n\n@app.route(\"/\")\ndef home():\n  return render_template_string(DISPLAY, notices=get_notices(True))\n\n\n\n\n@app.route(\"/admin\")\ndef admin():\n  return render_template_string(ADMIN, notices=get_notices(), notice=None,\n                    categories=CATEGORIES)\n\n\n\n\n@app.route(\"/admin/add\", methods=[\"POST\"])\ndef add_notice():\n  category=request.form.get(\"category\",\"\").strip()\n  title=request.form.get(\"title\",\"\").strip()\n  message=request.form.get(\"message\",\"\").strip()\n  expiry=request.form.get(\"expiry_date\",\"\").strip() or None\n  if not category or not title or not message:\n      abort(400, \"Category, title, and message are required.\")\n  with connect_db() as db:\n      db.execute(\"INSERT INTO notices(category,title,message,expiry_date) VALUES(?,?,?,?)\",\n            (category,title,message,expiry))\n  return redirect(url_for(\"admin\"))\n\n\n\n\n@app.route(\"/admin/edit/<int:notice_id>\", methods=[\"GET\",\"POST\"])\ndef edit_notice(notice_id):\n  notice=get_notice(notice_id)\n  if not notice: abort(404, \"Notice not found.\")\n  if request.method==\"POST\":\n      category=request.form.get(\"category\",\"\").strip()\n\n    title=request.form.get(\"title\",\"\").strip()\n    message=request.form.get(\"message\",\"\").strip()\n    expiry=request.form.get(\"expiry_date\",\"\").strip() or None\n    if not category or not title or not message:\n      abort(400, \"Category, title, and message are required.\")\n    with connect_db() as db:\n      db.execute(\"\"\"UPDATE notices SET category=?,title=?,message=?,expiry_date=?\n               WHERE id=?\"\"\",(category,title,message,expiry,notice_id))\n    return redirect(url_for(\"admin\"))\n  return render_template_string(ADMIN, notices=get_notices(), notice=notice,\n                    categories=CATEGORIES)\n\n\n\n\n@app.route(\"/admin/delete/<int:notice_id>\", methods=[\"POST\"])\ndef delete_notice(notice_id):\n  with connect_db() as db:\n    db.execute(\"DELETE FROM notices WHERE id=?\",(notice_id,))\n  return redirect(url_for(\"admin\"))\n\n\n\n\nif __name__==\"__main__\":\n  initialize_database()\n  app.run(host=\"0.0.0.0\",port=5000,debug=False)";
+
+const lines=program.split("\n");
+
+const steps=[{"title":"Import libraries","start":"from flask import Flask","end":"from datetime import date","text":"Loads Flask, SQLite, path and date tools."},{"title":"Configure app","start":"app = Flask","end":"CATEGORIES =","text":"Defines the web application, database path and notice categories."},{"title":"Open database","start":"def connect_db():","end":"return db","text":"Creates an SQLite connection with named fields."},{"title":"Initialize database","start":"def initialize_database():","end":"def get_notices(","text":"Creates the notices table and inserts example records if empty."},{"title":"Filter active notices","start":"def get_notices(","end":"def get_notice(","text":"Reads records and filters out expired notices for the display."},{"title":"Build public display","start":"DISPLAY = r","end":"ADMIN = r","text":"Defines the public notice page, live clock and rotation."},{"title":"Build admin page","start":"ADMIN = r","end":"@app.route(\"/\")","text":"Defines the form for adding/editing and listing notices."},{"title":"Handle web routes","start":"@app.route(\"/\")","end":"if __name__==","text":"Handles display, administration and CRUD requests."},{"title":"Start Flask","start":"if __name__==","end":"app.run(","text":"Initializes the database and runs Flask on port 5000."}];
+
+function escapeHtml(text)
+{
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+}
+
+function displayCode()
+{
+    document.getElementById("code-lines").innerHTML=
+        lines.map(function(line,index)
+        {
+            return '<span class="code-line" id="line-'+(index+1)+'">'+
+                '<span class="line-number">'+(index+1)+'</span>'+
+                '<span>'+escapeHtml(line)+'</span>'+
+                '</span>';
+        }).join("");
+}
+
+function findLine(searchText,startIndex)
+{
+    startIndex=startIndex||0;
+
+    for(let i=startIndex;i<lines.length;i++)
+    {
+        if(lines[i].includes(searchText))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function showStep(index)
+{
+    const step=steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button)
+        {
+            button.classList.remove("active");
+        });
+
+    const buttons=
+        document.querySelectorAll(".step");
+
+    if(buttons[index])
+    {
+        buttons[index]
+            .classList
+            .add("active");
+    }
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line)
+        {
+            line.classList.remove("selected");
+        });
+
+    const startLine=
+        findLine(
+            step.start,
+            0
+        );
+
+    if(startLine===-1)
+    {
+        return;
+    }
+
+    let endLine=
+        findLine(
+            step.end,
+            startLine
+        );
+
+    if(endLine===-1)
+    {
+        endLine=startLine;
+    }
+
+    for(let i=startLine;i<=endLine;i++)
+    {
+        const line=
+            document.getElementById(
+                "line-"+(i+1)
+            );
+
+        if(line)
+        {
+            line.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const selected=
+        document.getElementById(
+            "line-"+(startLine+1)
+        );
+
+    const body=
+        document.getElementById(
+            "code-body"
+        );
+
+    if(selected&&body)
+    {
+        body.scrollTo(
+        {
+            top:
+                selected.offsetTop-
+                body.offsetTop-
+                20,
+            behavior:"smooth"
+        });
+    }
+
+    document.getElementById(
+        "explanation"
+    ).innerHTML=
+        "<h3>"+
+        (index+1)+
+        ". "+
+        step.title+
+        "</h3><p>"+
+        step.text+
+        "</p>";
+}
+
+function copyCode()
+{
+    navigator.clipboard
+        .writeText(program)
+        .then(function()
+        {
+            const button=
+                document.querySelector(
+                    ".copy-button"
+                );
+
+            button.innerText=
+                "Copied!";
+
+            setTimeout(
+                function()
+                {
+                    button.innerText=
+                        "Copy Code";
+                },
+                1500
+            );
+        });
+}
+
+displayCode();
+showStep(0);
+
+</script>
+
+</body>
+</html>
