@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4-Digit 7-Segment Display with Relay Counter</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:white;
+    padding:10px;
+}
+.code-lesson{color:#142e3a;}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;}
+.guide>p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;}
+.step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;}
+.explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;}
+.guide details p,.guide details li{color:#526875;font-size:15px;}
+.guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+.result-box{background:#eff6ff;border-left:4px solid #2563eb;padding:16px;border-radius:8px;color:#234e87;}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>
+        4-Digit 7-Segment Display with Relay Counter
+    </h1>
+
+    <p>
+        Count relay switching cycles on a four-digit display
+    </p>
+</header>
+
+<nav>
+    <a href="../index.html">
+        ← R-Pi Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+<section class="section" id="aim"><h2>Aim</h2><p>To count relay ON/OFF cycles from 0000 to 9999 using a Raspberry Pi 4B and a multiplexed 4-digit 7-segment display.</p></section><section class="section" id="about"><h2>About the Experiment</h2><p>The Raspberry Pi drives the display segment and digit lines and controls a 5V relay using GPIO23. Each completed ON/OFF cycle increases the count by one.</p></section>
+<section
+    class="section"
+    id="components">
+
+    <h2>
+        Components Required
+    </h2>
+
+    <div class="components-grid">
+<div class="component-card">
+    <img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4B">
+    <h4>Raspberry Pi 4B (×1)</h4>
+    <p>Main controller for display and relay.</p>
+</div>
+
+<div class="component-card">
+    <img src="4-Digit 7-Segment Display(1).png" alt="4-Digit 7-Segment Display">
+    <h4>4-Digit 7-Segment Display (×1)</h4>
+    <p>Shows the four-digit relay cycle count.</p>
+</div>
+
+<div class="component-card">
+    <img src="1K ohm resistor.png" alt="1kΩ Resistor">
+    <h4>1kΩ Resistor (×8)</h4>
+    <p>Eight current-limiting resistors for segment lines.</p>
+</div>
+
+<div class="component-card">
+    <img src="1-Channel Relay Module(2).png" alt="5V Relay Module">
+    <h4>5V Relay Module (×1)</h4>
+    <p>Switches ON and OFF under GPIO control.</p>
+</div>
+
+<div class="component-card">
+    <img src="Breadboard(20261008-063220).png" alt="Breadboard">
+    <h4>Breadboard (×1)</h4>
+    <p>Supports the circuit connections.</p>
+</div>
+
+<div class="component-card">
+    <img src="Jumper Wires(20261008-063215).png" alt="Jumper Wires">
+    <h4>Jumper Wires (as required)</h4>
+    <p>Connect the GPIO, display and relay.</p>
+</div>
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="connections">
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Component / Signal</th>
+                    <th>Physical Pin / Terminal</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+<tr><td>Segment A through 1kΩ</td><td>Pin 29</td><td>GPIO5</td></tr>
+<tr><td>Segment B through 1kΩ</td><td>Pin 31</td><td>GPIO6</td></tr>
+<tr><td>Segment C through 1kΩ</td><td>Pin 33</td><td>GPIO13</td></tr>
+<tr><td>Segment D through 1kΩ</td><td>Pin 35</td><td>GPIO19</td></tr>
+<tr><td>Segment E through 1kΩ</td><td>Pin 37</td><td>GPIO26</td></tr>
+<tr><td>Segment F through 1kΩ</td><td>Pin 36</td><td>GPIO16</td></tr>
+<tr><td>Segment G through 1kΩ</td><td>Pin 38</td><td>GPIO20</td></tr>
+<tr><td>Decimal point through 1kΩ</td><td>Pin 40</td><td>GPIO21</td></tr>
+<tr><td>Digit 1</td><td>Pin 32</td><td>GPIO12</td></tr>
+<tr><td>Digit 2</td><td>Pin 11</td><td>GPIO17</td></tr>
+<tr><td>Digit 3</td><td>Pin 13</td><td>GPIO27</td></tr>
+<tr><td>Digit 4</td><td>Pin 15</td><td>GPIO22</td></tr>
+<tr><td>Relay VCC</td><td>Pin 2 or 4</td><td>5V</td></tr>
+<tr><td>Relay GND</td><td>Pin 6</td><td>GND</td></tr>
+<tr><td>Relay IN</td><td>Pin 16</td><td>GPIO23</td></tr>
+</tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+        class="circuit-img"
+        src="4-Digit 7-Segment Display with Relay Counter Circuit.png"
+        alt="4-Digit 7-Segment Display with Relay Counter Circuit">
+
+</section>
+
+<section
+    class="section"
+    id="working"><section class="section" id="working"><h2>Working Principle</h2><div class="flow">Relay ON → Show Count → Relay OFF → Show Count → Increment Count → Repeat</div><p>The eight 1kΩ resistors limit segment current and can make the display dimmer than the original 330Ω design. Confirm the display type and safe digit-driving hardware before wiring.</p></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Verify the display pinout, common configuration, and suitable GPIO digit drivers.</li><li>Connect A–G and DP to GPIO5, 6, 13, 19, 26, 16, 20, 21 through eight 1kΩ resistors.</li><li>Connect DIG1–DIG4 to the GPIO12, 17, 27, 22 control signals through suitable digit drivers.</li><li>Connect relay VCC to 5V, GND to ground, and IN to GPIO23; verify 3.3V GPIO compatibility.</li><li>Save the program as <code>relay_counter.py</code> and run with Python 3.</li><li>Observe relay cycling and the count advancing from 0000 to 9999.</li></ol></section>
+<section
+    class="section"
+    id="code">
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Raspberry Pi Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            4-Digit 7-Segment Display with Relay Counter · Select a step to see what each part of the Python program does.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        relay_counter.py
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        onclick="copyCode()">
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                    class="code-body"
+                    id="code-body">
+
+                    <code id="code-lines"></code>
+
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step. The matching code will light up on the left.
+                </p>
+
+                <div class="steps">
+
+<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load libraries</button>
+<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Assign segment GPIO</button>
+<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Assign digit GPIO</button>
+<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Set relay GPIO</button>
+<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Initialize outputs</button>
+<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Digit patterns</button>
+<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Multiplex display</button>
+<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Relay cycle and count</button>
+<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Cleanup</button>
+</div>
+
+                <div
+                    class="explanation"
+                    id="explanation">
+
+                    <h3>
+                        1. Load libraries
+                    </h3>
+
+                    <p>
+                        Import GPIO and timing functions.
+                    </p>
+
+                </div>
+
+                <details><summary>Explore more</summary><p>Digit multiplexing repeatedly selects one digit at a time. Verify the display electrical specifications and appropriate digit drivers.</p></details><details><summary>Check your understanding</summary><ul><li>Which GPIO controls the relay? <strong>GPIO23.</strong></li><li>How many segment resistors are used? <strong>Eight 1kΩ resistors.</strong></li><li>When does the count wrap? <strong>After 9999.</strong></li></ul></details>
+
+            </article>
+
+        </div>
+
+        <p class="tip"><strong>Tip:</strong> Verify the 4-digit display pinout, common configuration, GPIO current limits and relay logic compatibility before powering the circuit.</p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Expected Output<section class="section" id="output"><h2>Expected Output</h2><p>The relay alternates ON and OFF for approximately 0.5 seconds each. The four-digit display shows the current count and increments after each complete cycle, wrapping to 0000 after 9999.</p></section>
+<section
+    class="section"
+    id="result"><section class="section" id="result"><h2>Result</h2><div class="result-box">The program demonstrates timed relay control and four-digit counting using GPIO multiplexing, subject to appropriate display-driver hardware.</div></section><section class="section" id="learn"><h2>What You Learn</h2><ul><li>Mapping GPIO pins to seven-segment display signals.</li><li>Multiplexing a four-digit display.</li><li>Controlling an active-low relay.</li><li>Using current-limiting resistors and safe GPIO drivers.</li><li>Wrapping a counter after 9999.</li></ul></section>
+</main>
+
+<footer>
+    <strong>
+        4-Digit 7-Segment Display with Relay Counter
+    </strong>
+</footer>
+
+<script>
+
+const program="import RPi.GPIO as GPIO\nimport time\n\n# Segment GPIO\nA = 5\nB = 6\nC = 13\nD = 19\nE = 26\nF = 16\nG = 20\nDP = 21\nsegments = [A, B, C, D, E, F, G, DP]\n\n# Digit select GPIO\nDIG1 = 12\nDIG2 = 17\nDIG3 = 27\nDIG4 = 22\ndigit_select = [DIG1, DIG2, DIG3, DIG4]\n\n# Relay\nRELAY = 23\n\nGPIO.setmode(GPIO.BCM)\nfor pin in segments:\n    GPIO.setup(pin, GPIO.OUT)\n    GPIO.output(pin, GPIO.LOW)\n\nfor pin in digit_select:\n    GPIO.setup(pin, GPIO.OUT)\n    GPIO.output(pin, GPIO.HIGH)\n\nGPIO.setup(RELAY, GPIO.OUT)\n# Active-low relay\nGPIO.output(RELAY, GPIO.HIGH)\n\ndigit_pattern = {\n    0: [1, 1, 1, 1, 1, 1, 0],\n    1: [0, 1, 1, 0, 0, 0, 0],\n    2: [1, 1, 0, 1, 1, 0, 1],\n    3: [1, 1, 1, 1, 0, 0, 1],\n    4: [0, 1, 1, 0, 0, 1, 1],\n    5: [1, 0, 1, 1, 0, 1, 1],\n    6: [1, 0, 1, 1, 1, 1, 1],\n    7: [1, 1, 1, 0, 0, 0, 0],\n    8: [1, 1, 1, 1, 1, 1, 1],\n    9: [1, 1, 1, 1, 0, 1, 1]\n}\n\ndef all_digits_off():\n    for pin in digit_select:\n        GPIO.output(pin, GPIO.HIGH)\n\ndef set_segments(number):\n    pattern = digit_pattern[number]\n    for pin, state in zip(segments[:7], pattern):\n        GPIO.output(pin, state)\n    GPIO.output(DP, GPIO.LOW)\n\ndef display_position(position, number):\n    all_digits_off()\n    set_segments(number)\n    GPIO.output(digit_select[position], GPIO.LOW)\n\ndef display_number(number, duration):\n    number_string = f\"{number:04d}\"\n    start = time.time()\n    while time.time() - start < duration:\n        display_position(0, int(number_string[0]))\n        time.sleep(0.002)\n        display_position(1, int(number_string[1]))\n        time.sleep(0.002)\n        display_position(2, int(number_string[2]))\n        time.sleep(0.002)\n        display_position(3, int(number_string[3]))\n        time.sleep(0.002)\n\ncount = 0\ntry:\n    while True:\n        GPIO.output(RELAY, GPIO.LOW)\n        print(\"Relay: ON\")\n        print(\"Count:\", f\"{count:04d}\")\n        display_number(count, 0.5)\n\n        GPIO.output(RELAY, GPIO.HIGH)\n        print(\"Relay: OFF\")\n        display_number(count, 0.5)\n\n        count += 1\n        if count > 9999:\n            count = 0\n\nexcept KeyboardInterrupt:\n    print(\"\\nProgram stopped.\")\nfinally:\n    GPIO.output(RELAY, GPIO.HIGH)\n    all_digits_off()\n    GPIO.cleanup()";
+
+const lines=program.split("\n");
+
+const steps=[{"title":"Load libraries","start":"import RPi.GPIO as GPIO","end":"import time","text":"Import GPIO and timing functions."},{"title":"Assign segment GPIO","start":"A = 5","end":"segments =","text":"Set the eight segment pins."},{"title":"Assign digit GPIO","start":"DIG1 = 12","end":"digit_select =","text":"Set the four digit-select pins."},{"title":"Set relay GPIO","start":"RELAY = 23","end":"RELAY = 23","text":"Control the active-low relay using GPIO23."},{"title":"Initialize outputs","start":"GPIO.setmode","end":"GPIO.output(RELAY, GPIO.HIGH)","text":"Configure output pins and initially switch the relay off."},{"title":"Digit patterns","start":"digit_pattern =","end":"def all_digits_off","text":"Map numbers 0–9 to seven segment states."},{"title":"Multiplex display","start":"def all_digits_off","end":"count = 0","text":"Display digits in rapid sequence."},{"title":"Relay cycle and count","start":"count = 0","end":"count = 0","text":"Switch relay ON/OFF, show count, and wrap at 9999."},{"title":"Cleanup","start":"except KeyboardInterrupt:","end":"GPIO.cleanup()","text":"Turn off the relay and release GPIO resources."}];
+
+function escapeHtml(text)
+{
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+}
+
+function displayCode()
+{
+    document.getElementById("code-lines").innerHTML=
+        lines.map(function(line,index)
+        {
+            return '<span class="code-line" id="line-'+(index+1)+'">'+
+                '<span class="line-number">'+(index+1)+'</span>'+
+                '<span>'+escapeHtml(line)+'</span>'+
+                '</span>';
+        }).join("");
+}
+
+function findLine(searchText,startIndex)
+{
+    startIndex=startIndex||0;
+
+    for(let i=startIndex;i<lines.length;i++)
+    {
+        if(lines[i].includes(searchText))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function showStep(index)
+{
+    const step=steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button)
+        {
+            button.classList.remove("active");
+        });
+
+    const buttons=
+        document.querySelectorAll(".step");
+
+    if(buttons[index])
+    {
+        buttons[index]
+            .classList
+            .add("active");
+    }
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line)
+        {
+            line.classList.remove("selected");
+        });
+
+    const startLine=
+        findLine(
+            step.start,
+            0
+        );
+
+    if(startLine===-1)
+    {
+        return;
+    }
+
+    let endLine=
+        findLine(
+            step.end,
+            startLine
+        );
+
+    if(endLine===-1)
+    {
+        endLine=startLine;
+    }
+
+    for(let i=startLine;i<=endLine;i++)
+    {
+        const line=
+            document.getElementById(
+                "line-"+(i+1)
+            );
+
+        if(line)
+        {
+            line.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const selected=
+        document.getElementById(
+            "line-"+(startLine+1)
+        );
+
+    const body=
+        document.getElementById(
+            "code-body"
+        );
+
+    if(selected&&body)
+    {
+        body.scrollTo(
+        {
+            top:
+                selected.offsetTop-
+                body.offsetTop-
+                20,
+            behavior:"smooth"
+        });
+    }
+
+    document.getElementById(
+        "explanation"
+    ).innerHTML=
+        "<h3>"+
+        (index+1)+
+        ". "+
+        step.title+
+        "</h3><p>"+
+        step.text+
+        "</p>";
+}
+
+function copyCode()
+{
+    navigator.clipboard
+        .writeText(program)
+        .then(function()
+        {
+            const button=
+                document.querySelector(
+                    ".copy-button"
+                );
+
+            button.innerText=
+                "Copied!";
+
+            setTimeout(
+                function()
+                {
+                    button.innerText=
+                        "Copy Code";
+                },
+                1500
+            );
+        });
+}
+
+displayCode();
+showStep(0);
+
+</script>
+
+</body>
+</html>
