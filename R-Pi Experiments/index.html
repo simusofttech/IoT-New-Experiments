@@ -168,7 +168,6 @@ nav a:hover {
 .experiment-card {
     width: 100%;
     min-width: 0;
-
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 14px;
@@ -180,6 +179,8 @@ nav a:hover {
     display: flex;
     flex-direction: column;
 
+    position: relative;
+
     transition:
         transform .25s ease,
         box-shadow .25s ease;
@@ -187,6 +188,7 @@ nav a:hover {
 
 .experiment-card:hover {
     transform: translateY(-5px);
+
     box-shadow:
         0 12px 28px rgba(0,0,0,.14);
 }
@@ -205,81 +207,18 @@ nav a:hover {
 }
 
 /* ===============================
-   CARD CONTENT
-================================ */
-
-.experiment-content {
-    padding: 18px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-
-    min-height: 175px;
-}
-
-/* TITLE */
-
-.experiment-content h3 {
-    margin: 0 0 15px;
-    color: #1e3a8a;
-    font-size: 18px;
-    line-height: 1.35;
-}
-
-/* ===============================
-   BOTTOM CARD ROW
-   BUTTON LEFT - CIRCLE RIGHT
-================================ */
-
-.card-bottom {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: auto;
-    width: 100%;
-}
-
-/* ===============================
-   OPEN BUTTON
-================================ */
-
-.btn,
-.open-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    width: fit-content;
-    padding: 10px 16px;
-
-    background: #2563eb;
-    color: white;
-    text-decoration: none;
-    border-radius: 7px;
-
-    font-size: 13px;
-    font-weight: bold;
-    flex-shrink: 0;
-}
-
-.btn:hover,
-.open-btn:hover {
-    background: #1d4ed8;
-}
-
-/* ===============================
    EXPERIMENT NUMBER CIRCLE
+   BOTTOM RIGHT OF CARD
 ================================ */
 
 .experiment-number {
-    position: relative;
+    position: absolute;
+
+    bottom: 10px;
+    right: 10px;
 
     width: 90px;
     height: 90px;
-
-    min-width: 90px;
-    min-height: 90px;
 
     border-radius: 50%;
 
@@ -300,12 +239,12 @@ nav a:hover {
 
     display: flex;
     flex-direction: column;
-
     align-items: center;
     justify-content: center;
 
     text-align: center;
-    flex-shrink: 0;
+
+    z-index: 2;
 
     transition: transform .25s ease;
 }
@@ -323,28 +262,58 @@ nav a:hover {
 }
 
 .experiment-card:hover .experiment-number {
-    transform: scale(1.05);
+    transform: scale(1.07);
 }
 
 /* ===============================
-   EMPTY MESSAGE
+   CARD CONTENT
 ================================ */
 
-.empty-message {
-    background: #ffffff;
-    border: 1px dashed #cbd5e1;
-    border-radius: 14px;
-    padding: 40px 20px;
-    text-align: center;
-    color: #64748b;
-    grid-column: 1/-1;
+.experiment-content {
+    padding: 15px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    /* Space for the number circle */
+    min-height: 125px;
 }
 
-.empty-message strong {
-    display: block;
-    margin-bottom: 8px;
+/* TITLE */
+
+.experiment-content h3 {
+    margin: 0 0 15px;
     color: #1e3a8a;
-    font-size: 20px;
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+/* ===============================
+   OPEN BUTTON
+================================ */
+
+.btn,
+.open-btn {
+    display: inline-block;
+    width: fit-content;
+    margin-top: auto;
+    padding: 10px 16px;
+
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    position: relative;
+    z-index: 3;
+}
+
+.btn:hover,
+.open-btn:hover {
+    background: #1d4ed8;
 }
 
 /* ===============================
@@ -427,6 +396,23 @@ footer strong {
     }
 }
 
+/* VERY SMALL SCREENS */
+
+@media (max-width: 380px) {
+
+    .header-content h1 {
+        font-size: 17px;
+    }
+
+    .header-kit img {
+        width: 65px;
+    }
+
+    .logo-area img {
+        width: 55px;
+    }
+}
+
 </style>
 
 </head>
@@ -461,10 +447,12 @@ footer strong {
     <!-- RASPBERRY PI KIT PHOTO -->
 
     <div class="header-kit">
+
         <img
             src="../AI Innovation Kit 1.png"
             alt="Raspberry Pi Kit"
         >
+
     </div>
 
 </header>
@@ -476,7 +464,7 @@ footer strong {
 <nav>
 
     <a href="../index.html">
-        ← Back to IoT Experiments
+        &larr; Back to IoT Experiments
     </a>
 
 </nav>
@@ -685,7 +673,8 @@ footer strong {
     <div class="experiment-content">
 
         <h3>
-            Raspberry Pi Earthquake / Vibration Detection Prototype
+            Raspberry Pi Earthquake /
+            Vibration Detection Prototype
         </h3>
 
         <a
@@ -706,14 +695,15 @@ footer strong {
 
     <img
         src="DHT22 IoT Monitoring Dashboard.png"
-        alt="DHT22 Temperature & Humidity Monitor with SQLite Database"
+        alt="DHT22 Temperature and Humidity Monitor with SQLite Database"
         class="experiment-thumbnail"
     >
 
     <div class="experiment-content">
 
         <h3>
-            DHT22 Temperature &amp; Humidity Monitor with SQLite Database
+            DHT22 Temperature &amp; Humidity Monitor
+            with SQLite Database
         </h3>
 
         <a
@@ -862,7 +852,7 @@ footer strong {
 
 <!-- ===============================
      AUTOMATIC EXPERIMENT BADGES
-     NO OVERLAPPING
+     SAME AS ARDUINO PAGE
 ================================ -->
 
 <script>
@@ -870,20 +860,6 @@ footer strong {
 document.querySelectorAll(".experiment-card").forEach(
     (card, index) => {
 
-        const content = card.querySelector(
-            ".experiment-content"
-        );
-
-        const button = content.querySelector(
-            ".open-btn, .btn"
-        );
-
-        // Create bottom row
-        const bottomRow = document.createElement("div");
-
-        bottomRow.className = "card-bottom";
-
-        // Create circular number badge
         const circle = document.createElement("div");
 
         circle.className = "experiment-number";
@@ -893,16 +869,7 @@ document.querySelectorAll(".experiment-card").forEach(
             <strong>No. ${index + 1}</strong>
         `;
 
-        // Move Open button into bottom row
-        if (button) {
-            bottomRow.appendChild(button);
-        }
-
-        // Add circle to bottom row
-        bottomRow.appendChild(circle);
-
-        // Place row below experiment title
-        content.appendChild(bottomRow);
+        card.appendChild(circle);
 
     }
 );
