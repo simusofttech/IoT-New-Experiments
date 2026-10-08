@@ -1,404 +1,412 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>ESP32-CAM Experiments</title>
 
-
 <style>
-
 
 /* ===============================
    BASIC PAGE STYLE
 ================================ */
 
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    margin:0;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:#f4f7fb;
-
-    color:#222;
-
-    line-height:1.6;
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.6;
 }
 
 /* ===============================
    HEADER
 ================================ */
 
-.header{
-    background:#2563eb;
-
-    color:white;
-
-    padding:24px 40px;
-
-    min-height:115px;
-
-    position:relative;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
+.header {
+    background: #2563eb;
+    color: white;
+    padding: 24px 40px;
+    min-height: 115px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
 
 /* LOGO */
 
-.logo-area{
-    position:absolute;
-
-    left:35px;
-
-    top:50%;
-
-    transform:
-    translateY(-50%);
+.logo-area {
+    position: absolute;
+    left: 35px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
-.logo-area img{
-    width:135px;
-
-    height:auto;
-
-    max-height:72px;
-
-    object-fit:contain;
-
-    display:block;
-
-    border-radius:4px;
+.logo-area img {
+    width: 135px;
+    height: auto;
+    max-height: 72px;
+    object-fit: contain;
+    display: block;
+    border-radius: 4px;
 }
 
 /* HEADER TEXT */
 
-.header-content{
-    text-align:center;
+.header-content {
+    text-align: center;
 }
 
-.header-content h1{
-    margin:0 0 5px;
-
-    font-size:28px;
+.header-content h1 {
+    margin: 0 0 5px;
+    font-size: 28px;
 }
 
-.header-content p{
-    margin:0;
+.header-content p {
+    margin: 0;
+    font-size: 14px;
+}
 
-    font-size:14px;
+/* ===============================
+   ESP32 KIT PHOTO - RIGHT SIDE
+================================ */
+
+.header-kit {
+    position: absolute;
+    right: 35px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.header-kit img {
+    width: 210px;
+    height: auto;
+    max-height: 115px;
+    object-fit: contain;
+    display: block;
 }
 
 /* ===============================
    NAVIGATION
 ================================ */
 
-nav{
-    background:#ffffff;
-
-    border-bottom:
-    1px solid #ddd;
-
-    padding:13px 20px;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:10;
+nav {
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+    padding: 13px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-nav a{
-    color:#1e3a8a;
-
-    text-decoration:none;
-
-    font-weight:bold;
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-nav a:hover{
-    color:#2563eb;
+nav a:hover {
+    color: #2563eb;
 }
-
 
 /* ===============================
    MAIN CONTAINER
 ================================ */
 
-.container{
-    width:94%;
-
-    max-width:1400px;
-
-    margin:40px auto;
+.container {
+    width: 94%;
+    max-width: 1400px;
+    margin: 40px auto;
 }
-
 
 /* ===============================
    PAGE HEADING
 ================================ */
 
-.section-heading{
-    text-align:center;
-
-    margin-bottom:35px;
+.section-heading {
+    text-align: center;
+    margin-bottom: 35px;
 }
 
-.section-heading h2{
-    margin:0 0 8px;
-
-    color:#1e3a8a;
-
-    font-size:30px;
+.section-heading h2 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 30px;
 }
 
-.section-heading p{
-    margin:0;
-
-    color:#64748b;
-
-    font-size:16px;
+.section-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 16px;
 }
-
 
 /* ===============================
    EXPERIMENT GRID
-
    4 CARDS PER ROW
 ================================ */
 
-.experiment-grid{
-    width:100%;
-
-    display:grid;
-
+.experiment-grid {
+    width: 100%;
+    display: grid;
     grid-template-columns:
-        repeat(4, minmax(0,1fr));
-
-    gap:28px;
-
-    align-items:stretch;
+        repeat(4, minmax(0, 1fr));
+    gap: 28px;
+    align-items: stretch;
 }
-
 
 /* ===============================
    EXPERIMENT CARD
 ================================ */
 
-.experiment-card{
-    width:100%;
-
-    min-width:0;
-
-    background:#ffffff;
-
-    border:
-    1px solid #e2e8f0;
-
-    border-radius:14px;
-
-    overflow:hidden;
+.experiment-card {
+    width: 100%;
+    min-width: 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    overflow: hidden;
 
     box-shadow:
-        0 4px 14px
-        rgba(0,0,0,0.10);
+        0 4px 14px rgba(0,0,0,0.10);
 
-    display:flex;
-
-    flex-direction:column;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 
     transition:
         transform .25s ease,
         box-shadow .25s ease;
 }
 
-.experiment-card:hover{
-    transform:
-        translateY(-5px);
+.experiment-card:hover {
+    transform: translateY(-5px);
 
     box-shadow:
-        0 12px 28px
-        rgba(0,0,0,.14);
+        0 12px 28px rgba(0,0,0,.14);
 }
-
 
 /* ===============================
    THUMBNAIL
 ================================ */
 
-.experiment-thumbnail{
-    width:100%;
-
-    height:190px;
-
-    object-fit:cover;
-
-    object-position:center;
-
-    display:block;
-
-    flex-shrink:0;
+.experiment-thumbnail {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    flex-shrink: 0;
 }
 
+/* ===============================
+   EXPERIMENT NUMBER CIRCLE
+   BOTTOM RIGHT OF CARD
+================================ */
+
+.experiment-number {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #60a5fa,
+        #2563eb,
+        #1e3a8a
+    );
+
+    border: 3px solid #ffffff;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.25),
+        inset 0 2px 5px rgba(255,255,255,0.2);
+
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    z-index: 2;
+
+    transition: transform .25s ease;
+}
+
+.experiment-number span {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+.experiment-number strong {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+.experiment-card:hover .experiment-number {
+    transform: scale(1.07);
+}
 
 /* ===============================
    CARD CONTENT
 ================================ */
 
-.experiment-content{
-    padding:
-        18px 20px 20px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    flex:1;
+.experiment-content {
+    padding: 18px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
-
 
 /* TITLE */
 
-.experiment-content h3{
-    margin:
-        0 0 15px;
+.experiment-content h3 {
+    margin: 0 0 19px;
+    color: #1e3a8a;
+    font-size: 18px;
+    line-height: 1.15;
 
-    color:#1e3a8a;
+    /* Reserve space on right for circle */
+    padding-right: 65px;
 
-    font-size:18px;
+    /* Prevent long names from overflowing */
+    overflow-wrap: break-word;
+}
+/* DESCRIPTION */
 
-    line-height:1.35;
+.experiment-content p {
+    margin: 0 0 18px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
 }
 
-
 /* ===============================
-   BUTTON
+   OPEN BUTTON
 ================================ */
 
 .btn,
-.open-btn{
-    display:inline-block;
-
-    width:fit-content;
-
-    margin-top:auto;
-
-    padding:
-        10px 16px;
-
-    background:#2563eb;
-
-    color:white;
-
-    text-decoration:none;
-
-    border-radius:7px;
-
-    font-size:13px;
-
-    font-weight:bold;
+.open-btn {
+    display: inline-block;
+    width: fit-content;
+    margin-top: auto;
+    padding: 10px 16px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 .btn:hover,
-.open-btn:hover{
-    background:#1d4ed8;
+.open-btn:hover {
+    background: #1d4ed8;
 }
-
 
 /* ===============================
    FOOTER
 ================================ */
 
-footer{
-    margin-top:55px;
-
-    background:#0f172a;
-
-    color:#cbd5e1;
-
-    text-align:center;
-
-    padding:24px 20px;
-
-    font-size:14px;
+footer {
+    margin-top: 55px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 14px;
 }
 
-footer strong{
-    color:white;
+footer strong {
+    color: white;
 }
-
 
 /* ===============================
    RESPONSIVE
 ================================ */
 
-/* Tablet */
+/* TABLET */
 
-@media(max-width:1000px){
-
-    .experiment-grid{
+@media (max-width: 1000px) {
+    .experiment-grid {
         grid-template-columns:
             repeat(2, minmax(0,1fr));
     }
-
 }
 
+/* MOBILE */
 
-/* Mobile */
+@media (max-width: 600px) {
 
-@media(max-width:600px){
-
-    .container{
-        width:92%;
+    .container {
+        width: 92%;
     }
 
-    .experiment-grid{
-        grid-template-columns:1fr;
-
-        gap:20px;
+    .experiment-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
-    .experiment-thumbnail{
-        height:auto;
-
-        aspect-ratio:
-        274 / 190;
+    .experiment-thumbnail {
+        height: auto;
+        aspect-ratio: 274 / 190;
     }
 
-    .header h1{
-        font-size:29px;
+    .header-kit {
+        right: 10px;
     }
 
+    .header-kit img {
+        width: 95px;
+        max-height: 90px;
+    }
+
+    .logo-area {
+        left: 10px;
+    }
+
+    .logo-area img {
+        width: 65px;
+    }
+
+    .header-content {
+        padding: 0 40px;
+    }
+
+    .header-content h1 {
+        font-size: 21px;
+    }
+
+    .header-content p {
+        font-size: 11px;
+    }
 }
 
 </style>
-
 </head>
 
-
 <body>
-
 
 <!-- ===============================
      HEADER
@@ -415,11 +423,10 @@ footer strong{
 
     </div>
 
-
     <div class="header-content">
 
         <h1>
-           ESP Experiments
+            ESP Experiments
         </h1>
 
         <p>
@@ -428,8 +435,18 @@ footer strong{
 
     </div>
 
-</header>
+    <!-- ESP32 KIT PHOTO -->
 
+    <div class="header-kit">
+
+        <img
+            src="/Camera Coding Kit 1.png"
+            alt="ESP32 Kit"
+        >
+
+    </div>
+
+</header>
 
 <!-- ===============================
      NAVIGATION
@@ -438,24 +455,16 @@ footer strong{
 <nav>
 
     <a href="../index.html">
-
         ← Back to IoT Experiments
-
     </a>
 
 </nav>
-
 
 <!-- ===============================
      MAIN CONTENT
 ================================ -->
 
 <main class="container">
-
-
-<!-- ===============================
-     PAGE HEADING
-================================ -->
 
 <section class="section-heading">
 
@@ -467,7 +476,6 @@ footer strong{
 
 </section>
 
-
 <!-- ===============================
      EXPERIMENT GRID
 ================================ -->
@@ -475,9 +483,7 @@ footer strong{
 <section class="experiment-grid">
 
 
-<!-- ==================================
-     ESP32 IoT Machine Condition Monitor
-=================================== -->
+<!-- ESP32 IoT MACHINE CONDITION MONITOR -->
 
 <div class="experiment-card">
 
@@ -497,7 +503,7 @@ footer strong{
             class="open-btn"
             href="ESP32 IoT Machine Condition Monitor/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -505,9 +511,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wireless Servo Position Memory
-=================================== -->
+<!-- WIRELESS SERVO POSITION MEMORY -->
 
 <div class="experiment-card">
 
@@ -527,7 +531,7 @@ footer strong{
             class="open-btn"
             href="Wireless Servo Position Memory/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -535,9 +539,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 Mini Pan-Tilt Camera Mount
-=================================== -->
+<!-- ESP32 MINI PAN-TILT CAMERA MOUNT -->
 
 <div class="experiment-card">
 
@@ -557,7 +559,7 @@ footer strong{
             class="open-btn"
             href="ESP32 Mini Pan-Tilt Camera Mount/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -565,9 +567,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wireless RFID Token Generator
-=================================== -->
+<!-- WIRELESS RFID TOKEN GENERATOR -->
 
 <div class="experiment-card">
 
@@ -587,7 +587,7 @@ footer strong{
             class="open-btn"
             href="Wireless RFID Token Generator/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -595,9 +595,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 Wireless Environmental Dashboard
-=================================== -->
+<!-- ESP32 WIRELESS ENVIRONMENTAL DASHBOARD -->
 
 <div class="experiment-card">
 
@@ -617,7 +615,7 @@ footer strong{
             class="open-btn"
             href="ESP32 Wireless Environmental Dashboard/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -625,9 +623,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 Wireless Automated Inspection Gate
-=================================== -->
+<!-- ESP32 WIRELESS AUTOMATED INSPECTION GATE -->
 
 <div class="experiment-card">
 
@@ -647,7 +643,7 @@ footer strong{
             class="open-btn"
             href="ESP32 Wireless Automated Inspection Gate/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -655,9 +651,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi LED Web Controller
-=================================== -->
+<!-- WI-FI LED WEB CONTROLLER -->
 
 <div class="experiment-card">
 
@@ -677,7 +671,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi LED Web Controller/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -685,9 +679,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi Digital Clock
-=================================== -->
+<!-- WI-FI DIGITAL CLOCK -->
 
 <div class="experiment-card">
 
@@ -707,7 +699,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi Digital Clock/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -715,9 +707,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi Light Intensity Monitor
-=================================== -->
+<!-- WI-FI LIGHT INTENSITY MONITOR -->
 
 <div class="experiment-card">
 
@@ -737,7 +727,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi Light Intensity Monitor/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -745,9 +735,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi Countdown Timer
-=================================== -->
+<!-- WI-FI COUNTDOWN TIMER -->
 
 <div class="experiment-card">
 
@@ -767,7 +755,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi Countdown Timer/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -775,9 +763,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi IR Remote Decoder
-=================================== -->
+<!-- WI-FI IR REMOTE DECODER -->
 
 <div class="experiment-card">
 
@@ -797,7 +783,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi IR Remote Decoder/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -805,9 +791,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi Humidity Display
-=================================== -->
+<!-- WI-FI HUMIDITY DISPLAY -->
 
 <div class="experiment-card">
 
@@ -827,7 +811,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi Humidity Display/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -835,9 +819,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi Relay Control Panel
-=================================== -->
+<!-- WI-FI RELAY CONTROL PANEL -->
 
 <div class="experiment-card">
 
@@ -857,7 +839,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi Relay Control Panel/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -865,9 +847,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 Potentiometer Web Monitor
-=================================== -->
+<!-- ESP32 POTENTIOMETER WEB MONITOR -->
 
 <div class="experiment-card">
 
@@ -887,7 +867,7 @@ footer strong{
             class="open-btn"
             href="ESP32 Potentiometer Web Monitor/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -895,9 +875,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 Touch Button Interface
-=================================== -->
+<!-- ESP32 TOUCH BUTTON INTERFACE -->
 
 <div class="experiment-card">
 
@@ -917,7 +895,7 @@ footer strong{
             class="open-btn"
             href="ESP32 Touch Button Interface/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -925,9 +903,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi LED Matrix Message Board
-=================================== -->
+<!-- WI-FI LED MATRIX MESSAGE BOARD -->
 
 <div class="experiment-card">
 
@@ -947,7 +923,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi LED Matrix Message Board Experiment/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -955,9 +931,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 Dual-LED Status Dashboard
-=================================== -->
+<!-- ESP32 DUAL-LED STATUS DASHBOARD -->
 
 <div class="experiment-card">
 
@@ -977,7 +951,7 @@ footer strong{
             class="open-btn"
             href="ESP32 Dual-LED Status Dashboard Experiment/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -985,9 +959,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 Dual-Sensor Data Logger
-=================================== -->
+<!-- ESP32 DUAL-SENSOR DATA LOGGER -->
 
 <div class="experiment-card">
 
@@ -1007,7 +979,7 @@ footer strong{
             class="open-btn"
             href="ESP32 Dual-Sensor Data Logger/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1015,9 +987,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi Gas Sensor Data Logger
-=================================== -->
+<!-- WI-FI GAS SENSOR DATA LOGGER -->
 
 <div class="experiment-card">
 
@@ -1037,7 +1007,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi Gas Sensor Data Logger/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1045,9 +1015,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 Digital Parking Bay Indicator
-=================================== -->
+<!-- ESP32 DIGITAL PARKING BAY INDICATOR -->
 
 <div class="experiment-card">
 
@@ -1067,7 +1035,7 @@ footer strong{
             class="open-btn"
             href="ESP32 Digital Parking Bay Indicator/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1075,9 +1043,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wireless Stepper Position Controller
-=================================== -->
+<!-- WIRELESS STEPPER POSITION CONTROLLER -->
 
 <div class="experiment-card">
 
@@ -1097,7 +1063,7 @@ footer strong{
             class="open-btn"
             href="Wireless Stepper Position Controller/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1105,9 +1071,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32 RFID Web Identification System
-=================================== -->
+<!-- ESP32 RFID WEB IDENTIFICATION SYSTEM -->
 
 <div class="experiment-card">
 
@@ -1127,7 +1091,7 @@ footer strong{
             class="open-btn"
             href="ESP32 RFID Web Identification System/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1135,9 +1099,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     Wi-Fi Digital Dice
-=================================== -->
+<!-- WI-FI DIGITAL DICE -->
 
 <div class="experiment-card">
 
@@ -1157,7 +1119,7 @@ footer strong{
             class="open-btn"
             href="Wi-Fi Digital Dice/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1165,9 +1127,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32-CAM Wi-Fi Photo Booth
-=================================== -->
+<!-- ESP32-CAM WI-FI PHOTO BOOTH -->
 
 <div class="experiment-card">
 
@@ -1187,7 +1147,7 @@ footer strong{
             class="open-btn"
             href="ESP32-CAM Wi-Fi Photo Booth/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1195,9 +1155,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32-CAM AI GESTURE INTERFACE
-=================================== -->
+<!-- ESP32-CAM AI GESTURE INTERFACE -->
 
 <div class="experiment-card">
 
@@ -1217,7 +1175,7 @@ footer strong{
             class="open-btn"
             href="ESP32-CAM AI GESTURE INTERFACE/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1225,9 +1183,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32-CAM Face Recognition Access
-=================================== -->
+<!-- ESP32-CAM FACE RECOGNITION ACCESS -->
 
 <div class="experiment-card">
 
@@ -1247,7 +1203,7 @@ footer strong{
             class="open-btn"
             href="ESP32-CAM Face Recognition Access/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1255,9 +1211,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32-CAM Remote Image Viewer
-=================================== -->
+<!-- ESP32-CAM REMOTE IMAGE VIEWER -->
 
 <div class="experiment-card">
 
@@ -1277,7 +1231,7 @@ footer strong{
             class="open-btn"
             href="ESP32-CAM Remote Image Viewer/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1285,9 +1239,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32-CAM Motion Snapshot System
-=================================== -->
+<!-- ESP32-CAM MOTION SNAPSHOT SYSTEM -->
 
 <div class="experiment-card">
 
@@ -1307,7 +1259,7 @@ footer strong{
             class="open-btn"
             href="ESP32-CAM Motion Snapshot System/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1315,9 +1267,7 @@ footer strong{
 </div>
 
 
-<!-- ==================================
-     ESP32-CAM LIGHT-ACTIVATED CAMERA
-=================================== -->
+<!-- ESP32-CAM LIGHT-ACTIVATED CAMERA -->
 
 <div class="experiment-card">
 
@@ -1337,7 +1287,7 @@ footer strong{
             class="open-btn"
             href="ESP32-CAM LIGHT-ACTIVATED CAMERA/index.html"
         >
-            Open Experiment
+            Open
         </a>
 
     </div>
@@ -1346,7 +1296,6 @@ footer strong{
 
 
 </section>
-
 
 </main>
 
@@ -1368,6 +1317,30 @@ footer strong{
 </footer>
 
 
-</body>
+<!-- ===============================
+     AUTOMATIC EXPERIMENT BADGES
+================================ -->
 
+<script>
+
+document.querySelectorAll(".experiment-card").forEach(
+    (card, index) => {
+
+        const circle = document.createElement("div");
+
+        circle.className = "experiment-number";
+
+        circle.innerHTML = `
+            <span>Experiment</span>
+            <strong>No. ${index + 1}</strong>
+        `;
+
+        card.appendChild(circle);
+
+    }
+);
+
+</script>
+
+</body>
 </html>
