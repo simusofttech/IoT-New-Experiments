@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Image Metadata Manager Using Raspberry Pi</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:white;
+    padding:10px;
+}
+.code-lesson{color:#142e3a;}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;}
+.guide>p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;}
+.step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;}
+.explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;}
+.guide details p,.guide details li{color:#526875;font-size:15px;}
+.guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+.result-box{background:#eff6ff;border-left:4px solid #2563eb;padding:16px;border-radius:8px;color:#234e87;}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>
+        Camera Image Metadata Manager Using Raspberry Pi
+    </h1>
+
+    <p>
+        Display and manage school announcements through a local web application
+    </p>
+</header>
+
+<nav>
+    <a href="../index.html">
+        ← R-Pi Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container"><section class="section" id="aim"><h2>Aim</h2><p>To capture images with a USB webcam connected to Raspberry Pi 4B, save them using timestamp-based filenames and maintain capture information in a JSON metadata file.</p></section>
+<section class="section" id="about"><h2>About the Experiment</h2><p>The Raspberry Pi uses OpenCV to show a live webcam preview. Pressing SPACE captures a JPEG photograph. Python records the image name, date, time, resolution, format and file size in <code>camera_images/metadata.json</code>. Each capture adds a new metadata entry.</p></section>
+<section
+    class="section"
+    id="components">
+
+    <h2>
+        Components Required
+    </h2>
+
+    <div class="components-grid"><div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs OpenCV, captures webcam frames and stores image metadata.</p></div><div class="component-card"><img src="USB Webcam.png" alt="USB Webcam"><h4>USB Webcam (×1)</h4><p>Captures live images over a USB connection.</p></div></div>
+
+</section>
+
+<section
+    class="section"
+    id="connections">
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Component / Signal</th>
+                    <th>Physical Pin / Terminal</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody><tr><td>USB Webcam</td><td>USB connector</td><td>Raspberry Pi 4B USB port</td></tr></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+        class="circuit-img"
+        src="Camera Image Metadata Manager Using Raspberry Pi Circuit.png"
+        alt="Camera Image Metadata Manager Using Raspberry Pi Circuit">
+
+</section>
+
+<section
+    class="section"
+    id="working"><section class="section" id="working"><h2>Working Principle</h2><div class="flow">USB Webcam → OpenCV Video Capture → Live Preview → SPACE Key → Timestamped JPEG → Image Properties → metadata.json</div><p>Each saved JPEG contains the photograph, while <code>metadata.json</code> records the details of all successfully captured images.</p></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the USB webcam to a Raspberry Pi USB port and start Raspberry Pi OS desktop.</li><li>Run <code>sudo apt update</code>, <code>sudo apt install -y python3 python3-opencv</code> and <code>sudo apt install -y v4l-utils</code>.</li><li>Verify OpenCV with <code>python3 -c "import cv2; print(cv2.__version__)"</code>.</li><li>Run <code>v4l2-ctl --list-devices</code> and check the webcam path. The SOP uses <code>/dev/video1</code>.</li><li>Save the code as <code>camera.py</code> and adjust <code>CAMERA_DEVICE</code> if necessary.</li><li>Run <code>python3 camera.py</code> from the graphical desktop.</li><li>Press <strong>SPACE</strong> to save an image and append its metadata; press <strong>Q</strong> to exit.</li><li>Inspect the <code>camera_images</code> folder for JPEG files and <code>metadata.json</code>.</li></ol></section>
+<section
+    class="section"
+    id="code">
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Raspberry Pi Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Camera Image Metadata Manager Using Raspberry Pi · Select a step to see what each part of the Python program does.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        main.py
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        onclick="copyCode()">
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                    class="code-body"
+                    id="code-body">
+
+                    <code id="code-lines"></code>
+
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step. The matching code will light up on the left.
+                </p>
+
+                <div class="steps">
+
+<button class="step active" onclick="showStep(0)"><span class="step-number">1</span>Import libraries</button>
+<button class="step" onclick="showStep(1)"><span class="step-number">2</span>Configure files</button>
+<button class="step" onclick="showStep(2)"><span class="step-number">3</span>Open webcam</button>
+<button class="step" onclick="showStep(3)"><span class="step-number">4</span>Load metadata</button>
+<button class="step" onclick="showStep(4)"><span class="step-number">5</span>Check first frame</button>
+<button class="step" onclick="showStep(5)"><span class="step-number">6</span>Live preview</button>
+<button class="step" onclick="showStep(6)"><span class="step-number">7</span>Save JPEG</button>
+<button class="step" onclick="showStep(7)"><span class="step-number">8</span>Save JSON</button>
+<button class="step" onclick="showStep(8)"><span class="step-number">9</span>Cleanup</button>
+</div>
+
+                <div
+                    class="explanation"
+                    id="explanation">
+
+                    <h3>
+                        1. Load libraries
+                    </h3>
+
+                    <p>
+                        Loads Flask, SQLite, path and date tools.
+                    </p>
+
+                </div>
+
+                <details><summary>Explore more</summary><p>SQLite stores notices in <code>notices.db</code> next to <code>main.py</code>. The public page hides expired notices but the admin page still lists them.</p></details><details><summary>Check your understanding</summary><ul><li>Which library runs the web server? <strong>Flask.</strong></li><li>What file stores notices? <strong>notices.db.</strong></li><li>How often do notice cards rotate? <strong>Every 8 seconds.</strong></li></ul></details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">Use <code>v4l2-ctl --list-devices</code> to confirm the webcam device path. The SOP uses <code>/dev/video1</code>; yours may differ.</p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Expected Output<section class="section" id="output"><h2>Expected Output</h2><p>A live USB webcam preview appears. Pressing SPACE creates a file such as <code>image_20261009_120530_123456.jpg</code> and prints its filename, date, time, resolution, size and save location. The file <code>camera_images/metadata.json</code> stores the corresponding records.</p><pre>camera_images/
+├── image_YYYYMMDD_HHMMSS_microseconds.jpg
+└── metadata.json</pre></section>
+<section
+    class="section"
+    id="result"><section class="section" id="result"><h2>Result</h2><div class="result-box">Images are captured from a USB webcam, stored with timestamp-based names, and their information is maintained in a JSON metadata file.</div></section>
+<section class="section" id="learn"><h2>What You Learn</h2><ul><li>Connecting and detecting a USB webcam</li><li>Capturing images with OpenCV</li><li>Creating timestamp-based filenames</li><li>Measuring resolution and file size</li><li>Storing and updating records in JSON</li></ul></section>
+</main>
+
+<footer>
+    <strong>
+        Camera Image Metadata Manager Using Raspberry Pi
+    </strong>
+</footer>
+
+<script>
+
+const program="import cv2\nimport os\nimport json\nimport time\nfrom datetime import datetime\n\n# CAMERA IMAGE METADATA MANAGER\n# Raspberry Pi 4B + USB Webcam\nOUTPUT_DIR = \"camera_images\"\nMETADATA_FILE = os.path.join(OUTPUT_DIR, \"metadata.json\")\nCAMERA_DEVICE = \"/dev/video1\"\nWIDTH = 1280\nHEIGHT = 720\n\nos.makedirs(OUTPUT_DIR, exist_ok=True)\nprint(\"=\" * 55)\nprint(\"CAMERA IMAGE METADATA MANAGER\")\nprint(\"Raspberry Pi 4B + USB Webcam\")\nprint(\"=\" * 55)\n\n# OPEN USB WEBCAM\ncamera = cv2.VideoCapture(CAMERA_DEVICE, cv2.CAP_V4L2)\nif not camera.isOpened():\n    print(\"ERROR: Cannot open USB webcam:\", CAMERA_DEVICE)\n    input(\"Press Enter to exit...\")\n    raise SystemExit\n\ncamera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*\"MJPG\"))\ncamera.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)\ncamera.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)\ncamera.set(cv2.CAP_PROP_FPS, 30)\nprint(\"Camera opened:\", CAMERA_DEVICE)\nprint(\"Requested resolution:\", WIDTH, \"x\", HEIGHT)\ntime.sleep(2)\n\n# LOAD EXISTING METADATA\nif os.path.exists(METADATA_FILE):\n    try:\n        with open(METADATA_FILE, \"r\", encoding=\"utf-8\") as file:\n            all_metadata = json.load(file)\n        if not isinstance(all_metadata, list):\n            all_metadata = []\n    except (json.JSONDecodeError, OSError):\n        all_metadata = []\nelse:\n    all_metadata = []\n\n# CHECK FOR FIRST FRAME\nsuccess, frame = camera.read()\nif not success or frame is None:\n    camera.release()\n    print(\"ERROR: Webcam opened but no frame received.\")\n    print(\"Try 640 x 480 if necessary.\")\n    input(\"Press Enter to exit...\")\n    raise SystemExit\n\nprint(\"Live webcam preview started.\")\nprint(\"SPACE = Capture photo\")\nprint(\"Q = Quit\")\n\n# LIVE PREVIEW AND CAPTURE\ntry:\n    while True:\n        success, frame = camera.read()\n        if not success or frame is None:\n            print(\"Warning: Unable to read frame.\")\n            time.sleep(0.1)\n            continue\n\n        cv2.imshow(\"USB Webcam - SPACE: Capture | Q: Quit\", frame)\n        key = cv2.waitKey(1) & 0xFF\n\n        if key == ord(\" \"):\n            timestamp = datetime.now()\n            filename = timestamp.strftime(\"image_%Y%m%d_%H%M%S_%f.jpg\")\n            image_path = os.path.join(OUTPUT_DIR, filename)\n\n            if cv2.imwrite(image_path, frame):\n                height, width = frame.shape[:2]\n                file_size = os.path.getsize(image_path)\n                image_metadata = {\n                    \"image_name\": filename,\n                    \"capture_date\": timestamp.strftime(\"%Y-%m-%d\"),\n                    \"capture_time\": timestamp.strftime(\"%H:%M:%S\"),\n                    \"camera\": \"USB Webcam\",\n                    \"resolution\": f\"{width} x {height}\",\n                    \"width\": width,\n                    \"height\": height,\n                    \"format\": \"JPEG\",\n                    \"file_size_bytes\": file_size,\n                    \"file_size_kb\": round(file_size / 1024, 2)\n                }\n                all_metadata.append(image_metadata)\n                with open(METADATA_FILE, \"w\", encoding=\"utf-8\") as file:\n                    json.dump(all_metadata, file, indent=4)\n                print(\"\\n--- IMAGE CAPTURED ---\")\n                print(\"Image name :\", filename)\n                print(\"Date       :\", image_metadata[\"capture_date\"])\n                print(\"Time       :\", image_metadata[\"capture_time\"])\n                print(\"Resolution :\", image_metadata[\"resolution\"])\n                print(\"File size  :\", image_metadata[\"file_size_kb\"], \"KB\")\n                print(\"Image path :\", os.path.abspath(image_path))\n                print(\"Metadata   :\", os.path.abspath(METADATA_FILE))\n            else:\n                print(\"ERROR: Unable to save image.\")\n        elif key == ord(\"q\"):\n            break\nfinally:\n    camera.release()\n    cv2.destroyAllWindows()\n    print(\"\\nCamera closed.\")\n    print(\"Camera Image Metadata Manager completed.\")";
+
+const lines=program.split("\n");
+
+const steps=[{"title":"Import libraries","start":"import cv2","end":"from datetime import datetime","text":"Imports OpenCV and built-in file, JSON, time and date utilities."},{"title":"Configure files","start":"OUTPUT_DIR =","end":"os.makedirs","text":"Sets output folder, JSON path, camera device and resolution."},{"title":"Open webcam","start":"camera =","end":"time.sleep(2)","text":"Opens the webcam through V4L2 and requests MJPEG video."},{"title":"Load metadata","start":"if os.path.exists","end":"else:\n    all_metadata = []","text":"Reads previously saved JSON records."},{"title":"Check first frame","start":"# CHECK FOR FIRST FRAME","end":"print(\"Live webcam","text":"Checks whether the camera provides frames."},{"title":"Live preview","start":"# LIVE PREVIEW AND CAPTURE","end":"if key == ord(\" \")","text":"Displays the camera feed and reads keyboard input."},{"title":"Save JPEG","start":"if key == ord(\" \")","end":"image_metadata = {","text":"Captures a timestamped JPEG and measures its dimensions and file size."},{"title":"Save JSON","start":"image_metadata = {","end":"elif key == ord(\"q\")","text":"Appends image details to metadata.json."},{"title":"Cleanup","start":"finally:","end":"print(\"Camera Image","text":"Releases the camera and closes preview windows."}];
+
+function escapeHtml(text)
+{
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+}
+
+function displayCode()
+{
+    document.getElementById("code-lines").innerHTML=
+        lines.map(function(line,index)
+        {
+            return '<span class="code-line" id="line-'+(index+1)+'">'+
+                '<span class="line-number">'+(index+1)+'</span>'+
+                '<span>'+escapeHtml(line)+'</span>'+
+                '</span>';
+        }).join("");
+}
+
+function findLine(searchText,startIndex)
+{
+    startIndex=startIndex||0;
+
+    for(let i=startIndex;i<lines.length;i++)
+    {
+        if(lines[i].includes(searchText))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function showStep(index)
+{
+    const step=steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button)
+        {
+            button.classList.remove("active");
+        });
+
+    const buttons=
+        document.querySelectorAll(".step");
+
+    if(buttons[index])
+    {
+        buttons[index]
+            .classList
+            .add("active");
+    }
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line)
+        {
+            line.classList.remove("selected");
+        });
+
+    const startLine=
+        findLine(
+            step.start,
+            0
+        );
+
+    if(startLine===-1)
+    {
+        return;
+    }
+
+    let endLine=
+        findLine(
+            step.end,
+            startLine
+        );
+
+    if(endLine===-1)
+    {
+        endLine=startLine;
+    }
+
+    for(let i=startLine;i<=endLine;i++)
+    {
+        const line=
+            document.getElementById(
+                "line-"+(i+1)
+            );
+
+        if(line)
+        {
+            line.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const selected=
+        document.getElementById(
+            "line-"+(startLine+1)
+        );
+
+    const body=
+        document.getElementById(
+            "code-body"
+        );
+
+    if(selected&&body)
+    {
+        body.scrollTo(
+        {
+            top:
+                selected.offsetTop-
+                body.offsetTop-
+                20,
+            behavior:"smooth"
+        });
+    }
+
+    document.getElementById(
+        "explanation"
+    ).innerHTML=
+        "<h3>"+
+        (index+1)+
+        ". "+
+        step.title+
+        "</h3><p>"+
+        step.text+
+        "</p>";
+}
+
+function copyCode()
+{
+    navigator.clipboard
+        .writeText(program)
+        .then(function()
+        {
+            const button=
+                document.querySelector(
+                    ".copy-button"
+                );
+
+            button.innerText=
+                "Copied!";
+
+            setTimeout(
+                function()
+                {
+                    button.innerText=
+                        "Copy Code";
+                },
+                1500
+            );
+        });
+}
+
+displayCode();
+showStep(0);
+
+</script>
+
+</body>
+</html>
