@@ -263,20 +263,22 @@ nav a:hover{
     flex-shrink:0;
 }
 
+
 /* ===============================
-   EXPERIMENT NUMBER CIRCLE
-   BOTTOM RIGHT OF CARD
+   CLICKABLE EXPERIMENT CIRCLE
+   BOTTOM CENTER OF CARD
 ================================ */
 
 .experiment-number {
-
-    position: absolute;
-
-    bottom: 10px;
-    right: 10px;
+    position: relative;
 
     width: 90px;
     height: 90px;
+
+    min-width: 90px;
+    min-height: 90px;
+
+    margin: auto auto 0;
 
     border-radius: 50%;
 
@@ -294,35 +296,43 @@ nav a:hover{
         inset 0 2px 5px rgba(255,255,255,0.2);
 
     color: white;
+    text-decoration: none;
 
     display: flex;
-    flex-direction: column;
-
     align-items: center;
     justify-content: center;
 
     text-align: center;
 
-    z-index: 2;
-
-    transition: transform .25s ease;
-}
-
-.experiment-number span {
-    font-size: 12px;
+    font-size: 15px;
     font-weight: bold;
-    line-height: 1.3;
+
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
 }
+
+.experiment-number:hover {
+    transform: scale(1.08);
+
+    box-shadow:
+        0 8px 20px rgba(37,99,235,0.35);
+}
+
+.experiment-number:focus-visible {
+    outline: 3px solid #f59e0b;
+    outline-offset: 3px;
+}
+
+/* TEXT INSIDE CIRCLE */
 
 .experiment-number strong {
     font-size: 15px;
     font-weight: bold;
-    line-height: 1.4;
 }
 
-.experiment-card:hover .experiment-number {
-    transform: scale(1.07);
-}
 
 /* ===============================
    CARD CONTENT
@@ -341,15 +351,14 @@ nav a:hover{
 
 /* TITLE */
 
-.experiment-content h3{
+.experiment-content h3 {
+    margin: 0;
 
-    margin:0 0 15px;
+    color: #1e3a8a;
+    font-size: 18px;
+    line-height: 1.35;
 
-    color:#1e3a8a;
-
-    font-size:18px;
-
-    line-height:1.35;
+    text-align: center;
 }
 
 /* DESCRIPTION */
@@ -1687,22 +1696,58 @@ footer strong{
 
 <script>
 
+
 document.querySelectorAll(".experiment-card").forEach(
     (card, index) => {
 
-        const circle = document.createElement("div");
+        // Find card content
+        const content = card.querySelector(
+            ".experiment-content"
+        );
+
+        // Find existing Open button
+        const openButton = content.querySelector(
+            ".open-btn, .btn"
+        );
+
+        if (!openButton) return;
+
+        // Get original experiment link
+        const experimentLink = openButton.getAttribute("href");
+
+        // Remove old Open button
+        openButton.remove();
+
+        // Remove any old circle
+        card.querySelectorAll(".experiment-number").forEach(
+            circle => circle.remove()
+        );
+
+        // Create clickable circle
+        const circle = document.createElement("a");
 
         circle.className = "experiment-number";
 
+        // Preserve experiment destination
+        circle.href = experimentLink;
+
+        // Text inside circle
         circle.innerHTML = `
-            <span>Experiment</span>
-            <strong>No. ${index + 1}</strong>
+            <strong>Ex No. ${index + 1}</strong>
         `;
 
-        card.appendChild(circle);
+        // Accessibility label
+        circle.setAttribute(
+            "aria-label",
+            "Open Experiment No. " + (index + 1)
+        );
+
+        // Add circle inside card content
+        content.appendChild(circle);
 
     }
 );
+
 
 </script>
 
