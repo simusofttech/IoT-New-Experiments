@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DC Motor Vibration Monitoring System</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:white;
+    padding:10px;
+}
+.code-lesson{color:#142e3a;}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;}
+.guide>p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;}
+.step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;}
+.explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;}
+.guide details p,.guide details li{color:#526875;font-size:15px;}
+.guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+.result-box{background:#eff6ff;border-left:4px solid #2563eb;padding:16px;border-radius:8px;color:#234e87;}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>
+        DC Motor Vibration Monitoring System
+    </h1>
+
+    <p>
+        Monitor DC motor vibration and detect faults using an MPU6050 sensor
+    </p>
+</header>
+
+<nav>
+    <a href="../index.html">
+        ← R-Pi Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container">
+<section class="section" id="aim">
+<h2>Aim</h2>
+<p>To monitor DC motor vibration using an MPU6050 accelerometer and Raspberry Pi 4B, display the vibration value on an SSD1306 OLED, and activate a buzzer when the configured vibration threshold is exceeded.</p>
+</section>
+<section class="section" id="about">
+<h2>About the Experiment</h2>
+<p>The Raspberry Pi controls a DC motor through an L298N motor driver and reads acceleration on the X, Y and Z axes from an MPU6050. The program calculates acceleration magnitude and subtracts approximately 1 g of gravity to estimate vibration. An OLED displays the value and motor status. A transistor-driven buzzer indicates high vibration.</p>
+</section>
+<section
+    class="section"
+    id="components">
+
+    <h2>
+        Components Required
+    </h2>
+
+    <div class="components-grid">
+<div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Reads sensors, controls the motor, and detects faults.</p></div>
+<div class="component-card"><img src="MPU6050 GY-521.png" alt="MPU6050 Accelerometer/Gyroscope"><h4>MPU6050 Accelerometer/Gyroscope (×1)</h4><p>Measures three-axis acceleration for vibration monitoring.</p></div>
+<div class="component-card"><img src="L298N Motor Driver.png" alt="L298N Motor Driver Module"><h4>L298N Motor Driver Module (×1)</h4><p>Drives the DC motor from a suitable external supply.</p></div>
+<div class="component-card"><img src="DC Motor.png" alt="DC Motor"><h4>DC Motor (×1)</h4><p>Motor whose vibration is monitored.</p></div>
+<div class="component-card"><img src="Buzzer.png" alt="Buzzer"><h4>Buzzer (×1)</h4><p>Sounds when vibration exceeds the fault threshold.</p></div>
+<div class="component-card"><img src="OLED.png" alt="SSD1306 OLED Display"><h4>SSD1306 OLED Display (×1)</h4><p>Shows vibration readings and motor status.</p></div>
+<div class="component-card"><img src="NPN Transistor.png" alt="BC547 NPN Transistor"><h4>BC547 NPN Transistor (×1)</h4><p>Switches buzzer current safely.</p></div>
+<div class="component-card"><img src="1K ohm resistor.png" alt="1kΩ Resistor"><h4>1kΩ Resistor (×1)</h4><p>Limits current to the transistor base.</p></div>
+<div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard (×1)</h4><p>Supports the buzzer driver circuit.</p></div>
+<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires (As required)</h4><p>Connects the Raspberry Pi, sensor, driver, OLED and buzzer.</p></div>
+</div>
+
+</section>
+
+<section
+    class="section"
+    id="connections">
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Component / Signal</th>
+                    <th>Physical Pin / Terminal</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+<tr><td>MPU6050 VCC</td><td>3.3V</td><td>Physical pin 1 or 17</td></tr>
+<tr><td>MPU6050 GND</td><td>GND</td><td>Physical pin 6 or 9</td></tr>
+<tr><td>MPU6050 SDA</td><td>GPIO2 / SDA1</td><td>Physical pin 3</td></tr>
+<tr><td>MPU6050 SCL</td><td>GPIO3 / SCL1</td><td>Physical pin 5</td></tr>
+<tr><td>OLED SDA / SCL</td><td>GPIO2 / GPIO3</td><td>Physical pins 3 / 5 (shared I²C)</td></tr>
+<tr><td>OLED VCC / GND</td><td>3.3V / GND</td><td>Verify module supply rating</td></tr>
+<tr><td>L298N IN1</td><td>GPIO17</td><td>Physical pin 11</td></tr>
+<tr><td>L298N IN2</td><td>GPIO27</td><td>Physical pin 13</td></tr>
+<tr><td>L298N ENA</td><td>GPIO18 (PWM)</td><td>Physical pin 12</td></tr>
+<tr><td>L298N GND</td><td>Raspberry Pi GND</td><td>Common ground</td></tr>
+<tr><td>L298N OUT1 / OUT2</td><td>DC motor terminals</td><td>Motor connection</td></tr>
+<tr><td>L298N motor supply</td><td>External suitable motor supply</td><td>Never power motor from GPIO</td></tr>
+<tr><td>GPIO23 through 1kΩ</td><td>BC547 base</td><td>Physical pin 16</td></tr>
+<tr><td>BC547 emitter</td><td>GND</td><td>Common ground</td></tr>
+<tr><td>BC547 collector</td><td>Buzzer negative</td><td>Transistor switching</td></tr>
+<tr><td>Buzzer positive</td><td>Suitable buzzer supply</td><td>Match buzzer voltage/current</td></tr>
+</tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+        class="circuit-img"
+        src="DC Motor Vibration Monitoring System Circuit.png"
+        alt="DC Motor Vibration Monitoring System Circuit">
+
+</section>
+
+<section
+    class="section"
+    id="working"><section class="section" id="working">
+<h2>Working Principle</h2>
+<div class="flow">Raspberry Pi → L298N → DC Motor → Vibration → MPU6050 → Raspberry Pi → OLED Status / Buzzer Alert</div><p>The MPU6050 reports three-axis acceleration. The program calculates <code>abs(sqrt(ax² + ay² + az²) - 1.0)</code>. When the value exceeds 1.30 g, the OLED shows a fault and GPIO23 activates the transistor-driven buzzer; otherwise the display shows normal status.</p>
+</section>
+<section class="section" id="procedure">
+<h2>Procedure</h2>
+<ol><li>Mount the MPU6050 firmly to the motor or its mounting frame.</li><li>Connect MPU6050 SDA to GPIO2, SCL to GPIO3, VCC to 3.3V and GND to ground.</li><li>Connect the SSD1306 OLED to the same I²C SDA and SCL lines, using a compatible supply voltage.</li><li>Connect L298N IN1 to GPIO17, IN2 to GPIO27 and ENA to GPIO18. Connect the DC motor to OUT1 and OUT2.</li><li>Connect a suitable external motor supply to L298N and join motor-driver ground to Raspberry Pi ground.</li><li>Connect GPIO23 through the 1kΩ resistor to the BC547 base; emitter to ground; collector to buzzer negative; buzzer positive to a suitable supply.</li><li>Enable I²C in <code>sudo raspi-config</code> and reboot. Install Python dependencies <code>RPi.GPIO</code>, <code>smbus2</code>, <code>adafruit-blinka</code>, <code>adafruit-circuitpython-ssd1306</code> and Pillow.</li><li>Use <code>sudo i2cdetect -y 1</code> to check for MPU6050 at 0x68 and OLED at 0x3C.</li><li>Save the code below as <code>motor_vibration_monitor.py</code> and run <code>python3 motor_vibration_monitor.py</code>.</li><li>Observe the OLED and buzzer during safe, controlled vibration changes. Stop with Ctrl+C.</li></ol>
+</section>
+<section
+    class="section"
+    id="code">
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Raspberry Pi Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            DC Motor Vibration Monitoring System · Select a step to see what each part of the Python program does.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        motor_vibration_monitor.py
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        onclick="copyCode()">
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                    class="code-body"
+                    id="code-body">
+
+                    <code id="code-lines"></code>
+
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step. The matching code will light up on the left.
+                </p>
+
+                <div class="steps">
+
+<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Import libraries</button>
+<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configure GPIO</button>
+<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Configure sensor and OLED</button>
+<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Set fault threshold</button>
+<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Initialize hardware</button>
+<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Drive motor</button>
+<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Read acceleration</button>
+<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Calculate vibration</button>
+<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Display status</button>
+<button class="step" onclick="showStep(9)"><span class="step-number">10</span>Monitor and alert</button>
+<button class="step" onclick="showStep(10)"><span class="step-number">11</span>Clean up</button>
+</div>
+
+                <div
+                    class="explanation"
+                    id="explanation">
+
+                    <h3>
+                        1. Load libraries
+                    </h3>
+
+                    <p>
+                        Loads the Raspberry Pi GPIO library and the time module.
+                    </p>
+
+                </div>
+
+                <details><summary>Explore more</summary><p>The MPU6050 normally uses address 0x68 and the SSD1306 OLED uses 0x3C. Confirm both using <code>sudo i2cdetect -y 1</code>.</p></details><details><summary>Check your understanding</summary><ul><li>Which GPIO controls the motor PWM? <strong>GPIO18.</strong></li><li>What is the fault threshold? <strong>1.30 g.</strong></li><li>Which GPIO controls the buzzer driver? <strong>GPIO23.</strong></li></ul></details>
+
+            </article>
+
+        </div>
+
+        <p class="tip"><strong>Tip:</strong> Never connect the motor directly to Raspberry Pi GPIO. Use the L298N with a suitable motor supply and common ground. Calibrate the vibration threshold for the actual motor.</p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Expected Output<section class="section" id="output">
+<h2>Expected Output</h2>
+<p>The motor runs at 70% PWM duty cycle. The OLED shows the vibration value and either <strong>STATUS: NORMAL / Motor OK</strong> or <strong>STATUS: FAULT / HIGH VIBRATION!</strong>. The buzzer sounds above the 1.30 g threshold. On exit, the motor and buzzer stop and GPIO resources are cleaned up.</p>
+</section>
+<section
+    class="section"
+    id="result"><section class="section" id="result">
+<h2>Result</h2>
+<div class="result-box">The Raspberry Pi monitors motor vibration through the MPU6050, displays status on the SSD1306 OLED and activates the buzzer when the vibration threshold is exceeded.</div>
+</section>
+<section class="section" id="learn">
+<h2>What You Learn</h2>
+<ul><li>Reading MPU6050 acceleration data over I²C.</li><li>Using GPIO and PWM to control a motor driver.</li><li>Calculating acceleration magnitude and threshold alerts.</li><li>Displaying sensor values on an OLED.</li><li>Using a transistor to switch a buzzer.</li><li>Stopping motors and cleaning up GPIO safely.</li></ul>
+</section>
+</main>
+
+<footer>
+    <strong>
+        DC Motor Vibration Monitoring System
+    </strong>
+</footer>
+
+<script>
+
+const program="#!/usr/bin/env python3\nimport time\nimport math\nimport smbus2\nimport RPi.GPIO as GPIO\nimport board\nimport busio\nimport adafruit_ssd1306\nfrom PIL import Image, ImageDraw, ImageFont\n\n# GPIO CONFIGURATION - BCM NUMBERING\nMOTOR_IN1 = 17\nMOTOR_IN2 = 27\nMOTOR_ENA = 18\nBUZZER = 23\n\n# MPU6050 CONFIGURATION\nMPU6050_ADDR = 0x68\nPWR_MGMT_1 = 0x6B\nACCEL_XOUT_H = 0x3B\nACCEL_YOUT_H = 0x3D\nACCEL_ZOUT_H = 0x3F\n\n# OLED CONFIGURATION\nOLED_WIDTH = 128\nOLED_HEIGHT = 64\nOLED_ADDR = 0x3C\n\n# VIBRATION SETTINGS\nVIBRATION_THRESHOLD = 1.30\nSAMPLE_DELAY = 0.10\nMOTOR_SPEED = 70\n\n# GPIO SETUP\nGPIO.setwarnings(False)\nGPIO.setmode(GPIO.BCM)\nGPIO.setup(MOTOR_IN1, GPIO.OUT)\nGPIO.setup(MOTOR_IN2, GPIO.OUT)\nGPIO.setup(MOTOR_ENA, GPIO.OUT)\nGPIO.setup(BUZZER, GPIO.OUT)\nGPIO.output(MOTOR_IN1, GPIO.LOW)\nGPIO.output(MOTOR_IN2, GPIO.LOW)\nGPIO.output(BUZZER, GPIO.LOW)\nmotor_pwm = GPIO.PWM(MOTOR_ENA, 1000)\nmotor_pwm.start(0)\n\n# I2C SETUP\nbus = smbus2.SMBus(1)\nbus.write_byte_data(MPU6050_ADDR, PWR_MGMT_1, 0)\ni2c = busio.I2C(board.SCL, board.SDA)\noled = adafruit_ssd1306.SSD1306_I2C(\n    OLED_WIDTH, OLED_HEIGHT, i2c, addr=OLED_ADDR\n)\noled.fill(0)\noled.show()\nfont = ImageFont.load_default()\n\n# MOTOR FUNCTIONS\ndef motor_forward(speed=MOTOR_SPEED):\n    GPIO.output(MOTOR_IN1, GPIO.HIGH)\n    GPIO.output(MOTOR_IN2, GPIO.LOW)\n    motor_pwm.ChangeDutyCycle(speed)\n\ndef motor_stop():\n    motor_pwm.ChangeDutyCycle(0)\n    GPIO.output(MOTOR_IN1, GPIO.LOW)\n    GPIO.output(MOTOR_IN2, GPIO.LOW)\n\n# MPU6050 FUNCTIONS\ndef read_word(register):\n    high = bus.read_byte_data(MPU6050_ADDR, register)\n    low = bus.read_byte_data(MPU6050_ADDR, register + 1)\n    value = (high << 8) | low\n    if value >= 32768:\n        value -= 65536\n    return value\n\ndef read_acceleration():\n    raw_x = read_word(ACCEL_XOUT_H)\n    raw_y = read_word(ACCEL_YOUT_H)\n    raw_z = read_word(ACCEL_ZOUT_H)\n    ax = raw_x / 16384.0\n    ay = raw_y / 16384.0\n    az = raw_z / 16384.0\n    return ax, ay, az\n\n# VIBRATION CALCULATION\ndef calculate_vibration(ax, ay, az):\n    acceleration = math.sqrt(\n        (ax * ax) + (ay * ay) + (az * az)\n    )\n    vibration = abs(acceleration - 1.0)\n    return vibration\n\n# OLED DISPLAY\ndef display_status(vibration, fault):\n    image = Image.new(\"1\", (OLED_WIDTH, OLED_HEIGHT))\n    draw = ImageDraw.Draw(image)\n    draw.text((0, 0), \"DC MOTOR MONITOR\", font=font, fill=255)\n    draw.text((0, 16), \"Vibration:\", font=font, fill=255)\n    draw.text(\n        (75, 16), \"{:.2f} g\".format(vibration),\n        font=font, fill=255\n    )\n    if fault:\n        draw.text((0, 36), \"STATUS: FAULT\", font=font, fill=255)\n        draw.text((0, 50), \"HIGH VIBRATION!\", font=font, fill=255)\n    else:\n        draw.text((0, 36), \"STATUS: NORMAL\", font=font, fill=255)\n        draw.text((0, 50), \"Motor OK\", font=font, fill=255)\n    oled.image(image)\n    oled.show()\n\n# MAIN PROGRAM\nprint(\"----------------------------------------\")\nprint(\" DC MOTOR VIBRATION MONITORING SYSTEM\")\nprint(\"----------------------------------------\")\ntry:\n    print(\"Checking MPU6050...\")\n    ax, ay, az = read_acceleration()\n    print(\"MPU6050 detected\")\n    print(\"AX: {:.2f} g\".format(ax))\n    print(\"AY: {:.2f} g\".format(ay))\n    print(\"AZ: {:.2f} g\".format(az))\n    image = Image.new(\"1\", (OLED_WIDTH, OLED_HEIGHT))\n    draw = ImageDraw.Draw(image)\n    draw.text((0, 5), \"DC MOTOR MONITOR\", font=font, fill=255)\n    draw.text((0, 25), \"System Starting...\", font=font, fill=255)\n    draw.text((0, 45), \"Please Wait\", font=font, fill=255)\n    oled.image(image)\n    oled.show()\n    time.sleep(2)\n    print(\"Starting motor at {}% speed...\".format(MOTOR_SPEED))\n    motor_forward(MOTOR_SPEED)\n    time.sleep(2)\n    print(\"Monitoring motor vibration...\")\n    print(\"Press CTRL+C to stop.\")\n    print(\"----------------------------------------\")\n    while True:\n        ax, ay, az = read_acceleration()\n        vibration = calculate_vibration(ax, ay, az)\n        print(\n            \"AX: {:6.2f} | AY: {:6.2f} | \"\n            \"AZ: {:6.2f} | Vibration: {:5.2f} g\".format(\n                ax, ay, az, vibration\n            )\n        )\n        if vibration > VIBRATION_THRESHOLD:\n            print(\"!!! MOTOR FAULT DETECTED !!!\")\n            GPIO.output(BUZZER, GPIO.HIGH)\n            display_status(vibration, True)\n        else:\n            GPIO.output(BUZZER, GPIO.LOW)\n            display_status(vibration, False)\n        time.sleep(SAMPLE_DELAY)\nexcept KeyboardInterrupt:\n    print(\"\\nProgram stopped by user.\")\nexcept Exception as error:\n    print(\"\\nSYSTEM ERROR:\")\n    print(error)\nfinally:\n    print(\"Stopping motor...\")\n    motor_stop()\n    GPIO.output(BUZZER, GPIO.LOW)\n    try:\n        oled.fill(0)\n        oled.show()\n    except Exception:\n        pass\n    try:\n        motor_pwm.stop()\n    except Exception:\n        pass\n    GPIO.cleanup()\n    try:\n        bus.close()\n    except Exception:\n        pass\n    print(\"GPIO cleaned up.\")\n    print(\"System shutdown complete.\")";
+
+const lines=program.split("\n");
+
+const steps=[{"title":"Import libraries","start":"import time","end":"from PIL import","text":"Loads GPIO, I²C, OLED, image, time and math libraries."},{"title":"Configure GPIO","start":"MOTOR_IN1 =","end":"BUZZER =","text":"Assigns GPIO17, GPIO27, GPIO18 and GPIO23."},{"title":"Configure sensor and OLED","start":"MPU6050_ADDR =","end":"OLED_ADDR =","text":"Defines I²C addresses and sensor registers."},{"title":"Set fault threshold","start":"VIBRATION_THRESHOLD =","end":"MOTOR_SPEED =","text":"Sets the threshold to 1.30 g and motor PWM to 70%."},{"title":"Initialize hardware","start":"GPIO.setwarnings","end":"font =","text":"Sets up GPIO, PWM, MPU6050 and OLED."},{"title":"Drive motor","start":"def motor_forward","end":"def read_word","text":"Controls motor direction and PWM speed."},{"title":"Read acceleration","start":"def read_word","end":"def calculate_vibration","text":"Reads raw MPU6050 registers and converts to g."},{"title":"Calculate vibration","start":"def calculate_vibration","end":"def display_status","text":"Computes acceleration magnitude minus approximately 1 g."},{"title":"Display status","start":"def display_status","end":"print(\"----------------------------------------\")","text":"Shows vibration, NORMAL or FAULT status on the OLED."},{"title":"Monitor and alert","start":"while True:","end":"except KeyboardInterrupt:","text":"Checks the vibration threshold and switches the buzzer."},{"title":"Clean up","start":"finally:","end":"print(\"System shutdown complete.\")","text":"Stops the motor, clears the OLED, and releases GPIO."}];
+
+function escapeHtml(text)
+{
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+}
+
+function displayCode()
+{
+    document.getElementById("code-lines").innerHTML=
+        lines.map(function(line,index)
+        {
+            return '<span class="code-line" id="line-'+(index+1)+'">'+
+                '<span class="line-number">'+(index+1)+'</span>'+
+                '<span>'+escapeHtml(line)+'</span>'+
+                '</span>';
+        }).join("");
+}
+
+function findLine(searchText,startIndex)
+{
+    startIndex=startIndex||0;
+
+    for(let i=startIndex;i<lines.length;i++)
+    {
+        if(lines[i].includes(searchText))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function showStep(index)
+{
+    const step=steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button)
+        {
+            button.classList.remove("active");
+        });
+
+    const buttons=
+        document.querySelectorAll(".step");
+
+    if(buttons[index])
+    {
+        buttons[index]
+            .classList
+            .add("active");
+    }
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line)
+        {
+            line.classList.remove("selected");
+        });
+
+    const startLine=
+        findLine(
+            step.start,
+            0
+        );
+
+    if(startLine===-1)
+    {
+        return;
+    }
+
+    let endLine=
+        findLine(
+            step.end,
+            startLine
+        );
+
+    if(endLine===-1)
+    {
+        endLine=startLine;
+    }
+
+    for(let i=startLine;i<=endLine;i++)
+    {
+        const line=
+            document.getElementById(
+                "line-"+(i+1)
+            );
+
+        if(line)
+        {
+            line.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const selected=
+        document.getElementById(
+            "line-"+(startLine+1)
+        );
+
+    const body=
+        document.getElementById(
+            "code-body"
+        );
+
+    if(selected&&body)
+    {
+        body.scrollTo(
+        {
+            top:
+                selected.offsetTop-
+                body.offsetTop-
+                20,
+            behavior:"smooth"
+        });
+    }
+
+    document.getElementById(
+        "explanation"
+    ).innerHTML=
+        "<h3>"+
+        (index+1)+
+        ". "+
+        step.title+
+        "</h3><p>"+
+        step.text+
+        "</p>";
+}
+
+function copyCode()
+{
+    navigator.clipboard
+        .writeText(program)
+        .then(function()
+        {
+            const button=
+                document.querySelector(
+                    ".copy-button"
+                );
+
+            button.innerText=
+                "Copied!";
+
+            setTimeout(
+                function()
+                {
+                    button.innerText=
+                        "Copy Code";
+                },
+                1500
+            );
+        });
+}
+
+displayCode();
+showStep(0);
+
+</script>
+
+</body>
+</html>
