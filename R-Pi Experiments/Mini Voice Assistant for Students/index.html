@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Voice Assistant for Students</title>
+
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
+.header h1{margin:0 0 8px;font-size:34px;}
+.header p{margin:0;font-size:17px;}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
+nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
+.container{width:90%;max-width:1050px;margin:35px auto;}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
+.section h3{color:#1e3a8a;}
+ul,ol{padding-left:24px;}
+li{margin-bottom:8px;}
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
+.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
+.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
+.component-card p{color:#475569;font-size:14px;margin:0;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;min-width:620px;border-collapse:collapse;}
+th,td{padding:12px;border:1px solid #ddd;text-align:left;}
+th{background:#2563eb;color:white;}
+tr:nth-child(even){background:#f8fafc;}
+.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
+.circuit-img{
+    display:block;
+    width:100%;
+    max-width:760px;
+    margin:20px auto 0;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    background:white;
+    padding:10px;
+}
+.code-lesson{color:#142e3a;}
+.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important;}
+.intro{color:#526875;margin:0 0 22px;}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
+.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
+.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
+.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
+.copy-button:hover{background:#eff6ff;}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
+.code-line:hover{background:#f8fbff;}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
+.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;}
+.guide>p{color:#526875;font-size:15px;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
+.step:hover{border-color:#60a5fa;background:#f8fbff;}
+.step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;}
+.explanation p{margin:0;color:#526875;font-size:15px;}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px;}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;}
+.guide details p,.guide details li{color:#526875;font-size:15px;}
+.guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
+.result-box{background:#eff6ff;border-left:4px solid #2563eb;padding:16px;border-radius:8px;color:#234e87;}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
+footer strong{color:white;}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>
+        Mini Voice Assistant for Students
+    </h1>
+
+    <p>
+        Display and manage school announcements through a local web application
+    </p>
+</header>
+
+<nav>
+    <a href="../index.html">
+        ← R-Pi Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
+</nav>
+
+<main class="container"><section class="section" id="aim"><h2>Aim</h2><p>Build an offline, rule-based voice assistant that recognizes student questions through a USB microphone and answers using Vosk and a local question-and-answer list.</p></section>
+<section class="section" id="about"><h2>About the Experiment</h2><p>Raspberry Pi 4 Model B records spoken questions using a USB microphone. Vosk converts audio into text offline, and Python matches the text to predefined student-friendly answers. Answers are displayed in the terminal. eSpeak-NG audio output is optional and requires a configured audio device; no Bluetooth speaker is included.</p></section>
+<section
+    class="section"
+    id="components">
+
+    <h2>
+        Components Required
+    </h2>
+
+    <div class="components-grid"><div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs the offline speech-recognition program.</p></div><div class="component-card"><img src="USB Microphone.png" alt="USB Microphone"><h4>USB Microphone (×1)</h4><p>Records student questions.</p></div></div>
+
+</section>
+
+<section
+    class="section"
+    id="connections">
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Component / Signal</th>
+                    <th>Physical Pin / Terminal</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody><tr><td>USB Microphone</td><td>USB-A</td><td>Raspberry Pi USB port</td></tr><tr><td>Optional audio output</td><td>Configured system audio</td><td>Only if spoken responses are needed; no Bluetooth speaker included</td></tr></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<section
+    class="section"
+    id="circuit">
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+    <img
+        class="circuit-img"
+        src="Mini Voice Assistant for Students Circuit.png"
+        alt="Mini Voice Assistant for Students Circuit">
+
+</section>
+
+<section
+    class="section"
+    id="working"><section class="section" id="working"><h2>Working Principle</h2><div class="flow">USB Microphone → Five-second Recording → Vosk Offline Speech Recognition → Text Normalization → Predefined Question Matching → Terminal Response → Optional Text-to-Speech</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the USB microphone to Raspberry Pi 4B.</li><li>Check the microphone with <code>arecord -l</code>. Test it using <code>arecord -D plughw:3,0 -f S16_LE -r 16000 -c 1 -d 5 mic_test.wav</code>; adjust the device number as needed.</li><li>Install packages: <code>sudo apt update</code>, then <code>sudo apt install -y python3-venv python3-pip python3-dev build-essential alsa-utils espeak-ng unzip</code>.</li><li>Create <code>~/Mini_Voice_Assistant</code> and run <code>python3 -m venv venv</code>, <code>source venv/bin/activate</code>, and <code>pip install vosk</code>.</li><li>Download <code>vosk-model-small-en-us-0.15</code> from the Vosk model website, extract it and rename the model directory to <code>model</code>.</li><li>Save the program as <code>main.py</code>. Change <code>MIC_DEVICE</code> if necessary.</li><li>Run <code>python main.py</code>. Ask supported student questions; answers appear in the terminal.</li><li>Say stop, exit, quit or goodbye, or press Ctrl+C to stop.</li></ol></section>
+<section
+    class="section"
+    id="code">
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Raspberry Pi Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Mini Voice Assistant for Students · Select a step to see what each part of the Python program does.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        main.py
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        onclick="copyCode()">
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                    class="code-body"
+                    id="code-body">
+
+                    <code id="code-lines"></code>
+
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step. The matching code will light up on the left.
+                </p>
+
+                <div class="steps">
+
+<button class="step active" onclick="showStep(0)"><span class="step-number">1</span>Import libraries</button>
+<button class="step" onclick="showStep(1)"><span class="step-number">2</span>Configure microphone</button>
+<button class="step" onclick="showStep(2)"><span class="step-number">3</span>Questions and answers</button>
+<button class="step" onclick="showStep(3)"><span class="step-number">4</span>Normalize text</button>
+<button class="step" onclick="showStep(4)"><span class="step-number">5</span>Optional speech</button>
+<button class="step" onclick="showStep(5)"><span class="step-number">6</span>Record audio</button>
+<button class="step" onclick="showStep(6)"><span class="step-number">7</span>Recognize speech</button>
+<button class="step" onclick="showStep(7)"><span class="step-number">8</span>Find answers</button>
+<button class="step" onclick="showStep(8)"><span class="step-number">9</span>Run assistant</button>
+</div>
+
+                <div
+                    class="explanation"
+                    id="explanation">
+
+                    <h3>
+                        1. Load libraries
+                    </h3>
+
+                    <p>
+                        Loads Flask, SQLite, path and date tools.
+                    </p>
+
+                </div>
+
+                <details><summary>Explore more</summary><p>SQLite stores notices in <code>notices.db</code> next to <code>main.py</code>. The public page hides expired notices but the admin page still lists them.</p></details><details><summary>Check your understanding</summary><ul><li>Which library runs the web server? <strong>Flask.</strong></li><li>What file stores notices? <strong>notices.db.</strong></li><li>How often do notice cards rotate? <strong>Every 8 seconds.</strong></li></ul></details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">No Bluetooth speaker is required. For optional spoken output, configure an audio device and run <code>VOICE_AUDIO=1 python main.py</code>.</p>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Expected Output<section class="section" id="output"><h2>Expected Output</h2><p>The terminal shows the listening prompt, recognized student question and matching answer. Unknown questions receive a fallback response. Spoken output is optional and needs a configured system audio output.</p></section>
+<section
+    class="section"
+    id="result"><section class="section" id="result"><h2>Result</h2><div class="result-box">An offline voice assistant recognizes questions from a USB microphone and displays predefined answers without a Bluetooth speaker component.</div></section>
+<section class="section" id="learn"><h2>What You Learn</h2><ul><li>USB microphone setup</li><li>Offline speech recognition with Vosk</li><li>Python text normalization and dictionary matching</li><li>Optional text-to-speech using eSpeak-NG</li></ul></section>
+</main>
+
+<footer>
+    <strong>
+        Mini Voice Assistant for Students
+    </strong>
+</footer>
+
+<script>
+
+const program="import json\nimport os\nimport re\nimport subprocess\nimport tempfile\nimport wave\nfrom vosk import Model, KaldiRecognizer\n\nPROJECT_DIR = os.path.dirname(os.path.abspath(__file__))\nMODEL_PATH = os.path.join(PROJECT_DIR, \"model\")\nMIC_DEVICE = \"plughw:3,0\"\nSAMPLE_RATE = 16000\nRECORD_SECONDS = 5\n\nQA = {\n    \"what is a raspberry pi\": \"A Raspberry Pi is a small computer used to learn coding and build electronics projects.\",\n    \"what is programming\": \"Programming means writing instructions that tell a computer what to do.\",\n    \"what is artificial intelligence\": \"Artificial intelligence is technology that helps computers perform tasks that usually need human intelligence.\",\n    \"what is a sensor\": \"A sensor detects a change in the environment, such as temperature, light, or movement.\",\n    \"what is the internet\": \"The internet is a worldwide network that connects computers and other devices.\",\n    \"what is science\": \"Science is the study of the natural world through observation and experiments.\",\n    \"what is a robot\": \"A robot is a machine that can perform tasks automatically or with control.\",\n    \"what is electricity\": \"Electricity is the movement or presence of electric charge.\",\n    \"who are you\": \"I am your Mini Voice Assistant. Ask me a student question.\",\n    \"hello\": \"Hello! Ask me a question.\"\n}\nEXIT_PHRASES = {\"stop\", \"exit\", \"quit\", \"goodbye\", \"bye\"}\n\ndef normalize(text):\n    text = text.lower()\n    text = re.sub(r\"[^a-z0-9\\s]\", \"\", text)\n    text = re.sub(r\"\\s+\", \" \", text)\n    return text.strip()\n\ndef speak(text):\n    print(\"Assistant:\", text)\n    if os.environ.get(\"VOICE_AUDIO\", \"0\") == \"1\":\n        subprocess.run([\"espeak-ng\", \"-s\", \"145\", text], check=False)\n\ndef record_audio(path):\n    command = [\"arecord\", \"-q\", \"-D\", MIC_DEVICE, \"-f\", \"S16_LE\",\n               \"-r\", str(SAMPLE_RATE), \"-c\", \"1\",\n               \"-d\", str(RECORD_SECONDS), path]\n    result = subprocess.run(command, capture_output=True, text=True)\n    if result.returncode != 0:\n        print(\"Microphone recording failed:\")\n        print(result.stderr.strip())\n        return False\n    return True\n\ndef recognize(model, wav_path):\n    with wave.open(wav_path, \"rb\") as wf:\n        recognizer = KaldiRecognizer(model, wf.getframerate())\n        recognizer.SetWords(False)\n        while True:\n            data = wf.readframes(4000)\n            if not data:\n                break\n            recognizer.AcceptWaveform(data)\n        result = json.loads(recognizer.FinalResult())\n    return normalize(result.get(\"text\", \"\"))\n\ndef find_answer(question):\n    if question in QA:\n        return QA[question]\n    for known_question, answer in QA.items():\n        if known_question in question or question in known_question:\n            if len(question) >= 4:\n                return answer\n    return \"Sorry, I do not know that answer yet. You can add it to the question list in main.py.\"\n\ndef main():\n    if not os.path.isdir(MODEL_PATH):\n        print(\"Vosk model folder not found:\", MODEL_PATH)\n        print(\"Download the model and place it in the project folder named 'model'.\")\n        return\n    print(\"Loading offline speech model...\")\n    model = Model(MODEL_PATH)\n    speak(\"Mini Voice Assistant is ready. Ask a student question.\")\n    print(\"Press Ctrl+C to stop. Say stop, exit, quit, or goodbye to exit.\")\n    try:\n        while True:\n            print(\"Listening... Please ask your question.\")\n            fd, wav_path = tempfile.mkstemp(suffix=\".wav\")\n            os.close(fd)\n            try:\n                if not record_audio(wav_path):\n                    speak(\"I could not record audio. Please check the microphone.\")\n                    continue\n                question = recognize(model, wav_path)\n            finally:\n                if os.path.exists(wav_path):\n                    os.remove(wav_path)\n            if not question:\n                print(\"No clear speech recognized. Please try again.\")\n                continue\n            print(\"You:\", question)\n            if question in EXIT_PHRASES:\n                speak(\"Goodbye!\")\n                break\n            speak(find_answer(question))\n    except KeyboardInterrupt:\n        print(\"Stopping assistant.\")\n        speak(\"Goodbye!\")\n\nif __name__ == \"__main__\":\n    main()";
+
+const lines=program.split("\n");
+
+const steps=[{"title":"Import libraries","start":"import json","end":"from vosk import","text":"Imports the libraries used by the voice assistant."},{"title":"Configure microphone","start":"PROJECT_DIR =","end":"RECORD_SECONDS =","text":"Sets the model folder, microphone and recording duration."},{"title":"Questions and answers","start":"QA =","end":"EXIT_PHRASES =","text":"Defines supported student questions."},{"title":"Normalize text","start":"def normalize","end":"def speak","text":"Cleans recognized text for matching."},{"title":"Optional speech","start":"def speak","end":"def record_audio","text":"Prints answers and optionally speaks them."},{"title":"Record audio","start":"def record_audio","end":"def recognize","text":"Captures a five-second audio sample."},{"title":"Recognize speech","start":"def recognize","end":"def find_answer","text":"Runs offline Vosk recognition."},{"title":"Find answers","start":"def find_answer","end":"def main","text":"Matches recognized questions to the answer list."},{"title":"Run assistant","start":"def main","end":"if __name__","text":"Loops through questions and handles exit commands."}];
+
+function escapeHtml(text)
+{
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+}
+
+function displayCode()
+{
+    document.getElementById("code-lines").innerHTML=
+        lines.map(function(line,index)
+        {
+            return '<span class="code-line" id="line-'+(index+1)+'">'+
+                '<span class="line-number">'+(index+1)+'</span>'+
+                '<span>'+escapeHtml(line)+'</span>'+
+                '</span>';
+        }).join("");
+}
+
+function findLine(searchText,startIndex)
+{
+    startIndex=startIndex||0;
+
+    for(let i=startIndex;i<lines.length;i++)
+    {
+        if(lines[i].includes(searchText))
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+function showStep(index)
+{
+    const step=steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button)
+        {
+            button.classList.remove("active");
+        });
+
+    const buttons=
+        document.querySelectorAll(".step");
+
+    if(buttons[index])
+    {
+        buttons[index]
+            .classList
+            .add("active");
+    }
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line)
+        {
+            line.classList.remove("selected");
+        });
+
+    const startLine=
+        findLine(
+            step.start,
+            0
+        );
+
+    if(startLine===-1)
+    {
+        return;
+    }
+
+    let endLine=
+        findLine(
+            step.end,
+            startLine
+        );
+
+    if(endLine===-1)
+    {
+        endLine=startLine;
+    }
+
+    for(let i=startLine;i<=endLine;i++)
+    {
+        const line=
+            document.getElementById(
+                "line-"+(i+1)
+            );
+
+        if(line)
+        {
+            line.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const selected=
+        document.getElementById(
+            "line-"+(startLine+1)
+        );
+
+    const body=
+        document.getElementById(
+            "code-body"
+        );
+
+    if(selected&&body)
+    {
+        body.scrollTo(
+        {
+            top:
+                selected.offsetTop-
+                body.offsetTop-
+                20,
+            behavior:"smooth"
+        });
+    }
+
+    document.getElementById(
+        "explanation"
+    ).innerHTML=
+        "<h3>"+
+        (index+1)+
+        ". "+
+        step.title+
+        "</h3><p>"+
+        step.text+
+        "</p>";
+}
+
+function copyCode()
+{
+    navigator.clipboard
+        .writeText(program)
+        .then(function()
+        {
+            const button=
+                document.querySelector(
+                    ".copy-button"
+                );
+
+            button.innerText=
+                "Copied!";
+
+            setTimeout(
+                function()
+                {
+                    button.innerText=
+                        "Copy Code";
+                },
+                1500
+            );
+        });
+}
+
+displayCode();
+showStep(0);
+
+</script>
+
+</body>
+</html>
