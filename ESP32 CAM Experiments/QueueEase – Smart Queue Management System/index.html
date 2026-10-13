@@ -1,0 +1,441 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QueueEase – Smart Queue Management System</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#1e293b;font:16px/1.65 Arial,Helvetica,sans-serif}header{background:#2563eb;color:white;padding:28px 6%;text-align:center}header h1{margin:0;font-size:30px}nav{background:white;padding:13px 6%;border-bottom:1px solid #e2e8f0}nav a{color:#1d4ed8;font-weight:bold;text-decoration:none}main{max-width:1100px;margin:32px auto;padding:0 18px}section{background:white;border:1px solid #e2e8f0;border-radius:12px;margin:22px 0;padding:24px;box-shadow:0 3px 12px #0f172a0b}h2{color:#1e40af;margin-top:0;border-bottom:2px solid #dbeafe;padding-bottom:9px}.components{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:15px}.component{border:1px solid #e2e8f0;border-radius:10px;padding:12px;text-align:center}.component img{width:100%;height:125px;object-fit:contain}.component strong{display:block;font-size:14px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #dbe3ef;padding:11px;text-align:left}th{background:#eff6ff;color:#1e3a8a}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.steps{display:flex;flex-wrap:wrap;gap:10px}.steps span{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 13px}button{border:0;border-radius:7px;background:#2563eb;color:white;padding:10px 15px;cursor:pointer;margin:5px 4px 5px 0}.codebox{background:#0f172a;color:#e2e8f0;overflow:auto;border-radius:10px;max-height:660px;font:13px/1.6 Consolas,monospace}.code-line{display:block;white-space:pre;padding:0 12px}.code-line::before{content:attr(data-n);display:inline-block;width:35px;color:#64748b;user-select:none}.code-line.active{background:#1e40af;color:white}.note{background:#eff6ff;border-left:4px solid #2563eb;padding:12px;border-radius:5px}footer{text-align:center;background:#0f172a;color:white;padding:24px;margin-top:40px}@media(max-width:600px){header h1{font-size:23px}section{padding:16px}}</style></head><body><header><h1>QueueEase – Smart Queue Management System</h1></header><nav><a href="../index.html">← Back to Experiments</a></nav><main>
+<section><h2>Aim</h2><p>To build a smart queue management system where tokens can be generated, called and reset using a 4×4 keypad or Wi-Fi dashboard, with OLED status and buzzer feedback.</p></section>
+<section><h2>About the Experiment</h2><p>The ESP32 hosts a local web dashboard and processes keypad commands. Both interfaces share one queue state. The OLED shows the token currently being served and the number of waiting tokens.</p></section>
+<section><h2>Components Required</h2><div class="components"><div class="component"><img src="ESP32 Development Board.png" alt="ESP32 NodeMCU-32S"><strong>ESP32 NodeMCU-32S</strong></div><div class="component"><img src="OLED.png" alt="SSD1306 OLED Display"><strong>SSD1306 OLED Display</strong></div><div class="component"><img src="4×4 Keypad.png" alt="4×4 Matrix Keypad"><strong>4×4 Matrix Keypad</strong></div><div class="component"><img src="Buzzer.png" alt="Active Buzzer"><strong>Active Buzzer</strong></div><div class="component"><img src="Breadboard.png" alt="Breadboard"><strong>Breadboard</strong></div><div class="component"><img src="Jumper Wires.png" alt="Jumper Wires"><strong>Jumper Wires</strong></div></div></section>
+<section><h2>Circuit Connections</h2><table><thead><tr><th>Component / Signal</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>OLED SDA</td><td>GPIO21</td></tr><tr><td>OLED SCL</td><td>GPIO22</td></tr><tr><td>OLED VCC / GND</td><td>3V3 / GND</td></tr><tr><td>Keypad R1–R4</td><td>GPIO13, GPIO14, GPIO16, GPIO17</td></tr><tr><td>Keypad C1–C4</td><td>GPIO18, GPIO19, GPIO23, GPIO25</td></tr><tr><td>Buzzer +</td><td>GPIO27</td></tr><tr><td>Buzzer −</td><td>GND</td></tr></tbody></table><p class="note">Match the keypad's row and column order to the sketch. Do not include a seven-segment display. Check buzzer current and voltage compatibility.</p></section>
+<section><h2>Circuit Diagram</h2><img class="circuit-img" src="QueueEase – Smart Queue Management System Circuit.png" alt="QueueEase – Smart Queue Management System circuit diagram"></section>
+<section><h2>Working Principle</h2><div class="steps"><span>Keypad or browser action</span><span>→ ESP32 queue logic</span><span>→ Token count updated</span><span>→ OLED and dashboard refresh</span><span>→ Buzzer feedback</span></div></section>
+<section><h2>Procedure</h2><ol><li>Connect OLED, keypad and buzzer according to the circuit table.</li><li>Install the U8g2 and Keypad libraries in Arduino IDE and select the ESP32 board.</li><li>For physical hardware, set USE_WOKWI to 0 and enter your own Wi-Fi credentials in the sketch.</li><li>Upload the program and open Serial Monitor at 115200 baud.</li><li>Open the IP address displayed in Serial Monitor on a browser connected to the same network.</li><li>Press keypad A to generate a token, B to call the next token, C to reset, or D to refresh the OLED. The same actions are available in the dashboard.</li></ol></section>
+<section><h2>Explore the Code</h2><button onclick="copyCode()">Copy Code</button><div class="steps"><button onclick="focusCode('const byte ROWS')">Keypad Setup</button><button onclick="focusCode('void updateOLED')">OLED Display</button><button onclick="focusCode('void generateToken')">Generate Token</button><button onclick="focusCode('void callNextToken')">Call Token</button><button onclick="focusCode('void setupWebServer')">Web Dashboard</button><button onclick="focusCode('void loop')">Main Loop</button></div><p id="code-help" class="note">Select a topic to highlight its code.</p><div id="codebox" class="codebox"><span class="code-line" data-n="1">#include &lt;WiFi.h&gt;</span>
+<span class="code-line" data-n="2">#include &lt;WebServer.h&gt;</span>
+<span class="code-line" data-n="3">#include &lt;Wire.h&gt;</span>
+<span class="code-line" data-n="4">#include &lt;U8g2lib.h&gt;</span>
+<span class="code-line" data-n="5">#include &lt;Keypad.h&gt;</span>
+<span class="code-line" data-n="6">// Select environment: 1 = Wokwi, 0 = physical ESP32</span>
+<span class="code-line" data-n="7">#define USE_WOKWI 1</span>
+<span class="code-line" data-n="8"> </span>
+<span class="code-line" data-n="9"> </span>
+<span class="code-line" data-n="10">const char* WIFI_SSID = &quot;YOUR_WIFI_NAME&quot;;</span>
+<span class="code-line" data-n="11">const char* WIFI_PASSWORD = &quot;YOUR_WIFI_PASSWORD&quot;;</span>
+<span class="code-line" data-n="12"> </span>
+<span class="code-line" data-n="13"> </span>
+<span class="code-line" data-n="14">WebServer server(80);</span>
+<span class="code-line" data-n="15">// OLED: SDA = GPIO 21, SCL = GPIO 22</span>
+<span class="code-line" data-n="16">U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE);</span>
+<span class="code-line" data-n="17">// 4x4 keypad</span>
+<span class="code-line" data-n="18">const byte ROWS = 4;</span>
+<span class="code-line" data-n="19">const byte COLS = 4;</span>
+<span class="code-line" data-n="20">char keys[ROWS][COLS] = {</span>
+<span class="code-line" data-n="21">{'1', '2', '3', 'A'},</span>
+<span class="code-line" data-n="22">{'4', '5', '6', 'B'},</span>
+<span class="code-line" data-n="23">{'7', '8', '9', 'C'},</span>
+<span class="code-line" data-n="24">{'*', '0', '#', 'D'}</span>
+<span class="code-line" data-n="25">};</span>
+<span class="code-line" data-n="26">byte rowPins[ROWS] = {13, 14, 16, 17};</span>
+<span class="code-line" data-n="27">byte colPins[COLS] = {18, 19, 23, 25};</span>
+<span class="code-line" data-n="28">Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);</span>
+<span class="code-line" data-n="29">// Buzzer signal on GPIO 27</span>
+<span class="code-line" data-n="30">const byte BUZZER_PIN = 27;</span>
+<span class="code-line" data-n="31">// Queue state</span>
+<span class="code-line" data-n="32">int lastGenerated = 0;</span>
+<span class="code-line" data-n="33">int lastCalled = 0;</span>
+<span class="code-line" data-n="34">String lastMessage = &quot;System ready&quot;;</span>
+<span class="code-line" data-n="35">unsigned long lastOledUpdate = 0;</span>
+<span class="code-line" data-n="36">unsigned long lastWiFiCheck = 0;</span>
+<span class="code-line" data-n="37">void updateOLED() {</span>
+<span class="code-line" data-n="38">oled.clearBuffer();</span>
+<span class="code-line" data-n="39">oled.setFont(u8g2_font_6x12_tf);</span>
+<span class="code-line" data-n="40">oled.drawStr(0, 11, &quot;QUEUEEASE&quot;);</span>
+<span class="code-line" data-n="41">oled.drawHLine(0, 15, 128);</span>
+<span class="code-line" data-n="42">oled.drawStr(0, 28, &quot;NOW SERVING&quot;);</span>
+<span class="code-line" data-n="43"> </span>
+<span class="code-line" data-n="44">char token[16];</span>
+<span class="code-line" data-n="45">snprintf(token, sizeof(token), &quot;T-%03d&quot;, lastCalled);</span>
+<span class="code-line" data-n="46">oled.setFont(u8g2_font_ncenB14_tr);</span>
+<span class="code-line" data-n="47">oled.drawStr(0, 47, token);</span>
+<span class="code-line" data-n="48">oled.setFont(u8g2_font_5x8_tf);</span>
+<span class="code-line" data-n="49">char waitingText[24];</span>
+<span class="code-line" data-n="50">snprintf(waitingText, sizeof(waitingText), &quot;Waiting: %d&quot;,</span>
+<span class="code-line" data-n="51">lastGenerated - lastCalled);</span>
+<span class="code-line" data-n="52">oled.drawStr(0, 61, waitingText);</span>
+<span class="code-line" data-n="53">oled.sendBuffer();</span>
+<span class="code-line" data-n="54">}</span>
+<span class="code-line" data-n="55">void generateToken() {</span>
+<span class="code-line" data-n="56">if (lastGenerated &gt;= 999) {</span>
+<span class="code-line" data-n="57">lastMessage = &quot;Token limit reached&quot;;</span>
+<span class="code-line" data-n="58">tone(BUZZER_PIN, 400, 250);</span>
+<span class="code-line" data-n="59">return;</span>
+<span class="code-line" data-n="60">}</span>
+<span class="code-line" data-n="61">lastGenerated++;</span>
+<span class="code-line" data-n="62">lastMessage = &quot;Token T-&quot; + String(lastGenerated) + &quot; generated&quot;;</span>
+<span class="code-line" data-n="63">tone(BUZZER_PIN, 1500, 100);</span>
+<span class="code-line" data-n="64">Serial.println(lastMessage);</span>
+<span class="code-line" data-n="65">updateOLED();</span>
+<span class="code-line" data-n="66">}</span>
+<span class="code-line" data-n="67">void callNextToken() {</span>
+<span class="code-line" data-n="68">if (lastCalled &gt;= lastGenerated) {</span>
+<span class="code-line" data-n="69">lastMessage = &quot;No waiting tokens&quot;;</span>
+<span class="code-line" data-n="70">tone(BUZZER_PIN, 400, 250);</span>
+<span class="code-line" data-n="71">Serial.println(lastMessage);</span>
+<span class="code-line" data-n="72">updateOLED();</span>
+<span class="code-line" data-n="73">return;</span>
+<span class="code-line" data-n="74">}</span>
+<span class="code-line" data-n="75">lastCalled++;</span>
+<span class="code-line" data-n="76">lastMessage = &quot;Now serving T-&quot; + String(lastCalled);</span>
+<span class="code-line" data-n="77">tone(BUZZER_PIN, 2000, 150);</span>
+<span class="code-line" data-n="78">Serial.println(lastMessage);</span>
+<span class="code-line" data-n="79">updateOLED();</span>
+<span class="code-line" data-n="80">}</span>
+<span class="code-line" data-n="81">void resetQueue() {</span>
+<span class="code-line" data-n="82">lastGenerated = 0;</span>
+<span class="code-line" data-n="83">lastCalled = 0;</span>
+<span class="code-line" data-n="84">lastMessage = &quot;Queue reset&quot;;</span>
+<span class="code-line" data-n="85">tone(BUZZER_PIN, 1000, 100);</span>
+<span class="code-line" data-n="86">Serial.println(lastMessage);</span>
+<span class="code-line" data-n="87">updateOLED();</span>
+<span class="code-line" data-n="88"> </span>
+<span class="code-line" data-n="89">}</span>
+<span class="code-line" data-n="90">const char webpage[] PROGMEM = R&quot;HTML(</span>
+<span class="code-line" data-n="91">&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;</span>
+<span class="code-line" data-n="92">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</span>
+<span class="code-line" data-n="93">&lt;title&gt;QueueEase Dashboard&lt;/title&gt;</span>
+<span class="code-line" data-n="94">&lt;style&gt;</span>
+<span class="code-line" data-n="95">*{box-sizing:border-box}body{margin:0;padding:20px;background:#101827;color:#f8fafc;font-</span>
+<span class="code-line" data-n="96">family:Arial;text-align:center}</span>
+<span class="code-line" data-n="97">main{max-width:650px;margin:auto}h1{color:#60a5fa}.subtitle,.label{color:#cbd5e1}</span>
+<span class="code-line" data-n="98">.card{background:#1e293b;padding:20px;margin:14px 0;border-radius:16px}</span>
+<span class="code-line" data-n="99">.current{font-size:46px;font-weight:bold;color:#38bdf8;margin:10px}</span>
+<span class="code-line" data-n="100">.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}</span>
+<span class="code-line" data-n="101">.stat{padding:14px 5px}button{width:100%;padding:15px;margin:6px 0;border:0;border-radius:10px;font-</span>
+<span class="code-line" data-n="102">size:16px;font-weight:bold;cursor:pointer}</span>
+<span class="code-line" data-n="103">.generate{background:#38bdf8}.call{background:#4ade80}.reset{background:#fb7185}</span>
+<span class="code-line" data-n="104">&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;</span>
+<span class="code-line" data-n="105">&lt;h1&gt;QueueEase&lt;/h1&gt;&lt;p class=&quot;subtitle&quot;&gt;Smart Queue Management System&lt;/p&gt;</span>
+<span class="code-line" data-n="106">&lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;label&quot;&gt;NOW SERVING&lt;/div&gt;&lt;div class=&quot;current&quot;</span>
+<span class="code-line" data-n="107">id=&quot;called&quot;&gt;T-000&lt;/div&gt;&lt;/div&gt;</span>
+<span class="code-line" data-n="108">&lt;div class=&quot;stats&quot;&gt;</span>
+<span class="code-line" data-n="109">&lt;div class=&quot;card stat&quot;&gt;&lt;div class=&quot;label&quot;&gt;Generated&lt;/div&gt;&lt;h2 id=&quot;generated&quot;&gt;0&lt;/h2&gt;&lt;/div&gt;</span>
+<span class="code-line" data-n="110">&lt;div class=&quot;card stat&quot;&gt;&lt;div class=&quot;label&quot;&gt;Waiting&lt;/div&gt;&lt;h2 id=&quot;waiting&quot;&gt;0&lt;/h2&gt;&lt;/div&gt;</span>
+<span class="code-line" data-n="111">&lt;div class=&quot;card stat&quot;&gt;&lt;div class=&quot;label&quot;&gt;Called&lt;/div&gt;&lt;h2 id=&quot;calledCount&quot;&gt;0&lt;/h2&gt;&lt;/div&gt;</span>
+<span class="code-line" data-n="112">&lt;/div&gt;</span>
+<span class="code-line" data-n="113">&lt;div class=&quot;card&quot;&gt;</span>
+<span class="code-line" data-n="114">&lt;button class=&quot;generate&quot; onclick=&quot;action('/generate')&quot;&gt;+ Generate Token&lt;/button&gt;</span>
+<span class="code-line" data-n="115">&lt;button class=&quot;call&quot; onclick=&quot;action('/call')&quot;&gt;Call Next Token&lt;/button&gt;</span>
+<span class="code-line" data-n="116">&lt;button class=&quot;reset&quot; onclick=&quot;action('/reset')&quot;&gt;Reset Queue&lt;/button&gt;</span>
+<span class="code-line" data-n="117">&lt;p id=&quot;message&quot;&gt;Connecting...&lt;/p&gt;&lt;/div&gt;&lt;/main&gt;</span>
+<span class="code-line" data-n="118">&lt;script&gt;</span>
+<span class="code-line" data-n="119">async function refresh(){try{</span>
+<span class="code-line" data-n="120">const r=await fetch('/api');if(!r.ok)throw Error('server');const d=await r.json();</span>
+<span class="code-line" data-n="121">document.getElementById('called').textContent='T-'+String(d.called).padStart(3,'0');</span>
+<span class="code-line" data-n="122">document.getElementById('generated').textContent=d.generated;</span>
+<span class="code-line" data-n="123">document.getElementById('waiting').textContent=d.waiting;</span>
+<span class="code-line" data-n="124">document.getElementById('calledCount').textContent=d.called;</span>
+<span class="code-line" data-n="125">document.getElementById('message').textContent=d.message;</span>
+<span class="code-line" data-n="126">}catch(e){document.getElementById('message').textContent='Connection lost. Retrying...';}}</span>
+<span class="code-line" data-n="127">async function action(path){try{const r=await fetch(path,{method:'POST'});const d=await r.json();</span>
+<span class="code-line" data-n="128">document.getElementById('message').textContent=d.message;await refresh();</span>
+<span class="code-line" data-n="129">}catch(e){document.getElementById('message').textContent='Command failed. Check connection.';}}</span>
+<span class="code-line" data-n="130">refresh();setInterval(refresh,1000);</span>
+<span class="code-line" data-n="131">&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</span>
+<span class="code-line" data-n="132">)HTML&quot;;</span>
+<span class="code-line" data-n="133"> </span>
+<span class="code-line" data-n="134">void sendAPI() {</span>
+<span class="code-line" data-n="135">String json = &quot;{\&quot;called\&quot;:&quot; + String(lastCalled) +</span>
+<span class="code-line" data-n="136">&quot;,\&quot;generated\&quot;:&quot; + String(lastGenerated) +</span>
+<span class="code-line" data-n="137">&quot;,\&quot;waiting\&quot;:&quot; + String(lastGenerated - lastCalled) +</span>
+<span class="code-line" data-n="138">&quot;,\&quot;message\&quot;:\&quot;&quot; + lastMessage + &quot;\&quot;}&quot;;</span>
+<span class="code-line" data-n="139">server.send(200, &quot;application/json&quot;, json);</span>
+<span class="code-line" data-n="140">}</span>
+<span class="code-line" data-n="141">void setupWebServer() {</span>
+<span class="code-line" data-n="142">server.on(&quot;/&quot;, HTTP_GET, []() { server.send_P(200, &quot;text/html&quot;, webpage); });</span>
+<span class="code-line" data-n="143">server.on(&quot;/api&quot;, HTTP_GET, []() { sendAPI(); });</span>
+<span class="code-line" data-n="144">server.on(&quot;/generate&quot;, HTTP_POST, []() { generateToken(); sendAPI(); });</span>
+<span class="code-line" data-n="145">server.on(&quot;/call&quot;, HTTP_POST, []() { callNextToken(); sendAPI(); });</span>
+<span class="code-line" data-n="146">server.on(&quot;/reset&quot;, HTTP_POST, []() { resetQueue(); sendAPI(); });</span>
+<span class="code-line" data-n="147">server.onNotFound([]() { server.send(404, &quot;text/plain&quot;, &quot;Not found&quot;); });</span>
+<span class="code-line" data-n="148">server.begin();</span>
+<span class="code-line" data-n="149">Serial.println(&quot;HTTP web server started on port 80&quot;);</span>
+<span class="code-line" data-n="150">}</span>
+<span class="code-line" data-n="151">void connectWiFi() {</span>
+<span class="code-line" data-n="152">WiFi.mode(WIFI_STA);</span>
+<span class="code-line" data-n="153">#if USE_WOKWI</span>
+<span class="code-line" data-n="154">WiFi.begin(WIFI_SSID, WIFI_PASSWORD, 6);</span>
+<span class="code-line" data-n="155">#else</span>
+<span class="code-line" data-n="156">WiFi.begin(WIFI_SSID, WIFI_PASSWORD);</span>
+<span class="code-line" data-n="157">#endif</span>
+<span class="code-line" data-n="158">Serial.print(&quot;Connecting to &quot;);</span>
+<span class="code-line" data-n="159">Serial.println(WIFI_SSID);</span>
+<span class="code-line" data-n="160">unsigned long start = millis();</span>
+<span class="code-line" data-n="161">while (WiFi.status() != WL_CONNECTED &amp;&amp; millis() - start &lt; 20000) {</span>
+<span class="code-line" data-n="162">delay(300);</span>
+<span class="code-line" data-n="163">Serial.print(&quot;.&quot;);</span>
+<span class="code-line" data-n="164">}</span>
+<span class="code-line" data-n="165">Serial.println();</span>
+<span class="code-line" data-n="166">if (WiFi.status() == WL_CONNECTED) {</span>
+<span class="code-line" data-n="167">Serial.println(&quot;Wi-Fi connected!&quot;);</span>
+<span class="code-line" data-n="168">Serial.print(&quot;ESP32 IP Address: &quot;);</span>
+<span class="code-line" data-n="169">Serial.println(WiFi.localIP());</span>
+<span class="code-line" data-n="170">#if USE_WOKWI</span>
+<span class="code-line" data-n="171">Serial.println(&quot;Dashboard URL: http://localhost:9080&quot;);</span>
+<span class="code-line" data-n="172">Serial.println(&quot;Requires Wokwi Private IoT Gateway/port forwarding.&quot;);</span>
+<span class="code-line" data-n="173">#else</span>
+<span class="code-line" data-n="174">Serial.print(&quot;Dashboard URL: http://&quot;);</span>
+<span class="code-line" data-n="175">Serial.println(WiFi.localIP());</span>
+<span class="code-line" data-n="176">#endif</span>
+<span class="code-line" data-n="177">} else {</span>
+<span class="code-line" data-n="178"> </span>
+<span class="code-line" data-n="179">Serial.println(&quot;Wi-Fi connection failed. Check settings.&quot;);</span>
+<span class="code-line" data-n="180">}</span>
+<span class="code-line" data-n="181">}</span>
+<span class="code-line" data-n="182">void setup() {</span>
+<span class="code-line" data-n="183">Serial.begin(115200);</span>
+<span class="code-line" data-n="184">delay(500);</span>
+<span class="code-line" data-n="185">pinMode(BUZZER_PIN, OUTPUT);</span>
+<span class="code-line" data-n="186">Wire.begin(21, 22);</span>
+<span class="code-line" data-n="187">oled.begin();</span>
+<span class="code-line" data-n="188">updateOLED();</span>
+<span class="code-line" data-n="189">connectWiFi();</span>
+<span class="code-line" data-n="190">setupWebServer();</span>
+<span class="code-line" data-n="191">Serial.println(&quot;QUEUEEASE READY&quot;);</span>
+<span class="code-line" data-n="192">Serial.println(&quot;Keypad: A=Generate, B=Call, C=Reset, D=Refresh OLED&quot;);</span>
+<span class="code-line" data-n="193">}</span>
+<span class="code-line" data-n="194">void loop() {</span>
+<span class="code-line" data-n="195">server.handleClient();</span>
+<span class="code-line" data-n="196">char key = keypad.getKey();</span>
+<span class="code-line" data-n="197">if (key == 'A') generateToken();</span>
+<span class="code-line" data-n="198">else if (key == 'B') callNextToken();</span>
+<span class="code-line" data-n="199">else if (key == 'C') resetQueue();</span>
+<span class="code-line" data-n="200">else if (key == 'D') {</span>
+<span class="code-line" data-n="201">lastMessage = &quot;Status refreshed&quot;;</span>
+<span class="code-line" data-n="202">updateOLED();</span>
+<span class="code-line" data-n="203">}</span>
+<span class="code-line" data-n="204">if (millis() - lastOledUpdate &gt;= 500) {</span>
+<span class="code-line" data-n="205">lastOledUpdate = millis();</span>
+<span class="code-line" data-n="206">updateOLED();</span>
+<span class="code-line" data-n="207">}</span>
+<span class="code-line" data-n="208">if (WiFi.status() != WL_CONNECTED &amp;&amp;</span>
+<span class="code-line" data-n="209">millis() - lastWiFiCheck &gt;= 5000) {</span>
+<span class="code-line" data-n="210">lastWiFiCheck = millis();</span>
+<span class="code-line" data-n="211">Serial.println(&quot;Wi-Fi disconnected; reconnecting...&quot;);</span>
+<span class="code-line" data-n="212">WiFi.reconnect();</span>
+<span class="code-line" data-n="213">}</span>
+<span class="code-line" data-n="214">}</span></div><script id="raw-code" type="text/plain">#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;U8g2lib.h&gt;
+#include &lt;Keypad.h&gt;
+// Select environment: 1 = Wokwi, 0 = physical ESP32
+#define USE_WOKWI 1
+
+
+const char* WIFI_SSID = &quot;YOUR_WIFI_NAME&quot;;
+const char* WIFI_PASSWORD = &quot;YOUR_WIFI_PASSWORD&quot;;
+
+
+WebServer server(80);
+// OLED: SDA = GPIO 21, SCL = GPIO 22
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE);
+// 4x4 keypad
+const byte ROWS = 4;
+const byte COLS = 4;
+char keys[ROWS][COLS] = {
+{'1', '2', '3', 'A'},
+{'4', '5', '6', 'B'},
+{'7', '8', '9', 'C'},
+{'*', '0', '#', 'D'}
+};
+byte rowPins[ROWS] = {13, 14, 16, 17};
+byte colPins[COLS] = {18, 19, 23, 25};
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+// Buzzer signal on GPIO 27
+const byte BUZZER_PIN = 27;
+// Queue state
+int lastGenerated = 0;
+int lastCalled = 0;
+String lastMessage = &quot;System ready&quot;;
+unsigned long lastOledUpdate = 0;
+unsigned long lastWiFiCheck = 0;
+void updateOLED() {
+oled.clearBuffer();
+oled.setFont(u8g2_font_6x12_tf);
+oled.drawStr(0, 11, &quot;QUEUEEASE&quot;);
+oled.drawHLine(0, 15, 128);
+oled.drawStr(0, 28, &quot;NOW SERVING&quot;);
+
+char token[16];
+snprintf(token, sizeof(token), &quot;T-%03d&quot;, lastCalled);
+oled.setFont(u8g2_font_ncenB14_tr);
+oled.drawStr(0, 47, token);
+oled.setFont(u8g2_font_5x8_tf);
+char waitingText[24];
+snprintf(waitingText, sizeof(waitingText), &quot;Waiting: %d&quot;,
+lastGenerated - lastCalled);
+oled.drawStr(0, 61, waitingText);
+oled.sendBuffer();
+}
+void generateToken() {
+if (lastGenerated &gt;= 999) {
+lastMessage = &quot;Token limit reached&quot;;
+tone(BUZZER_PIN, 400, 250);
+return;
+}
+lastGenerated++;
+lastMessage = &quot;Token T-&quot; + String(lastGenerated) + &quot; generated&quot;;
+tone(BUZZER_PIN, 1500, 100);
+Serial.println(lastMessage);
+updateOLED();
+}
+void callNextToken() {
+if (lastCalled &gt;= lastGenerated) {
+lastMessage = &quot;No waiting tokens&quot;;
+tone(BUZZER_PIN, 400, 250);
+Serial.println(lastMessage);
+updateOLED();
+return;
+}
+lastCalled++;
+lastMessage = &quot;Now serving T-&quot; + String(lastCalled);
+tone(BUZZER_PIN, 2000, 150);
+Serial.println(lastMessage);
+updateOLED();
+}
+void resetQueue() {
+lastGenerated = 0;
+lastCalled = 0;
+lastMessage = &quot;Queue reset&quot;;
+tone(BUZZER_PIN, 1000, 100);
+Serial.println(lastMessage);
+updateOLED();
+
+}
+const char webpage[] PROGMEM = R&quot;HTML(
+&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;title&gt;QueueEase Dashboard&lt;/title&gt;
+&lt;style&gt;
+*{box-sizing:border-box}body{margin:0;padding:20px;background:#101827;color:#f8fafc;font-
+family:Arial;text-align:center}
+main{max-width:650px;margin:auto}h1{color:#60a5fa}.subtitle,.label{color:#cbd5e1}
+.card{background:#1e293b;padding:20px;margin:14px 0;border-radius:16px}
+.current{font-size:46px;font-weight:bold;color:#38bdf8;margin:10px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{padding:14px 5px}button{width:100%;padding:15px;margin:6px 0;border:0;border-radius:10px;font-
+size:16px;font-weight:bold;cursor:pointer}
+.generate{background:#38bdf8}.call{background:#4ade80}.reset{background:#fb7185}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;
+&lt;h1&gt;QueueEase&lt;/h1&gt;&lt;p class=&quot;subtitle&quot;&gt;Smart Queue Management System&lt;/p&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;label&quot;&gt;NOW SERVING&lt;/div&gt;&lt;div class=&quot;current&quot;
+id=&quot;called&quot;&gt;T-000&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;stats&quot;&gt;
+&lt;div class=&quot;card stat&quot;&gt;&lt;div class=&quot;label&quot;&gt;Generated&lt;/div&gt;&lt;h2 id=&quot;generated&quot;&gt;0&lt;/h2&gt;&lt;/div&gt;
+&lt;div class=&quot;card stat&quot;&gt;&lt;div class=&quot;label&quot;&gt;Waiting&lt;/div&gt;&lt;h2 id=&quot;waiting&quot;&gt;0&lt;/h2&gt;&lt;/div&gt;
+&lt;div class=&quot;card stat&quot;&gt;&lt;div class=&quot;label&quot;&gt;Called&lt;/div&gt;&lt;h2 id=&quot;calledCount&quot;&gt;0&lt;/h2&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;
+&lt;button class=&quot;generate&quot; onclick=&quot;action('/generate')&quot;&gt;+ Generate Token&lt;/button&gt;
+&lt;button class=&quot;call&quot; onclick=&quot;action('/call')&quot;&gt;Call Next Token&lt;/button&gt;
+&lt;button class=&quot;reset&quot; onclick=&quot;action('/reset')&quot;&gt;Reset Queue&lt;/button&gt;
+&lt;p id=&quot;message&quot;&gt;Connecting...&lt;/p&gt;&lt;/div&gt;&lt;/main&gt;
+&lt;script&gt;
+async function refresh(){try{
+const r=await fetch('/api');if(!r.ok)throw Error('server');const d=await r.json();
+document.getElementById('called').textContent='T-'+String(d.called).padStart(3,'0');
+document.getElementById('generated').textContent=d.generated;
+document.getElementById('waiting').textContent=d.waiting;
+document.getElementById('calledCount').textContent=d.called;
+document.getElementById('message').textContent=d.message;
+}catch(e){document.getElementById('message').textContent='Connection lost. Retrying...';}}
+async function action(path){try{const r=await fetch(path,{method:'POST'});const d=await r.json();
+document.getElementById('message').textContent=d.message;await refresh();
+}catch(e){document.getElementById('message').textContent='Command failed. Check connection.';}}
+refresh();setInterval(refresh,1000);
+&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;
+)HTML&quot;;
+
+void sendAPI() {
+String json = &quot;{\&quot;called\&quot;:&quot; + String(lastCalled) +
+&quot;,\&quot;generated\&quot;:&quot; + String(lastGenerated) +
+&quot;,\&quot;waiting\&quot;:&quot; + String(lastGenerated - lastCalled) +
+&quot;,\&quot;message\&quot;:\&quot;&quot; + lastMessage + &quot;\&quot;}&quot;;
+server.send(200, &quot;application/json&quot;, json);
+}
+void setupWebServer() {
+server.on(&quot;/&quot;, HTTP_GET, []() { server.send_P(200, &quot;text/html&quot;, webpage); });
+server.on(&quot;/api&quot;, HTTP_GET, []() { sendAPI(); });
+server.on(&quot;/generate&quot;, HTTP_POST, []() { generateToken(); sendAPI(); });
+server.on(&quot;/call&quot;, HTTP_POST, []() { callNextToken(); sendAPI(); });
+server.on(&quot;/reset&quot;, HTTP_POST, []() { resetQueue(); sendAPI(); });
+server.onNotFound([]() { server.send(404, &quot;text/plain&quot;, &quot;Not found&quot;); });
+server.begin();
+Serial.println(&quot;HTTP web server started on port 80&quot;);
+}
+void connectWiFi() {
+WiFi.mode(WIFI_STA);
+#if USE_WOKWI
+WiFi.begin(WIFI_SSID, WIFI_PASSWORD, 6);
+#else
+WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+#endif
+Serial.print(&quot;Connecting to &quot;);
+Serial.println(WIFI_SSID);
+unsigned long start = millis();
+while (WiFi.status() != WL_CONNECTED &amp;&amp; millis() - start &lt; 20000) {
+delay(300);
+Serial.print(&quot;.&quot;);
+}
+Serial.println();
+if (WiFi.status() == WL_CONNECTED) {
+Serial.println(&quot;Wi-Fi connected!&quot;);
+Serial.print(&quot;ESP32 IP Address: &quot;);
+Serial.println(WiFi.localIP());
+#if USE_WOKWI
+Serial.println(&quot;Dashboard URL: http://localhost:9080&quot;);
+Serial.println(&quot;Requires Wokwi Private IoT Gateway/port forwarding.&quot;);
+#else
+Serial.print(&quot;Dashboard URL: http://&quot;);
+Serial.println(WiFi.localIP());
+#endif
+} else {
+
+Serial.println(&quot;Wi-Fi connection failed. Check settings.&quot;);
+}
+}
+void setup() {
+Serial.begin(115200);
+delay(500);
+pinMode(BUZZER_PIN, OUTPUT);
+Wire.begin(21, 22);
+oled.begin();
+updateOLED();
+connectWiFi();
+setupWebServer();
+Serial.println(&quot;QUEUEEASE READY&quot;);
+Serial.println(&quot;Keypad: A=Generate, B=Call, C=Reset, D=Refresh OLED&quot;);
+}
+void loop() {
+server.handleClient();
+char key = keypad.getKey();
+if (key == 'A') generateToken();
+else if (key == 'B') callNextToken();
+else if (key == 'C') resetQueue();
+else if (key == 'D') {
+lastMessage = &quot;Status refreshed&quot;;
+updateOLED();
+}
+if (millis() - lastOledUpdate &gt;= 500) {
+lastOledUpdate = millis();
+updateOLED();
+}
+if (WiFi.status() != WL_CONNECTED &amp;&amp;
+millis() - lastWiFiCheck &gt;= 5000) {
+lastWiFiCheck = millis();
+Serial.println(&quot;Wi-Fi disconnected; reconnecting...&quot;);
+WiFi.reconnect();
+}
+}</script></section>
+<section><h2>Check Your Understanding</h2><details><summary>Which keypad button generates a new token?</summary><p>A</p></details><details><summary>Which ESP32 pins connect to OLED SDA and SCL?</summary><p>GPIO21 and GPIO22.</p></details><details><summary>What happens when the queue is empty and you call the next token?</summary><p>The system reports that no token is waiting and provides buzzer feedback.</p></details></section>
+<section><h2>Expected Output</h2><p>The OLED shows QUEUEEASE, the current serving token and waiting count. The web dashboard displays generated, waiting and called counts. The keypad and dashboard operate on the same queue state; the buzzer responds to queue actions.</p></section><section><h2>Result</h2><p>A smart queue management experiment with synchronized keypad, OLED and browser control is implemented.</p></section><section><h2>What You Learn</h2><p>ESP32 GPIO interfacing, keypad matrix scanning, I²C OLED displays, buzzer output, Wi-Fi web servers and shared application state.</p></section></main><footer>SimuSoft | IoT Experiments</footer><script>
+function copyCode(){const t=[...document.querySelectorAll('.code-line')].map(e=>e.textContent).join('\n');navigator.clipboard.writeText(t).then(()=>alert('Code copied'))}
+function focusCode(term){const l=[...document.querySelectorAll('.code-line')];l.forEach(e=>e.classList.remove('active'));const match=l.find(e=>e.textContent.includes(term));if(match){match.classList.add('active');match.scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('code-help').textContent='Highlighted: '+term}}
+</script></body></html>
