@@ -1,0 +1,438 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Wi-Fi Pressure Monitor</title><style>
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:1050px;margin:35px auto}.section{background:#fff;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}li{margin-bottom:8px}
+/* ======================
+   COMPONENTS
+====================== */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+    background:white;
+
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+
+    padding:20px;
+
+    text-align:center;
+
+    overflow:hidden;
+}
+
+
+.component-card img{
+    display:block;
+
+    width:100%;
+    max-width:180px;
+
+    height:150px;
+
+    object-fit:contain;
+
+    margin:0 auto 15px;
+
+    background:white;
+}
+
+
+.component-card h4{
+    margin:8px 0;
+
+    color:#1e3a8a;
+
+    font-size:17px;
+}
+
+
+.component-card p{
+    margin:0;
+
+    color:#475569;
+
+    font-size:14px;
+
+    line-height:1.5;
+}
+.component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:25px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
+.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+
+   /* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+   
+.flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
+.code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
+pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
+.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}
+@media(max-width:700px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.circuit{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+
+.code-line{display:block;white-space:pre}.code-line.highlight{background:#334155;color:white}.code-steps{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.code-steps button{background:#eff6ff;color:#1e3a8a;border:1px solid #93c5fd;padding:10px;border-radius:7px;cursor:pointer}.explanation{background:#eff6ff;border-left:4px solid #2563eb;padding:12px;border-radius:6px}</style></head><body><header class="header">
+
+    <!-- COMPANY LOGO - TOP LEFT -->
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <!-- CENTER TITLE -->
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Wi-Fi Pressure Monitor</p>
+    </div>
+
+    <!-- BOTTOM BUTTON BAR -->
+
+    <div class="header-buttons">
+
+        <!-- LEFT: BACK AND HOME -->
+
+        <div class="header-left-buttons">
+
+            <!-- BACK BUTTON -->
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+                title="Back to ESP32 Experiments"
+            >
+                &#8592; Back
+            </a>
+
+            <!-- HOME ICON ONLY -->
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <!-- RIGHT: ARDUINO, ESP, R-PI -->
+
+        <div class="header-right-buttons">
+
+            <!-- ARDUINO BUTTON -->
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >
+                Arduino
+            </a>
+
+            <!-- ESP BUTTON -->
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                ESP
+            </a>
+
+            <!-- RASPBERRY PI BUTTON -->
+
+            <a
+                href="../../R-Pi Experiments/index.html"
+                class="header-nav-btn"
+            >
+                R-Pi
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+<nav><a href="../index.html">← ESP32 Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#expected-output">Expected Output</a><a href="#result">Result</a><a href="#learn">What You Learn</a></nav>
+<main class="container">
+<section class="section" id="aim"><h2>Aim</h2><p>Measure atmospheric pressure, temperature and calculated altitude using the BMP180. Show pressure status on an OLED and serve the latest measurements over Wi-Fi.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>Measure atmospheric pressure, temperature and calculated altitude using the BMP180. Show pressure status on an OLED and serve the latest measurements over Wi-Fi. The local OLED and Wi-Fi interface work with the same ESP32 controller.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32 Development Board.png" alt="ESP32 DevKitC V4"><h4>ESP32 DevKitC V4</h4><p>Controller and Wi-Fi</p></div><div class="component-card"><img src="Pressure Sensor.png" alt="BMP180 Barometric Pressure Sensor"><h4>BMP180 Barometric Pressure Sensor</h4><p>Pressure and temperature sensor</p></div><div class="component-card"><img src="OLED.png" alt="SSD1306 OLED Display"><h4>SSD1306 OLED Display</h4><p>Local pressure display</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Physical prototyping</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Connections</p></div></div><div class="note">Breadboard and jumper wires are included for physical assembly. Wi-Fi and a USB data cable are required for programming and browser access.</div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>BMP180 GND</td><td>GND</td></tr><tr><td>BMP180 SCL</td><td>GPIO22</td></tr><tr><td>BMP180 SDA</td><td>GPIO21</td></tr><tr><td>BMP180 3V3</td><td>3V3</td></tr><tr><td>BMP180 VIN/VCC</td><td>3V3 (per SOP; verify board markings)</td></tr><tr><td>OLED GND</td><td>GND</td></tr><tr><td>OLED VCC</td><td>3V3</td></tr><tr><td>OLED SCL</td><td>GPIO22</td></tr><tr><td>OLED SDA</td><td>GPIO21</td></tr></tbody></table></div><div class="note">Use a common ground and 3.3 V-compatible ESP32 connections. Confirm the actual sensor/module markings before applying power.</div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Wi-Fi Pressure Monitor Circuit.png" alt="Wi-Fi Pressure Monitor Circuit Diagram"></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">BMP180 → ESP32 I²C → Pressure and temperature → OLED + Wi-Fi web dashboard</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Install WiFi, WebServer, Wire, Adafruit BMP085 and U8g2 libraries.</li><li>Wire the BMP180 and OLED to shared I²C GPIO21/GPIO22.</li><li>Replace the Wi-Fi credentials for your physical network.</li><li>Open the ESP32 IP address in a browser to view live pressure.</li><li>Upload the sketch and open Serial Monitor at 115200 baud. Replace Wokwi-GUEST credentials when using real Wi-Fi.</li></ol></section>
+<section class="section" id="code"><h2>Explore the Code</h2><div class="code-panel"><div class="code-top"><strong>Arduino IDE — Wi-Fi Pressure Monitor</strong><button onclick="copyCode()">Copy Code</button></div><pre id="codeView"><span class="code-line" id="line1">  1  #include &lt;WiFi.h&gt;</span>
+<span class="code-line" id="line2">  2  #include &lt;WebServer.h&gt;</span>
+<span class="code-line" id="line3">  3  #include &lt;Wire.h&gt;</span>
+<span class="code-line" id="line4">  4  const char* ssid = "Wokwi-GUEST"; // Replace with your Wi-Fi</span>
+<span class="code-line" id="line5">  5  const char* password = "";</span>
+<span class="code-line" id="line6">  6  WebServer server(80);</span>
+<span class="code-line" id="line7">  7  #include &lt;Adafruit_BMP085.h&gt;</span>
+<span class="code-line" id="line8">  8  #include &lt;U8g2lib.h&gt;</span>
+<span class="code-line" id="line9">  9  Adafruit_BMP085 bmp;</span>
+<span class="code-line" id="line10"> 10  U8G2_SSD1306_128X64_NONAME_F_HW_I2C display(U8G2_R0,U8X8_PIN_NONE);</span>
+<span class="code-line" id="line11"> 11  float temperature=0,pressure=0,altitude=0;</span>
+<span class="code-line" id="line12"> 12  String pressureStatus(float p){return p&lt;1000?"LOW":p&lt;=1020?"NORMAL":"HIGH";}</span>
+<span class="code-line" id="line13"> 13  void updateOLED(){</span>
+<span class="code-line" id="line14"> 14   display.clearBuffer(); display.setFont(u8g2_font_6x10_tf);</span>
+<span class="code-line" id="line15"> 15   display.drawStr(0,10,"WI-FI PRESSURE");</span>
+<span class="code-line" id="line16"> 16   char line[32];</span>
+<span class="code-line" id="line17"> 17   snprintf(line,sizeof(line),"P: %.1f hPa",pressure);display.drawStr(0,25,line);</span>
+<span class="code-line" id="line18"> 18   snprintf(line,sizeof(line),"T: %.1f C",temperature);display.drawStr(0,39,line);</span>
+<span class="code-line" id="line19"> 19   snprintf(line,sizeof(line),"Alt: %.1f m",altitude);display.drawStr(0,52,line);</span>
+<span class="code-line" id="line20"> 20   display.drawStr(0,63,pressureStatus(pressure).c_str());display.sendBuffer();</span>
+<span class="code-line" id="line21"> 21  }</span>
+<span class="code-line" id="line22"> 22  void sampleSensor(){</span>
+<span class="code-line" id="line23"> 23   temperature=bmp.readTemperature();pressure=bmp.readPressure()/100.0;</span>
+<span class="code-line" id="line24"> 24   altitude=44330.0*(1.0-pow(pressure/1013.25,0.1903));</span>
+<span class="code-line" id="line25"> 25   updateOLED();Serial.printf("P %.1f hPa, T %.1f C, Alt %.1f m\\n",pressure,temperature,altitude);</span>
+<span class="code-line" id="line26"> 26  }</span>
+<span class="code-line" id="line27"> 27  void servePage(){</span>
+<span class="code-line" id="line28"> 28   String h="&lt;html&gt;&lt;meta name='viewport' content='width=device-width'&gt;&lt;h1&gt;Wi-Fi Pressure Monitor&lt;/h1&gt;";</span>
+<span class="code-line" id="line29"> 29   h+="&lt;p&gt;Pressure: "+String(pressure,1)+" hPa&lt;/p&gt;&lt;p&gt;Temperature: "+String(temperature,1)+" C&lt;/p&gt;";</span>
+<span class="code-line" id="line30"> 30   h+="&lt;p&gt;Altitude: "+String(altitude,1)+" m&lt;/p&gt;&lt;p&gt;Status: "+pressureStatus(pressure)+"&lt;/p&gt;";</span>
+<span class="code-line" id="line31"> 31   h+="&lt;script&gt;setTimeout(()=&gt;location.reload(),2000)&lt;/script&gt;&lt;/html&gt;";server.send(200,"text/html",h);</span>
+<span class="code-line" id="line32"> 32  }</span>
+<span class="code-line" id="line33"> 33  void setup(){</span>
+<span class="code-line" id="line34"> 34   Serial.begin(115200);Wire.begin(21,22);display.begin();</span>
+<span class="code-line" id="line35"> 35   if(!bmp.begin()){Serial.println("BMP180 not found");while(true)delay(1000);}</span>
+<span class="code-line" id="line36"> 36   WiFi.begin(ssid,password);server.on("/",servePage);server.begin();sampleSensor();</span>
+<span class="code-line" id="line37"> 37  }</span>
+<span class="code-line" id="line38"> 38  void loop(){server.handleClient();static unsigned long last=0;if(millis()-last&gt;=2000){last=millis();sampleSensor();}}</span></pre></div><h3>Step-by-Step Explanation</h3><div class="code-steps"><button onclick="explain(0)">Step 1</button><button onclick="explain(1)">Step 2</button><button onclick="explain(2)">Step 3</button><button onclick="explain(3)">Step 4</button></div><p class="explanation" id="explanation">Select a step to highlight the related code and read the explanation.</p><h3>Check Your Understanding</h3><p>Which pins carry I²C data and clock? What happens when Wi-Fi is disconnected? Which buttons or sensor inputs change the output?</p></section>
+<section class="section" id="expected-output"><h2>Expected Output</h2><p>OLED and web page show atmospheric pressure (hPa), temperature (°C), altitude (m) and LOW/NORMAL/HIGH status.</p></section>
+<section class="section" id="result"><h2>Result</h2><div class="result-box">The Wi-Fi Pressure Monitor demonstrates sensor or timer control with local OLED feedback and Wi-Fi access.</div></section>
+<section class="section" id="learn"><h2>What You Learn</h2><ul><li>ESP32 GPIO and I²C interfacing</li><li>OLED display programming</li><li>Wi-Fi web-server basics</li><li>Practical embedded-system testing</li></ul></section></main><footer><strong>SimuSoft</strong> — SIMUDIY Exploration Kit</footer>
+<script>const rawCode="#include <WiFi.h>\n#include <WebServer.h>\n#include <Wire.h>\nconst char* ssid = \"Wokwi-GUEST\"; // Replace with your Wi-Fi\nconst char* password = \"\";\nWebServer server(80);\n#include <Adafruit_BMP085.h>\n#include <U8g2lib.h>\nAdafruit_BMP085 bmp;\nU8G2_SSD1306_128X64_NONAME_F_HW_I2C display(U8G2_R0,U8X8_PIN_NONE);\nfloat temperature=0,pressure=0,altitude=0;\nString pressureStatus(float p){return p<1000?\"LOW\":p<=1020?\"NORMAL\":\"HIGH\";}\nvoid updateOLED(){\n display.clearBuffer(); display.setFont(u8g2_font_6x10_tf);\n display.drawStr(0,10,\"WI-FI PRESSURE\");\n char line[32];\n snprintf(line,sizeof(line),\"P: %.1f hPa\",pressure);display.drawStr(0,25,line);\n snprintf(line,sizeof(line),\"T: %.1f C\",temperature);display.drawStr(0,39,line);\n snprintf(line,sizeof(line),\"Alt: %.1f m\",altitude);display.drawStr(0,52,line);\n display.drawStr(0,63,pressureStatus(pressure).c_str());display.sendBuffer();\n}\nvoid sampleSensor(){\n temperature=bmp.readTemperature();pressure=bmp.readPressure()/100.0;\n altitude=44330.0*(1.0-pow(pressure/1013.25,0.1903));\n updateOLED();Serial.printf(\"P %.1f hPa, T %.1f C, Alt %.1f m\\\\n\",pressure,temperature,altitude);\n}\nvoid servePage(){\n String h=\"<html><meta name='viewport' content='width=device-width'><h1>Wi-Fi Pressure Monitor</h1>\";\n h+=\"<p>Pressure: \"+String(pressure,1)+\" hPa</p><p>Temperature: \"+String(temperature,1)+\" C</p>\";\n h+=\"<p>Altitude: \"+String(altitude,1)+\" m</p><p>Status: \"+pressureStatus(pressure)+\"</p>\";\n h+=\"<script>setTimeout(()=>location.reload(),2000)</script></html>\";server.send(200,\"text/html\",h);\n}\nvoid setup(){\n Serial.begin(115200);Wire.begin(21,22);display.begin();\n if(!bmp.begin()){Serial.println(\"BMP180 not found\");while(true)delay(1000);}\n WiFi.begin(ssid,password);server.on(\"/\",servePage);server.begin();sampleSensor();\n}\nvoid loop(){server.handleClient();static unsigned long last=0;if(millis()-last>=2000){last=millis();sampleSensor();}}";const steps=["Install WiFi, WebServer, Wire, Adafruit BMP085 and U8g2 libraries.","Wire the BMP180 and OLED to shared I²C GPIO21/GPIO22.","Replace the Wi-Fi credentials for your physical network.","Open the ESP32 IP address in a browser to view live pressure."];function copyCode(){navigator.clipboard.writeText(rawCode).then(()=>alert("Code copied!"))}function explain(i){document.querySelectorAll(".code-line").forEach(e=>e.classList.remove("highlight"));const lines=document.querySelectorAll(".code-line");let start=Math.floor(i*lines.length/steps.length),end=Math.floor((i+1)*lines.length/steps.length);for(let j=start;j<end;j++)lines[j].classList.add("highlight");lines[start]?.scrollIntoView({behavior:"smooth",block:"center"});document.getElementById("explanation").textContent=steps[i]}</script></body></html>
