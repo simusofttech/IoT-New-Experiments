@@ -1,0 +1,445 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Wi-Fi Electronic Timer Bell</title><style>
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}nav a:hover{color:#2563eb}
+.container{width:90%;max-width:1050px;margin:35px auto}.section{background:#fff;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}li{margin-bottom:8px}
+/* ======================
+   COMPONENTS
+====================== */
+
+.components-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px, 1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+    background:white;
+
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+
+    padding:20px;
+
+    text-align:center;
+
+    overflow:hidden;
+}
+
+
+.component-card img{
+    display:block;
+
+    width:100%;
+    max-width:180px;
+
+    height:150px;
+
+    object-fit:contain;
+
+    margin:0 auto 15px;
+
+    background:white;
+}
+
+
+.component-card h4{
+    margin:8px 0;
+
+    color:#1e3a8a;
+
+    font-size:17px;
+}
+
+
+.component-card p{
+    margin:0;
+
+    color:#475569;
+
+    font-size:14px;
+
+    line-height:1.5;
+}
+.component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:25px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
+.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+
+   /* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+   
+.flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
+.code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
+pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
+.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}
+@media(max-width:700px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.circuit{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+
+.code-line{display:block;white-space:pre}.code-line.highlight{background:#334155;color:white}.code-steps{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.code-steps button{background:#eff6ff;color:#1e3a8a;border:1px solid #93c5fd;padding:10px;border-radius:7px;cursor:pointer}.explanation{background:#eff6ff;border-left:4px solid #2563eb;padding:12px;border-radius:6px}</style></head><body><header class="header">
+
+    <!-- COMPANY LOGO - TOP LEFT -->
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <!-- CENTER TITLE -->
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Wi-Fi Electronic Timer Bell</p>
+    </div>
+
+    <!-- BOTTOM BUTTON BAR -->
+
+    <div class="header-buttons">
+
+        <!-- LEFT: BACK AND HOME -->
+
+        <div class="header-left-buttons">
+
+            <!-- BACK BUTTON -->
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+                title="Back to ESP32 Experiments"
+            >
+                &#8592; Back
+            </a>
+
+            <!-- HOME ICON ONLY -->
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <!-- RIGHT: ARDUINO, ESP, R-PI -->
+
+        <div class="header-right-buttons">
+
+            <!-- ARDUINO BUTTON -->
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >
+                Arduino
+            </a>
+
+            <!-- ESP BUTTON -->
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                ESP
+            </a>
+
+            <!-- RASPBERRY PI BUTTON -->
+
+            <a
+                href="../../R-Pi Experiments/index.html"
+                class="header-nav-btn"
+            >
+                R-Pi
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+<nav><a href="../index.html">← ESP32 Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#expected-output">Expected Output</a><a href="#result">Result</a><a href="#learn">What You Learn</a></nav>
+<main class="container">
+<section class="section" id="aim"><h2>Aim</h2><p>An ESP32 countdown timer with OLED, buzzer, push-button control and a Wi-Fi web interface. The buzzer rings when the configured countdown ends.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>An ESP32 countdown timer with OLED, buzzer, push-button control and a Wi-Fi web interface. The buzzer rings when the configured countdown ends. The local OLED and Wi-Fi interface work with the same ESP32 controller.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32 Development Board.png" alt="ESP32 DevKitC V4"><h4>ESP32 DevKitC V4</h4><p>Controller and Wi-Fi</p></div><div class="component-card"><img src="OLED.png" alt="SSD1306 OLED Display"><h4>SSD1306 OLED Display</h4><p>Countdown display</p></div><div class="component-card"><img src="Buzzer.png" alt="Buzzer"><h4>Buzzer</h4><p>Bell sound</p></div><div class="component-card"><img src="Push Button.png" alt="Push Button"><h4>Push Button</h4><p>Physical timer control</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Physical prototyping</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Connections</p></div></div><div class="note">Breadboard and jumper wires are included for physical assembly. Wi-Fi and a USB data cable are required for programming and browser access.</div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>OLED VCC</td><td>3V3</td></tr><tr><td>OLED GND</td><td>GND</td></tr><tr><td>OLED SDA</td><td>GPIO21</td></tr><tr><td>OLED SCL</td><td>GPIO22</td></tr><tr><td>Buzzer positive</td><td>GPIO25 (driver if needed)</td></tr><tr><td>Buzzer negative</td><td>GND</td></tr><tr><td>Push Button pin 1</td><td>GPIO27</td></tr><tr><td>Push Button pin 2</td><td>GND</td></tr></tbody></table></div><div class="note">Use a common ground and 3.3 V-compatible ESP32 connections. Confirm the actual sensor/module markings before applying power.</div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Wi-Fi Electronic Timer Bell Circuit.png" alt="Wi-Fi Electronic Timer Bell Circuit Diagram"></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">Set timer → Start countdown → OLED updates → Timer reaches zero → Buzzer rings</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Install U8g2 and ESP32 libraries.</li><li>Connect the OLED via I²C and button to GPIO27 with internal pull-up.</li><li>Use GPIO25 for a compatible buzzer or a suitable driver.</li><li>Use the web page to set, start, stop or reset the countdown.</li><li>Upload the sketch and open Serial Monitor at 115200 baud. Replace Wokwi-GUEST credentials when using real Wi-Fi.</li></ol></section>
+<section class="section" id="code"><h2>Explore the Code</h2><div class="code-panel"><div class="code-top"><strong>Arduino IDE — Wi-Fi Electronic Timer Bell</strong><button onclick="copyCode()">Copy Code</button></div><pre id="codeView"><span class="code-line" id="line1">  1  #include &lt;WiFi.h&gt;</span>
+<span class="code-line" id="line2">  2  #include &lt;WebServer.h&gt;</span>
+<span class="code-line" id="line3">  3  #include &lt;Wire.h&gt;</span>
+<span class="code-line" id="line4">  4  const char* ssid = "Wokwi-GUEST"; // Replace with your Wi-Fi</span>
+<span class="code-line" id="line5">  5  const char* password = "";</span>
+<span class="code-line" id="line6">  6  WebServer server(80);</span>
+<span class="code-line" id="line7">  7  #include &lt;U8g2lib.h&gt;</span>
+<span class="code-line" id="line8">  8  #define BUZZER_PIN 25</span>
+<span class="code-line" id="line9">  9  #define BUTTON_PIN 27</span>
+<span class="code-line" id="line10"> 10  U8G2_SSD1306_128X64_NONAME_F_HW_I2C display(U8G2_R0,U8X8_PIN_NONE);</span>
+<span class="code-line" id="line11"> 11  unsigned long timerDuration=300,remainingTime=300,lastTick=0,bellStart=0;</span>
+<span class="code-line" id="line12"> 12  bool timerRunning=false,bellRinging=false,lastButton=HIGH;</span>
+<span class="code-line" id="line13"> 13  void drawTimer(){</span>
+<span class="code-line" id="line14"> 14   display.clearBuffer();display.setFont(u8g2_font_6x10_tf);display.drawStr(15,12,"WI-FI TIMER BELL");</span>
+<span class="code-line" id="line15"> 15   char t[12];snprintf(t,sizeof(t),"%02lu:%02lu",remainingTime/60,remainingTime%60);</span>
+<span class="code-line" id="line16"> 16   display.setFont(u8g2_font_logisoso24_tf);display.drawStr(20,46,t);</span>
+<span class="code-line" id="line17"> 17   display.setFont(u8g2_font_6x10_tf);display.drawStr(15,61,bellRinging?"BELL!":timerRunning?"RUNNING":"STOPPED");display.sendBuffer();</span>
+<span class="code-line" id="line18"> 18  }</span>
+<span class="code-line" id="line19"> 19  void startTimer(){if(remainingTime==0)remainingTime=timerDuration;timerRunning=true;lastTick=millis();bellRinging=false;digitalWrite(BUZZER_PIN,LOW);}</span>
+<span class="code-line" id="line20"> 20  void stopTimer(){timerRunning=false;}</span>
+<span class="code-line" id="line21"> 21  void resetTimer(){timerRunning=false;remainingTime=timerDuration;bellRinging=false;digitalWrite(BUZZER_PIN,LOW);drawTimer();}</span>
+<span class="code-line" id="line22"> 22  void webPage(){</span>
+<span class="code-line" id="line23"> 23   String h="&lt;meta name='viewport' content='width=device-width'&gt;&lt;h2&gt;Wi-Fi Electronic Timer Bell&lt;/h2&gt;";</span>
+<span class="code-line" id="line24"> 24   h+="&lt;h1&gt;"+String(remainingTime/60)+":"+String(remainingTime%60)+"&lt;/h1&gt;";</span>
+<span class="code-line" id="line25"> 25   h+="&lt;a href='/start'&gt;START&lt;/a&gt; | &lt;a href='/stop'&gt;STOP&lt;/a&gt; | &lt;a href='/reset'&gt;RESET&lt;/a&gt;";</span>
+<span class="code-line" id="line26"> 26   h+="&lt;form action='/set'&gt;Seconds: &lt;input type='number' name='seconds' min='1' value='"+String(timerDuration)+"'&gt;&lt;button&gt;SET&lt;/button&gt;&lt;/form&gt;";</span>
+<span class="code-line" id="line27"> 27   h+="&lt;script&gt;setTimeout(()=&gt;location.reload(),1000)&lt;/script&gt;";server.send(200,"text/html",h);</span>
+<span class="code-line" id="line28"> 28  }</span>
+<span class="code-line" id="line29"> 29  void redirectHome(){server.sendHeader("Location","/");server.send(303,"text/plain","");}</span>
+<span class="code-line" id="line30"> 30  void setup(){</span>
+<span class="code-line" id="line31"> 31   Serial.begin(115200);pinMode(BUZZER_PIN,OUTPUT);pinMode(BUTTON_PIN,INPUT_PULLUP);</span>
+<span class="code-line" id="line32"> 32   digitalWrite(BUZZER_PIN,LOW);Wire.begin(21,22);display.begin();drawTimer();</span>
+<span class="code-line" id="line33"> 33   WiFi.begin(ssid,password);</span>
+<span class="code-line" id="line34"> 34   server.on("/",webPage);server.on("/start",[]{startTimer();redirectHome();});</span>
+<span class="code-line" id="line35"> 35   server.on("/stop",[]{stopTimer();redirectHome();});server.on("/reset",[]{resetTimer();redirectHome();});</span>
+<span class="code-line" id="line36"> 36   server.on("/set",[]{if(server.hasArg("seconds")){timerDuration=max(1L,server.arg("seconds").toInt());resetTimer();}redirectHome();});server.begin();</span>
+<span class="code-line" id="line37"> 37  }</span>
+<span class="code-line" id="line38"> 38  void loop(){</span>
+<span class="code-line" id="line39"> 39   server.handleClient();bool b=digitalRead(BUTTON_PIN);</span>
+<span class="code-line" id="line40"> 40   if(lastButton==HIGH&amp;&amp;b==LOW){if(timerRunning)stopTimer();else startTimer();delay(35);}lastButton=b;</span>
+<span class="code-line" id="line41"> 41   unsigned long now=millis();</span>
+<span class="code-line" id="line42"> 42   if(timerRunning&amp;&amp;now-lastTick&gt;=1000){lastTick+=1000;if(remainingTime&gt;0)--remainingTime;</span>
+<span class="code-line" id="line43"> 43   if(remainingTime==0){timerRunning=false;bellRinging=true;bellStart=now;digitalWrite(BUZZER_PIN,HIGH);}drawTimer();}</span>
+<span class="code-line" id="line44"> 44   if(bellRinging&amp;&amp;now-bellStart&gt;=3000){bellRinging=false;digitalWrite(BUZZER_PIN,LOW);drawTimer();}</span>
+<span class="code-line" id="line45"> 45  }</span></pre></div><h3>Step-by-Step Explanation</h3><div class="code-steps"><button onclick="explain(0)">Step 1</button><button onclick="explain(1)">Step 2</button><button onclick="explain(2)">Step 3</button><button onclick="explain(3)">Step 4</button></div><p class="explanation" id="explanation">Select a step to highlight the related code and read the explanation.</p><h3>Check Your Understanding</h3><p>Which pins carry I²C data and clock? What happens when Wi-Fi is disconnected? Which buttons or sensor inputs change the output?</p></section>
+<section class="section" id="expected-output"><h2>Expected Output</h2><p>The OLED counts down; at zero the buzzer sounds. A web page provides timer controls.</p></section>
+<section class="section" id="result"><h2>Result</h2><div class="result-box">The Wi-Fi Electronic Timer Bell demonstrates sensor or timer control with local OLED feedback and Wi-Fi access.</div></section>
+<section class="section" id="learn"><h2>What You Learn</h2><ul><li>ESP32 GPIO and I²C interfacing</li><li>OLED display programming</li><li>Wi-Fi web-server basics</li><li>Practical embedded-system testing</li></ul></section></main><footer><strong>SimuSoft</strong> — SIMUDIY Exploration Kit</footer>
+<script>const rawCode="#include <WiFi.h>\n#include <WebServer.h>\n#include <Wire.h>\nconst char* ssid = \"Wokwi-GUEST\"; // Replace with your Wi-Fi\nconst char* password = \"\";\nWebServer server(80);\n#include <U8g2lib.h>\n#define BUZZER_PIN 25\n#define BUTTON_PIN 27\nU8G2_SSD1306_128X64_NONAME_F_HW_I2C display(U8G2_R0,U8X8_PIN_NONE);\nunsigned long timerDuration=300,remainingTime=300,lastTick=0,bellStart=0;\nbool timerRunning=false,bellRinging=false,lastButton=HIGH;\nvoid drawTimer(){\n display.clearBuffer();display.setFont(u8g2_font_6x10_tf);display.drawStr(15,12,\"WI-FI TIMER BELL\");\n char t[12];snprintf(t,sizeof(t),\"%02lu:%02lu\",remainingTime/60,remainingTime%60);\n display.setFont(u8g2_font_logisoso24_tf);display.drawStr(20,46,t);\n display.setFont(u8g2_font_6x10_tf);display.drawStr(15,61,bellRinging?\"BELL!\":timerRunning?\"RUNNING\":\"STOPPED\");display.sendBuffer();\n}\nvoid startTimer(){if(remainingTime==0)remainingTime=timerDuration;timerRunning=true;lastTick=millis();bellRinging=false;digitalWrite(BUZZER_PIN,LOW);}\nvoid stopTimer(){timerRunning=false;}\nvoid resetTimer(){timerRunning=false;remainingTime=timerDuration;bellRinging=false;digitalWrite(BUZZER_PIN,LOW);drawTimer();}\nvoid webPage(){\n String h=\"<meta name='viewport' content='width=device-width'><h2>Wi-Fi Electronic Timer Bell</h2>\";\n h+=\"<h1>\"+String(remainingTime/60)+\":\"+String(remainingTime%60)+\"</h1>\";\n h+=\"<a href='/start'>START</a> | <a href='/stop'>STOP</a> | <a href='/reset'>RESET</a>\";\n h+=\"<form action='/set'>Seconds: <input type='number' name='seconds' min='1' value='\"+String(timerDuration)+\"'><button>SET</button></form>\";\n h+=\"<script>setTimeout(()=>location.reload(),1000)</script>\";server.send(200,\"text/html\",h);\n}\nvoid redirectHome(){server.sendHeader(\"Location\",\"/\");server.send(303,\"text/plain\",\"\");}\nvoid setup(){\n Serial.begin(115200);pinMode(BUZZER_PIN,OUTPUT);pinMode(BUTTON_PIN,INPUT_PULLUP);\n digitalWrite(BUZZER_PIN,LOW);Wire.begin(21,22);display.begin();drawTimer();\n WiFi.begin(ssid,password);\n server.on(\"/\",webPage);server.on(\"/start\",[]{startTimer();redirectHome();});\n server.on(\"/stop\",[]{stopTimer();redirectHome();});server.on(\"/reset\",[]{resetTimer();redirectHome();});\n server.on(\"/set\",[]{if(server.hasArg(\"seconds\")){timerDuration=max(1L,server.arg(\"seconds\").toInt());resetTimer();}redirectHome();});server.begin();\n}\nvoid loop(){\n server.handleClient();bool b=digitalRead(BUTTON_PIN);\n if(lastButton==HIGH&&b==LOW){if(timerRunning)stopTimer();else startTimer();delay(35);}lastButton=b;\n unsigned long now=millis();\n if(timerRunning&&now-lastTick>=1000){lastTick+=1000;if(remainingTime>0)--remainingTime;\n if(remainingTime==0){timerRunning=false;bellRinging=true;bellStart=now;digitalWrite(BUZZER_PIN,HIGH);}drawTimer();}\n if(bellRinging&&now-bellStart>=3000){bellRinging=false;digitalWrite(BUZZER_PIN,LOW);drawTimer();}\n}";const steps=["Install U8g2 and ESP32 libraries.","Connect the OLED via I²C and button to GPIO27 with internal pull-up.","Use GPIO25 for a compatible buzzer or a suitable driver.","Use the web page to set, start, stop or reset the countdown."];function copyCode(){navigator.clipboard.writeText(rawCode).then(()=>alert("Code copied!"))}function explain(i){document.querySelectorAll(".code-line").forEach(e=>e.classList.remove("highlight"));const lines=document.querySelectorAll(".code-line");let start=Math.floor(i*lines.length/steps.length),end=Math.floor((i+1)*lines.length/steps.length);for(let j=start;j<end;j++)lines[j].classList.add("highlight");lines[start]?.scrollIntoView({behavior:"smooth",block:"center"});document.getElementById("explanation").textContent=steps[i]}</script></body></html>
