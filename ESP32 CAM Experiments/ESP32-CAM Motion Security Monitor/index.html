@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ESP32-CAM Motion Security Monitor</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#22354e;font:16px/1.65 Arial,Helvetica,sans-serif}.header{background:#2563eb;color:white;padding:28px 5%;text-align:center}.header h1{margin:0;font-size:clamp(24px,4vw,34px)}.header p{margin:6px 0 0}.container{max-width:1100px;margin:25px auto;padding:0 18px}section{background:#fff;border:1px solid #dce7f4;border-radius:12px;padding:25px;margin-bottom:20px;box-shadow:0 4px 14px #0c32600d}h2{margin:0 0 16px;color:#1d4ed8;font-size:23px}.components{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:16px}.component{border:1px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center}.component img{width:100%;height:145px;object-fit:contain}.component b{display:block;font-size:14px}.component small{color:#64748b}table{width:100%;border-collapse:collapse}th,td{border:1px solid #dce7f4;padding:10px;text-align:left}th{background:#eff6ff}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.flow{display:flex;flex-wrap:wrap;gap:10px}.flow span{padding:12px;border-radius:9px;background:#eff6ff;border:1px solid #bfdbfe}.codebar{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}button{background:#2563eb;border:0;color:white;border-radius:8px;padding:10px 16px;cursor:pointer}.code{background:#10213b;color:#e8f1ff;border-radius:10px;padding:16px;max-height:660px;overflow:auto;font:13px/1.55 Consolas,monospace}.line{display:block;white-space:pre;width:max-content;min-width:100%;cursor:pointer}.line:before{content:attr(data-num);display:inline-block;color:#86a1c5;width:43px;user-select:none}.line.active{background:#25558a}details{border:1px solid #dce7f4;border-radius:9px;padding:13px;margin:12px 0}summary{cursor:pointer;font-weight:bold;color:#1e40af}.answer{color:#166534}footer{text-align:center;padding:30px;color:#64748b}@media(max-width:600px){section{padding:17px}}
+</style></head><body>
+<header class="header"><h1>ESP32-CAM Motion Security Monitor</h1><p>Restricted Area Motion Detection</p></header><main class="container">
+<section><h2>Aim</h2><p>To develop an ESP32-CAM security monitor that detects movement using a PIR sensor, activates a buzzer, displays alerts on a 1.3-inch SH1106 OLED, and provides a Wi-Fi dashboard with live camera view and event counter.</p></section>
+<section><h2>About the Experiment</h2><p>The AI-Thinker ESP32-CAM monitors a restricted area using an HC-SR501 PIR sensor. On motion, it sounds an alarm for five seconds, updates the OLED and event counter, and reports status through a browser-based dashboard. The camera supplies periodically refreshed JPEG snapshots. No SD card or physical control button is required.</p></section>
+<section><h2>Components Required</h2><div class="components"><div class="component"><img src="ESP32 CAM.png" alt="AI-Thinker ESP32-CAM"><b>AI-Thinker ESP32-CAM</b><small>Qty: 1</small></div><div class="component"><img src="HC-SR501 PIR Motion Sensor Module.png" alt="HC-SR501 PIR Motion Sensor"><b>HC-SR501 PIR Motion Sensor</b><small>Qty: 1</small></div><div class="component"><img src="OLED.png" alt="1.3-inch I2C SH1106 OLED (128×64)"><b>1.3-inch I2C SH1106 OLED (128×64)</b><small>Qty: 1</small></div><div class="component"><img src="Buzzer.png" alt="Active Buzzer"><b>Active Buzzer</b><small>Qty: 1</small></div><div class="component"><img src="USB-to-TTL.png" alt="USB-to-TTL Programmer"><b>USB-to-TTL Programmer</b><small>Qty: 1</small></div><div class="component"><img src="Breadboard.png" alt="Breadboard"><b>Breadboard</b><small>Qty: 1</small></div><div class="component"><img src="Jumper Wires.png" alt="Jumper Wires"><b>Jumper Wires</b><small>Qty: As required</small></div></div></section>
+<section><h2>Circuit Connections</h2><table><thead><tr><th>Component Pin</th><th>ESP32-CAM Connection</th></tr></thead><tbody><tr><td>OLED GND</td><td>GND</td></tr><tr><td>OLED VCC</td><td>5V (verify OLED module voltage rating)</td></tr><tr><td>OLED SCL</td><td>GPIO14</td></tr><tr><td>OLED SDA</td><td>GPIO13</td></tr><tr><td>PIR VCC</td><td>5V</td></tr><tr><td>PIR GND</td><td>GND</td></tr><tr><td>PIR OUT</td><td>GPIO12</td></tr><tr><td>Buzzer +</td><td>GPIO4</td></tr><tr><td>Buzzer −</td><td>GND</td></tr></tbody></table><p><strong>Note:</strong> GPIO12 is a boot-strapping pin. If the PIR output causes boot problems, disconnect PIR OUT during flashing/startup and reconnect after boot. GPIO4 also controls the onboard flash LED on some ESP32-CAM boards.</p></section>
+<section><h2>Circuit Diagram</h2><img class="circuit-img" src="ESP32-CAM Motion Security Monitor Circuit.png" alt="Circuit diagram for ESP32-CAM Motion Security Monitor"></section>
+<section><h2>Working Principle</h2><div class="flow"><span>1. Initialize camera, OLED and Wi-Fi</span><span>2. Monitor PIR motion</span><span>3. Activate buzzer for 5 seconds</span><span>4. Update OLED and event count</span><span>5. Refresh camera and security dashboard</span><span>6. Return to monitoring</span></div></section>
+<section><h2>Procedure</h2><ol><li>Connect the ESP32-CAM, PIR sensor, OLED and active buzzer according to the circuit connections.</li><li>In Arduino IDE, install the ESP32 board package and the <strong>U8g2</strong> library.</li><li>Select <strong>AI Thinker ESP32-CAM</strong> and the correct COM port.</li><li>Replace the Wi-Fi SSID and password placeholders in the program with your own 2.4 GHz network details.</li><li>For manual USB-to-TTL programming, connect GPIO0 to GND, upload the code, disconnect GPIO0 from GND, then reset.</li><li>Open Serial Monitor at 115200 baud and read the ESP32-CAM IP address.</li><li>Open the IP address in a browser connected to the same Wi-Fi network.</li><li>Move in front of the PIR sensor and observe the buzzer, OLED, motion counter, camera and dashboard.</li></ol></section>
+<section><div class="codebar"><h2>Explore the Code</h2><button id="copy">Copy Code</button></div><textarea id="raw" hidden>#include &quot;esp_camera.h&quot;
+#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;U8g2lib.h&gt;
+
+
+// ===============================
+// WIFI
+// ===============================
+const char* ssid = &quot;YOUR_WIFI_NAME&quot;;
+const char* password = &quot;YOUR_WIFI_PASSWORD&quot;;
+
+
+// ===============================
+// PINS
+// ===============================
+
+
+#define OLED_SDA 13
+#define OLED_SCL 14
+#define PIR_PIN 12
+#define BUZZER_PIN 4
+
+
+// Alarm duration after motion
+const unsigned long ALARM_DURATION = 5000UL;
+
+
+// Small lockout to avoid repeated events while PIR stays HIGH
+const unsigned long MOTION_COOLDOWN = 2000UL;
+
+
+U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
+ U8G2_R0, U8X8_PIN_NONE, OLED_SCL, OLED_SDA
+);
+
+
+WebServer server(80);
+
+
+// ===============================
+// AI-THINKER CAMERA PINS
+// ===============================
+#define PWDN_GPIO_NUM              32
+#define RESET_GPIO_NUM             -1
+#define XCLK_GPIO_NUM              0
+#define SIOD_GPIO_NUM           26
+#define SIOC_GPIO_NUM          27
+
+
+#define Y9_GPIO_NUM           35
+#define Y8_GPIO_NUM           34
+#define Y7_GPIO_NUM           39
+#define Y6_GPIO_NUM           36
+#define Y5_GPIO_NUM           21
+#define Y4_GPIO_NUM           19
+#define Y3_GPIO_NUM           18
+#define Y2_GPIO_NUM            5
+#define VSYNC_GPIO_NUM             25
+#define HREF_GPIO_NUM           23
+#define PCLK_GPIO_NUM           22
+
+
+bool motionActive = false;
+bool alarmActive = false;
+unsigned long alarmStart = 0;
+unsigned long lastMotionEvent = 0;
+unsigned long eventCount = 0;
+int pirState = LOW;
+
+
+void showOLED() {
+ oled.clearBuffer();
+
+
+ oled.setFont(u8g2_font_helvB10_tr);
+ oled.drawStr(12, 13, &quot;SECURITY MONITOR&quot;);
+ oled.drawHLine(5, 17, 118);
+
+
+ oled.setFont(u8g2_font_6x10_tr);
+
+
+ if (alarmActive) {
+     oled.drawStr(8, 33, &quot;!!! MOTION ALERT !!!&quot;);
+     oled.drawStr(8, 46, &quot;BUZZER: ON&quot;);
+ } else {
+     oled.drawStr(8, 33, &quot;AREA: MONITORING&quot;);
+     oled.drawStr(8, 46, &quot;BUZZER: OFF&quot;);
+ }
+
+
+ char eventText[24];
+
+
+    sprintf(eventText, &quot;EVENTS: %lu&quot;, eventCount);
+    oled.drawStr(8, 59, eventText);
+
+
+    oled.sendBuffer();
+}
+
+
+bool initCamera() {
+    camera_config_t config;
+
+
+    config.ledc_channel = LEDC_CHANNEL_0;
+    config.ledc_timer = LEDC_TIMER_0;
+
+
+    config.pin_d0 = Y2_GPIO_NUM;
+    config.pin_d1 = Y3_GPIO_NUM;
+    config.pin_d2 = Y4_GPIO_NUM;
+    config.pin_d3 = Y5_GPIO_NUM;
+    config.pin_d4 = Y6_GPIO_NUM;
+    config.pin_d5 = Y7_GPIO_NUM;
+    config.pin_d6 = Y8_GPIO_NUM;
+    config.pin_d7 = Y9_GPIO_NUM;
+
+
+    config.pin_xclk = XCLK_GPIO_NUM;
+    config.pin_pclk = PCLK_GPIO_NUM;
+    config.pin_vsync = VSYNC_GPIO_NUM;
+    config.pin_href = HREF_GPIO_NUM;
+    config.pin_sccb_sda = SIOD_GPIO_NUM;
+    config.pin_sccb_scl = SIOC_GPIO_NUM;
+    config.pin_pwdn = PWDN_GPIO_NUM;
+    config.pin_reset = RESET_GPIO_NUM;
+
+
+    config.xclk_freq_hz = 20000000;
+    config.pixel_format = PIXFORMAT_JPEG;
+    config.frame_size = FRAMESIZE_VGA;
+    config.jpeg_quality = 12;
+    config.fb_count = 1;
+
+
+    esp_err_t result = esp_camera_init(&amp;config);
+
+
+    if (result != ESP_OK) {
+        Serial.print(&quot;Camera initialization failed: 0x&quot;);
+        Serial.println(result, HEX);
+        return false;
+    }
+
+
+    return true;
+}
+
+
+void captureMotionEvent() {
+    eventCount++;
+    motionActive = true;
+    alarmActive = true;
+    alarmStart = millis();
+
+
+    digitalWrite(BUZZER_PIN, HIGH);
+
+
+    Serial.println(&quot;==============================&quot;);
+    Serial.println(&quot;MOTION DETECTED&quot;);
+    Serial.print(&quot;Security event: &quot;);
+    Serial.println(eventCount);
+    Serial.println(&quot;BUZZER: ON&quot;);
+    Serial.println(&quot;==============================&quot;);
+
+
+    showOLED();
+
+
+}
+
+
+void updateSecurity() {
+    pirState = digitalRead(PIR_PIN);
+
+
+    if (pirState == HIGH &amp;&amp;
+         !alarmActive &amp;&amp;
+         (millis() - lastMotionEvent &gt; MOTION_COOLDOWN)) {
+
+
+        lastMotionEvent = millis();
+        captureMotionEvent();
+    }
+
+
+    if (alarmActive &amp;&amp;
+         (millis() - alarmStart &gt;= ALARM_DURATION)) {
+
+
+        alarmActive = false;
+        motionActive = false;
+        digitalWrite(BUZZER_PIN, LOW);
+
+
+        Serial.println(&quot;BUZZER: OFF&quot;);
+        Serial.println(&quot;AREA: MONITORING&quot;);
+
+
+        showOLED();
+    }
+}
+
+
+void handleRoot() {
+    String ip = WiFi.localIP().toString();
+
+
+    String html = R&quot;rawliteral(
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0&quot;&gt;
+&lt;title&gt;ESP32-CAM Motion Security Monitor&lt;/title&gt;
+&lt;style&gt;
+*{box-sizing:border-box}
+body{
+    margin:0;background:#09111f;color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+}
+.header{
+    padding:20px;background:#0e192b;
+    border-bottom:1px solid #24344d;
+}
+.header-inner{
+    width:92%;max-width:1150px;margin:auto;
+    display:flex;justify-content:space-between;align-items:center;
+}
+.brand h1{margin:0;font-size:22px}
+.brand p{margin:5px 0 0;color:#8fa0b8;font-size:12px}
+.online{
+    padding:9px 14px;border-radius:20px;
+    background:#113522;color:#4ade80;font-size:12px;font-weight:bold;
+}
+.container{width:92%;max-width:1150px;margin:auto;padding:22px 0 40px}
+.grid{
+    display:grid;grid-template-columns:2fr 1fr;gap:18px;
+}
+.card{
+    background:#121e31;border:1px solid #263753;
+
+
+    border-radius:18px;padding:18px;
+}
+.title{font-size:17px;font-weight:bold;margin-bottom:12px}
+.sub{color:#8091aa;font-size:12px}
+.camera{
+    background:#02060c;border-radius:13px;overflow:hidden;
+    border:1px solid #25364e;
+}
+.camera img{width:100%;display:block;max-height:520px;object-fit:contain}
+.badge{
+    display:inline-block;margin-top:10px;padding:7px 10px;
+    border-radius:8px;background:#24344d;font-size:11px;
+}
+.status{
+    margin-bottom:12px;padding:15px;border-radius:13px;
+    background:#1b2a40;
+}
+.label{font-size:11px;color:#8da0b9;text-transform:uppercase}
+.value{margin-top:6px;font-size:20px;font-weight:bold}
+.ok{color:#4ade80}.alert{color:#ff5965}.blue{color:#60a5fa}
+.log{
+    margin-top:18px;padding:16px;border-radius:15px;
+    background:#121e31;border:1px solid #263753;
+}
+.event{
+    padding:10px 0;border-bottom:1px solid #22324a;
+    font-size:12px;color:#cbd5e1;
+}
+.event:last-child{border-bottom:0}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;header&quot;&gt;
+    &lt;div class=&quot;header-inner&quot;&gt;
+     &lt;div class=&quot;brand&quot;&gt;
+      &lt;h1&gt;ESP32-CAM MOTION SECURITY MONITOR&lt;/h1&gt;
+      &lt;p&gt;Restricted Area • PIR Detection • Audible Alarm&lt;/p&gt;
+     &lt;/div&gt;
+     &lt;div class=&quot;online&quot;&gt;● ONLINE&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;div class=&quot;container&quot;&gt;
+&lt;div class=&quot;grid&quot;&gt;
+
+
+&lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;title&quot;&gt;Live Camera &lt;span class=&quot;sub&quot;&gt;| VGA / JPEG&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;camera&quot;&gt;
+     &lt;img id=&quot;cam&quot; src=&quot;/snapshot&quot; alt=&quot;ESP32-CAM Live View&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;badge&quot;&gt;Camera view refreshes automatically&lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;div class=&quot;card&quot;&gt;
+    &lt;div class=&quot;title&quot;&gt;Security Status&lt;/div&gt;
+
+
+    &lt;div class=&quot;status&quot;&gt;
+     &lt;div class=&quot;label&quot;&gt;Area Status&lt;/div&gt;
+     &lt;div id=&quot;area&quot; class=&quot;value ok&quot;&gt;MONITORING&lt;/div&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class=&quot;status&quot;&gt;
+
+
+     &lt;div class=&quot;label&quot;&gt;Buzzer&lt;/div&gt;
+     &lt;div id=&quot;buzzer&quot; class=&quot;value ok&quot;&gt;OFF&lt;/div&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class=&quot;status&quot;&gt;
+     &lt;div class=&quot;label&quot;&gt;Motion Events&lt;/div&gt;
+     &lt;div id=&quot;events&quot; class=&quot;value blue&quot;&gt;0&lt;/div&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class=&quot;status&quot;&gt;
+     &lt;div class=&quot;label&quot;&gt;IP Address&lt;/div&gt;
+     &lt;div class=&quot;value blue&quot; style=&quot;font-size:14px&quot;&gt;)rawliteral&quot;;
+
+
+    html += ip;
+
+
+    html += R&quot;rawliteral(&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;/div&gt;
+
+
+&lt;div class=&quot;log&quot;&gt;
+    &lt;div class=&quot;title&quot;&gt;Event Log&lt;/div&gt;
+    &lt;div id=&quot;log&quot; class=&quot;event&quot;&gt;System started. Waiting for motion...&lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;/div&gt;
+
+
+&lt;script&gt;
+let lastEvents=0;
+
+
+async function updateStatus(){
+    try{
+     const r=await fetch('/status');
+     const d=await r.json();
+
+
+     const area=document.getElementById('area');
+     const buzzer=document.getElementById('buzzer');
+
+
+     document.getElementById('events').innerText=d.events;
+
+
+     if(d.motion){
+         area.innerText='MOTION DETECTED';
+         area.className='value alert';
+         buzzer.innerText='ON';
+         buzzer.className='value alert';
+     }else{
+         area.innerText='MONITORING';
+         area.className='value ok';
+         buzzer.innerText='OFF';
+         buzzer.className='value ok';
+     }
+
+
+     if(d.events &gt; lastEvents){
+         document.getElementById('log').innerText =
+          new Date().toLocaleTimeString() +
+          ' • Motion detected • Buzzer activated';
+         lastEvents=d.events;
+     }
+    }catch(e){}
+}
+
+
+setInterval(()=&gt;{
+
+
+    document.getElementById('cam').src='/snapshot?t='+Date.now();
+},1000);
+
+
+setInterval(updateStatus,500);
+updateStatus();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+)rawliteral&quot;;
+
+
+    server.send(200, &quot;text/html&quot;, html);
+}
+
+
+void handleSnapshot() {
+    camera_fb_t* fb = esp_camera_fb_get();
+
+
+    if (!fb) {
+        server.send(500, &quot;text/plain&quot;, &quot;Camera error&quot;);
+        return;
+    }
+
+
+    server.setContentLength(fb-&gt;len);
+    server.send(200, &quot;image/jpeg&quot;, &quot;&quot;);
+
+
+    WiFiClient client = server.client();
+    client.write(fb-&gt;buf, fb-&gt;len);
+
+
+    esp_camera_fb_return(fb);
+}
+
+
+void handleStatus() {
+    String json = &quot;{&quot;;
+    json += &quot;\&quot;motion\&quot;:&quot;;
+    json += alarmActive ? &quot;true&quot; : &quot;false&quot;;
+    json += &quot;,&quot;;
+    json += &quot;\&quot;buzzer\&quot;:&quot;;
+    json += alarmActive ? &quot;true&quot; : &quot;false&quot;;
+    json += &quot;,&quot;;
+    json += &quot;\&quot;events\&quot;:&quot;;
+    json += String(eventCount);
+    json += &quot;}&quot;;
+
+
+    server.send(200, &quot;application/json&quot;, json);
+}
+
+
+void setup() {
+    Serial.begin(115200);
+    delay(1000);
+
+
+    pinMode(PIR_PIN, INPUT);
+    pinMode(BUZZER_PIN, OUTPUT);
+    digitalWrite(BUZZER_PIN, LOW);
+
+
+    // OLED
+    Wire.begin(OLED_SDA, OLED_SCL);
+    Wire.setClock(100000);
+    oled.begin();
+
+
+    oled.clearBuffer();
+    oled.setFont(u8g2_font_helvB12_tr);
+    oled.drawStr(20, 22, &quot;SECURITY&quot;);
+    oled.setFont(u8g2_font_6x10_tr);
+    oled.drawStr(28, 42, &quot;STARTING...&quot;);
+
+
+    oled.sendBuffer();
+
+
+    // Camera
+    if (!initCamera()) {
+        oled.clearBuffer();
+        oled.setFont(u8g2_font_helvB12_tr);
+        oled.drawStr(28, 25, &quot;CAMERA&quot;);
+        oled.drawStr(38, 45, &quot;ERROR&quot;);
+        oled.sendBuffer();
+
+
+        while(true){
+            delay(1000);
+        }
+    }
+
+
+    // Wi-Fi
+    oled.clearBuffer();
+    oled.setFont(u8g2_font_helvB12_tr);
+    oled.drawStr(35, 22, &quot;WiFi&quot;);
+    oled.setFont(u8g2_font_6x10_tr);
+    oled.drawStr(20, 42, &quot;CONNECTING...&quot;);
+    oled.sendBuffer();
+
+
+    WiFi.begin(ssid, password);
+
+
+    Serial.print(&quot;Connecting to WiFi&quot;);
+    while(WiFi.status() != WL_CONNECTED){
+        delay(500);
+        Serial.print(&quot;.&quot;);
+    }
+
+
+    Serial.println();
+    Serial.println(&quot;WiFi connected!&quot;);
+
+
+    server.on(&quot;/&quot;, HTTP_GET, handleRoot);
+    server.on(&quot;/snapshot&quot;, HTTP_GET, handleSnapshot);
+    server.on(&quot;/status&quot;, HTTP_GET, handleStatus);
+
+
+    server.begin();
+
+
+    showOLED();
+
+
+    Serial.println(&quot;==============================&quot;);
+    Serial.println(&quot;ESP32-CAM SECURITY MONITOR READY&quot;);
+    Serial.print(&quot;Open: http://&quot;);
+    Serial.println(WiFi.localIP());
+    Serial.println(&quot;Waiting for motion...&quot;);
+    Serial.println(&quot;==============================&quot;);
+}
+
+
+void loop() {
+    server.handleClient();
+    updateSecurity();
+}</textarea><div class="code" id="code"><span class="line" data-num="1">#include &quot;esp_camera.h&quot;</span>
+<span class="line" data-num="2">#include &lt;WiFi.h&gt;</span>
+<span class="line" data-num="3">#include &lt;WebServer.h&gt;</span>
+<span class="line" data-num="4">#include &lt;Wire.h&gt;</span>
+<span class="line" data-num="5">#include &lt;U8g2lib.h&gt;</span>
+<span class="line" data-num="6"> </span>
+<span class="line" data-num="7"> </span>
+<span class="line" data-num="8">// ===============================</span>
+<span class="line" data-num="9">// WIFI</span>
+<span class="line" data-num="10">// ===============================</span>
+<span class="line" data-num="11">const char* ssid = &quot;YOUR_WIFI_NAME&quot;;</span>
+<span class="line" data-num="12">const char* password = &quot;YOUR_WIFI_PASSWORD&quot;;</span>
+<span class="line" data-num="13"> </span>
+<span class="line" data-num="14"> </span>
+<span class="line" data-num="15">// ===============================</span>
+<span class="line" data-num="16">// PINS</span>
+<span class="line" data-num="17">// ===============================</span>
+<span class="line" data-num="18"> </span>
+<span class="line" data-num="19"> </span>
+<span class="line" data-num="20">#define OLED_SDA 13</span>
+<span class="line" data-num="21">#define OLED_SCL 14</span>
+<span class="line" data-num="22">#define PIR_PIN 12</span>
+<span class="line" data-num="23">#define BUZZER_PIN 4</span>
+<span class="line" data-num="24"> </span>
+<span class="line" data-num="25"> </span>
+<span class="line" data-num="26">// Alarm duration after motion</span>
+<span class="line" data-num="27">const unsigned long ALARM_DURATION = 5000UL;</span>
+<span class="line" data-num="28"> </span>
+<span class="line" data-num="29"> </span>
+<span class="line" data-num="30">// Small lockout to avoid repeated events while PIR stays HIGH</span>
+<span class="line" data-num="31">const unsigned long MOTION_COOLDOWN = 2000UL;</span>
+<span class="line" data-num="32"> </span>
+<span class="line" data-num="33"> </span>
+<span class="line" data-num="34">U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(</span>
+<span class="line" data-num="35"> U8G2_R0, U8X8_PIN_NONE, OLED_SCL, OLED_SDA</span>
+<span class="line" data-num="36">);</span>
+<span class="line" data-num="37"> </span>
+<span class="line" data-num="38"> </span>
+<span class="line" data-num="39">WebServer server(80);</span>
+<span class="line" data-num="40"> </span>
+<span class="line" data-num="41"> </span>
+<span class="line" data-num="42">// ===============================</span>
+<span class="line" data-num="43">// AI-THINKER CAMERA PINS</span>
+<span class="line" data-num="44">// ===============================</span>
+<span class="line" data-num="45">#define PWDN_GPIO_NUM              32</span>
+<span class="line" data-num="46">#define RESET_GPIO_NUM             -1</span>
+<span class="line" data-num="47">#define XCLK_GPIO_NUM              0</span>
+<span class="line" data-num="48">#define SIOD_GPIO_NUM           26</span>
+<span class="line" data-num="49">#define SIOC_GPIO_NUM          27</span>
+<span class="line" data-num="50"> </span>
+<span class="line" data-num="51"> </span>
+<span class="line" data-num="52">#define Y9_GPIO_NUM           35</span>
+<span class="line" data-num="53">#define Y8_GPIO_NUM           34</span>
+<span class="line" data-num="54">#define Y7_GPIO_NUM           39</span>
+<span class="line" data-num="55">#define Y6_GPIO_NUM           36</span>
+<span class="line" data-num="56">#define Y5_GPIO_NUM           21</span>
+<span class="line" data-num="57">#define Y4_GPIO_NUM           19</span>
+<span class="line" data-num="58">#define Y3_GPIO_NUM           18</span>
+<span class="line" data-num="59">#define Y2_GPIO_NUM            5</span>
+<span class="line" data-num="60">#define VSYNC_GPIO_NUM             25</span>
+<span class="line" data-num="61">#define HREF_GPIO_NUM           23</span>
+<span class="line" data-num="62">#define PCLK_GPIO_NUM           22</span>
+<span class="line" data-num="63"> </span>
+<span class="line" data-num="64"> </span>
+<span class="line" data-num="65">bool motionActive = false;</span>
+<span class="line" data-num="66">bool alarmActive = false;</span>
+<span class="line" data-num="67">unsigned long alarmStart = 0;</span>
+<span class="line" data-num="68">unsigned long lastMotionEvent = 0;</span>
+<span class="line" data-num="69">unsigned long eventCount = 0;</span>
+<span class="line" data-num="70">int pirState = LOW;</span>
+<span class="line" data-num="71"> </span>
+<span class="line" data-num="72"> </span>
+<span class="line" data-num="73">void showOLED() {</span>
+<span class="line" data-num="74"> oled.clearBuffer();</span>
+<span class="line" data-num="75"> </span>
+<span class="line" data-num="76"> </span>
+<span class="line" data-num="77"> oled.setFont(u8g2_font_helvB10_tr);</span>
+<span class="line" data-num="78"> oled.drawStr(12, 13, &quot;SECURITY MONITOR&quot;);</span>
+<span class="line" data-num="79"> oled.drawHLine(5, 17, 118);</span>
+<span class="line" data-num="80"> </span>
+<span class="line" data-num="81"> </span>
+<span class="line" data-num="82"> oled.setFont(u8g2_font_6x10_tr);</span>
+<span class="line" data-num="83"> </span>
+<span class="line" data-num="84"> </span>
+<span class="line" data-num="85"> if (alarmActive) {</span>
+<span class="line" data-num="86">     oled.drawStr(8, 33, &quot;!!! MOTION ALERT !!!&quot;);</span>
+<span class="line" data-num="87">     oled.drawStr(8, 46, &quot;BUZZER: ON&quot;);</span>
+<span class="line" data-num="88"> } else {</span>
+<span class="line" data-num="89">     oled.drawStr(8, 33, &quot;AREA: MONITORING&quot;);</span>
+<span class="line" data-num="90">     oled.drawStr(8, 46, &quot;BUZZER: OFF&quot;);</span>
+<span class="line" data-num="91"> }</span>
+<span class="line" data-num="92"> </span>
+<span class="line" data-num="93"> </span>
+<span class="line" data-num="94"> char eventText[24];</span>
+<span class="line" data-num="95"> </span>
+<span class="line" data-num="96"> </span>
+<span class="line" data-num="97">    sprintf(eventText, &quot;EVENTS: %lu&quot;, eventCount);</span>
+<span class="line" data-num="98">    oled.drawStr(8, 59, eventText);</span>
+<span class="line" data-num="99"> </span>
+<span class="line" data-num="100"> </span>
+<span class="line" data-num="101">    oled.sendBuffer();</span>
+<span class="line" data-num="102">}</span>
+<span class="line" data-num="103"> </span>
+<span class="line" data-num="104"> </span>
+<span class="line" data-num="105">bool initCamera() {</span>
+<span class="line" data-num="106">    camera_config_t config;</span>
+<span class="line" data-num="107"> </span>
+<span class="line" data-num="108"> </span>
+<span class="line" data-num="109">    config.ledc_channel = LEDC_CHANNEL_0;</span>
+<span class="line" data-num="110">    config.ledc_timer = LEDC_TIMER_0;</span>
+<span class="line" data-num="111"> </span>
+<span class="line" data-num="112"> </span>
+<span class="line" data-num="113">    config.pin_d0 = Y2_GPIO_NUM;</span>
+<span class="line" data-num="114">    config.pin_d1 = Y3_GPIO_NUM;</span>
+<span class="line" data-num="115">    config.pin_d2 = Y4_GPIO_NUM;</span>
+<span class="line" data-num="116">    config.pin_d3 = Y5_GPIO_NUM;</span>
+<span class="line" data-num="117">    config.pin_d4 = Y6_GPIO_NUM;</span>
+<span class="line" data-num="118">    config.pin_d5 = Y7_GPIO_NUM;</span>
+<span class="line" data-num="119">    config.pin_d6 = Y8_GPIO_NUM;</span>
+<span class="line" data-num="120">    config.pin_d7 = Y9_GPIO_NUM;</span>
+<span class="line" data-num="121"> </span>
+<span class="line" data-num="122"> </span>
+<span class="line" data-num="123">    config.pin_xclk = XCLK_GPIO_NUM;</span>
+<span class="line" data-num="124">    config.pin_pclk = PCLK_GPIO_NUM;</span>
+<span class="line" data-num="125">    config.pin_vsync = VSYNC_GPIO_NUM;</span>
+<span class="line" data-num="126">    config.pin_href = HREF_GPIO_NUM;</span>
+<span class="line" data-num="127">    config.pin_sccb_sda = SIOD_GPIO_NUM;</span>
+<span class="line" data-num="128">    config.pin_sccb_scl = SIOC_GPIO_NUM;</span>
+<span class="line" data-num="129">    config.pin_pwdn = PWDN_GPIO_NUM;</span>
+<span class="line" data-num="130">    config.pin_reset = RESET_GPIO_NUM;</span>
+<span class="line" data-num="131"> </span>
+<span class="line" data-num="132"> </span>
+<span class="line" data-num="133">    config.xclk_freq_hz = 20000000;</span>
+<span class="line" data-num="134">    config.pixel_format = PIXFORMAT_JPEG;</span>
+<span class="line" data-num="135">    config.frame_size = FRAMESIZE_VGA;</span>
+<span class="line" data-num="136">    config.jpeg_quality = 12;</span>
+<span class="line" data-num="137">    config.fb_count = 1;</span>
+<span class="line" data-num="138"> </span>
+<span class="line" data-num="139"> </span>
+<span class="line" data-num="140">    esp_err_t result = esp_camera_init(&amp;config);</span>
+<span class="line" data-num="141"> </span>
+<span class="line" data-num="142"> </span>
+<span class="line" data-num="143">    if (result != ESP_OK) {</span>
+<span class="line" data-num="144">        Serial.print(&quot;Camera initialization failed: 0x&quot;);</span>
+<span class="line" data-num="145">        Serial.println(result, HEX);</span>
+<span class="line" data-num="146">        return false;</span>
+<span class="line" data-num="147">    }</span>
+<span class="line" data-num="148"> </span>
+<span class="line" data-num="149"> </span>
+<span class="line" data-num="150">    return true;</span>
+<span class="line" data-num="151">}</span>
+<span class="line" data-num="152"> </span>
+<span class="line" data-num="153"> </span>
+<span class="line" data-num="154">void captureMotionEvent() {</span>
+<span class="line" data-num="155">    eventCount++;</span>
+<span class="line" data-num="156">    motionActive = true;</span>
+<span class="line" data-num="157">    alarmActive = true;</span>
+<span class="line" data-num="158">    alarmStart = millis();</span>
+<span class="line" data-num="159"> </span>
+<span class="line" data-num="160"> </span>
+<span class="line" data-num="161">    digitalWrite(BUZZER_PIN, HIGH);</span>
+<span class="line" data-num="162"> </span>
+<span class="line" data-num="163"> </span>
+<span class="line" data-num="164">    Serial.println(&quot;==============================&quot;);</span>
+<span class="line" data-num="165">    Serial.println(&quot;MOTION DETECTED&quot;);</span>
+<span class="line" data-num="166">    Serial.print(&quot;Security event: &quot;);</span>
+<span class="line" data-num="167">    Serial.println(eventCount);</span>
+<span class="line" data-num="168">    Serial.println(&quot;BUZZER: ON&quot;);</span>
+<span class="line" data-num="169">    Serial.println(&quot;==============================&quot;);</span>
+<span class="line" data-num="170"> </span>
+<span class="line" data-num="171"> </span>
+<span class="line" data-num="172">    showOLED();</span>
+<span class="line" data-num="173"> </span>
+<span class="line" data-num="174"> </span>
+<span class="line" data-num="175">}</span>
+<span class="line" data-num="176"> </span>
+<span class="line" data-num="177"> </span>
+<span class="line" data-num="178">void updateSecurity() {</span>
+<span class="line" data-num="179">    pirState = digitalRead(PIR_PIN);</span>
+<span class="line" data-num="180"> </span>
+<span class="line" data-num="181"> </span>
+<span class="line" data-num="182">    if (pirState == HIGH &amp;&amp;</span>
+<span class="line" data-num="183">         !alarmActive &amp;&amp;</span>
+<span class="line" data-num="184">         (millis() - lastMotionEvent &gt; MOTION_COOLDOWN)) {</span>
+<span class="line" data-num="185"> </span>
+<span class="line" data-num="186"> </span>
+<span class="line" data-num="187">        lastMotionEvent = millis();</span>
+<span class="line" data-num="188">        captureMotionEvent();</span>
+<span class="line" data-num="189">    }</span>
+<span class="line" data-num="190"> </span>
+<span class="line" data-num="191"> </span>
+<span class="line" data-num="192">    if (alarmActive &amp;&amp;</span>
+<span class="line" data-num="193">         (millis() - alarmStart &gt;= ALARM_DURATION)) {</span>
+<span class="line" data-num="194"> </span>
+<span class="line" data-num="195"> </span>
+<span class="line" data-num="196">        alarmActive = false;</span>
+<span class="line" data-num="197">        motionActive = false;</span>
+<span class="line" data-num="198">        digitalWrite(BUZZER_PIN, LOW);</span>
+<span class="line" data-num="199"> </span>
+<span class="line" data-num="200"> </span>
+<span class="line" data-num="201">        Serial.println(&quot;BUZZER: OFF&quot;);</span>
+<span class="line" data-num="202">        Serial.println(&quot;AREA: MONITORING&quot;);</span>
+<span class="line" data-num="203"> </span>
+<span class="line" data-num="204"> </span>
+<span class="line" data-num="205">        showOLED();</span>
+<span class="line" data-num="206">    }</span>
+<span class="line" data-num="207">}</span>
+<span class="line" data-num="208"> </span>
+<span class="line" data-num="209"> </span>
+<span class="line" data-num="210">void handleRoot() {</span>
+<span class="line" data-num="211">    String ip = WiFi.localIP().toString();</span>
+<span class="line" data-num="212"> </span>
+<span class="line" data-num="213"> </span>
+<span class="line" data-num="214">    String html = R&quot;rawliteral(</span>
+<span class="line" data-num="215">&lt;!DOCTYPE html&gt;</span>
+<span class="line" data-num="216">&lt;html&gt;</span>
+<span class="line" data-num="217">&lt;head&gt;</span>
+<span class="line" data-num="218">&lt;meta charset=&quot;UTF-8&quot;&gt;</span>
+<span class="line" data-num="219">&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1.0&quot;&gt;</span>
+<span class="line" data-num="220">&lt;title&gt;ESP32-CAM Motion Security Monitor&lt;/title&gt;</span>
+<span class="line" data-num="221">&lt;style&gt;</span>
+<span class="line" data-num="222">*{box-sizing:border-box}</span>
+<span class="line" data-num="223">body{</span>
+<span class="line" data-num="224">    margin:0;background:#09111f;color:#fff;</span>
+<span class="line" data-num="225">    font-family:Arial,Helvetica,sans-serif;</span>
+<span class="line" data-num="226">}</span>
+<span class="line" data-num="227">.header{</span>
+<span class="line" data-num="228">    padding:20px;background:#0e192b;</span>
+<span class="line" data-num="229">    border-bottom:1px solid #24344d;</span>
+<span class="line" data-num="230">}</span>
+<span class="line" data-num="231">.header-inner{</span>
+<span class="line" data-num="232">    width:92%;max-width:1150px;margin:auto;</span>
+<span class="line" data-num="233">    display:flex;justify-content:space-between;align-items:center;</span>
+<span class="line" data-num="234">}</span>
+<span class="line" data-num="235">.brand h1{margin:0;font-size:22px}</span>
+<span class="line" data-num="236">.brand p{margin:5px 0 0;color:#8fa0b8;font-size:12px}</span>
+<span class="line" data-num="237">.online{</span>
+<span class="line" data-num="238">    padding:9px 14px;border-radius:20px;</span>
+<span class="line" data-num="239">    background:#113522;color:#4ade80;font-size:12px;font-weight:bold;</span>
+<span class="line" data-num="240">}</span>
+<span class="line" data-num="241">.container{width:92%;max-width:1150px;margin:auto;padding:22px 0 40px}</span>
+<span class="line" data-num="242">.grid{</span>
+<span class="line" data-num="243">    display:grid;grid-template-columns:2fr 1fr;gap:18px;</span>
+<span class="line" data-num="244">}</span>
+<span class="line" data-num="245">.card{</span>
+<span class="line" data-num="246">    background:#121e31;border:1px solid #263753;</span>
+<span class="line" data-num="247"> </span>
+<span class="line" data-num="248"> </span>
+<span class="line" data-num="249">    border-radius:18px;padding:18px;</span>
+<span class="line" data-num="250">}</span>
+<span class="line" data-num="251">.title{font-size:17px;font-weight:bold;margin-bottom:12px}</span>
+<span class="line" data-num="252">.sub{color:#8091aa;font-size:12px}</span>
+<span class="line" data-num="253">.camera{</span>
+<span class="line" data-num="254">    background:#02060c;border-radius:13px;overflow:hidden;</span>
+<span class="line" data-num="255">    border:1px solid #25364e;</span>
+<span class="line" data-num="256">}</span>
+<span class="line" data-num="257">.camera img{width:100%;display:block;max-height:520px;object-fit:contain}</span>
+<span class="line" data-num="258">.badge{</span>
+<span class="line" data-num="259">    display:inline-block;margin-top:10px;padding:7px 10px;</span>
+<span class="line" data-num="260">    border-radius:8px;background:#24344d;font-size:11px;</span>
+<span class="line" data-num="261">}</span>
+<span class="line" data-num="262">.status{</span>
+<span class="line" data-num="263">    margin-bottom:12px;padding:15px;border-radius:13px;</span>
+<span class="line" data-num="264">    background:#1b2a40;</span>
+<span class="line" data-num="265">}</span>
+<span class="line" data-num="266">.label{font-size:11px;color:#8da0b9;text-transform:uppercase}</span>
+<span class="line" data-num="267">.value{margin-top:6px;font-size:20px;font-weight:bold}</span>
+<span class="line" data-num="268">.ok{color:#4ade80}.alert{color:#ff5965}.blue{color:#60a5fa}</span>
+<span class="line" data-num="269">.log{</span>
+<span class="line" data-num="270">    margin-top:18px;padding:16px;border-radius:15px;</span>
+<span class="line" data-num="271">    background:#121e31;border:1px solid #263753;</span>
+<span class="line" data-num="272">}</span>
+<span class="line" data-num="273">.event{</span>
+<span class="line" data-num="274">    padding:10px 0;border-bottom:1px solid #22324a;</span>
+<span class="line" data-num="275">    font-size:12px;color:#cbd5e1;</span>
+<span class="line" data-num="276">}</span>
+<span class="line" data-num="277">.event:last-child{border-bottom:0}</span>
+<span class="line" data-num="278">@media(max-width:800px){.grid{grid-template-columns:1fr}}</span>
+<span class="line" data-num="279">&lt;/style&gt;</span>
+<span class="line" data-num="280">&lt;/head&gt;</span>
+<span class="line" data-num="281">&lt;body&gt;</span>
+<span class="line" data-num="282">&lt;div class=&quot;header&quot;&gt;</span>
+<span class="line" data-num="283">    &lt;div class=&quot;header-inner&quot;&gt;</span>
+<span class="line" data-num="284">     &lt;div class=&quot;brand&quot;&gt;</span>
+<span class="line" data-num="285">      &lt;h1&gt;ESP32-CAM MOTION SECURITY MONITOR&lt;/h1&gt;</span>
+<span class="line" data-num="286">      &lt;p&gt;Restricted Area • PIR Detection • Audible Alarm&lt;/p&gt;</span>
+<span class="line" data-num="287">     &lt;/div&gt;</span>
+<span class="line" data-num="288">     &lt;div class=&quot;online&quot;&gt;● ONLINE&lt;/div&gt;</span>
+<span class="line" data-num="289">    &lt;/div&gt;</span>
+<span class="line" data-num="290">&lt;/div&gt;</span>
+<span class="line" data-num="291"> </span>
+<span class="line" data-num="292"> </span>
+<span class="line" data-num="293">&lt;div class=&quot;container&quot;&gt;</span>
+<span class="line" data-num="294">&lt;div class=&quot;grid&quot;&gt;</span>
+<span class="line" data-num="295"> </span>
+<span class="line" data-num="296"> </span>
+<span class="line" data-num="297">&lt;div class=&quot;card&quot;&gt;</span>
+<span class="line" data-num="298">    &lt;div class=&quot;title&quot;&gt;Live Camera &lt;span class=&quot;sub&quot;&gt;| VGA / JPEG&lt;/span&gt;&lt;/div&gt;</span>
+<span class="line" data-num="299">    &lt;div class=&quot;camera&quot;&gt;</span>
+<span class="line" data-num="300">     &lt;img id=&quot;cam&quot; src=&quot;/snapshot&quot; alt=&quot;ESP32-CAM Live View&quot;&gt;</span>
+<span class="line" data-num="301">    &lt;/div&gt;</span>
+<span class="line" data-num="302">    &lt;div class=&quot;badge&quot;&gt;Camera view refreshes automatically&lt;/div&gt;</span>
+<span class="line" data-num="303">&lt;/div&gt;</span>
+<span class="line" data-num="304"> </span>
+<span class="line" data-num="305"> </span>
+<span class="line" data-num="306">&lt;div class=&quot;card&quot;&gt;</span>
+<span class="line" data-num="307">    &lt;div class=&quot;title&quot;&gt;Security Status&lt;/div&gt;</span>
+<span class="line" data-num="308"> </span>
+<span class="line" data-num="309"> </span>
+<span class="line" data-num="310">    &lt;div class=&quot;status&quot;&gt;</span>
+<span class="line" data-num="311">     &lt;div class=&quot;label&quot;&gt;Area Status&lt;/div&gt;</span>
+<span class="line" data-num="312">     &lt;div id=&quot;area&quot; class=&quot;value ok&quot;&gt;MONITORING&lt;/div&gt;</span>
+<span class="line" data-num="313">    &lt;/div&gt;</span>
+<span class="line" data-num="314"> </span>
+<span class="line" data-num="315"> </span>
+<span class="line" data-num="316">    &lt;div class=&quot;status&quot;&gt;</span>
+<span class="line" data-num="317"> </span>
+<span class="line" data-num="318"> </span>
+<span class="line" data-num="319">     &lt;div class=&quot;label&quot;&gt;Buzzer&lt;/div&gt;</span>
+<span class="line" data-num="320">     &lt;div id=&quot;buzzer&quot; class=&quot;value ok&quot;&gt;OFF&lt;/div&gt;</span>
+<span class="line" data-num="321">    &lt;/div&gt;</span>
+<span class="line" data-num="322"> </span>
+<span class="line" data-num="323"> </span>
+<span class="line" data-num="324">    &lt;div class=&quot;status&quot;&gt;</span>
+<span class="line" data-num="325">     &lt;div class=&quot;label&quot;&gt;Motion Events&lt;/div&gt;</span>
+<span class="line" data-num="326">     &lt;div id=&quot;events&quot; class=&quot;value blue&quot;&gt;0&lt;/div&gt;</span>
+<span class="line" data-num="327">    &lt;/div&gt;</span>
+<span class="line" data-num="328"> </span>
+<span class="line" data-num="329"> </span>
+<span class="line" data-num="330">    &lt;div class=&quot;status&quot;&gt;</span>
+<span class="line" data-num="331">     &lt;div class=&quot;label&quot;&gt;IP Address&lt;/div&gt;</span>
+<span class="line" data-num="332">     &lt;div class=&quot;value blue&quot; style=&quot;font-size:14px&quot;&gt;)rawliteral&quot;;</span>
+<span class="line" data-num="333"> </span>
+<span class="line" data-num="334"> </span>
+<span class="line" data-num="335">    html += ip;</span>
+<span class="line" data-num="336"> </span>
+<span class="line" data-num="337"> </span>
+<span class="line" data-num="338">    html += R&quot;rawliteral(&lt;/div&gt;</span>
+<span class="line" data-num="339">    &lt;/div&gt;</span>
+<span class="line" data-num="340">&lt;/div&gt;</span>
+<span class="line" data-num="341"> </span>
+<span class="line" data-num="342"> </span>
+<span class="line" data-num="343">&lt;/div&gt;</span>
+<span class="line" data-num="344"> </span>
+<span class="line" data-num="345"> </span>
+<span class="line" data-num="346">&lt;div class=&quot;log&quot;&gt;</span>
+<span class="line" data-num="347">    &lt;div class=&quot;title&quot;&gt;Event Log&lt;/div&gt;</span>
+<span class="line" data-num="348">    &lt;div id=&quot;log&quot; class=&quot;event&quot;&gt;System started. Waiting for motion...&lt;/div&gt;</span>
+<span class="line" data-num="349">&lt;/div&gt;</span>
+<span class="line" data-num="350"> </span>
+<span class="line" data-num="351"> </span>
+<span class="line" data-num="352">&lt;/div&gt;</span>
+<span class="line" data-num="353"> </span>
+<span class="line" data-num="354"> </span>
+<span class="line" data-num="355">&lt;script&gt;</span>
+<span class="line" data-num="356">let lastEvents=0;</span>
+<span class="line" data-num="357"> </span>
+<span class="line" data-num="358"> </span>
+<span class="line" data-num="359">async function updateStatus(){</span>
+<span class="line" data-num="360">    try{</span>
+<span class="line" data-num="361">     const r=await fetch('/status');</span>
+<span class="line" data-num="362">     const d=await r.json();</span>
+<span class="line" data-num="363"> </span>
+<span class="line" data-num="364"> </span>
+<span class="line" data-num="365">     const area=document.getElementById('area');</span>
+<span class="line" data-num="366">     const buzzer=document.getElementById('buzzer');</span>
+<span class="line" data-num="367"> </span>
+<span class="line" data-num="368"> </span>
+<span class="line" data-num="369">     document.getElementById('events').innerText=d.events;</span>
+<span class="line" data-num="370"> </span>
+<span class="line" data-num="371"> </span>
+<span class="line" data-num="372">     if(d.motion){</span>
+<span class="line" data-num="373">         area.innerText='MOTION DETECTED';</span>
+<span class="line" data-num="374">         area.className='value alert';</span>
+<span class="line" data-num="375">         buzzer.innerText='ON';</span>
+<span class="line" data-num="376">         buzzer.className='value alert';</span>
+<span class="line" data-num="377">     }else{</span>
+<span class="line" data-num="378">         area.innerText='MONITORING';</span>
+<span class="line" data-num="379">         area.className='value ok';</span>
+<span class="line" data-num="380">         buzzer.innerText='OFF';</span>
+<span class="line" data-num="381">         buzzer.className='value ok';</span>
+<span class="line" data-num="382">     }</span>
+<span class="line" data-num="383"> </span>
+<span class="line" data-num="384"> </span>
+<span class="line" data-num="385">     if(d.events &gt; lastEvents){</span>
+<span class="line" data-num="386">         document.getElementById('log').innerText =</span>
+<span class="line" data-num="387">          new Date().toLocaleTimeString() +</span>
+<span class="line" data-num="388">          ' • Motion detected • Buzzer activated';</span>
+<span class="line" data-num="389">         lastEvents=d.events;</span>
+<span class="line" data-num="390">     }</span>
+<span class="line" data-num="391">    }catch(e){}</span>
+<span class="line" data-num="392">}</span>
+<span class="line" data-num="393"> </span>
+<span class="line" data-num="394"> </span>
+<span class="line" data-num="395">setInterval(()=&gt;{</span>
+<span class="line" data-num="396"> </span>
+<span class="line" data-num="397"> </span>
+<span class="line" data-num="398">    document.getElementById('cam').src='/snapshot?t='+Date.now();</span>
+<span class="line" data-num="399">},1000);</span>
+<span class="line" data-num="400"> </span>
+<span class="line" data-num="401"> </span>
+<span class="line" data-num="402">setInterval(updateStatus,500);</span>
+<span class="line" data-num="403">updateStatus();</span>
+<span class="line" data-num="404">&lt;/script&gt;</span>
+<span class="line" data-num="405">&lt;/body&gt;</span>
+<span class="line" data-num="406">&lt;/html&gt;</span>
+<span class="line" data-num="407">)rawliteral&quot;;</span>
+<span class="line" data-num="408"> </span>
+<span class="line" data-num="409"> </span>
+<span class="line" data-num="410">    server.send(200, &quot;text/html&quot;, html);</span>
+<span class="line" data-num="411">}</span>
+<span class="line" data-num="412"> </span>
+<span class="line" data-num="413"> </span>
+<span class="line" data-num="414">void handleSnapshot() {</span>
+<span class="line" data-num="415">    camera_fb_t* fb = esp_camera_fb_get();</span>
+<span class="line" data-num="416"> </span>
+<span class="line" data-num="417"> </span>
+<span class="line" data-num="418">    if (!fb) {</span>
+<span class="line" data-num="419">        server.send(500, &quot;text/plain&quot;, &quot;Camera error&quot;);</span>
+<span class="line" data-num="420">        return;</span>
+<span class="line" data-num="421">    }</span>
+<span class="line" data-num="422"> </span>
+<span class="line" data-num="423"> </span>
+<span class="line" data-num="424">    server.setContentLength(fb-&gt;len);</span>
+<span class="line" data-num="425">    server.send(200, &quot;image/jpeg&quot;, &quot;&quot;);</span>
+<span class="line" data-num="426"> </span>
+<span class="line" data-num="427"> </span>
+<span class="line" data-num="428">    WiFiClient client = server.client();</span>
+<span class="line" data-num="429">    client.write(fb-&gt;buf, fb-&gt;len);</span>
+<span class="line" data-num="430"> </span>
+<span class="line" data-num="431"> </span>
+<span class="line" data-num="432">    esp_camera_fb_return(fb);</span>
+<span class="line" data-num="433">}</span>
+<span class="line" data-num="434"> </span>
+<span class="line" data-num="435"> </span>
+<span class="line" data-num="436">void handleStatus() {</span>
+<span class="line" data-num="437">    String json = &quot;{&quot;;</span>
+<span class="line" data-num="438">    json += &quot;\&quot;motion\&quot;:&quot;;</span>
+<span class="line" data-num="439">    json += alarmActive ? &quot;true&quot; : &quot;false&quot;;</span>
+<span class="line" data-num="440">    json += &quot;,&quot;;</span>
+<span class="line" data-num="441">    json += &quot;\&quot;buzzer\&quot;:&quot;;</span>
+<span class="line" data-num="442">    json += alarmActive ? &quot;true&quot; : &quot;false&quot;;</span>
+<span class="line" data-num="443">    json += &quot;,&quot;;</span>
+<span class="line" data-num="444">    json += &quot;\&quot;events\&quot;:&quot;;</span>
+<span class="line" data-num="445">    json += String(eventCount);</span>
+<span class="line" data-num="446">    json += &quot;}&quot;;</span>
+<span class="line" data-num="447"> </span>
+<span class="line" data-num="448"> </span>
+<span class="line" data-num="449">    server.send(200, &quot;application/json&quot;, json);</span>
+<span class="line" data-num="450">}</span>
+<span class="line" data-num="451"> </span>
+<span class="line" data-num="452"> </span>
+<span class="line" data-num="453">void setup() {</span>
+<span class="line" data-num="454">    Serial.begin(115200);</span>
+<span class="line" data-num="455">    delay(1000);</span>
+<span class="line" data-num="456"> </span>
+<span class="line" data-num="457"> </span>
+<span class="line" data-num="458">    pinMode(PIR_PIN, INPUT);</span>
+<span class="line" data-num="459">    pinMode(BUZZER_PIN, OUTPUT);</span>
+<span class="line" data-num="460">    digitalWrite(BUZZER_PIN, LOW);</span>
+<span class="line" data-num="461"> </span>
+<span class="line" data-num="462"> </span>
+<span class="line" data-num="463">    // OLED</span>
+<span class="line" data-num="464">    Wire.begin(OLED_SDA, OLED_SCL);</span>
+<span class="line" data-num="465">    Wire.setClock(100000);</span>
+<span class="line" data-num="466">    oled.begin();</span>
+<span class="line" data-num="467"> </span>
+<span class="line" data-num="468"> </span>
+<span class="line" data-num="469">    oled.clearBuffer();</span>
+<span class="line" data-num="470">    oled.setFont(u8g2_font_helvB12_tr);</span>
+<span class="line" data-num="471">    oled.drawStr(20, 22, &quot;SECURITY&quot;);</span>
+<span class="line" data-num="472">    oled.setFont(u8g2_font_6x10_tr);</span>
+<span class="line" data-num="473">    oled.drawStr(28, 42, &quot;STARTING...&quot;);</span>
+<span class="line" data-num="474"> </span>
+<span class="line" data-num="475"> </span>
+<span class="line" data-num="476">    oled.sendBuffer();</span>
+<span class="line" data-num="477"> </span>
+<span class="line" data-num="478"> </span>
+<span class="line" data-num="479">    // Camera</span>
+<span class="line" data-num="480">    if (!initCamera()) {</span>
+<span class="line" data-num="481">        oled.clearBuffer();</span>
+<span class="line" data-num="482">        oled.setFont(u8g2_font_helvB12_tr);</span>
+<span class="line" data-num="483">        oled.drawStr(28, 25, &quot;CAMERA&quot;);</span>
+<span class="line" data-num="484">        oled.drawStr(38, 45, &quot;ERROR&quot;);</span>
+<span class="line" data-num="485">        oled.sendBuffer();</span>
+<span class="line" data-num="486"> </span>
+<span class="line" data-num="487"> </span>
+<span class="line" data-num="488">        while(true){</span>
+<span class="line" data-num="489">            delay(1000);</span>
+<span class="line" data-num="490">        }</span>
+<span class="line" data-num="491">    }</span>
+<span class="line" data-num="492"> </span>
+<span class="line" data-num="493"> </span>
+<span class="line" data-num="494">    // Wi-Fi</span>
+<span class="line" data-num="495">    oled.clearBuffer();</span>
+<span class="line" data-num="496">    oled.setFont(u8g2_font_helvB12_tr);</span>
+<span class="line" data-num="497">    oled.drawStr(35, 22, &quot;WiFi&quot;);</span>
+<span class="line" data-num="498">    oled.setFont(u8g2_font_6x10_tr);</span>
+<span class="line" data-num="499">    oled.drawStr(20, 42, &quot;CONNECTING...&quot;);</span>
+<span class="line" data-num="500">    oled.sendBuffer();</span>
+<span class="line" data-num="501"> </span>
+<span class="line" data-num="502"> </span>
+<span class="line" data-num="503">    WiFi.begin(ssid, password);</span>
+<span class="line" data-num="504"> </span>
+<span class="line" data-num="505"> </span>
+<span class="line" data-num="506">    Serial.print(&quot;Connecting to WiFi&quot;);</span>
+<span class="line" data-num="507">    while(WiFi.status() != WL_CONNECTED){</span>
+<span class="line" data-num="508">        delay(500);</span>
+<span class="line" data-num="509">        Serial.print(&quot;.&quot;);</span>
+<span class="line" data-num="510">    }</span>
+<span class="line" data-num="511"> </span>
+<span class="line" data-num="512"> </span>
+<span class="line" data-num="513">    Serial.println();</span>
+<span class="line" data-num="514">    Serial.println(&quot;WiFi connected!&quot;);</span>
+<span class="line" data-num="515"> </span>
+<span class="line" data-num="516"> </span>
+<span class="line" data-num="517">    server.on(&quot;/&quot;, HTTP_GET, handleRoot);</span>
+<span class="line" data-num="518">    server.on(&quot;/snapshot&quot;, HTTP_GET, handleSnapshot);</span>
+<span class="line" data-num="519">    server.on(&quot;/status&quot;, HTTP_GET, handleStatus);</span>
+<span class="line" data-num="520"> </span>
+<span class="line" data-num="521"> </span>
+<span class="line" data-num="522">    server.begin();</span>
+<span class="line" data-num="523"> </span>
+<span class="line" data-num="524"> </span>
+<span class="line" data-num="525">    showOLED();</span>
+<span class="line" data-num="526"> </span>
+<span class="line" data-num="527"> </span>
+<span class="line" data-num="528">    Serial.println(&quot;==============================&quot;);</span>
+<span class="line" data-num="529">    Serial.println(&quot;ESP32-CAM SECURITY MONITOR READY&quot;);</span>
+<span class="line" data-num="530">    Serial.print(&quot;Open: http://&quot;);</span>
+<span class="line" data-num="531">    Serial.println(WiFi.localIP());</span>
+<span class="line" data-num="532">    Serial.println(&quot;Waiting for motion...&quot;);</span>
+<span class="line" data-num="533">    Serial.println(&quot;==============================&quot;);</span>
+<span class="line" data-num="534">}</span>
+<span class="line" data-num="535"> </span>
+<span class="line" data-num="536"> </span>
+<span class="line" data-num="537">void loop() {</span>
+<span class="line" data-num="538">    server.handleClient();</span>
+<span class="line" data-num="539">    updateSecurity();</span>
+<span class="line" data-num="540">}</span></div><p>Click any code line to highlight it. Explore the steps below to understand how the program works.</p><details><summary>Step 1: Wi-Fi &amp; libraries</summary><p>Imports the camera, Wi-Fi, web server, I2C and OLED libraries and configures Wi-Fi.</p></details><details><summary>Step 2: Pin definitions</summary><p>Maps OLED SDA/SCL to GPIO13/14, PIR to GPIO12 and buzzer to GPIO4.</p></details><details><summary>Step 3: Camera setup</summary><p>Initializes the AI-Thinker OV2640 camera for VGA JPEG capture.</p></details><details><summary>Step 4: OLED status</summary><p>Displays monitoring/alert status and total motion events.</p></details><details><summary>Step 5: Motion detection</summary><p>Reads PIR output and triggers the five-second audible alarm.</p></details><details><summary>Step 6: Web dashboard</summary><p>Serves live camera snapshots, alarm state, event counter and IP address.</p></details><details><summary>Step 7: Main loop</summary><p>Handles incoming browser requests and monitors PIR continuously.</p></details><details><summary>Check Your Understanding</summary><p>Which GPIO reads the PIR sensor? What is the alarm duration? Which pins connect the SH1106 OLED? How does the browser retrieve the live camera image?</p><p class="answer">Answers: GPIO12; 5 seconds; SDA GPIO13 and SCL GPIO14; the browser refreshes the /snapshot endpoint.</p></details></section>
+<section><h2>Expected Output</h2><p>Serial Monitor prints the device IP address and motion events. The OLED normally shows <strong>AREA: MONITORING</strong> and <strong>BUZZER: OFF</strong>. On motion, it shows <strong>MOTION ALERT</strong>, the buzzer turns on for five seconds, and the event counter increases. The web dashboard shows the camera snapshot, motion status, buzzer state, event count and IP address.</p></section>
+<section><h2>Result</h2><p>The ESP32-CAM Motion Security Monitor detects restricted-area motion, provides a local audible alert and OLED indication, and updates a Wi-Fi security dashboard with a live camera view and motion event counter.</p></section>
+<section><h2>What You Learn</h2><p>ESP32-CAM camera initialization, PIR motion sensing, digital output control, I2C SH1106 display interfacing, Wi-Fi networking, web dashboard development, and event counting.</p></section></main><footer>SimuSoft | IoT Experiments</footer>
+<script>document.getElementById('copy').addEventListener('click',async()=>{await navigator.clipboard.writeText(document.getElementById('raw').value);document.getElementById('copy').textContent='Copied!'});document.querySelectorAll('.line').forEach(x=>x.addEventListener('click',()=>x.classList.toggle('active')))</script></body></html>
