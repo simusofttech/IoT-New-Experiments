@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Wi-Fi Vibration Event Counter</title><style>
+:root{--blue:#1453a5;--light:#eff6ff;--line:#dbe7f5}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#20334b;background:#f6f9fe}header{background:linear-gradient(110deg,#0e448e,#2375c9);color:white;padding:36px max(5%,calc((100% - 1060px)/2))}h1{margin:0;font-size:clamp(26px,4vw,36px)}main{max-width:1060px;margin:25px auto;padding:0 18px}section{background:white;border:1px solid var(--line);border-radius:14px;padding:24px;margin:20px 0;box-shadow:0 4px 15px #183a6110}h2{color:var(--blue);margin-top:0;font-size:22px}p,li{line-height:1.7}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px}.component{border:1px solid var(--line);border-radius:12px;text-align:center;padding:13px;background:#fff}.component img{width:100%;height:125px;object-fit:contain}.component strong{display:block;font-size:14px;margin-top:8px}table{border-collapse:collapse;width:100%}th,td{padding:12px;border:1px solid var(--line);text-align:left}th{background:var(--light)}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.steps{display:flex;flex-wrap:wrap;gap:8px}.steps span{background:var(--light);border:1px solid var(--line);border-radius:10px;padding:12px}.codebar{display:flex;justify-content:space-between;align-items:center;gap:12px}button{border:0;border-radius:8px;background:var(--blue);color:#fff;padding:10px 16px;cursor:pointer}pre{background:#101e34;color:#e8f1ff;padding:15px;overflow:auto;border-radius:10px;line-height:1.55}.line{display:block;white-space:pre}.line:before{content:attr(data-n);display:inline-block;color:#7e96b7;width:34px;user-select:none}.line.active{background:#25558a}details{margin-top:14px;border:1px solid var(--line);padding:12px;border-radius:8px}summary{cursor:pointer;font-weight:bold}</style></head><body><header><h1>Wi-Fi Vibration Event Counter</h1><p>Hands-on IoT Experiment</p></header><main>
+<section><h2>Aim</h2><p>Detect vibration events with a bare SW-500D, show the count on a 0.96-inch SSD1306 OLED, sound a buzzer, and serve a live Wi-Fi dashboard.</p></section><section><h2>About the Experiment</h2><p>Detect vibration events with a bare SW-500D, show the count on a 0.96-inch SSD1306 OLED, sound a buzzer, and serve a live Wi-Fi dashboard.</p></section>
+<section><h2>Components Required</h2><div class="cards"><div class="component"><img src="ESP32 Development Board.png" alt="ESP32-DevKitC ×1" onerror="this.style.visibility='hidden'"><strong>ESP32-DevKitC ×1</strong></div><div class="component"><img src="Vibration Sensor.png" alt="SW-500D Bare Vibration Sensor ×1" onerror="this.style.visibility='hidden'"><strong>SW-500D Bare Vibration Sensor ×1</strong></div><div class="component"><img src="OLED.png" alt="0.96-inch SSD1306 OLED ×1" onerror="this.style.visibility='hidden'"><strong>0.96-inch SSD1306 OLED ×1</strong></div><div class="component"><img src="Buzzer.png" alt="Active Buzzer ×1" onerror="this.style.visibility='hidden'"><strong>Active Buzzer ×1</strong></div><div class="component"><img src="Breadboard.png" alt="Breadboard ×1" onerror="this.style.visibility='hidden'"><strong>Breadboard ×1</strong></div><div class="component"><img src="Jumper Wires.png" alt="Jumper Wires" onerror="this.style.visibility='hidden'"><strong>Jumper Wires</strong></div></div></section>
+<section><h2>Circuit Connections</h2><table><thead><tr><th>Component Pin</th><th>Connection</th></tr></thead><tbody><tr><td>SW-500D terminal 1</td><td>GND</td></tr><tr><td>SW-500D terminal 2</td><td>GPIO 27</td></tr><tr><td>OLED VCC</td><td>3.3V</td></tr><tr><td>OLED GND</td><td>GND</td></tr><tr><td>OLED SDA</td><td>GPIO 21</td></tr><tr><td>OLED SCL</td><td>GPIO 22</td></tr><tr><td>Buzzer +</td><td>GPIO 25</td></tr><tr><td>Buzzer −</td><td>GND</td></tr></tbody></table></section>
+<section><h2>Circuit Diagram</h2><img class="circuit-img" src="Wi-Fi Vibration Event Counter Circuit.png" alt="Wi-Fi Vibration Event Counter circuit diagram"></section>
+<section><h2>Working Principle</h2><div class="steps"><span>1. SW-500D detects vibration</span><span>2. ESP32 debounces event</span><span>3. Counter increases</span><span>4. OLED and dashboard update</span><span>5. Buzzer sounds</span></div></section>
+<section><h2>Procedure</h2><ol><li>Arrange the components and verify their specifications.</li><li>Make all connections exactly as listed in the table.</li><li>Install the required ESP32 board package and libraries in Arduino IDE.</li><li>Configure your local Wi-Fi credentials in the sketch without publishing them.</li><li>Upload using the correct board selection and programmer.</li><li>Open Serial Monitor at 115200 baud and observe the output.</li><li>Test the sensor, display, camera or web dashboard as appropriate.</li></ol></section>
+<section><div class="codebar"><h2>Explore the Code</h2><button onclick="navigator.clipboard.writeText(document.getElementById('rawcode').value).then(()=>this.textContent='Copied!')">Copy Code</button></div><textarea id="rawcode" hidden>#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;U8g2lib.h&gt;
+const char* ssid = &quot;YOUR_WIFI_NAME&quot;;
+const char* password = &quot;YOUR_WIFI_PASSWORD&quot;;
+#define VIBRATION_PIN 27
+#define BUZZER_PIN 25
+WebServer server(80);
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE);
+unsigned long vibrationCount=0, lastDebounceTime=0, lastEventTime=0;
+const unsigned long debounceDelay=500;
+bool lastSensorState=HIGH;
+void updateOLED(){
+ oled.clearBuffer(); oled.setFont(u8g2_font_6x10_tr);
+ oled.drawStr(0,12,&quot;Vibration Events&quot;);
+ char buf[22]; snprintf(buf,sizeof(buf),&quot;%lu&quot;,vibrationCount);
+ oled.setFont(u8g2_font_helvB18_tr); oled.drawStr(0,44,buf);
+ oled.sendBuffer();
+}
+void alert(){digitalWrite(BUZZER_PIN,HIGH);delay(120);digitalWrite(BUZZER_PIN,LOW);}
+void handleRoot(){
+ server.send(200,&quot;text/html&quot;,R&quot;rawliteral(&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;&lt;body style=&quot;font-family:Arial;text-align:center&quot;&gt;&lt;h2&gt;Wi-Fi Vibration Event Counter&lt;/h2&gt;&lt;h1 id=&quot;count&quot;&gt;0&lt;/h1&gt;&lt;p id=&quot;info&quot;&gt;&lt;/p&gt;&lt;button onclick=&quot;fetch('/reset').then(refresh)&quot;&gt;Reset Counter&lt;/button&gt;&lt;script&gt;async function refresh(){let x=await(await fetch('/data')).json();document.getElementById('count').textContent=x.count;document.getElementById('info').textContent='Last event (ms): '+x.lastEvent+' | Uptime (ms): '+x.uptime}setInterval(refresh,1000);refresh();&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;)rawliteral&quot;);
+}
+void setup(){
+ Serial.begin(115200);
+ pinMode(VIBRATION_PIN,INPUT_PULLUP);pinMode(BUZZER_PIN,OUTPUT);
+ digitalWrite(BUZZER_PIN,LOW);
+ Wire.begin(21,22);oled.begin();updateOLED();
+ WiFi.begin(ssid,password);
+ while(WiFi.status()!=WL_CONNECTED){delay(500);}
+ Serial.println(WiFi.localIP());
+ server.on(&quot;/&quot;,handleRoot);
+ server.on(&quot;/data&quot;,[]{server.send(200,&quot;application/json&quot;,String(&quot;{\&quot;count\&quot;:&quot;)+vibrationCount+&quot;,\&quot;lastEvent\&quot;:&quot;+lastEventTime+&quot;,\&quot;uptime\&quot;:&quot;+millis()+&quot;}&quot;);});
+ server.on(&quot;/reset&quot;,[]{vibrationCount=0;updateOLED();server.send(200,&quot;text/plain&quot;,&quot;Reset&quot;);});
+ server.begin();
+}
+void loop(){
+ server.handleClient();
+ bool state=digitalRead(VIBRATION_PIN);
+ if(state==LOW &amp;&amp; lastSensorState==HIGH &amp;&amp; millis()-lastDebounceTime&gt;debounceDelay){
+  vibrationCount++;lastEventTime=millis();lastDebounceTime=millis();
+  Serial.printf(&quot;Vibration Event: %lu\n&quot;,vibrationCount);
+  alert();updateOLED();
+ }
+ lastSensorState=state;
+}</textarea><pre id="code"><span class="line" data-n="1">#include &lt;WiFi.h&gt;</span>
+<span class="line" data-n="2">#include &lt;WebServer.h&gt;</span>
+<span class="line" data-n="3">#include &lt;Wire.h&gt;</span>
+<span class="line" data-n="4">#include &lt;U8g2lib.h&gt;</span>
+<span class="line" data-n="5">const char* ssid = &quot;YOUR_WIFI_NAME&quot;;</span>
+<span class="line" data-n="6">const char* password = &quot;YOUR_WIFI_PASSWORD&quot;;</span>
+<span class="line" data-n="7">#define VIBRATION_PIN 27</span>
+<span class="line" data-n="8">#define BUZZER_PIN 25</span>
+<span class="line" data-n="9">WebServer server(80);</span>
+<span class="line" data-n="10">U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE);</span>
+<span class="line" data-n="11">unsigned long vibrationCount=0, lastDebounceTime=0, lastEventTime=0;</span>
+<span class="line" data-n="12">const unsigned long debounceDelay=500;</span>
+<span class="line" data-n="13">bool lastSensorState=HIGH;</span>
+<span class="line" data-n="14">void updateOLED(){</span>
+<span class="line" data-n="15"> oled.clearBuffer(); oled.setFont(u8g2_font_6x10_tr);</span>
+<span class="line" data-n="16"> oled.drawStr(0,12,&quot;Vibration Events&quot;);</span>
+<span class="line" data-n="17"> char buf[22]; snprintf(buf,sizeof(buf),&quot;%lu&quot;,vibrationCount);</span>
+<span class="line" data-n="18"> oled.setFont(u8g2_font_helvB18_tr); oled.drawStr(0,44,buf);</span>
+<span class="line" data-n="19"> oled.sendBuffer();</span>
+<span class="line" data-n="20">}</span>
+<span class="line" data-n="21">void alert(){digitalWrite(BUZZER_PIN,HIGH);delay(120);digitalWrite(BUZZER_PIN,LOW);}</span>
+<span class="line" data-n="22">void handleRoot(){</span>
+<span class="line" data-n="23"> server.send(200,&quot;text/html&quot;,R&quot;rawliteral(&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;&lt;body style=&quot;font-family:Arial;text-align:center&quot;&gt;&lt;h2&gt;Wi-Fi Vibration Event Counter&lt;/h2&gt;&lt;h1 id=&quot;count&quot;&gt;0&lt;/h1&gt;&lt;p id=&quot;info&quot;&gt;&lt;/p&gt;&lt;button onclick=&quot;fetch('/reset').then(refresh)&quot;&gt;Reset Counter&lt;/button&gt;&lt;script&gt;async function refresh(){let x=await(await fetch('/data')).json();document.getElementById('count').textContent=x.count;document.getElementById('info').textContent='Last event (ms): '+x.lastEvent+' | Uptime (ms): '+x.uptime}setInterval(refresh,1000);refresh();&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;)rawliteral&quot;);</span>
+<span class="line" data-n="24">}</span>
+<span class="line" data-n="25">void setup(){</span>
+<span class="line" data-n="26"> Serial.begin(115200);</span>
+<span class="line" data-n="27"> pinMode(VIBRATION_PIN,INPUT_PULLUP);pinMode(BUZZER_PIN,OUTPUT);</span>
+<span class="line" data-n="28"> digitalWrite(BUZZER_PIN,LOW);</span>
+<span class="line" data-n="29"> Wire.begin(21,22);oled.begin();updateOLED();</span>
+<span class="line" data-n="30"> WiFi.begin(ssid,password);</span>
+<span class="line" data-n="31"> while(WiFi.status()!=WL_CONNECTED){delay(500);}</span>
+<span class="line" data-n="32"> Serial.println(WiFi.localIP());</span>
+<span class="line" data-n="33"> server.on(&quot;/&quot;,handleRoot);</span>
+<span class="line" data-n="34"> server.on(&quot;/data&quot;,[]{server.send(200,&quot;application/json&quot;,String(&quot;{\&quot;count\&quot;:&quot;)+vibrationCount+&quot;,\&quot;lastEvent\&quot;:&quot;+lastEventTime+&quot;,\&quot;uptime\&quot;:&quot;+millis()+&quot;}&quot;);});</span>
+<span class="line" data-n="35"> server.on(&quot;/reset&quot;,[]{vibrationCount=0;updateOLED();server.send(200,&quot;text/plain&quot;,&quot;Reset&quot;);});</span>
+<span class="line" data-n="36"> server.begin();</span>
+<span class="line" data-n="37">}</span>
+<span class="line" data-n="38">void loop(){</span>
+<span class="line" data-n="39"> server.handleClient();</span>
+<span class="line" data-n="40"> bool state=digitalRead(VIBRATION_PIN);</span>
+<span class="line" data-n="41"> if(state==LOW &amp;&amp; lastSensorState==HIGH &amp;&amp; millis()-lastDebounceTime&gt;debounceDelay){</span>
+<span class="line" data-n="42">  vibrationCount++;lastEventTime=millis();lastDebounceTime=millis();</span>
+<span class="line" data-n="43">  Serial.printf(&quot;Vibration Event: %lu\n&quot;,vibrationCount);</span>
+<span class="line" data-n="44">  alert();updateOLED();</span>
+<span class="line" data-n="45"> }</span>
+<span class="line" data-n="46"> lastSensorState=state;</span>
+<span class="line" data-n="47">}</span></pre><p>Click a line to highlight it and inspect the program step by step.</p><details><summary>Check Your Understanding</summary><p>Which pins carry the sensor or display signals? What output occurs when the experiment detects an event? What happens if Wi-Fi disconnects?</p></details></section>
+<section><h2>Expected Output</h2><p>SW-500D detects vibration → ESP32 debounces event → Counter increases → OLED and dashboard update → Buzzer sounds.</p></section><section><h2>Result</h2><p>The experiment demonstrates the intended sensing, output, and IoT workflow when the connections and code are configured correctly.</p></section><section><h2>What You Learn</h2><p>Sensor interfacing, GPIO configuration, signal flow, Wi-Fi connectivity, event-driven programming and troubleshooting.</p></section></main><script>document.querySelectorAll('.line').forEach(x=>x.onclick=()=>x.classList.toggle('active'))</script></body></html>
