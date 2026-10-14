@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Joystick-Controlled Two Servo Motors</title><style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f4f8ff;color:#1e293b;line-height:1.65;margin:0}header{background:#1761b8;color:white;padding:28px;text-align:center}h1{margin:0}main{max-width:1100px;margin:24px auto;padding:0 16px}section{background:white;margin:20px 0;padding:24px;border-radius:12px;box-shadow:0 2px 12px #0001}h2{color:#1559a7;border-bottom:2px solid #dbeafe;padding-bottom:9px}.components{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px}.component{border:1px solid #dbeafe;border-radius:10px;text-align:center;padding:12px}.component img{height:140px;width:100%;object-fit:contain}.component strong{display:block}.component small{color:#64748b}table{border-collapse:collapse;width:100%}td,th{border:1px solid #cbd5e1;padding:10px;text-align:left}th{background:#eff6ff}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.flow{background:#eff6ff;padding:18px;border-radius:10px;text-align:center;font-weight:bold}.codewrap{display:grid;grid-template-columns:50px 1fr;background:#0f172a;color:#e2e8f0;border-radius:10px;overflow:auto;font:13px/1.6 Consolas,monospace}.numbers{background:#172b48;color:#94a3b8;text-align:right;padding:15px 8px;white-space:pre}.source{white-space:pre;padding:15px;min-width:max-content;margin:0}.source span{display:block;min-height:20.8px;cursor:pointer}.source span.active{background:#334155}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}button{background:#1d4ed8;color:white;border:0;border-radius:7px;padding:10px 15px;cursor:pointer}.explain{background:#eff6ff;padding:12px;border-radius:8px;min-height:50px}.note{border-left:4px solid #eab308;padding:12px;background:#fffbeb}footer{text-align:center;color:#64748b;padding:20px}</style></head><body><header><h1>Joystick-Controlled Two Servo Motors</h1></header><main>
+<section><h2>Aim</h2><p>Control two servo motors independently using the X and Y axes of an analog joystick.</p></section>
+<section><h2>About the Experiment</h2><p>Control two servo motors independently using the X and Y axes of an analog joystick. This educational experiment demonstrates sensor input, microcontroller processing and output control.</p></section>
+<section><h2>Components Required</h2><div class="components"><div class="component"><img src="Arduino UNO.png" alt="Arduino UNO R3"><strong>Arduino UNO R3</strong><small>Quantity: 1</small></div><div class="component"><img src="Joystick Module.png" alt="Analog Joystick Module"><strong>Analog Joystick Module</strong><small>Quantity: 1</small></div><div class="component"><img src="Servo Motor.png" alt="SG90 Servo Motor"><strong>SG90 Servo Motor</strong><small>Quantity: 2</small></div><div class="component"><img src="Breadboard.png" alt="Breadboard"><strong>Breadboard</strong><small>Quantity: 1</small></div><div class="component"><img src="Jumper Wires.png" alt="Jumper Wires"><strong>Jumper Wires</strong><small>Quantity: As required</small></div></div></section>
+<section><h2>Circuit Connections</h2><table><tr><th>Component Pin</th><th>Connection</th></tr><tr><td>Joystick VCC</td><td>5V</td></tr><tr><td>Joystick GND</td><td>GND</td></tr><tr><td>Joystick HORZ</td><td>A0</td></tr><tr><td>Joystick VERT</td><td>A1</td></tr><tr><td>Servo 1 signal</td><td>D9</td></tr><tr><td>Servo 2 signal</td><td>D10</td></tr><tr><td>Servo V+</td><td>Regulated 5V supply appropriate for both servos</td></tr><tr><td>Servo GND</td><td>Common GND with Arduino</td></tr></table><p class="note">For physical hardware, two servos may exceed the Arduino's 5V output current. Use a suitable regulated servo supply with common ground.</p></section>
+<section><h2>Circuit Diagram</h2><img class="circuit-img" src="Joystick-Controlled Two Servo Motors Circuit.png" alt="Circuit diagram for Joystick-Controlled Two Servo Motors"></section>
+<section><h2>Working Principle</h2><div class="flow">Joystick X/Y → Analog inputs A0/A1 → Angle mapping → Servos D9/D10</div></section>
+<section><h2>Procedure</h2><ol><li>Gather the components and verify their pin labels.</li><li>Connect the components as shown in the Circuit Connections table.</li><li>Open Arduino IDE and select Arduino UNO.</li><li>Enter the SOP sketch in the code section below.</li><li>Verify and upload the code to the board.</li><li>Test the input and observe the output response.</li></ol></section>
+<section><h2>Explore the Code</h2><div class="buttons"><button onclick="navigator.clipboard.writeText(document.getElementById('raw').value)">Copy Code</button><button onclick="document.getElementById('explain').textContent='Click a code line to view its explanation.'">Step-by-Step Explanation</button></div><div class="codewrap"><div class="numbers">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</div><div class="source" id="source"><span data-line="1">#include &lt;Servo.h&gt;</span><span data-line="2"> </span><span data-line="3">Servo servoX;</span><span data-line="4">Servo servoY;</span><span data-line="5"> </span><span data-line="6">const int joystickX = A0;</span><span data-line="7">const int joystickY = A1;</span><span data-line="8">const int servoXPin = 9;</span><span data-line="9">const int servoYPin = 10;</span><span data-line="10"> </span><span data-line="11">void setup() {</span><span data-line="12">  servoX.attach(servoXPin);</span><span data-line="13">  servoY.attach(servoYPin);</span><span data-line="14"> </span><span data-line="15">  // Start both servos at center</span><span data-line="16">  servoX.write(90);</span><span data-line="17">  servoY.write(90);</span><span data-line="18">  delay(500);</span><span data-line="19">}</span><span data-line="20"> </span><span data-line="21">void loop() {</span><span data-line="22">  int xValue = analogRead(joystickX);</span><span data-line="23">  int yValue = analogRead(joystickY);</span><span data-line="24"> </span><span data-line="25">  int angleX = map(xValue, 0, 1023, 0, 180);</span><span data-line="26">  int angleY = map(yValue, 0, 1023, 0, 180);</span><span data-line="27"> </span><span data-line="28">  angleX = constrain(angleX, 0, 180);</span><span data-line="29">  angleY = constrain(angleY, 0, 180);</span><span data-line="30"> </span><span data-line="31">  servoX.write(angleX);</span><span data-line="32">  servoY.write(angleY);</span><span data-line="33"> </span><span data-line="34">  delay(15);</span><span data-line="35">}</span></div></div><textarea id="raw" hidden>#include &lt;Servo.h&gt;
+
+Servo servoX;
+Servo servoY;
+
+const int joystickX = A0;
+const int joystickY = A1;
+const int servoXPin = 9;
+const int servoYPin = 10;
+
+void setup() {
+  servoX.attach(servoXPin);
+  servoY.attach(servoYPin);
+
+  // Start both servos at center
+  servoX.write(90);
+  servoY.write(90);
+  delay(500);
+}
+
+void loop() {
+  int xValue = analogRead(joystickX);
+  int yValue = analogRead(joystickY);
+
+  int angleX = map(xValue, 0, 1023, 0, 180);
+  int angleY = map(yValue, 0, 1023, 0, 180);
+
+  angleX = constrain(angleX, 0, 180);
+  angleY = constrain(angleY, 0, 180);
+
+  servoX.write(angleX);
+  servoY.write(angleY);
+
+  delay(15);
+}</textarea><div class="explain" id="explain">Click a code line to explore how it works.</div><details><summary><strong>Check Your Understanding</strong></summary><p>Which input pin is used in this experiment, and how does the program change its output?</p></details></section>
+<section><h2>Expected Output</h2><p>Horizontal joystick movement controls Servo 1 and vertical movement controls Servo 2.</p></section><section><h2>Result</h2><p>Horizontal joystick movement controls Servo 1 and vertical movement controls Servo 2. The experiment demonstrates the intended input-to-output control.</p></section><section><h2>What You Learn</h2><p>Sensor interfacing, Arduino input/output pins, program logic, circuit wiring and testing.</p></section></main><footer>SimuSoft | Arduino Experiments</footer><script>
+document.querySelectorAll('#source span').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('#source span').forEach(n=>n.classList.remove('active'));el.classList.add('active');const t=el.textContent.trim();let msg='Line '+el.dataset.line+': ';if(t.startsWith('//'))msg+='This is a comment explaining the code.';else if(/pinMode/.test(t))msg+='Sets a pin as input or output.';else if(/analogRead/.test(t))msg+='Reads an analog sensor value.';else if(/digitalRead/.test(t))msg+='Reads a digital sensor state.';else if(/digitalWrite/.test(t))msg+='Switches an output HIGH or LOW.';else if(/map\(/.test(t))msg+='Maps a sensor value into the servo angle range.';else if(/constrain\(/.test(t))msg+='Keeps a value within its allowed range.';else if(/\.write\(/.test(t))msg+='Commands the servo to a specified angle.';else if(/attach\(/.test(t))msg+='Attaches a servo to its signal pin.';else if(/delay\(/.test(t))msg+='Waits the specified number of milliseconds.';else if(/Serial\./.test(t))msg+='Communicates diagnostic text to Serial Monitor.';else if(/if\s*\(/.test(t))msg+='Checks a condition to choose the next action.';else if(/else/.test(t))msg+='Handles the alternative condition.';else if(/void setup/.test(t))msg+='Runs once at startup.';else if(/void loop/.test(t))msg+='Runs repeatedly while the board is powered.';else msg+='This line declares a value or forms part of the program structure.';document.getElementById('explain').textContent=msg;}));
+</script></body></html>
