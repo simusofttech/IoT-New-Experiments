@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rain Alert Indicator</title><style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f4f8ff;color:#1e293b;line-height:1.65;margin:0}header{background:#1761b8;color:white;padding:28px;text-align:center}h1{margin:0}main{max-width:1100px;margin:24px auto;padding:0 16px}section{background:white;margin:20px 0;padding:24px;border-radius:12px;box-shadow:0 2px 12px #0001}h2{color:#1559a7;border-bottom:2px solid #dbeafe;padding-bottom:9px}.components{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:15px}.component{border:1px solid #dbeafe;border-radius:10px;text-align:center;padding:12px}.component img{height:140px;width:100%;object-fit:contain}.component strong{display:block}.component small{color:#64748b}table{border-collapse:collapse;width:100%}td,th{border:1px solid #cbd5e1;padding:10px;text-align:left}th{background:#eff6ff}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.flow{background:#eff6ff;padding:18px;border-radius:10px;text-align:center;font-weight:bold}.codewrap{display:grid;grid-template-columns:50px 1fr;background:#0f172a;color:#e2e8f0;border-radius:10px;overflow:auto;font:13px/1.6 Consolas,monospace}.numbers{background:#172b48;color:#94a3b8;text-align:right;padding:15px 8px;white-space:pre}.source{white-space:pre;padding:15px;min-width:max-content;margin:0}.source span{display:block;min-height:20.8px;cursor:pointer}.source span.active{background:#334155}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}button{background:#1d4ed8;color:white;border:0;border-radius:7px;padding:10px 15px;cursor:pointer}.explain{background:#eff6ff;padding:12px;border-radius:8px;min-height:50px}.note{border-left:4px solid #eab308;padding:12px;background:#fffbeb}footer{text-align:center;color:#64748b;padding:20px}</style></head><body><header><h1>Rain Alert Indicator</h1></header><main>
+<section><h2>Aim</h2><p>Detect rain with a rain sensor plate and alert with a red LED and active buzzer.</p></section>
+<section><h2>About the Experiment</h2><p>Detect rain with a rain sensor plate and alert with a red LED and active buzzer. This educational experiment demonstrates sensor input, microcontroller processing and output control.</p></section>
+<section><h2>Components Required</h2><div class="components"><div class="component"><img src="Arduino UNO.png" alt="Arduino UNO R3"><strong>Arduino UNO R3</strong><small>Quantity: 1</small></div><div class="component"><img src="Rain Sensor Module.png" alt="Rain Sensor Module (plate + comparator)"><strong>Rain Sensor Module (plate + comparator)</strong><small>Quantity: 1</small></div><div class="component"><img src="Red LED.png" alt="Red LED"><strong>Red LED</strong><small>Quantity: 1</small></div><div class="component"><img src="220 Ohm Resistor.png" alt="220Ω Resistor"><strong>220Ω Resistor</strong><small>Quantity: 1</small></div><div class="component"><img src="Buzzer.png" alt="Active Buzzer"><strong>Active Buzzer</strong><small>Quantity: 1</small></div><div class="component"><img src="Breadboard.png" alt="Breadboard"><strong>Breadboard</strong><small>Quantity: 1</small></div><div class="component"><img src="Jumper Wires.png" alt="Jumper Wires"><strong>Jumper Wires</strong><small>Quantity: As required</small></div></div></section>
+<section><h2>Circuit Connections</h2><table><tr><th>Component Pin</th><th>Connection</th></tr><tr><td>Rain module VCC</td><td>5V or module-rated supply</td></tr><tr><td>Rain module GND</td><td>GND</td></tr><tr><td>Rain module DO</td><td>D2</td></tr><tr><td>Rain module AO</td><td>Not connected</td></tr><tr><td>Red LED anode</td><td>D8 through 220Ω resistor</td></tr><tr><td>Red LED cathode</td><td>GND</td></tr><tr><td>Buzzer +</td><td>D9</td></tr><tr><td>Buzzer −</td><td>GND</td></tr></table><p class="note">The sketch assumes active-LOW sensor output. Check the module's output polarity and adjust the comparator threshold. Keep electronics dry; wet only the sensing plate.</p></section>
+<section><h2>Circuit Diagram</h2><img class="circuit-img" src="Rain Alert Indicator Circuit.png" alt="Circuit diagram for Rain Alert Indicator"></section>
+<section><h2>Working Principle</h2><div class="flow">Rain sensor DO → Arduino D2 → Rain detection → LED D8 + Buzzer D9</div></section>
+<section><h2>Procedure</h2><ol><li>Gather the components and verify their pin labels.</li><li>Connect the components as shown in the Circuit Connections table.</li><li>Open Arduino IDE and select Arduino UNO.</li><li>Enter the SOP sketch in the code section below.</li><li>Verify and upload the code to the board.</li><li>Test the input and observe the output response.</li></ol></section>
+<section><h2>Explore the Code</h2><div class="buttons"><button onclick="navigator.clipboard.writeText(document.getElementById('raw').value)">Copy Code</button><button onclick="document.getElementById('explain').textContent='Click a code line to view its explanation.'">Step-by-Step Explanation</button></div><div class="codewrap"><div class="numbers">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</div><div class="source" id="source"><span data-line="1">#define RAIN_SENSOR 2</span><span data-line="2">#define LED_PIN 8</span><span data-line="3">#define BUZZER_PIN 9</span><span data-line="4"> </span><span data-line="5">void setup() {</span><span data-line="6">  Serial.begin(9600);</span><span data-line="7"> </span><span data-line="8">  pinMode(RAIN_SENSOR, INPUT);</span><span data-line="9">  pinMode(LED_PIN, OUTPUT);</span><span data-line="10">  pinMode(BUZZER_PIN, OUTPUT);</span><span data-line="11"> </span><span data-line="12">  digitalWrite(LED_PIN, LOW);</span><span data-line="13">  digitalWrite(BUZZER_PIN, LOW);</span><span data-line="14"> </span><span data-line="15">  Serial.println(&quot;RAIN DETECTOR SYSTEM READY&quot;);</span><span data-line="16">}</span><span data-line="17"> </span><span data-line="18">void loop() {</span><span data-line="19">  int rainStatus = digitalRead(RAIN_SENSOR);</span><span data-line="20"> </span><span data-line="21">  // This sketch assumes DO is LOW when rain is detected.</span><span data-line="22">  if (rainStatus == LOW) {</span><span data-line="23">    Serial.println(&quot;STATUS: RAIN DETECTED&quot;);</span><span data-line="24">    digitalWrite(LED_PIN, HIGH);</span><span data-line="25">    digitalWrite(BUZZER_PIN, HIGH);</span><span data-line="26">  } else {</span><span data-line="27">    Serial.println(&quot;STATUS: NO RAIN&quot;);</span><span data-line="28">    digitalWrite(LED_PIN, LOW);</span><span data-line="29">    digitalWrite(BUZZER_PIN, LOW);</span><span data-line="30">  }</span><span data-line="31"> </span><span data-line="32">  delay(500);</span><span data-line="33">}</span></div></div><textarea id="raw" hidden>#define RAIN_SENSOR 2
+#define LED_PIN 8
+#define BUZZER_PIN 9
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(RAIN_SENSOR, INPUT);
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  digitalWrite(LED_PIN, LOW);
+  digitalWrite(BUZZER_PIN, LOW);
+
+  Serial.println(&quot;RAIN DETECTOR SYSTEM READY&quot;);
+}
+
+void loop() {
+  int rainStatus = digitalRead(RAIN_SENSOR);
+
+  // This sketch assumes DO is LOW when rain is detected.
+  if (rainStatus == LOW) {
+    Serial.println(&quot;STATUS: RAIN DETECTED&quot;);
+    digitalWrite(LED_PIN, HIGH);
+    digitalWrite(BUZZER_PIN, HIGH);
+  } else {
+    Serial.println(&quot;STATUS: NO RAIN&quot;);
+    digitalWrite(LED_PIN, LOW);
+    digitalWrite(BUZZER_PIN, LOW);
+  }
+
+  delay(500);
+}</textarea><div class="explain" id="explain">Click a code line to explore how it works.</div><details><summary><strong>Check Your Understanding</strong></summary><p>Which input pin is used in this experiment, and how does the program change its output?</p></details></section>
+<section><h2>Expected Output</h2><p>Dry sensor: LED and buzzer OFF. Rain detected: red LED and buzzer ON.</p></section><section><h2>Result</h2><p>Dry sensor: LED and buzzer OFF. Rain detected: red LED and buzzer ON. The experiment demonstrates the intended input-to-output control.</p></section><section><h2>What You Learn</h2><p>Sensor interfacing, Arduino input/output pins, program logic, circuit wiring and testing.</p></section></main><footer>SimuSoft | Arduino Experiments</footer><script>
+document.querySelectorAll('#source span').forEach(el=>el.addEventListener('click',()=>{document.querySelectorAll('#source span').forEach(n=>n.classList.remove('active'));el.classList.add('active');const t=el.textContent.trim();let msg='Line '+el.dataset.line+': ';if(t.startsWith('//'))msg+='This is a comment explaining the code.';else if(/pinMode/.test(t))msg+='Sets a pin as input or output.';else if(/analogRead/.test(t))msg+='Reads an analog sensor value.';else if(/digitalRead/.test(t))msg+='Reads a digital sensor state.';else if(/digitalWrite/.test(t))msg+='Switches an output HIGH or LOW.';else if(/map\(/.test(t))msg+='Maps a sensor value into the servo angle range.';else if(/constrain\(/.test(t))msg+='Keeps a value within its allowed range.';else if(/\.write\(/.test(t))msg+='Commands the servo to a specified angle.';else if(/attach\(/.test(t))msg+='Attaches a servo to its signal pin.';else if(/delay\(/.test(t))msg+='Waits the specified number of milliseconds.';else if(/Serial\./.test(t))msg+='Communicates diagnostic text to Serial Monitor.';else if(/if\s*\(/.test(t))msg+='Checks a condition to choose the next action.';else if(/else/.test(t))msg+='Handles the alternative condition.';else if(/void setup/.test(t))msg+='Runs once at startup.';else if(/void loop/.test(t))msg+='Runs repeatedly while the board is powered.';else msg+='This line declares a value or forms part of the program structure.';document.getElementById('explain').textContent=msg;}));
+</script></body></html>
