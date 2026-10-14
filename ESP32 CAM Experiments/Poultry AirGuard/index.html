@@ -1,0 +1,67 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Poultry AirGuard</title><style>*{box-sizing:border-box}body{margin:0;background:#f4f7fb;font:16px/1.65 Arial,sans-serif;color:#1e293b}header{background:#2563eb;color:white;padding:25px;text-align:center}h1{margin:0}main{max-width:1100px;margin:30px auto;padding:0 20px}section{background:white;border:1px solid #e2e8f0;border-radius:12px;margin:20px 0;padding:22px}h2{color:#1e3a8a;margin-top:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}.part{border:1px solid #e2e8f0;border-radius:10px;padding:12px;text-align:center}.part img{width:100%;height:130px;object-fit:contain}table{width:100%;border-collapse:collapse}td,th{border:1px solid #dbe4f0;padding:9px;text-align:left}th{background:#eff6ff}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}pre{background:#0f172a;color:#e2e8f0;padding:20px;overflow:auto;max-height:650px;line-height:1.6}button{background:#2563eb;color:#fff;border:0;padding:10px 16px;border-radius:7px;cursor:pointer}.note{background:#fff7ed;padding:12px;border-left:4px solid #f59e0b}a{color:#1d4ed8}</style></head><body><header><h1>Poultry AirGuard</h1></header><main><a href="../index.html">← Back to Experiments</a><section><h2>Aim</h2><p>Build an ESP32-based poultry environment monitoring prototype with gas proxy input, temperature and humidity readings, ventilation fan, damper, LEDs, buzzer, OLED and Wi-Fi dashboard.</p></section><section><h2>About the Experiment</h2><p>The MQ-2 analog reading is mapped to a <strong>simulated</strong> 0–100 gas scale. It does not directly measure ammonia ppm. This is an educational demonstration, not a calibrated animal or worker safety device.</p></section><section><h2>Components Required</h2><div class="grid"><div class="part"><img src="ESP32 Development Board.png" alt="ESP32 Development Board"><strong>ESP32 Development Board</strong></div><div class="part"><img src="MQ-2 Gas Sensor.png" alt="MQ-2 Gas Sensor"><strong>MQ-2 Gas Sensor</strong></div><div class="part"><img src="DHT22 Temperature Humidity Sensor.png" alt="DHT22 Temperature Humidity Sensor"><strong>DHT22 Temperature Humidity Sensor</strong></div><div class="part"><img src="OLED.png" alt="OLED"><strong>OLED</strong></div><div class="part"><img src="Servo Motor.png" alt="Servo Motor"><strong>Servo Motor</strong></div><div class="part"><img src="1-Channel Relay Module.png" alt="1-Channel Relay Module"><strong>1-Channel Relay Module</strong></div><div class="part"><img src="5V Fan.png" alt="5V Fan"><strong>5V Fan</strong></div><div class="part"><img src="Green LED.png" alt="Green LED"><strong>Green LED</strong></div><div class="part"><img src="Yellow LED.png" alt="Yellow LED"><strong>Yellow LED</strong></div><div class="part"><img src="Red LED.png" alt="Red LED"><strong>Red LED</strong></div><div class="part"><img src="220 Ohm Resistor.png" alt="220 Ohm Resistor"><strong>220 Ohm Resistor</strong> (×3)</div><div class="part"><img src="Buzzer.png" alt="Buzzer"><strong>Buzzer</strong></div><div class="part"><img src="Breadboard.png" alt="Breadboard"><strong>Breadboard</strong></div><div class="part"><img src="Jumper Wires.png" alt="Jumper Wires"><strong>Jumper Wires</strong></div></div></section><section><h2>Circuit Connections</h2><table><tr><th>Component</th><th>ESP32 pin</th></tr><tr><td>MQ-2 AOUT</td><td>GPIO 34</td></tr><tr><td>DHT22 DATA</td><td>GPIO 12</td></tr><tr><td>OLED SDA / SCL</td><td>GPIO 21 / GPIO 22</td></tr><tr><td>Servo signal</td><td>GPIO 18</td></tr><tr><td>Fan relay IN</td><td>GPIO 26</td></tr><tr><td>Green / Yellow / Red LED</td><td>GPIO 25 / 33 / 32 (220Ω each)</td></tr><tr><td>Buzzer +</td><td>GPIO 27</td></tr></table><p>Connect common grounds; OLED VCC to 3V3, DHT22 VCC to 3V3, and supply the MQ-2, servo and fan according to their ratings. Protect ESP32 ADC from voltages over 3.3V.</p></section><section><h2>Circuit Diagram</h2><img class="circuit-img" src="Poultry AirGuard Circuit.png" alt="Poultry AirGuard Circuit Diagram"></section><section><h2>Working Principle</h2><p>MQ-2 and DHT22 → ESP32 processing → simulated gas classification → fan, servo, LEDs and buzzer → OLED and Wi-Fi dashboard.</p><table><tr><th>Status</th><th>Gas scale</th><th>Outputs</th></tr><tr><td>SAFE</td><td>0–20</td><td>Green LED, fan OFF, damper 0°</td></tr><tr><td>CAUTION</td><td>21–40</td><td>Yellow LED, fan ON, damper 90°</td></tr><tr><td>DANGER</td><td>41–100</td><td>Red LED, fan ON, buzzer ON, damper 180°</td></tr></table></section><section><h2>Procedure</h2><ol><li>Assemble the circuit with power disconnected.</li><li>Install ESP32Servo, DHTesp and U8g2 in Arduino IDE.</li><li>Set Wi-Fi SSID and password in the code.</li><li>Select the correct ESP32 board and upload the sketch.</li><li>Open Serial Monitor at 115200 baud.</li><li>Open the displayed IP address in a browser on the same network.</li><li>Observe SAFE, CAUTION and DANGER outputs as the analog reading changes.</li></ol></section><section><h2>Explore the Code</h2><button id="copy" onclick="navigator.clipboard.writeText(document.getElementById('source').textContent).then(()=>this.textContent='Copied!')">Copy Code</button><pre><code id="source">#include &lt;WiFi.h&gt;
+#include &lt;WebServer.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;U8g2lib.h&gt;
+#include &lt;DHTesp.h&gt;
+#include &lt;ESP32Servo.h&gt;
+const char* WIFI_SSID = &quot;YOUR_WIFI_SSID&quot;;
+const char* WIFI_PASSWORD = &quot;YOUR_WIFI_PASSWORD&quot;;
+const int MQ2=34,DHT=12,SERVO=18,RELAY=26,GREEN=25,YELLOW=33,RED=32,BUZZER=27;
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0,U8X8_PIN_NONE);
+DHTesp dht;
+Servo damper;
+WebServer server(80);
+int raw=0,simulated=0,angle=0;
+float temp=NAN,humidity=NAN;
+bool fan=false,alarmOn=false,valid=false;
+String status=&quot;SAFE&quot;;
+unsigned long lastDHT=0,lastOLED=0;
+void page(){
+  server.send(200,&quot;text/html&quot;,&quot;&lt;meta name='viewport' content='width=device-width'&gt;&lt;h1&gt;Poultry AirGuard&lt;/h1&gt;&lt;p&gt;Live status: &lt;b id='s'&gt;Loading&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Simulated gas: &lt;b id='g'&gt;--&lt;/b&gt; (not measured NH3 ppm)&lt;/p&gt;&lt;p&gt;Temperature: &lt;b id='t'&gt;--&lt;/b&gt; C&lt;/p&gt;&lt;p&gt;Humidity: &lt;b id='h'&gt;--&lt;/b&gt; %&lt;/p&gt;&lt;p&gt;Fan: &lt;b id='f'&gt;--&lt;/b&gt;&lt;/p&gt;&lt;script&gt;setInterval(async()=&gt;{try{let x=await(await fetch('/data')).json();for(let k of ['s','g','t','h','f'])document.getElementById(k).textContent=x[k]}catch(e){}},1200)&lt;/script&gt;&quot;);
+}
+void data(){
+  String j=&quot;{\&quot;s\&quot;:\&quot;&quot;+status+&quot;\&quot;,\&quot;g\&quot;:&quot;+String(simulated)+&quot;,\&quot;t\&quot;:\&quot;&quot;+(valid?String(temp,1):&quot;Sensor error&quot;)+&quot;\&quot;,\&quot;h\&quot;:\&quot;&quot;+(valid?String(humidity,1):&quot;Sensor error&quot;)+&quot;\&quot;,\&quot;f\&quot;:\&quot;&quot;+(fan?&quot;ON&quot;:&quot;OFF&quot;)+&quot;\&quot;}&quot;;
+  server.send(200,&quot;application/json&quot;,j);
+}
+void setup(){
+  Serial.begin(115200);
+  analogReadResolution(12);
+  pinMode(RELAY,OUTPUT);pinMode(GREEN,OUTPUT);pinMode(YELLOW,OUTPUT);pinMode(RED,OUTPUT);pinMode(BUZZER,OUTPUT);
+  digitalWrite(RELAY,LOW);digitalWrite(BUZZER,LOW);
+  Wire.begin(21,22);oled.setI2CAddress(0x3C&lt;&lt;1);oled.begin();
+  dht.setup(DHT,DHTesp::DHT22);
+  damper.setPeriodHertz(50);damper.attach(SERVO,500,2400);damper.write(0);
+  WiFi.begin(WIFI_SSID,WIFI_PASSWORD);
+  Serial.print(&quot;Connecting&quot;);
+  while(WiFi.status()!=WL_CONNECTED){delay(500);Serial.print(&quot;.&quot;);}
+  Serial.print(&quot;\nDashboard: http://&quot;);Serial.println(WiFi.localIP());
+  server.on(&quot;/&quot;,page);server.on(&quot;/data&quot;,data);server.begin();
+}
+void loop(){
+  server.handleClient();
+  raw=analogRead(MQ2);
+  simulated=constrain(map(raw,1400,4095,0,100),0,100);
+  if(millis()-lastDHT&gt;=2500||lastDHT==0){
+    lastDHT=millis();
+    TempAndHumidity th=dht.getTempAndHumidity();
+    valid=!isnan(th.temperature)&amp;&amp;!isnan(th.humidity);
+    if(valid){temp=th.temperature;humidity=th.humidity;}
+  }
+  status=simulated&lt;=20?&quot;SAFE&quot;:simulated&lt;=40?&quot;CAUTION&quot;:&quot;DANGER&quot;;
+  fan=status!=&quot;SAFE&quot;;alarmOn=status==&quot;DANGER&quot;;
+  angle=status==&quot;SAFE&quot;?0:status==&quot;CAUTION&quot;?90:180;
+  digitalWrite(RELAY,fan?HIGH:LOW); // Assumes active-HIGH relay
+  digitalWrite(GREEN,status==&quot;SAFE&quot;);
+  digitalWrite(YELLOW,status==&quot;CAUTION&quot;);
+  digitalWrite(RED,status==&quot;DANGER&quot;);
+  digitalWrite(BUZZER,alarmOn);
+  damper.write(angle);
+  if(millis()-lastOLED&gt;=500){
+    lastOLED=millis();oled.clearBuffer();oled.setFont(u8g2_font_6x12_tf);
+    oled.drawStr(0,12,&quot;POULTRY AIRGUARD&quot;);
+    oled.setCursor(0,27);oled.print(&quot;Gas(sim): &quot;);oled.print(simulated);
+    oled.setCursor(0,40);oled.print(&quot;Temp: &quot;);if(valid)oled.print(temp,1);else oled.print(&quot;ERR&quot;);
+    oled.setCursor(0,52);oled.print(&quot;Hum: &quot;);if(valid)oled.print(humidity,1);else oled.print(&quot;ERR&quot;);
+    oled.setCursor(0,64);oled.print(status);oled.sendBuffer();
+  }
+}</code></pre><button onclick="document.getElementById('explain').textContent='GPIO definitions set the connections. The analog value is mapped to a simulated 0–100 scale. Thresholds choose the LEDs, fan, servo and buzzer. The web server exposes a live dashboard.'">Explain the Code</button><p id="explain"></p><h3>Check Your Understanding</h3><details><summary>Why is the MQ-2 value called simulated NH₃?</summary>Because the MQ-2 reading is a proxy, not a calibrated ammonia concentration measurement.</details><details><summary>What happens in DANGER?</summary>Red LED, fan and buzzer turn on; damper moves to 180°.</details></section><section><h2>Expected Output</h2><p>Live temperature, humidity and simulated gas value on the OLED and web dashboard, with automatic SAFE/CAUTION/DANGER outputs.</p></section><section><h2>Result</h2><p>The prototype demonstrates automated environmental monitoring and response.</p></section><section><h2>What You Learn</h2><p>ESP32 ADC, DHT22 sensing, I²C OLED, servo PWM, relay control, state thresholds and Wi-Fi web servers.</p><p class="note">Real-world operation requires verified relay polarity, suitable power supplies and appropriate GPIO level protection.</p></section></main></body></html>
