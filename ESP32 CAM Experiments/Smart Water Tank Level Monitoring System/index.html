@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Smart Water Tank Level Monitoring System</title>
+
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+
+/* PROJECT THUMBNAIL */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .project-thumbnail {
+        padding: 12px;
+    }
+
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:16px;
+}
+
+
+.sensor-box{
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.sensor-box h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+
+.sensor-value{
+
+    font-size:26px;
+
+    color:#2563eb;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+
+<header class="header">
+
+    <!-- COMPANY LOGO - TOP LEFT -->
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <!-- CENTER TITLE -->
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Smart Water Tank Level Monitoring System</p>
+    </div>
+
+    <!-- BOTTOM BUTTON BAR -->
+
+    <div class="header-buttons">
+
+        <!-- LEFT: BACK AND HOME -->
+
+        <div class="header-left-buttons">
+
+            <!-- BACK BUTTON -->
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+                title="Back to ESP32 Experiments"
+            >
+                &#8592; Back
+            </a>
+
+            <!-- HOME ICON ONLY -->
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <!-- RIGHT: ARDUINO, ESP, R-PI -->
+
+        <div class="header-right-buttons">
+
+            <!-- ARDUINO BUTTON -->
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >
+                Arduino
+            </a>
+
+            <!-- ESP BUTTON -->
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                ESP
+            </a>
+
+            <!-- RASPBERRY PI BUTTON -->
+
+            <a
+                href="../../R-Pi Experiments/index.html"
+                class="header-nav-btn"
+            >
+                R-Pi
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">
+        Aim
+    </a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+
+<main class="container"><section class="section project-thumbnail"><img src="../Smart Water Tank Level Monitoring System.png" alt="Smart Water Tank Level Monitoring System thumbnail"></section><section class="section" id="aim"><h2>Aim</h2><p>To monitor a water tank's level using an HC-SR04 ultrasonic sensor and ESP32, display the percentage on a local Wi-Fi dashboard, and send Telegram and buzzer alerts when the tank becomes nearly empty or full.</p></section><section class="section"><h2>About the Experiment</h2><p>The ultrasonic sensor measures the distance to the water surface. The ESP32 estimates the water percentage from a configured tank height and provides EMPTY, NORMAL and FULL status. The system provides notifications only; it does not operate a pump.</p></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32 Development Board.png" alt="ESP32 Development Board"><h4>ESP32 Development Board</h4><p>Component used in the tank monitoring system.</p></div><div class="component-card"><img src="HC-SR04 Sensor.png" alt="HC-SR04 Ultrasonic Sensor"><h4>HC-SR04 Ultrasonic Sensor</h4><p>Component used in the tank monitoring system.</p></div><div class="component-card"><img src="Buzzer.png" alt="Buzzer"><h4>Buzzer</h4><p>Component used in the tank monitoring system.</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Component used in the tank monitoring system.</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Component used in the tank monitoring system.</p></div></div><p><strong>Electrical safety:</strong> The 5 V ECHO output requires proper level shifting before GPIO18.</p></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><tr><th>Component pin</th><th>ESP32 connection</th></tr><tr><td>HC-SR04 VCC</td><td>5V/VIN (check board)</td></tr><tr><td>HC-SR04 GND</td><td>GND</td></tr><tr><td>HC-SR04 TRIG</td><td>GPIO 5</td></tr><tr><td>HC-SR04 ECHO</td><td>GPIO 18 <strong>through suitable 5V-to-3.3V level shifter</strong></td></tr><tr><td>Buzzer +</td><td>GPIO 19 (use driver if required by buzzer current)</td></tr><tr><td>Buzzer −</td><td>GND</td></tr></table><p class="warning"><strong>Safety:</strong> Never connect the HC-SR04's 5V ECHO output directly to the ESP32 GPIO18. The SOP requires voltage-level protection. No resistor-based divider is included here as requested.</p></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Smart Water Tank Level Monitoring System Circuit.png" alt="Smart Water Tank Level Monitoring System circuit diagram"></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">HC-SR04 Distance Measurement → ESP32 Water-Level Calculation → Web Dashboard → EMPTY / NORMAL / FULL → Buzzer and Telegram Alerts</div><p>EMPTY: 10% or less; NORMAL: above 10% and below 90%; FULL: 90% or more. EMPTY and FULL send an alert on state entry.</p></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Place the HC-SR04 above the water surface, protected from splashes.</li><li>Wire the sensor and buzzer as specified, using safe ECHO voltage-level conversion.</li><li>Install the ESP32 board package in Arduino IDE.</li><li>Configure the actual Wi-Fi SSID and password and your private Telegram bot token and recipient Chat ID.</li><li>Set the measured tank height (100 cm is only the SOP's example configuration).</li><li>Compile and upload the verified sketch from the SOP.</li><li>Open Serial Monitor at 115200 baud and find the dashboard IP address.</li><li>Open that IP in a browser on the same Wi-Fi network and test EMPTY, NORMAL and FULL states safely.</li></ol></section><section class="section" id="code"><div class="code-lesson"><p class="eyebrow">ESP32 Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Smart Water Tank Level Monitoring System · Select a step to understand the available reference code.</p><p><strong>Code availability:</strong> The source document describes the full application but does not provide the complete uploadable Arduino sketch. The code below is an educational excerpt only.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">Water_Level_Reference_Excerpt.txt</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step. The matching section of code will light up on the left.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Define pins</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set tank height</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Set alert thresholds</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Calculate level</button></div><div class="note" id="explanation"></div><details><summary>Check Your Understanding</summary><p>What happens at 90%? <strong>The tank is considered FULL.</strong></p></details></article></div><p class="tip">The complete Wi-Fi, Telegram and sensor-handling sketch must be obtained from the experiment source before hardware deployment.</p></div></section><section class="section"><h2>Expected Output</h2><p>The web dashboard displays live water level percentage, measured distance, tank visualization and status. Telegram sends an EMPTY alert at 10% or below and a FULL alert at 90% or above, with a brief buzzer signal.</p></section><section class="section" id="result"><h2>Result</h2><p>The system demonstrates remote monitoring and alerting for water level without automatic pump control.</p></section><section class="section"><h2>What You Learn</h2><p>Ultrasonic distance sensing, ESP32 GPIO and voltage-level safety, percentage calculations, local web dashboards, Wi-Fi networking, Telegram notifications and state-change alerts.</p></section></main><footer><strong>ESP32 Experiment</strong><br>Smart Water Tank Level Monitoring System</footer><script type="text/plain" id="esp32-program">
+// GPIO connections from the SOP
+const int TRIG_PIN = 5;
+const int ECHO_PIN = 18; // ECHO must be shifted to 3.3 V
+const int BUZZER_PIN = 19;
+const float TANK_HEIGHT_CM = 100.0f;
+const int EMPTY_LEVEL_PERCENT = 10;
+const int FULL_LEVEL_PERCENT = 90;
+
+// Water level percentage calculation:
+float waterLevelPercent(float distanceCm) {
+  float percent = (TANK_HEIGHT_CM - distanceCm) * 100.0f / TANK_HEIGHT_CM;
+  return constrain(percent, 0.0f, 100.0f);
+}
+
+// SOP describes additional Wi-Fi, web-server,
+// ultrasonic timing, Telegram and alert logic.
+// Obtain the full verified sketch before uploading.
+</script><script>
+
+
+const program =
+
+document
+
+.getElementById(
+    "esp32-program"
+)
+
+.textContent
+
+.trim();
+
+
+const lines =
+
+program.split(
+    "\n"
+);
+
+
+/* =========================
+   CODE STEPS
+========================= */
+
+const steps = [{title:"Define pins",search:"const int TRIG_PIN",text:"TRIG GPIO5, ECHO GPIO18 (through level shifting), and buzzer GPIO19."},{title:"Set tank height",search:"const float TANK_HEIGHT_CM",text:"Configure the measured height of the water tank."},{title:"Set alert thresholds",search:"const int EMPTY_LEVEL_PERCENT",text:"EMPTY is at or below 10%; FULL is at or above 90%."},{title:"Calculate level",search:"float waterLevelPercent",text:"Convert measured distance into a bounded water-level percentage."}];
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text)
+{
+
+    return text
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+
+/* =========================
+   DISPLAY CODE
+========================= */
+
+function displayCode()
+{
+
+    let output = "";
+
+
+    lines.forEach(
+
+        function(
+            line,
+            index
+        )
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+
+            (index + 1) +
+
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+
+        }
+
+    );
+
+
+    document
+
+    .getElementById(
+        "code-lines"
+    )
+
+    .innerHTML =
+    output;
+
+}
+
+
+/* =========================
+   SHOW STEP
+========================= */
+
+function showStep(index)
+{
+    const step = steps[index];
+    document.querySelectorAll(".step").forEach(function(button, i) {
+        button.classList.toggle("active", i === index);
+    });
+    document.querySelectorAll(".code-line").forEach(function(line) {
+        line.classList.remove("selected");
+    });
+
+    // Find the matching source statement. Use the first non-comment
+    // occurrence, and never highlight an unrelated fixed 12-line range.
+    let foundLine = lines.findIndex(function(line) {
+        return line.trim().startsWith(step.search.trim());
+    });
+    if (foundLine < 0) {
+        foundLine = lines.findIndex(function(line) {
+            return line.includes(step.search);
+        });
+    }
+
+    if (foundLine >= 0) {
+        let lastLine = foundLine;
+        // Extend across a declaration or a brace-delimited code block.
+        let depth = 0;
+        let blockStarted = false;
+        for (let i = foundLine; i < lines.length; i++) {
+            const current = lines[i];
+            for (const ch of current) {
+                if (ch === "{") { depth++; blockStarted = true; }
+                if (ch === "}") { depth--; }
+            }
+            lastLine = i;
+            if (blockStarted && depth <= 0) break;
+            if (!blockStarted && i > foundLine && current.trim() === "") {
+                lastLine = i - 1;
+                break;
+            }
+            if (i - foundLine >= 35) break;
+        }
+        for (let i = foundLine; i <= lastLine; i++) {
+            document.getElementById("line-" + (i + 1))?.classList.add("selected");
+        }
+        const selectedLine = document.getElementById("line-" + (foundLine + 1));
+        const codeBody = document.getElementById("code-body");
+        if (selectedLine && codeBody) {
+            codeBody.scrollTo({
+                top: selectedLine.offsetTop - codeBody.offsetTop - 20,
+                behavior: "smooth"
+            });
+        }
+    }
+    document.getElementById("explanation").innerHTML =
+        "<h3>" + (index + 1) + ". " + step.title + "</h3>" +
+        "<p>" + step.text + "</p>";
+}
+
+
+/* =========================
+   COPY CODE
+========================= */
+
+function copyCode()
+{
+
+    navigator
+
+    .clipboard
+
+    .writeText(
+        program
+    )
+
+    .then(
+
+        function()
+        {
+
+            const button =
+
+            document
+
+            .querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+
+                function()
+                {
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+
+                1500
+
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+displayCode();
+
+showStep(0);
+
+
+</script></body></html>
