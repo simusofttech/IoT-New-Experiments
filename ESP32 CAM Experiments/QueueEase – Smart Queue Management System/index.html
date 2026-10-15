@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>QueueEase – Smart Queue Management System</title>
+
+
+<style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+
+/* PROJECT THUMBNAIL */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .project-thumbnail {
+        padding: 12px;
+    }
+
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:16px;
+}
+
+
+.sensor-box{
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.sensor-box h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+
+.sensor-value{
+
+    font-size:26px;
+
+    color:#2563eb;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+
+<header class="header">
+
+    <!-- COMPANY LOGO - TOP LEFT -->
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <!-- CENTER TITLE -->
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>QueueEase – Smart Queue Management System</p>
+    </div>
+
+    <!-- BOTTOM BUTTON BAR -->
+
+    <div class="header-buttons">
+
+        <!-- LEFT: BACK AND HOME -->
+
+        <div class="header-left-buttons">
+
+            <!-- BACK BUTTON -->
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+                title="Back to ESP32 Experiments"
+            >
+                &#8592; Back
+            </a>
+
+            <!-- HOME ICON ONLY -->
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <!-- RIGHT: ARDUINO, ESP, R-PI -->
+
+        <div class="header-right-buttons">
+
+            <!-- ARDUINO BUTTON -->
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >
+                Arduino
+            </a>
+
+            <!-- ESP BUTTON -->
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                ESP
+            </a>
+
+            <!-- RASPBERRY PI BUTTON -->
+
+            <a
+                href="../../R-Pi Experiments/index.html"
+                class="header-nav-btn"
+            >
+                R-Pi
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+
+    <a href="../index.html">
+        ← ESP32 Experiments
+    </a>
+
+    <a href="#aim">
+        Aim
+    </a>
+
+    <a href="#components">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#procedure">
+        Procedure
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+    <a href="#result">
+        Result
+    </a>
+
+</nav>
+
+
+
+<main class="container"><section class="section project-thumbnail"><img src="../QueueEase – Smart Queue Management System.png" alt="QueueEase – Smart Queue Management System thumbnail"></section><section class="section" id="aim"><h2>Aim</h2><p>To build a smart queue management system where tokens can be generated, called and reset using a 4×4 keypad or Wi-Fi dashboard, with OLED status and buzzer feedback.</p></section><section class="section"><h2>About the Experiment</h2><p>The ESP32 hosts a local web dashboard and processes keypad commands. Both interfaces share one queue state. The OLED shows the token currently being served and the number of waiting tokens.</p></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32 Development Board.png" alt="ESP32 NodeMCU-32S"><h4>ESP32 NodeMCU-32S</h4><p>Required hardware for the queue management system.</p></div><div class="component-card"><img src="OLED.png" alt="SSD1306 OLED Display"><h4>SSD1306 OLED Display</h4><p>Required hardware for the queue management system.</p></div><div class="component-card"><img src="4x4 Keypad.png" alt="4×4 Matrix Keypad"><h4>4×4 Matrix Keypad</h4><p>Required hardware for the queue management system.</p></div><div class="component-card"><img src="Buzzer.png" alt="Active Buzzer"><h4>Active Buzzer</h4><p>Required hardware for the queue management system.</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Required hardware for the queue management system.</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Required hardware for the queue management system.</p></div></div></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component / Signal</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>OLED SDA</td><td>GPIO21</td></tr><tr><td>OLED SCL</td><td>GPIO22</td></tr><tr><td>OLED VCC / GND</td><td>3V3 / GND</td></tr><tr><td>Keypad R1–R4</td><td>GPIO13, GPIO14, GPIO16, GPIO17</td></tr><tr><td>Keypad C1–C4</td><td>GPIO18, GPIO19, GPIO23, GPIO25</td></tr><tr><td>Buzzer +</td><td>GPIO27</td></tr><tr><td>Buzzer −</td><td>GND</td></tr></tbody></table><p class="note">Match the keypad's row and column order to the sketch. Do not include a seven-segment display. Check buzzer current and voltage compatibility.</p></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="QueueEase – Smart Queue Management System Circuit.png" alt="QueueEase – Smart Queue Management System circuit diagram"></section><section class="section" id="working"><h2>Working Principle</h2><div class="steps"><span>Keypad or browser action</span><span>→ ESP32 queue logic</span><span>→ Token count updated</span><span>→ OLED and dashboard refresh</span><span>→ Buzzer feedback</span></div></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect OLED, keypad and buzzer according to the circuit table.</li><li>Install the U8g2 and Keypad libraries in Arduino IDE and select the ESP32 board.</li><li>For physical hardware, set USE_WOKWI to 0 and enter your own Wi-Fi credentials in the sketch.</li><li>Upload the program and open Serial Monitor at 115200 baud.</li><li>Open the IP address displayed in Serial Monitor on a browser connected to the same network.</li><li>Press keypad A to generate a token, B to call the next token, C to reset, or D to refresh the OLED. The same actions are available in the dashboard.</li></ol></section><section class="section" id="code"><div class="code-lesson"><p class="eyebrow">ESP32 Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">QueueEase – Smart Queue Management System · Select a step to highlight its corresponding code.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">QueueEase_Smart_Queue_Management_System.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step. The matching section of code will light up on the left.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load libraries</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configure keypad</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Update OLED</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Generate token</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Call next token</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Set up dashboard</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>Initialize system</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Run main loop</button></div><div class="note" id="explanation"></div><details><summary>Check Your Understanding</summary><p>What happens when you call the next token? <strong>The waiting queue advances and the buzzer gives feedback.</strong></p></details></article></div><p class="tip">Use the keypad or the web dashboard to generate and call queue tokens.</p></div></section><section class="section"><h2>Expected Output</h2><p>The OLED shows QUEUEEASE, the current serving token and waiting count. The web dashboard displays generated, waiting and called counts. The keypad and dashboard operate on the same queue state; the buzzer responds to queue actions.</p></section><section class="section" id="result"><h2>Result</h2><p>A smart queue management experiment with synchronized keypad, OLED and browser control is implemented.</p></section><section class="section"><h2>What You Learn</h2><p>ESP32 GPIO interfacing, keypad matrix scanning, I²C OLED displays, buzzer output, Wi-Fi web servers and shared application state.</p></section></main><footer><strong>ESP32 Experiment</strong><br>QueueEase – Smart Queue Management System</footer><script type="text/plain" id="esp32-program">
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <U8g2lib.h>
+#include <Keypad.h>
+// Select environment: 1 = Wokwi, 0 = physical ESP32
+#define USE_WOKWI 1
+ 
+ 
+const char* WIFI_SSID = "YOUR_WIFI_NAME";
+const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
+ 
+ 
+WebServer server(80);
+// OLED: SDA = GPIO 21, SCL = GPIO 22
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE);
+// 4x4 keypad
+const byte ROWS = 4;
+const byte COLS = 4;
+char keys[ROWS][COLS] = {
+{'1', '2', '3', 'A'},
+{'4', '5', '6', 'B'},
+{'7', '8', '9', 'C'},
+{'*', '0', '#', 'D'}
+};
+byte rowPins[ROWS] = {13, 14, 16, 17};
+byte colPins[COLS] = {18, 19, 23, 25};
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+// Buzzer signal on GPIO 27
+const byte BUZZER_PIN = 27;
+// Queue state
+int lastGenerated = 0;
+int lastCalled = 0;
+String lastMessage = "System ready";
+unsigned long lastOledUpdate = 0;
+unsigned long lastWiFiCheck = 0;
+void updateOLED() {
+oled.clearBuffer();
+oled.setFont(u8g2_font_6x12_tf);
+oled.drawStr(0, 11, "QUEUEEASE");
+oled.drawHLine(0, 15, 128);
+oled.drawStr(0, 28, "NOW SERVING");
+ 
+char token[16];
+snprintf(token, sizeof(token), "T-%03d", lastCalled);
+oled.setFont(u8g2_font_ncenB14_tr);
+oled.drawStr(0, 47, token);
+oled.setFont(u8g2_font_5x8_tf);
+char waitingText[24];
+snprintf(waitingText, sizeof(waitingText), "Waiting: %d",
+lastGenerated - lastCalled);
+oled.drawStr(0, 61, waitingText);
+oled.sendBuffer();
+}
+void generateToken() {
+if (lastGenerated >= 999) {
+lastMessage = "Token limit reached";
+tone(BUZZER_PIN, 400, 250);
+return;
+}
+lastGenerated++;
+lastMessage = "Token T-" + String(lastGenerated) + " generated";
+tone(BUZZER_PIN, 1500, 100);
+Serial.println(lastMessage);
+updateOLED();
+}
+void callNextToken() {
+if (lastCalled >= lastGenerated) {
+lastMessage = "No waiting tokens";
+tone(BUZZER_PIN, 400, 250);
+Serial.println(lastMessage);
+updateOLED();
+return;
+}
+lastCalled++;
+lastMessage = "Now serving T-" + String(lastCalled);
+tone(BUZZER_PIN, 2000, 150);
+Serial.println(lastMessage);
+updateOLED();
+}
+void resetQueue() {
+lastGenerated = 0;
+lastCalled = 0;
+lastMessage = "Queue reset";
+tone(BUZZER_PIN, 1000, 100);
+Serial.println(lastMessage);
+updateOLED();
+ 
+}
+const char webpage[] PROGMEM = R"HTML(
+<!DOCTYPE html><html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QueueEase Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:20px;background:#101827;color:#f8fafc;font-
+family:Arial;text-align:center}
+main{max-width:650px;margin:auto}h1{color:#60a5fa}.subtitle,.label{color:#cbd5e1}
+.card{background:#1e293b;padding:20px;margin:14px 0;border-radius:16px}
+.current{font-size:46px;font-weight:bold;color:#38bdf8;margin:10px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{padding:14px 5px}button{width:100%;padding:15px;margin:6px 0;border:0;border-radius:10px;font-
+size:16px;font-weight:bold;cursor:pointer}
+.generate{background:#38bdf8}.call{background:#4ade80}.reset{background:#fb7185}
+</style></head><body><main>
+<h1>QueueEase</h1><p class="subtitle">Smart Queue Management System</p>
+<div class="card"><div class="label">NOW SERVING</div><div class="current"
+id="called">T-000</div></div>
+<div class="stats">
+<div class="card stat"><div class="label">Generated</div><h2 id="generated">0</h2></div>
+<div class="card stat"><div class="label">Waiting</div><h2 id="waiting">0</h2></div>
+<div class="card stat"><div class="label">Called</div><h2 id="calledCount">0</h2></div>
+</div>
+<div class="card">
+<button class="generate" onclick="action('/generate')">+ Generate Token</button>
+<button class="call" onclick="action('/call')">Call Next Token</button>
+<button class="reset" onclick="action('/reset')">Reset Queue</button>
+<p id="message">Connecting...</p></div></main>
+<script>
+async function refresh(){try{
+const r=await fetch('/api');if(!r.ok)throw Error('server');const d=await r.json();
+document.getElementById('called').textContent='T-'+String(d.called).padStart(3,'0');
+document.getElementById('generated').textContent=d.generated;
+document.getElementById('waiting').textContent=d.waiting;
+document.getElementById('calledCount').textContent=d.called;
+document.getElementById('message').textContent=d.message;
+}catch(e){document.getElementById('message').textContent='Connection lost. Retrying...';}}
+async function action(path){try{const r=await fetch(path,{method:'POST'});const d=await r.json();
+document.getElementById('message').textContent=d.message;await refresh();
+}catch(e){document.getElementById('message').textContent='Command failed. Check connection.';}}
+refresh();setInterval(refresh,1000);
+</script></body></html>
+)HTML";
+ 
+void sendAPI() {
+String json = "{\"called\":" + String(lastCalled) +
+",\"generated\":" + String(lastGenerated) +
+",\"waiting\":" + String(lastGenerated - lastCalled) +
+",\"message\":\"" + lastMessage + "\"}";
+server.send(200, "application/json", json);
+}
+void setupWebServer() {
+server.on("/", HTTP_GET, []() { server.send_P(200, "text/html", webpage); });
+server.on("/api", HTTP_GET, []() { sendAPI(); });
+server.on("/generate", HTTP_POST, []() { generateToken(); sendAPI(); });
+server.on("/call", HTTP_POST, []() { callNextToken(); sendAPI(); });
+server.on("/reset", HTTP_POST, []() { resetQueue(); sendAPI(); });
+server.onNotFound([]() { server.send(404, "text/plain", "Not found"); });
+server.begin();
+Serial.println("HTTP web server started on port 80");
+}
+void connectWiFi() {
+WiFi.mode(WIFI_STA);
+#if USE_WOKWI
+WiFi.begin(WIFI_SSID, WIFI_PASSWORD, 6);
+#else
+WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+#endif
+Serial.print("Connecting to ");
+Serial.println(WIFI_SSID);
+unsigned long start = millis();
+while (WiFi.status() != WL_CONNECTED && millis() - start < 20000) {
+delay(300);
+Serial.print(".");
+}
+Serial.println();
+if (WiFi.status() == WL_CONNECTED) {
+Serial.println("Wi-Fi connected!");
+Serial.print("ESP32 IP Address: ");
+Serial.println(WiFi.localIP());
+#if USE_WOKWI
+Serial.println("Dashboard URL: http://localhost:9080");
+Serial.println("Requires Wokwi Private IoT Gateway/port forwarding.");
+#else
+Serial.print("Dashboard URL: http://");
+Serial.println(WiFi.localIP());
+#endif
+} else {
+ 
+Serial.println("Wi-Fi connection failed. Check settings.");
+}
+}
+void setup() {
+Serial.begin(115200);
+delay(500);
+pinMode(BUZZER_PIN, OUTPUT);
+Wire.begin(21, 22);
+oled.begin();
+updateOLED();
+connectWiFi();
+setupWebServer();
+Serial.println("QUEUEEASE READY");
+Serial.println("Keypad: A=Generate, B=Call, C=Reset, D=Refresh OLED");
+}
+void loop() {
+server.handleClient();
+char key = keypad.getKey();
+if (key == 'A') generateToken();
+else if (key == 'B') callNextToken();
+else if (key == 'C') resetQueue();
+else if (key == 'D') {
+lastMessage = "Status refreshed";
+updateOLED();
+}
+if (millis() - lastOledUpdate >= 500) {
+lastOledUpdate = millis();
+updateOLED();
+}
+if (WiFi.status() != WL_CONNECTED &&
+millis() - lastWiFiCheck >= 5000) {
+lastWiFiCheck = millis();
+Serial.println("Wi-Fi disconnected; reconnecting...");
+WiFi.reconnect();
+}
+}
+</script><script>
+
+
+const program =
+
+document
+
+.getElementById(
+    "esp32-program"
+)
+
+.textContent
+
+.trim();
+
+
+const lines =
+
+program.split(
+    "\n"
+);
+
+
+/* =========================
+   CODE STEPS
+========================= */
+
+const steps = [{title:"Load libraries",search:"#include <WiFi.h>",text:"Include Wi-Fi, web server, OLED and keypad libraries."},{title:"Configure keypad",search:"const byte ROWS",text:"Define the keypad matrix and row/column connections."},{title:"Update OLED",search:"void updateOLED",text:"Show the serving token and queue status on the OLED."},{title:"Generate token",search:"void generateToken",text:"Create a new token and add it to the waiting queue."},{title:"Call next token",search:"void callNextToken",text:"Advance the queue and sound the buzzer."},{title:"Set up dashboard",search:"void setupWebServer",text:"Provide browser controls for the same queue state."},{title:"Initialize system",search:"void setup()",text:"Initialize display, keypad, buzzer and network."},{title:"Run main loop",search:"void loop()",text:"Handle keypad presses and incoming web requests."}];
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text)
+{
+
+    return text
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+
+/* =========================
+   DISPLAY CODE
+========================= */
+
+function displayCode()
+{
+
+    let output = "";
+
+
+    lines.forEach(
+
+        function(
+            line,
+            index
+        )
+        {
+
+            output +=
+
+            '<span class="code-line" ' +
+
+            'id="line-' +
+
+            (index + 1) +
+
+            '">' +
+
+            '<span class="line-number">' +
+
+            (index + 1) +
+
+            '</span>' +
+
+            '<span>' +
+
+            escapeHtml(line) +
+
+            '</span>' +
+
+            '</span>';
+
+        }
+
+    );
+
+
+    document
+
+    .getElementById(
+        "code-lines"
+    )
+
+    .innerHTML =
+    output;
+
+}
+
+
+/* =========================
+   SHOW STEP
+========================= */
+
+function showStep(index)
+{
+    const step = steps[index];
+    document.querySelectorAll(".step").forEach(function(button, i) {
+        button.classList.toggle("active", i === index);
+    });
+    document.querySelectorAll(".code-line").forEach(function(line) {
+        line.classList.remove("selected");
+    });
+
+    // Find the matching source statement. Use the first non-comment
+    // occurrence, and never highlight an unrelated fixed 12-line range.
+    let foundLine = lines.findIndex(function(line) {
+        return line.trim().startsWith(step.search.trim());
+    });
+    if (foundLine < 0) {
+        foundLine = lines.findIndex(function(line) {
+            return line.includes(step.search);
+        });
+    }
+
+    if (foundLine >= 0) {
+        let lastLine = foundLine;
+        // Extend across a declaration or a brace-delimited code block.
+        let depth = 0;
+        let blockStarted = false;
+        for (let i = foundLine; i < lines.length; i++) {
+            const current = lines[i];
+            for (const ch of current) {
+                if (ch === "{") { depth++; blockStarted = true; }
+                if (ch === "}") { depth--; }
+            }
+            lastLine = i;
+            if (blockStarted && depth <= 0) break;
+            if (!blockStarted && i > foundLine && current.trim() === "") {
+                lastLine = i - 1;
+                break;
+            }
+            if (i - foundLine >= 35) break;
+        }
+        for (let i = foundLine; i <= lastLine; i++) {
+            document.getElementById("line-" + (i + 1))?.classList.add("selected");
+        }
+        const selectedLine = document.getElementById("line-" + (foundLine + 1));
+        const codeBody = document.getElementById("code-body");
+        if (selectedLine && codeBody) {
+            codeBody.scrollTo({
+                top: selectedLine.offsetTop - codeBody.offsetTop - 20,
+                behavior: "smooth"
+            });
+        }
+    }
+    document.getElementById("explanation").innerHTML =
+        "<h3>" + (index + 1) + ". " + step.title + "</h3>" +
+        "<p>" + step.text + "</p>";
+}
+
+
+/* =========================
+   COPY CODE
+========================= */
+
+function copyCode()
+{
+
+    navigator
+
+    .clipboard
+
+    .writeText(
+        program
+    )
+
+    .then(
+
+        function()
+        {
+
+            const button =
+
+            document
+
+            .querySelector(
+                ".copy-button"
+            );
+
+
+            button.innerText =
+            "Copied!";
+
+
+            setTimeout(
+
+                function()
+                {
+
+                    button.innerText =
+                    "Copy Code";
+
+                },
+
+                1500
+
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+displayCode();
+
+showStep(0);
+
+
+</script></body></html>
