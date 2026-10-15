@@ -1231,23 +1231,178 @@ footer strong{
 
 
 <main class="container"><section class="section project-thumbnail"><img src="../Smart Water Tank Level Monitoring System.png" alt="Smart Water Tank Level Monitoring System thumbnail"></section><section class="section" id="aim"><h2>Aim</h2><p>To monitor a water tank's level using an HC-SR04 ultrasonic sensor and ESP32, display the percentage on a local Wi-Fi dashboard, and send Telegram and buzzer alerts when the tank becomes nearly empty or full.</p></section><section class="section"><h2>About the Experiment</h2><p>The ultrasonic sensor measures the distance to the water surface. The ESP32 estimates the water percentage from a configured tank height and provides EMPTY, NORMAL and FULL status. The system provides notifications only; it does not operate a pump.</p></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32 Development Board.png" alt="ESP32 Development Board"><h4>ESP32 Development Board</h4><p>Component used in the tank monitoring system.</p></div><div class="component-card"><img src="HC-SR04 Sensor.png" alt="HC-SR04 Ultrasonic Sensor"><h4>HC-SR04 Ultrasonic Sensor</h4><p>Component used in the tank monitoring system.</p></div><div class="component-card"><img src="Buzzer.png" alt="Buzzer"><h4>Buzzer</h4><p>Component used in the tank monitoring system.</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Component used in the tank monitoring system.</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Component used in the tank monitoring system.</p></div></div><p><strong>Electrical safety:</strong> The 5 V ECHO output requires proper level shifting before GPIO18.</p></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><tr><th>Component pin</th><th>ESP32 connection</th></tr><tr><td>HC-SR04 VCC</td><td>5V/VIN (check board)</td></tr><tr><td>HC-SR04 GND</td><td>GND</td></tr><tr><td>HC-SR04 TRIG</td><td>GPIO 5</td></tr><tr><td>HC-SR04 ECHO</td><td>GPIO 18 <strong>through suitable 5V-to-3.3V level shifter</strong></td></tr><tr><td>Buzzer +</td><td>GPIO 19 (use driver if required by buzzer current)</td></tr><tr><td>Buzzer −</td><td>GND</td></tr></table><p class="warning"><strong>Safety:</strong> Never connect the HC-SR04's 5V ECHO output directly to the ESP32 GPIO18. The SOP requires voltage-level protection. No resistor-based divider is included here as requested.</p></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Smart Water Tank Level Monitoring System Circuit.png" alt="Smart Water Tank Level Monitoring System circuit diagram"></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">HC-SR04 Distance Measurement → ESP32 Water-Level Calculation → Web Dashboard → EMPTY / NORMAL / FULL → Buzzer and Telegram Alerts</div><p>EMPTY: 10% or less; NORMAL: above 10% and below 90%; FULL: 90% or more. EMPTY and FULL send an alert on state entry.</p></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Place the HC-SR04 above the water surface, protected from splashes.</li><li>Wire the sensor and buzzer as specified, using safe ECHO voltage-level conversion.</li><li>Install the ESP32 board package in Arduino IDE.</li><li>Configure the actual Wi-Fi SSID and password and your private Telegram bot token and recipient Chat ID.</li><li>Set the measured tank height (100 cm is only the SOP's example configuration).</li><li>Compile and upload the verified sketch from the SOP.</li><li>Open Serial Monitor at 115200 baud and find the dashboard IP address.</li><li>Open that IP in a browser on the same Wi-Fi network and test EMPTY, NORMAL and FULL states safely.</li></ol></section><section class="section" id="code"><div class="code-lesson"><p class="eyebrow">ESP32 Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Smart Water Tank Level Monitoring System · Select a step to understand the available reference code.</p><p><strong>Code availability:</strong> The source document describes the full application but does not provide the complete uploadable Arduino sketch. The code below is an educational excerpt only.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">Water_Level_Reference_Excerpt.txt</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step. The matching section of code will light up on the left.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Define pins</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set tank height</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Set alert thresholds</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Calculate level</button></div><div class="note" id="explanation"></div><details><summary>Check Your Understanding</summary><p>What happens at 90%? <strong>The tank is considered FULL.</strong></p></details></article></div><p class="tip">The complete Wi-Fi, Telegram and sensor-handling sketch must be obtained from the experiment source before hardware deployment.</p></div></section><section class="section"><h2>Expected Output</h2><p>The web dashboard displays live water level percentage, measured distance, tank visualization and status. Telegram sends an EMPTY alert at 10% or below and a FULL alert at 90% or above, with a brief buzzer signal.</p></section><section class="section" id="result"><h2>Result</h2><p>The system demonstrates remote monitoring and alerting for water level without automatic pump control.</p></section><section class="section"><h2>What You Learn</h2><p>Ultrasonic distance sensing, ESP32 GPIO and voltage-level safety, percentage calculations, local web dashboards, Wi-Fi networking, Telegram notifications and state-change alerts.</p></section></main><footer><strong>ESP32 Experiment</strong><br>Smart Water Tank Level Monitoring System</footer><script type="text/plain" id="esp32-program">
-// GPIO connections from the SOP
-const int TRIG_PIN = 5;
-const int ECHO_PIN = 18; // ECHO must be shifted to 3.3 V
-const int BUZZER_PIN = 19;
-const float TANK_HEIGHT_CM = 100.0f;
-const int EMPTY_LEVEL_PERCENT = 10;
-const int FULL_LEVEL_PERCENT = 90;
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <HTTPClient.h>
+#include <WebServer.h>
 
-// Water level percentage calculation:
-float waterLevelPercent(float distanceCm) {
-  float percent = (TANK_HEIGHT_CM - distanceCm) * 100.0f / TANK_HEIGHT_CM;
-  return constrain(percent, 0.0f, 100.0f);
+const char* WIFI_SSID = "YOUR_WIFI_NAME";
+const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
+const char* BOT_TOKEN = "YOUR_BOT_TOKEN";
+const char* CHAT_ID = "YOUR_CHAT_ID";
+
+#define TRIG_PIN 5
+#define ECHO_PIN 18
+#define BUZZER_PIN 19
+// IMPORTANT: HC-SR04 ECHO requires a 5V-to-3.3V level divider.
+const float TANK_HEIGHT_CM = 100.0f;
+const float EMPTY_LEVEL_PERCENT = 10.0f;
+const float FULL_LEVEL_PERCENT = 90.0f;
+const unsigned long READ_INTERVAL = 2000UL;
+WebServer server(80);
+float distanceCm = 0, waterPercent = 0;
+String tankStatus = "WAITING", lastAlertStatus = "WAITING";
+unsigned long lastReadTime = 0;
+
+String urlEncode(const String &s) {
+  String out;
+  char hex[4];
+  for (size_t i = 0; i < s.length(); ++i) {
+    unsigned char c = s[i];
+    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') out += (char)c;
+    else { snprintf(hex, sizeof(hex), "%%%02X", c); out += hex; }
+  }
+  return out;
 }
 
-// SOP describes additional Wi-Fi, web-server,
-// ultrasonic timing, Telegram and alert logic.
-// Obtain the full verified sketch before uploading.
+bool sendTelegramMessage(const String &message) {
+  if (WiFi.status() != WL_CONNECTED || String(BOT_TOKEN) == "YOUR_BOT_TOKEN" ||
+      String(CHAT_ID) == "YOUR_CHAT_ID") return false;
+  WiFiClientSecure client;
+  client.setInsecure(); // Demonstration only: TLS certificates are not validated.
+  HTTPClient http;
+  String url = "https://api.telegram.org/bot" + String(BOT_TOKEN) + "/sendMessage";
+  if (!http.begin(client, url)) return false;
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  int status = http.POST("chat_id=" + String(CHAT_ID) + "&text=" + urlEncode(message));
+  http.end();
+  return status == 200;
+}
+
+float readDistanceCm() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(3);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  unsigned long duration = pulseIn(ECHO_PIN, HIGH, 30000);
+  if (!duration) return -1;
+  return duration * 0.0343f / 2.0f;
+}
+
+void updateWaterLevel() {
+  float d = readDistanceCm();
+  if (d < 0 || d > TANK_HEIGHT_CM) {
+    tankStatus = "SENSOR ERROR";
+    Serial.println("Invalid ultrasonic reading");
+    return;
+  }
+  distanceCm = d;
+  waterPercent = constrain((TANK_HEIGHT_CM - d) * 100.0f / TANK_HEIGHT_CM, 0.0f, 100.0f);
+  tankStatus = waterPercent <= EMPTY_LEVEL_PERCENT ? "EMPTY" :
+               waterPercent >= FULL_LEVEL_PERCENT ? "FULL" : "NORMAL";
+  Serial.printf("Distance: %.1f cm, Level: %.1f%%, Status: %s\n",
+                distanceCm, waterPercent, tankStatus.c_str());
+  if (tankStatus != lastAlertStatus) {
+    if (tankStatus == "NORMAL") lastAlertStatus = "NORMAL";
+    else {
+      digitalWrite(BUZZER_PIN, HIGH);
+      bool sent = sendTelegramMessage(tankStatus == "EMPTY" ?
+        "WATER TANK EMPTY! Please START water filling." :
+        "WATER TANK FULL! Please STOP water filling.");
+      delay(250);
+      digitalWrite(BUZZER_PIN, LOW);
+      if (sent) lastAlertStatus = tankStatus;
+    }
+  }
+}
+
+void handleRoot() {
+  const char* page = R"PAGE(
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Water Tank Dashboard</title>
+<style>
+body{font:16px Arial;background:#edf4fa;color:#203040;margin:0;padding:22px}
+main{max-width:850px;margin:auto}header{text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.card{background:white;border-radius:16px;padding:22px;margin:14px 0;box-shadow:0 4px 18px #d7e0e9}
+.value{font-size:30px;font-weight:bold;margin:10px 0}
+.bar{background:#dce7f0;border-radius:10px;overflow:hidden;height:18px}
+#fill{height:100%;background:#2196f3;width:0;transition:width .4s}
+.tank{height:180px;width:110px;border:4px solid #7892a7;border-radius:12px;
+display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;margin:auto}
+#water{background:#2196f3;color:white;height:0;display:flex;align-items:center;
+justify-content:center;transition:height .4s}
+</style></head><body><main><header><h1>Smart Water Tank</h1>
+<p>Live Monitoring Dashboard</p></header>
+<div class="grid"><div class="card"><h3>Water Level</h3><div class="value" id="level">--%</div>
+<div class="bar"><div id="fill"></div></div></div>
+<div class="card"><h3>Sensor Distance</h3><div class="value" id="distance">--</div>cm</div></div>
+<div class="card" style="text-align:center"><h3>Tank Visualization</h3>
+<div class="tank"><div id="water">0%</div></div>
+<h2 id="status">Connecting...</h2><p id="advice">Waiting for sensor data</p></div>
+<div class="card"><h3>Telegram Notifications</h3>
+<p>EMPTY: Start water filling. FULL: Stop water filling.</p></div></main>
+<script>
+async function refresh(){
+ try {
+  const r=await fetch('/data');if(!r.ok)throw Error('offline');
+  const d=await r.json();
+  document.getElementById('level').textContent=d.level+'%';
+  document.getElementById('distance').textContent=d.distance;
+  document.getElementById('fill').style.width=d.level+'%';
+  document.getElementById('water').style.height=d.level+'%';
+  document.getElementById('water').textContent=d.level+'%';
+  document.getElementById('status').textContent=d.status;
+  document.getElementById('advice').textContent=d.status==='EMPTY'?'Please START water filling':
+   d.status==='FULL'?'Please STOP water filling':
+   d.status==='NORMAL'?'Water level is normal':'Check sensor and wiring';
+ }catch(e){document.getElementById('status').textContent='Connection error';}
+}
+refresh();setInterval(refresh,2000);
+</script></body></html>
+)PAGE";
+  server.send(200, "text/html", page);
+}
+
+void handleData() {
+  String json = "{\"level\":" + String(waterPercent,1) +
+    ",\"distance\":" + String(distanceCm,1) +
+    ",\"status\":\"" + tankStatus + "\"}";
+  server.send(200, "application/json", json);
+}
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(TRIG_PIN, LOW);
+  digitalWrite(BUZZER_PIN, LOW);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  unsigned long start = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - start < 20000UL) {
+    delay(500); Serial.print(".");
+  }
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.print("\nDashboard IP: http://"); Serial.println(WiFi.localIP());
+  } else Serial.println("\nWi-Fi not connected");
+  server.on("/", HTTP_GET, handleRoot);
+  server.on("/data", HTTP_GET, handleData);
+  server.begin();
+  updateWaterLevel();
+}
+
+void loop() {
+  server.handleClient();
+  if (millis() - lastReadTime >= READ_INTERVAL) {
+    lastReadTime = millis();
+    updateWaterLevel();
+  }
+  delay(2);
+}
 </script><script>
 
 
@@ -1275,7 +1430,7 @@ program.split(
    CODE STEPS
 ========================= */
 
-const steps = [{title:"Define pins",search:"const int TRIG_PIN",text:"TRIG GPIO5, ECHO GPIO18 (through level shifting), and buzzer GPIO19."},{title:"Set tank height",search:"const float TANK_HEIGHT_CM",text:"Configure the measured height of the water tank."},{title:"Set alert thresholds",search:"const int EMPTY_LEVEL_PERCENT",text:"EMPTY is at or below 10%; FULL is at or above 90%."},{title:"Calculate level",search:"float waterLevelPercent",text:"Convert measured distance into a bounded water-level percentage."}];
+const steps = [{"title":"Libraries","search":"#include <WiFi.h>","text":"Load network, HTTPS, and web server libraries."},{"title":"Configure credentials","search":"const char* WIFI_SSID","text":"Enter local Wi-Fi and Telegram credentials privately before uploading."},{"title":"Connect components","search":"#define TRIG_PIN 5","text":"Use GPIO 5 for trigger, GPIO 18 for echo via voltage divider, and GPIO 19 for the buzzer."},{"title":"Set thresholds","search":"const float TANK_HEIGHT_CM","text":"Set the tank reference height and empty/full percentages."},{"title":"Measure distance","search":"float readDistanceCm()","text":"Trigger the ultrasonic sensor and measure the echo pulse."},{"title":"Determine water status","search":"void updateWaterLevel()","text":"Convert the measured distance to water percentage and status."},{"title":"Send alerts","search":"bool sendTelegramMessage","text":"Send a Telegram message when the water level enters EMPTY or FULL."},{"title":"Dashboard","search":"void handleRoot()","text":"Serve the live tank visualization and readings."},{"title":"Initialize","search":"void setup()","text":"Configure pins, connect Wi-Fi, start web server and read the sensor."},{"title":"Continuous monitoring","search":"void loop()","text":"Refresh measurements approximately every two seconds."}];
 
 
 /* =========================
