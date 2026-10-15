@@ -3269,196 +3269,59 @@ function displayCode()
 
 function showStep(index)
 {
+    const step = steps[index];
+    document.querySelectorAll(".step").forEach(function(button, i) {
+        button.classList.toggle("active", i === index);
+    });
+    document.querySelectorAll(".code-line").forEach(function(line) {
+        line.classList.remove("selected");
+    });
 
-    const step =
-    steps[index];
-
-
-    const buttons =
-
-    document
-
-    .querySelectorAll(
-        ".step"
-    );
-
-
-    buttons.forEach(
-
-        function(button)
-        {
-
-            button
-
-            .classList
-
-            .remove(
-                "active"
-            );
-
-        }
-
-    );
-
-
-    buttons[index]
-
-    .classList
-
-    .add(
-        "active"
-    );
-
-
-    const codeLines =
-
-    document
-
-    .querySelectorAll(
-        ".code-line"
-    );
-
-
-    codeLines.forEach(
-
-        function(line)
-        {
-
-            line
-
-            .classList
-
-            .remove(
-                "selected"
-            );
-
-        }
-
-    );
-
-
-    let foundLine =
-    -1;
-
-
-    for(
-        let i = 0;
-        i < lines.length;
-        i++
-    )
-    {
-
-        if(
-            lines[i]
-            .includes(
-                step.search
-            )
-        )
-        {
-
-            foundLine =
-            i;
-
-            break;
-
-        }
-
-    }
-
-
-    if(
-        foundLine >= 0
-    )
-    {
-
-        for(
-            let i =
-            foundLine;
-
-            i <
-            Math.min(
-                foundLine + 12,
-                lines.length
-            );
-
-            i++
-        )
-        {
-
-            document
-
-            .getElementById(
-
-                "line-" +
-                (i + 1)
-
-            )
-
-            .classList
-
-            .add(
-                "selected"
-            );
-
-        }
-
-
-        const selectedLine =
-
-        document
-
-        .getElementById(
-
-            "line-" +
-            (foundLine + 1)
-
-        );
-
-
-        document
-
-        .getElementById(
-            "code-body"
-        )
-
-        .scrollTo({
-
-            top:
-            selectedLine.offsetTop
-            - 20,
-
-            behavior:
-            "smooth"
-
+    // Find the matching source statement. Use the first non-comment
+    // occurrence, and never highlight an unrelated fixed 12-line range.
+    let foundLine = lines.findIndex(function(line) {
+        return line.trim().startsWith(step.search.trim());
+    });
+    if (foundLine < 0) {
+        foundLine = lines.findIndex(function(line) {
+            return line.includes(step.search);
         });
-
     }
 
-
-    document
-
-    .getElementById(
-        "explanation"
-    )
-
-    .innerHTML =
-
-    "<h3>" +
-
-    (index + 1) +
-
-    ". " +
-
-    step.title +
-
-    "</h3>" +
-
-    "<p>" +
-
-    step.text +
-
-    "</p>";
-
+    if (foundLine >= 0) {
+        let lastLine = foundLine;
+        // Extend across a declaration or a brace-delimited code block.
+        let depth = 0;
+        let blockStarted = false;
+        for (let i = foundLine; i < lines.length; i++) {
+            const current = lines[i];
+            for (const ch of current) {
+                if (ch === "{") { depth++; blockStarted = true; }
+                if (ch === "}") { depth--; }
+            }
+            lastLine = i;
+            if (blockStarted && depth <= 0) break;
+            if (!blockStarted && i > foundLine && current.trim() === "") {
+                lastLine = i - 1;
+                break;
+            }
+            if (i - foundLine >= 35) break;
+        }
+        for (let i = foundLine; i <= lastLine; i++) {
+            document.getElementById("line-" + (i + 1))?.classList.add("selected");
+        }
+        const selectedLine = document.getElementById("line-" + (foundLine + 1));
+        const codeBody = document.getElementById("code-body");
+        if (selectedLine && codeBody) {
+            codeBody.scrollTo({
+                top: selectedLine.offsetTop - codeBody.offsetTop - 20,
+                behavior: "smooth"
+            });
+        }
+    }
+    document.getElementById("explanation").innerHTML =
+        "<h3>" + (index + 1) + ". " + step.title + "</h3>" +
+        "<p>" + step.text + "</p>";
 }
 
 
