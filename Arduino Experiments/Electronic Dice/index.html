@@ -516,7 +516,7 @@ footer strong{
     <h2>Aim</h2>
     <p>
         To create an electronic dice using Arduino UNO, a push button and a
-        single-digit common-anode 7-segment display.
+        single-digit common-cathode 7-segment display.
     </p>
 </section>
 
@@ -546,7 +546,7 @@ footer strong{
 
         <div class="component-card">
             <img src="Single Digit 7 Segment Display.png" alt="Single Digit 7 Segment Display">
-            <h4>1-Digit Common-Anode 7-Segment Display (×1)</h4>
+            <h4>1-Digit Common-Cathode 7-Segment Display (×1)</h4>
             <p>Displays the dice value from 1 to 6.</p>
         </div>
 
@@ -598,7 +598,7 @@ footer strong{
                 <tr><td>Segment E</td><td>D6 through 220Ω resistor</td></tr>
                 <tr><td>Segment F</td><td>D7 through 220Ω resistor</td></tr>
                 <tr><td>Segment G</td><td>D8 through 220Ω resistor</td></tr>
-                <tr><td>Common Anode</td><td>5V</td></tr>
+                <tr><td>Common Cathode</td><td>5V</td></tr>
             </tbody>
         </table>
     </div>
@@ -623,7 +623,7 @@ footer strong{
     <div class="note">
         <strong>Display Segments:</strong> D2 to D8<br>
         <strong>Push Button:</strong> A0<br>
-        <strong>Display Type:</strong> Common Anode<br>
+        <strong>Display Type:</strong> Common Cathode<br>
         <strong>Dice Range:</strong> 1 to 6
     </div>
 </section>
@@ -633,7 +633,7 @@ footer strong{
 
     <p>
         Connect display segments A to G through individual 220Ω resistors
-        to Arduino pins D2 to D8. Connect the common anode to 5V.
+        to Arduino pins D2 to D8. Connect the common cathode to 5V.
         Connect the push button between A0 and GND.
     </p>
 
@@ -684,7 +684,7 @@ footer strong{
         <li>Connect display segment E to D6 through a 220Ω resistor.</li>
         <li>Connect display segment F to D7 through a 220Ω resistor.</li>
         <li>Connect display segment G to D8 through a 220Ω resistor.</li>
-        <li>Connect the common anode of the display to Arduino 5V.</li>
+        <li>Connect the common cathode of the display to Arduino 5V.</li>
         <li>Connect one terminal of the push button to A0.</li>
         <li>Connect the other terminal of the push button to GND.</li>
         <li>Connect Arduino UNO to the computer.</li>
@@ -706,6 +706,7 @@ footer strong{
     </div>
 
 <pre><code id="arduinoCode">#define SEG_A 2
+#define SEG_A 2
 #define SEG_B 3
 #define SEG_C 4
 #define SEG_D 5
@@ -715,126 +716,76 @@ footer strong{
 
 #define BUTTON_PIN A0
 
-void displayNumber(int number)
-{
-  // Turn all segments OFF
-  digitalWrite(SEG_A, HIGH);
-  digitalWrite(SEG_B, HIGH);
-  digitalWrite(SEG_C, HIGH);
-  digitalWrite(SEG_D, HIGH);
-  digitalWrite(SEG_E, HIGH);
-  digitalWrite(SEG_F, HIGH);
-  digitalWrite(SEG_G, HIGH);
+int segments[] = {2, 3, 4, 5, 6, 7, 8};
 
-  switch (number)
-  {
-    case 1:
-      digitalWrite(SEG_B, LOW);
-      digitalWrite(SEG_C, LOW);
-      break;
+// Numbers 0-6 for COMMON ANODE
+byte numbers[7][7] = {
+  {1,1,1,1,1,1,0}, // 0
+  {0,1,1,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1}, // 2
+  {1,1,1,1,0,0,1}, // 3
+  {0,1,1,0,0,1,1}, // 4
+  {1,0,1,1,0,1,1}, // 5
+  {1,0,1,1,1,1,1}  // 6
+};
 
-    case 2:
-      digitalWrite(SEG_A, LOW);
-      digitalWrite(SEG_B, LOW);
-      digitalWrite(SEG_D, LOW);
-      digitalWrite(SEG_E, LOW);
-      digitalWrite(SEG_G, LOW);
-      break;
+void displayNumber(int num) {
+  if (num < 0 || num > 6) return;
 
-    case 3:
-      digitalWrite(SEG_A, LOW);
-      digitalWrite(SEG_B, LOW);
-      digitalWrite(SEG_C, LOW);
-      digitalWrite(SEG_D, LOW);
-      digitalWrite(SEG_G, LOW);
-      break;
-
-    case 4:
-      digitalWrite(SEG_B, LOW);
-      digitalWrite(SEG_C, LOW);
-      digitalWrite(SEG_F, LOW);
-      digitalWrite(SEG_G, LOW);
-      break;
-
-    case 5:
-      digitalWrite(SEG_A, LOW);
-      digitalWrite(SEG_C, LOW);
-      digitalWrite(SEG_D, LOW);
-      digitalWrite(SEG_F, LOW);
-      digitalWrite(SEG_G, LOW);
-      break;
-
-    case 6:
-      digitalWrite(SEG_A, LOW);
-      digitalWrite(SEG_C, LOW);
-      digitalWrite(SEG_D, LOW);
-      digitalWrite(SEG_E, LOW);
-      digitalWrite(SEG_F, LOW);
-      digitalWrite(SEG_G, LOW);
-      break;
+  for (int i = 0; i < 7; i++) {
+    digitalWrite(segments[i], numbers[num][i]);
   }
 }
 
-void setup()
-{
-  pinMode(SEG_A, OUTPUT);
-  pinMode(SEG_B, OUTPUT);
-  pinMode(SEG_C, OUTPUT);
-  pinMode(SEG_D, OUTPUT);
-  pinMode(SEG_E, OUTPUT);
-  pinMode(SEG_F, OUTPUT);
-  pinMode(SEG_G, OUTPUT);
+void setup() {
+  Serial.begin(9600);
+
+  for (int i = 0; i < 7; i++) {
+    pinMode(segments[i], OUTPUT);
+    digitalWrite(segments[i], LOW);
+  }
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-  Serial.begin(9600);
-
-  // Randomize the random number
   randomSeed(analogRead(A1));
 
-  // Initial dice value
   displayNumber(1);
 
-  Serial.println("ELECTRONIC DICE");
-  Serial.println("Press the button to roll.");
+  Serial.println("ELECTRONIC DICE READY");
 }
 
-void loop()
-{
-  // Button pressed
-  if (digitalRead(BUTTON_PIN) == LOW)
-  {
-    delay(50);
+void loop() {
 
-    if (digitalRead(BUTTON_PIN) == LOW)
-    {
-      // Dice rolling effect
-      for (int i = 0; i < 10; i++)
-      {
-        int rollingNumber = random(1, 7);
+  if (digitalRead(BUTTON_PIN) == LOW) {
 
-        displayNumber(rollingNumber);
+    delay(50); // Debounce
 
-        delay(80 + i * 20);
+    if (digitalRead(BUTTON_PIN) == LOW) {
+
+      // Rolling animation
+      for (int i = 0; i < 15; i++) {
+        int rolling = random(1, 7);
+        displayNumber(rolling);
+        delay(80 + i * 15);
       }
 
-      // Generate final random number
-      int diceNumber = random(1, 7);
+      // Final dice result
+      int result = random(1, 7);
 
-      displayNumber(diceNumber);
+      displayNumber(result);
 
       Serial.print("Dice Result: ");
-      Serial.println(diceNumber);
+      Serial.println(result);
 
-      // Wait until button is released
-      while (digitalRead(BUTTON_PIN) == LOW)
-      {
+      // Wait for button release
+      while (digitalRead(BUTTON_PIN) == LOW) {
         delay(10);
       }
 
       delay(200);
     }
   }
+}
 }</code></pre>
 
 </section>
@@ -861,7 +812,7 @@ void loop()
 
     <p>
         The Electronic Dice experiment was implemented using Arduino UNO,
-        a push button and a common-anode 7-segment display.
+        a push button and a common-cathode 7-segment display.
         Each button press generates and displays a random dice value from 1 to 6.
     </p>
 </section>
@@ -870,7 +821,7 @@ void loop()
     <h2>What You Learn</h2>
 
     <ul>
-        <li>How to control a common-anode 7-segment display.</li>
+        <li>How to control a common-cathode 7-segment display.</li>
         <li>How to display numbers from 1 to 6.</li>
         <li>How to use a push button with INPUT_PULLUP.</li>
         <li>How to generate random numbers using random().</li>
