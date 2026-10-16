@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Raspberry Pi 4B Internet Speed Monitor</title><style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+
+/* PROJECT THUMBNAIL */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .project-thumbnail {
+        padding: 12px;
+    }
+
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:16px;
+}
+
+
+.sensor-box{
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.sensor-box h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+
+.sensor-value{
+
+    font-size:26px;
+
+    color:#2563eb;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style></head><body>
+<header class="header"><img class="header-logo" src="../../Simusoft logo white background.jpeg" alt="SimuSoft logo"><div class="header-content"><h1>SIMUDIY Exploration Kit</h1><p>Raspberry Pi 4B Internet Speed Monitor</p></div><div class="header-buttons"><div class="header-left-buttons"><a href="../index.html" class="header-nav-btn">← Back</a><a href="../../index.html" class="header-nav-btn home-icon-btn" title="Home" aria-label="Home">⌂</a></div><div class="header-right-buttons"><a href="../../Arduino Experiments/index.html" class="header-nav-btn">Arduino</a><a href="../../ESP32 CAM Experiments/index.html" class="header-nav-btn">ESP</a><a href="../index.html" class="header-nav-btn">R-Pi</a></div></div></header>
+<nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#result">Result</a></nav>
+<main class="container">
+<section class="section project-thumbnail"><img src="../Raspberry Pi 4B Internet Speed Monitor.png" alt="Raspberry Pi 4B Internet Speed Monitor thumbnail" onerror="this.hidden=true;document.getElementById('thumb-pending').hidden=false"><div id="thumb-pending" class="note" hidden>Approved experiment thumbnail pending.</div></section>
+<section class="section" id="aim"><h2>Aim</h2><p>To monitor internet speed and network quality on a Raspberry Pi 4B, save periodic measurements to CSV and display results in a browser dashboard.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>The Raspberry Pi 4B measures download, upload, idle ping, loaded latency, jitter and packet loss using the installed Ookla Speedtest CLI. A systemd timer runs a Python monitor every 10 minutes and writes its measurements to a CSV file. Flask serves a browser dashboard on port 5001.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B (×1)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Approved component PNG pending upload.</p><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs the network speed tests, CSV logging and web dashboard.</p></div></div><div class="note">A compatible power supply, operating system storage and required software/network setup are explained in the SOP. Per the approved SimuSoft component-card policy, unnecessary accessories are not displayed as image cards.</div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Item</th><th>Connection / Role</th></tr></thead><tbody><tr><td>Network</td><td>Connect Raspberry Pi through Wi-Fi or Ethernet to a functioning internet network</td></tr><tr><td>Power</td><td>Compatible supply to Raspberry Pi USB-C power input</td></tr><tr><td>Dashboard viewer</td><td>Browser on a device connected to the same trusted LAN</td></tr><tr><td>GPIO</td><td>No GPIO connections required</td></tr></tbody></table></div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><!-- SOP connection image/diagram placeholder; do not generate an imaginary circuit. When an approved PNG is available use class="circuit-img" --> <div class="note">The SOP uses network and power connections rather than a GPIO circuit. An approved setup/circuit image may be added here later.</div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">Raspberry Pi connects to internet<br>↓<br>systemd timer runs speed_monitor.py every 10 minutes<br>↓<br>Ookla CLI measures network speed and latency<br>↓<br>monitor appends a CSV row<br>↓<br>Flask app reads CSV<br>↓<br>dashboard displays graphs and results at port 5001.</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Start Raspberry Pi OS and connect the board to the internet.</li><li>Verify network access with hostname -I and ping -c 3 1.1.1.1.</li><li>Check that the Ookla Speedtest CLI and Flask are installed.</li><li>Confirm the existing speed_monitor.py, app.py and templates/dashboard.html are present at the documented paths.</li><li>Run speed_monitor.py manually to verify it appends a result to speed_history.csv.</li><li>Configure the SOP's oneshot systemd service and the timer with OnCalendar=*:0/10.</li><li>Reload systemd, enable the timer, and verify it is active.</li><li>Configure and enable internet-speed-dashboard.service for app.py on port 5001.</li><li>Open http://<PI-IP>:5001 from a browser on the same trusted LAN and inspect the latest results.</li><li>Download the CSV from the dashboard; check journalctl logs if a test fails.</li></ol><div class="note"><strong>Source-code limitation:</strong> The uploaded SOP describes speed_monitor.py, app.py and dashboard.html but does not contain their full source. The Explore the Code viewer therefore shows the SOP's setup/verification commands, not fabricated application code. The original program files must be supplied to complete this section.</div></section>
+<section class="section" id="code"><div class="code-lesson"><p class="eyebrow">Raspberry Pi Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Select a step to highlight relevant lines. SOP setup and maintenance commands; original application source not included in the SOP.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">Setup_and_Verification_Commands.sh</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Select each step to view its code and explanation.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Check network</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Check Python</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Check Flask</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Check Speedtest</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Run monitor</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Review history</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>Enable timer</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Verify timer</button><button class="step" onclick="showStep(8)"><span class="step-number">09</span>Enable dashboard</button><button class="step" onclick="showStep(9)"><span class="step-number">10</span>Open dashboard</button></div><div class="explanation" id="explanation" aria-live="polite"></div><details><summary>Check Your Understanding</summary><p>Which service schedules speed tests, where are results stored and what port serves the Flask dashboard?</p><button class="copy-button" onclick="document.getElementById('quiz-answers').hidden=!document.getElementById('quiz-answers').hidden">Show / Hide Answers</button><p id="quiz-answers" hidden>systemd timer; speed_history.csv; port 5001.</p></details></article></div><p class="tip"><strong>Remember:</strong> Do not replace working production scripts based only on documentation. Request the existing source files before changing them.</p></div></section>
+<section class="section"><h2>Expected Output</h2><p>The dashboard shows current download/upload speeds, ping, averages, charts, recent results and a CSV download. The browser page refreshes every 60 seconds; tests are scheduled every 10 minutes.</p></section>
+<section class="section" id="result"><h2>Result</h2><p>The SOP reports a working systemd timer, recorded internet-speed CSV results, and a Flask dashboard serving network metrics over the local network.</p></section>
+<section class="section"><h2>What You Learn</h2><ul><li>Checking internet performance with Ookla Speedtest CLI</li><li>Understanding download, upload, latency, jitter and packet loss</li><li>Recording measurements in CSV files</li><li>Using systemd services and timers</li><li>Serving a Flask dashboard on a local network</li><li>Using Chart.js for historical graphs</li></ul></section>
+</main><footer><strong>Raspberry Pi Experiment</strong><p>Raspberry Pi 4B Internet Speed Monitor</p></footer>
+<script type="text/plain" id="program"># Test connectivity and required programs
+hostname -I
+python3 --version
+/usr/bin/python3 -c "import flask; print('Flask installed')"
+/home/pi/speedtest-install/speedtest --version
+
+# Run existing monitor script
+cd /home/pi/internet-speed-monitor
+/usr/bin/python3 -u /home/pi/internet-speed-monitor/speed_monitor.py
+
+# Inspect CSV records
+head -n 2 /home/pi/internet-speed-monitor/logs/speed_history.csv
+
+# Enable monitoring schedule
+sudo systemctl daemon-reload
+sudo systemctl enable --now internet-speed-monitor.timer
+systemctl is-active internet-speed-monitor.timer
+systemctl list-timers --all internet-speed-monitor.timer
+
+# Enable dashboard service
+sudo systemctl enable --now internet-speed-dashboard.service
+systemctl is-active internet-speed-dashboard.service
+
+# Open dashboard from another device on the same LAN:
+# http://&lt;PI-IP&gt;:5001</script><script>
+const program=document.getElementById("program").textContent.trim();
+const lines=program.split("\n");
+const steps=[{"title":"Check network","search":"hostname -I","text":"Find the current Raspberry Pi IP address."},{"title":"Check Python","search":"python3 --version","text":"Verify Python is installed."},{"title":"Check Flask","search":"/usr/bin/python3 -c","text":"Check the Flask dependency without replacing a working installation."},{"title":"Check Speedtest","search":"/home/pi/speedtest-install/speedtest --version","text":"Verify the installed Ookla Speedtest binary."},{"title":"Run monitor","search":"cd /home/pi/internet-speed-monitor","text":"The existing script tests the connection and writes a CSV result."},{"title":"Review history","search":"head -n 2","text":"Read CSV headers and recorded results."},{"title":"Enable timer","search":"sudo systemctl daemon-reload","text":"Systemd reloads service definitions."},{"title":"Verify timer","search":"systemctl is-active internet-speed-monitor.timer","text":"The timer should be active and schedule ten-minute tests."},{"title":"Enable dashboard","search":"sudo systemctl enable --now internet-speed-dashboard.service","text":"The web dashboard runs as a service."},{"title":"Open dashboard","search":"# http://<PI-IP>:5001","text":"Open the current Raspberry Pi address in a browser on the same LAN."}];
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function displayCode(){document.getElementById("code-lines").innerHTML=lines.map((s,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeHtml(s)+'</span></span>').join("");}
+function showStep(i){const s=steps[i];document.querySelectorAll(".step").forEach((b,k)=>b.classList.toggle("active",k===i));document.querySelectorAll(".code-line").forEach(x=>x.classList.remove("selected"));const n=lines.findIndex(x=>x.trim().startsWith(s.search));if(n>=0){let end=n;let indent=lines[n].search(/\S/);if(lines[n].trim().endsWith(":")){for(let k=n+1;k<lines.length;k++){if(lines[k].trim()&&lines[k].search(/\S/)<=indent){end=k-1;break;}end=k;}}else{end=Math.min(lines.length-1,n+1);}for(let k=n;k<=end;k++)document.getElementById("line-"+(k+1))?.classList.add("selected");const line=document.getElementById("line-"+(n+1)),panel=document.getElementById("code-body");if(line&&panel)panel.scrollTo({top:line.offsetTop-panel.offsetTop-20,behavior:"smooth"});}document.getElementById("explanation").innerHTML="<h3>"+(i+1)+". "+s.title+"</h3><p>"+s.text+"</p>";}
+async function copyCode(){const b=document.querySelector(".code-top .copy-button");try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const a=document.createElement("textarea");a.value=program;document.body.appendChild(a);a.select();if(!document.execCommand("copy"))throw Error("Copy failed");a.remove();}b.textContent="Copied!";}catch(e){b.textContent="Copy failed";}setTimeout(()=>b.textContent="Copy Code",1500);}
+displayCode();showStep(0);</script></body></html>
