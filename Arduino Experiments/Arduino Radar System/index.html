@@ -1,0 +1,1176 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Arduino Radar System</title><style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+
+/* PROJECT THUMBNAIL */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .project-thumbnail {
+        padding: 12px;
+    }
+
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:16px;
+}
+
+
+.sensor-box{
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.sensor-box h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+
+.sensor-value{
+
+    font-size:26px;
+
+    color:#2563eb;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style></head><body>
+<header class="header"><img class="header-logo" src="../../Simusoft logo white background.jpeg" alt="SimuSoft logo"><div class="header-content"><h1>SIMUDIY Exploration Kit</h1><p>Arduino Radar System</p></div>
+<div class="header-buttons"><div class="header-left-buttons"><a href="../index.html" class="header-nav-btn">← Back</a><a href="../../index.html" class="header-nav-btn home-icon-btn" aria-label="Home" title="Home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-7h6v7"/></svg></a></div>
+<div class="header-right-buttons"><a href="../index.html" class="header-nav-btn">Arduino</a><a href="../../ESP32 CAM Experiments/index.html" class="header-nav-btn">ESP</a><a href="../../R-Pi Experiments/index.html" class="header-nav-btn">R-Pi</a></div></div></header>
+<nav><a href="../index.html">← Arduino Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#result">Result</a></nav>
+<main class="container"><section class="section project-thumbnail"><img src="../Arduino Radar System.png" alt="Arduino Radar System thumbnail" onerror="this.hidden=true;document.getElementById('thumb-placeholder').hidden=false"><div id="thumb-placeholder" class="note" hidden>Approved experiment thumbnail pending.</div></section>
+<section class="section" id="aim"><h2>Aim</h2><p>To create a radar-style distance scanning system using Arduino UNO R3, an HC-SR04 ultrasonic sensor on an SG90 servo, a red LED and a buzzer. The system scans 0°–180° and activates alerts for detections within 60 cm.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>An SG90 servo rotates the HC-SR04 ultrasonic sensor from 0° to 180° and back. At each angle, Arduino measures the distance in centimetres. Readings over 60 cm are changed to 0, and the LED and buzzer are switched ON only for readings from 1 to 60 cm.</p><p>The Arduino prints comma-separated <strong>angle,distance</strong> readings at 9600 baud. A compatible Processing visualizer may be connected separately; its program is not provided in the SOP.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO R3 (×1)"><h4>Arduino UNO R3 (×1)</h4><p>Microcontroller</p></div><div class="component-card"><img src="HC-SR04 Ultrasonic Sensor.png" alt="HC-SR04 Ultrasonic Sensor (×1)"><h4>HC-SR04 Ultrasonic Sensor (×1)</h4><p>Distance measurement</p></div><div class="component-card"><img src="Servo Motor.png" alt="Servo Motor SG90 (×1)"><h4>Servo Motor SG90 (×1)</h4><p>Sensor rotation</p></div><div class="component-card"><img src="Red LED.png" alt="Red LED (×1)"><h4>Red LED (×1)</h4><p>Detection indicator</p></div><div class="component-card"><img src="220 Ohm Resistor.png" alt="220Ω Resistor (×1)"><h4>220Ω Resistor (×1)</h4><p>LED current limiting</p></div><div class="component-card"><img src="Buzzer.png" alt="Buzzer (×1)"><h4>Buzzer (×1)</h4><p>Audible alert</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard (×1)"><h4>Breadboard (×1)</h4><p>Circuit connections</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Electrical connections</p></div></div><div class="note">Power: Use a regulated 5V supply appropriate for the servo if its current requirements exceed what the Arduino can safely provide. Connect the supply ground to Arduino GND. USB cable and power accessories are intentionally excluded from component cards.</div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Arduino UNO connection</th></tr></thead><tbody><tr><td>HC-SR04 VCC</td><td>5V</td></tr><tr><td>HC-SR04 GND</td><td>GND</td></tr><tr><td>HC-SR04 TRIG</td><td>D10</td></tr><tr><td>HC-SR04 ECHO</td><td>D11</td></tr><tr><td>Servo signal</td><td>D9</td></tr><tr><td>Servo VCC</td><td>Suitable 5V supply</td></tr><tr><td>Servo GND</td><td>Common GND</td></tr><tr><td>Red LED anode (through 220Ω)</td><td>D7</td></tr><tr><td>Red LED cathode</td><td>GND</td></tr><tr><td>Buzzer (+)</td><td>D8</td></tr><tr><td>Buzzer (−)</td><td>GND</td></tr></tbody></table></div><div class="note">Use the SOP's updated assignments: servo D9, TRIG D10, ECHO D11, red LED D7 through 220Ω and buzzer D8. Use a low-current buzzer suitable for direct GPIO drive. Disconnect power before changing wiring.</div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><!-- Approved circuit diagram not yet supplied. When provided, use: <img class="circuit-img" src="Arduino Radar System Circuit.png" alt="Arduino Radar System Circuit Diagram"> --><div class="note">Approved circuit diagram PNG pending; no wiring image has been invented.</div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">Start Arduino<br>↓<br>Sweep the servo 0° to 180°<br>↓<br>Transmit ultrasonic pulse<br>↓<br>Calculate distance from echo<br>↓<br>1–60 cm: LED and buzzer ON<br>↓<br>Outside detection range: LED and buzzer OFF<br>↓<br>Send angle,distance at 9600 baud<br>↓<br>Sweep 180° to 0° and repeat</div><p>The formula is distance = echo pulse duration × 0.034 / 2, with time measured in microseconds. The supplied sketch uses pulseIn() without an explicit timeout, so a missing echo can delay the sweep.</p></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Mount the HC-SR04 ultrasonic sensor securely on the SG90 servo arm.</li><li>Connect HC-SR04 VCC to 5V and GND to GND.</li><li>Connect TRIG to D10 and ECHO to D11.</li><li>Connect servo signal to D9. Supply suitable servo power and share ground with Arduino.</li><li>Connect red LED anode to D7 through a 220Ω resistor, and cathode to GND.</li><li>Connect the compatible low-current buzzer (+) to D8 and (−) to GND.</li><li>Verify connections with power disconnected, then power the system.</li><li>Open Arduino IDE and use its Servo library.</li><li>Create Arduino_Radar_System.ino and copy the complete Explore the Code program.</li><li>Select Arduino Uno and the correct port; verify and upload.</li><li>Open Serial Monitor at 9600 baud and observe angle,distance output.</li><li>Test an object between 1–60 cm and check both warning outputs.</li><li>Move it beyond 60 cm and confirm both outputs switch OFF.</li><li>Observe continuous forward and reverse sweeping.</li></ol></section>
+<section class="section" id="code"><div class="code-lesson"><p class="eyebrow">Arduino Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Select a step to highlight its code lines.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">Arduino_Radar_System.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step to scroll to and highlight the relevant program lines.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load library</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Define sensor pins</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Set LED and buzzer</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Initialize hardware</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Forward scan</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Measure the distance</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>Limit detection range</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Detection alert</button><button class="step" onclick="showStep(8)"><span class="step-number">09</span>Reverse scan</button><button class="step" onclick="showStep(9)"><span class="step-number">10</span>Echo calculation</button></div><div class="explanation" id="explanation" aria-live="polite"></div><details><summary>Explore more: Serial data</summary><p>Data appears as angle,distance, e.g. 90,35. Zero indicates no valid detection inside the configured 60 cm range, rather than a literal zero-centimetre distance.</p></details><details><summary>Check Your Understanding</summary><p>Which Arduino pin controls the servo? What are the ultrasonic TRIG and ECHO pins? When do the LED and buzzer activate?</p><button type="button" class="copy-button" style="border:1px solid #bfdbfe" onclick="document.getElementById('answers').hidden=!document.getElementById('answers').hidden">Show / Hide Answers</button><p id="answers" hidden>Servo D9; TRIG D10; ECHO D11; alerts ON for valid readings from 1 to 60 cm.</p></details></article></div><p class="tip"><strong>Try it:</strong> Move an object inside the scanning area and watch the LED, buzzer and Serial Monitor.</p></div></section>
+<section class="section"><h2>Expected Output</h2><p>The servo sweeps back and forth across 0°–180°. The Arduino prints angle,distance data at 9600 baud, such as 90,35.</p><div class="table-wrap"><table><thead><tr><th>Detection condition</th><th>Serial distance</th><th>LED</th><th>Buzzer</th></tr></thead><tbody><tr><td>Object at 1–60 cm</td><td>Measured value</td><td>ON</td><td>ON</td></tr><tr><td>Object beyond 60 cm</td><td>0</td><td>OFF</td><td>OFF</td></tr><tr><td>No valid echo</td><td>Typically 0</td><td>OFF</td><td>OFF</td></tr></tbody></table></div><p>The supplied Arduino sketch does not include a Processing visualizer. A graphical radar display requires compatible separate Processing code.</p></section>
+<section class="section" id="result"><h2>Result</h2><p>The Arduino Radar System demonstrates automated ultrasonic scanning and threshold-based alerts. It continuously moves the sensor across the scan arc, calculates object distances, and provides visual, audible and serial feedback.</p></section>
+<section class="section"><h2>What You Learn</h2><ul><li>Using the HC-SR04 ultrasonic distance sensor.</li><li>Using Servo.h to control an SG90 motor.</li><li>Sweeping angles from 0° to 180° and back.</li><li>Calculating distance using ultrasonic echo duration.</li><li>Applying a 60 cm detection threshold.</li><li>Controlling LEDs and buzzers from digital pins.</li><li>Using comma-separated Serial Monitor output at 9600 baud.</li><li>Understanding common ground and appropriate servo power.</li></ul></section>
+</main><footer><strong>Arduino Experiment</strong><p>Arduino Radar System</p></footer><script type="text/plain" id="arduino-program">#include <Servo.h>
+
+Servo myServo;
+
+const int trigPin = 10;
+const int echoPin = 11;
+
+const int ledPin = 7;
+const int buzzerPin = 8;
+
+long duration;
+int distance;
+
+void setup() {
+  Serial.begin(9600);
+  myServo.attach(9);
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  for (int angle = 0; angle <= 180; angle++) {
+    myServo.write(angle);
+    delay(30);
+
+    distance = getDistance();
+
+    // LIMIT DISPLAY TO 60 cm
+    if (distance > 60) {
+      distance = 0;
+    }
+
+    // DETECTION UP TO 60 cm
+    if (distance > 0 && distance <= 60) {
+      digitalWrite(ledPin, HIGH);
+      digitalWrite(buzzerPin, HIGH);
+    } else {
+      digitalWrite(ledPin, LOW);
+      digitalWrite(buzzerPin, LOW);
+    }
+
+    Serial.print(angle);
+    Serial.print(",");
+    Serial.println(distance);
+  }
+
+  for (int angle = 180; angle >= 0; angle--) {
+    myServo.write(angle);
+    delay(30);
+
+    distance = getDistance();
+
+    if (distance > 60) {
+      distance = 0;
+    }
+
+    if (distance > 0 && distance <= 60) {
+      digitalWrite(ledPin, HIGH);
+      digitalWrite(buzzerPin, HIGH);
+    } else {
+      digitalWrite(ledPin, LOW);
+      digitalWrite(buzzerPin, LOW);
+    }
+
+    Serial.print(angle);
+    Serial.print(",");
+    Serial.println(distance);
+  }
+}
+
+// DISTANCE FUNCTION
+int getDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  int dist = duration * 0.034 / 2;
+
+  return dist;
+}</script><script>const program=document.getElementById("arduino-program").textContent.trim();
+const lines=program.split("\n");
+const steps=[{"title":"Load library","search":"#include <Servo.h>","text":"Servo.h controls the angular position of the motor."},{"title":"Define sensor pins","search":"const int trigPin","text":"TRIG is D10 and ECHO is D11."},{"title":"Set LED and buzzer","search":"const int ledPin","text":"The current SOP sketch uses D7 for the LED and D8 for the buzzer."},{"title":"Initialize hardware","search":"void setup()","text":"Serial runs at 9600 baud; the servo is attached to D9."},{"title":"Forward scan","search":"for (int angle = 0; angle <= 180; angle++)","text":"The servo sweeps from 0 to 180 degrees."},{"title":"Measure the distance","search":"distance = getDistance()","text":"The HC-SR04 measures each scan position."},{"title":"Limit detection range","search":"if (distance > 60)","text":"Readings above 60 cm are changed to zero."},{"title":"Detection alert","search":"if (distance > 0 && distance <= 60)","text":"The LED and buzzer turn on for detections between 1 and 60 cm."},{"title":"Reverse scan","search":"for (int angle = 180; angle >= 0; angle--)","text":"The servo sweeps back to zero degrees."},{"title":"Echo calculation","search":"int getDistance()","text":"The echo duration is converted to centimetres."}];
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function displayCode(){document.getElementById("code-lines").innerHTML=lines.map((s,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeHtml(s)+'</span></span>').join("");}
+function showStep(i){const s=steps[i];document.querySelectorAll(".step").forEach((b,j)=>b.classList.toggle("active",i===j));document.querySelectorAll(".code-line").forEach(e=>e.classList.remove("selected"));const n=lines.findIndex(l=>l.trim().startsWith(s.search));if(n>=0){let end=n,depth=0,open=false;for(let k=n;k<lines.length&&k<n+45;k++){for(const ch of lines[k]){if(ch==="{"){open=true;depth++;}if(ch==="}")depth--;}end=k;if(open&&depth<=0)break;if(!open&&k>n&&!lines[k].trim()){end=k-1;break;}}for(let k=n;k<=end;k++)document.getElementById("line-"+(k+1))?.classList.add("selected");const first=document.getElementById("line-"+(n+1)),panel=document.getElementById("code-body");if(first&&panel)panel.scrollTo({top:first.offsetTop-panel.offsetTop-20,behavior:"smooth"});}document.getElementById("explanation").innerHTML="<h3>"+(i+1)+". "+s.title+"</h3><p>"+s.text+"</p>";}
+async function copyCode(){const b=document.querySelector(".code-top .copy-button");try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const a=document.createElement("textarea");a.value=program;document.body.appendChild(a);a.select();if(!document.execCommand("copy"))throw Error("Failed");a.remove();}b.textContent="Copied!";}catch(e){b.textContent="Copy failed";}setTimeout(()=>b.textContent="Copy Code",1500);}
+displayCode();showStep(0);</script></body></html>
