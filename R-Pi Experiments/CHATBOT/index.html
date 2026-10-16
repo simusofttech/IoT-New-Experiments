@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CHATBOT</title><style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+
+/* PROJECT THUMBNAIL */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .project-thumbnail {
+        padding: 12px;
+    }
+
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:16px;
+}
+
+
+.sensor-box{
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.sensor-box h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+
+.sensor-value{
+
+    font-size:26px;
+
+    color:#2563eb;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style></head>
+<body>
+<header class="header"><img class="header-logo" src="../../Simusoft logo white background.jpeg" alt="SimuSoft logo"><div class="header-content"><h1>SIMUDIY Exploration Kit</h1><p>CHATBOT</p></div><div class="header-buttons"><div class="header-left-buttons"><a class="header-nav-btn" href="../index.html">← Back</a><a class="header-nav-btn home-icon-btn" href="../../index.html" title="Home" aria-label="Home">⌂</a></div><div class="header-right-buttons"><a class="header-nav-btn" href="../../Arduino Experiments/index.html">Arduino</a><a class="header-nav-btn" href="../../ESP32 CAM Experiments/index.html">ESP</a><a class="header-nav-btn" href="../index.html">R-Pi</a></div></div></header>
+<nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#result">Result</a></nav>
+<main class="container">
+<section class="section project-thumbnail"><img src="../CHATBOT.png" alt="CHATBOT thumbnail" onerror="this.hidden=true;document.getElementById('thumb-note').hidden=false"><div id="thumb-note" class="note" hidden>Approved thumbnail PNG is pending.</div></section>
+<section class="section" id="aim"><h2>Aim</h2><p>To develop an offline predefined-command voice-response desk robot on Raspberry Pi 4 using a push button, USB microphone, Vosk speech recognition, SSD1306 OLED face and two SG90 servo motors.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>The system records speech after a push-button press, recognizes it locally using Vosk and selects a predefined response. The OLED changes its face expression, and two servos animate while the text-to-speech command runs.</p><p>This is a locally programmed voice responder, not a generative AI chatbot. It does not use ChatGPT or any online AI system. After downloading dependencies and the Vosk model, speech recognition can run offline.</p><div class="note"><strong>Audio-output limitation:</strong> A Bluetooth speaker has been excluded from the components at your request. The SOP's <code>espeak-ng</code> command still generates speech, but audible playback requires a working, configured audio output. No alternative speaker has been added or assumed.</div></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B (×1)" onerror="this.hidden=true"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Local speech recognition and GPIO control.</p></div>
+<div class="component-card"><img src="USB Microphone.png" alt="USB Microphone (×1)" onerror="this.hidden=true"><h4>USB Microphone (×1)</h4><p>Records spoken commands.</p></div>
+<div class="component-card"><img src="Servo Motor.png" alt="SG90 Servo Motor (×2)" onerror="this.hidden=true"><h4>SG90 Servo Motor (×2)</h4><p>Moves the robot while speaking.</p></div>
+<div class="component-card"><img src="OLED.png" alt="SSD1306 OLED 128×64 I2C (×1)" onerror="this.hidden=true"><h4>SSD1306 OLED 128×64 I2C (×1)</h4><p>Shows face and status.</p></div>
+<div class="component-card"><img src="Push Button.png" alt="Push Button (×1)" onerror="this.hidden=true"><h4>Push Button (×1)</h4><p>Triggers listening.</p></div>
+<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires" onerror="this.hidden=true"><h4>Jumper Wires</h4><p>Connects GPIO-controlled hardware.</p></div></div><div class="note">Power and storage requirements are covered in the setup. The servos need a suitable regulated 5V supply and shared GND. Do not drive them directly from Raspberry Pi GPIO pins. No Bluetooth Speaker or accessory card is included.</div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component terminal</th><th>Raspberry Pi connection</th></tr></thead><tbody><tr><td>OLED VCC</td><td>3.3V (physical pin 1)</td></tr><tr><td>OLED GND</td><td>GND (physical pin 6)</td></tr><tr><td>OLED SDA</td><td>GPIO2 (physical pin 3)</td></tr><tr><td>OLED SCL</td><td>GPIO3 (physical pin 5)</td></tr><tr><td>Button one side</td><td>GPIO17 (physical pin 11)</td></tr><tr><td>Button other side</td><td>GND (physical pin 9)</td></tr><tr><td>Servo 1 signal</td><td>GPIO18 (physical pin 12)</td></tr><tr><td>Servo 2 signal</td><td>GPIO19 (physical pin 35)</td></tr><tr><td>Both servo red leads</td><td>Suitable regulated 5V servo supply</td></tr><tr><td>Both servo ground leads</td><td>Common GND, connected to Pi GND</td></tr><tr><td>USB Microphone</td><td>Raspberry Pi USB port</td></tr></tbody></table></div><div class="note"><strong>Precautions:</strong> OLED supply is 3.3V as specified by the SOP. The push button uses the Raspberry Pi's internal pull-up, so no external resistor is required. Connect the 5V servo supply GND to Pi GND. Confirm correct motor lead colors and voltage before power-up.</div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><!-- Approved circuit PNG to be added here: <img class="circuit-img" src="CHATBOT Circuit.png" alt="CHATBOT circuit diagram"> --><div class="note">Approved circuit diagram PNG pending. The verified connection table above gives the required wiring.</div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">Press Push Button<br>↓<br>USB Microphone captures voice<br>↓<br>Vosk converts speech to text offline<br>↓<br>Match a predefined command<br>↓<br>Choose response text<br>↓<br>Update OLED face<br>↓<br>Run text-to-speech and animate servos<br>↓<br>Return servos to 90° and wait</div><p>Typical commands include Hello, How are you, Your name, Time, Date, Thank you and Bye. A command not in the programmed table receives a default response.</p></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the USB microphone and wire the OLED, push button and servo signals using the verified table.</li><li>Supply the two servos with regulated 5V as required and connect the supply ground to Raspberry Pi GND.</li><li>Start Raspberry Pi OS and enable I2C in <code>sudo raspi-config</code>.</li><li>Install required system packages: <code>sudo apt update</code> and <code>sudo apt install -y python3-venv python3-pip espeak-ng unzip i2c-tools</code>.</li><li>Create <code>~/Offline_Voice_Chatbot/models</code>, make and activate a Python virtual environment.</li><li>Install <code>vosk sounddevice gpiozero lgpio pillow luma.oled</code> in the environment.</li><li>Check the microphone with <code>arecord -l</code> and the OLED I2C address using <code>i2cdetect -y 1</code>. The SOP OLED address is 0x3C.</li><li>Download an appropriate English Vosk model and extract it as <code>~/Offline_Voice_Chatbot/models/vosk-model</code>.</li><li>Save the complete Python program from Explore the Code as <code>main.py</code> in the project folder.</li><li>Check syntax using <code>python -m py_compile main.py</code> and start it using <code>python main.py</code>.</li><li>Press the push button, say a supported command and watch the OLED and servo animation.</li><li>If audible speech is required, configure a supported audio output before testing <code>espeak-ng</code>. The excluded Bluetooth speaker is not assumed to be present.</li></ol></section>
+<section class="section" id="code"><div class="code-lesson"><p class="eyebrow">Raspberry Pi Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Complete reconstructed <code>main.py</code> from the SOP's two-column program layout, with safe audio-queue timeout handling.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">main.py</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step to highlight and scroll to its source lines.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Libraries</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configure model</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Initialize outputs</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Draw OLED face</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Update status</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Match responses</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>Initialize Vosk</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Record microphone</button><button class="step" onclick="showStep(8)"><span class="step-number">09</span>Speak and animate</button><button class="step" onclick="showStep(9)"><span class="step-number">10</span>Process button input</button></div><div class="explanation" id="explanation" aria-live="polite"></div><details><summary>Check Your Understanding</summary><p>Which GPIO starts voice input? Which two GPIO pins control servos? Does this robot generate new AI answers?</p><button type="button" class="copy-button" style="border:1px solid #bfdbfe" onclick="document.getElementById('answers').hidden=!document.getElementById('answers').hidden">Show / Hide Answers</button><p id="answers" hidden>Button GPIO17; servos GPIO18 and GPIO19; no, it matches commands to predefined responses.</p></details></article></div><p class="tip"><strong>Remember:</strong> This program generates spoken output only when an audio-output device is properly configured. Without one, you can still observe OLED, terminal text and servo activity.</p></div></section>
+<section class="section"><h2>Expected Output</h2><p>When ready, the OLED displays a simple face. Pressing the button activates listening, and recognized speech is printed in the terminal. The program finds a predefined reply; the OLED changes expression and servo 1 moves from 90° to 0° and back during the text-to-speech call. Servo 2 remains centered according to the SOP program.</p><p>Example: saying "Hello" yields "Hello. How are you?" in the program's response. Audible speech depends on a configured audio output.</p></section>
+<section class="section" id="result"><h2>Result</h2><p>The offline voice-response desk robot demonstrates local speech-to-text processing, fixed question-and-answer responses, OLED facial animation, servo control and button-triggered interaction. Voice playback requires an audio device, which is not included in the approved six-component list.</p></section>
+<section class="section"><h2>What You Learn</h2><ul><li>Configuring Raspberry Pi GPIO and internal pull-up buttons.</li><li>Interfacing SSD1306 OLED through I2C.</li><li>Using Vosk for offline voice recognition.</li><li>Capturing USB microphone input with Python.</li><li>Matching voice commands to predefined responses.</li><li>Controlling SG90 servos using gpiozero.</li><li>Using espeak-ng for local text-to-speech.</li><li>Maintaining correct servo power and shared ground.</li></ul></section></main>
+<footer><strong>Raspberry Pi Experiment</strong><p>CHATBOT</p></footer>
+<script type="text/plain" id="program">import json
+import queue
+import time
+import subprocess
+import sounddevice as sd
+
+from vosk import Model, KaldiRecognizer
+from gpiozero import Button, AngularServo
+from luma.core.interface.serial import i2c
+from luma.oled.device import ssd1306
+from PIL import Image, ImageDraw
+
+# ---------------- SETTINGS ----------------
+MODEL_PATH = "/home/pi/Offline_Voice_Chatbot/models/vosk-model"
+SAMPLE_RATE = 16000
+
+BUTTON_PIN = 17
+SERVO1_PIN = 18
+SERVO2_PIN = 19
+
+# ---------------- HARDWARE ----------------
+button = Button(BUTTON_PIN, pull_up=True)
+servo1 = AngularServo(SERVO1_PIN, min_angle=0, max_angle=180)
+servo2 = AngularServo(SERVO2_PIN, min_angle=0, max_angle=180)
+servo1.angle = 90
+servo2.angle = 90
+
+serial = i2c(port=1, address=0x3C)
+oled = ssd1306(serial, width=128, height=64)
+
+# ---------------- OLED ----------------
+def show_face(left="open", right="open", text="READY"):
+    img = Image.new("1", (128, 64))
+    draw = ImageDraw.Draw(img)
+
+    if left == "open":
+        draw.rounded_rectangle((20, 17, 48, 39), radius=7, fill=255)
+    else:
+        draw.line((20, 28, 48, 28), fill=255, width=4)
+
+    if right == "open":
+        draw.rounded_rectangle((80, 17, 108, 39), radius=7, fill=255)
+    else:
+        draw.line((80, 28, 108, 28), fill=255, width=4)
+
+    oled.display(img)
+
+def show_status(text):
+    if text == "LISTENING":
+        show_face("open", "open")
+    elif text == "THINKING":
+        show_face("closed", "open")
+    elif text == "SPEAKING":
+        show_face("open", "closed")
+    else:
+        show_face("open", "open")
+
+# ---------------- RESPONSE LOGIC ----------------
+def get_response(command):
+    command = command.lower().strip()
+
+    if "hello" in command or "hi" in command:
+        return "Hello. How are you?"
+    if "how are you" in command:
+        return "I am fine. I am ready to talk with you."
+    if "your name" in command:
+        return "My name is Raspberry Pi Buddy."
+    if "who are you" in command:
+        return "I am your offline voice desk buddy."
+    if "time" in command:
+        return time.strftime("The time is %I:%M %p.")
+    if "date" in command or "today" in command:
+        return time.strftime("Today is %d %B %Y.")
+    if "thank you" in command or "thanks" in command:
+        return "You are welcome."
+    if "bye" in command or "goodbye" in command:
+        return "Goodbye. See you again."
+    if "how is the weather" in command:
+        return ("I do not have an online weather service. "
+                "I can answer only my programmed commands.")
+    return "Sorry, I did not understand that command."
+
+# ---------------- SPEECH RECOGNITION ----------------
+print("Loading Vosk model...")
+model = Model(MODEL_PATH)
+recognizer = KaldiRecognizer(model, SAMPLE_RATE)
+audio_queue = queue.Queue()
+
+def audio_callback(indata, frames, time_info, status):
+    if status:
+        print(status)
+    audio_queue.put(bytes(indata))
+
+def listen():
+    while not audio_queue.empty():
+        audio_queue.get()
+
+    show_status("LISTENING")
+    print("Speak now...")
+
+    with sd.RawInputStream(
+        samplerate=SAMPLE_RATE,
+        blocksize=8000,
+        dtype="int16",
+        channels=1,
+        callback=audio_callback
+    ):
+        start = time.time()
+        final_text = ""
+
+        while time.time() - start &lt; 6:
+            try:
+                data = audio_queue.get(timeout=0.5)
+            except queue.Empty:
+                continue
+
+            if recognizer.AcceptWaveform(data):
+                result = json.loads(recognizer.Result())
+                final_text = result.get("text", "")
+                if final_text:
+                    break
+
+        if not final_text:
+            result = json.loads(recognizer.FinalResult())
+            final_text = result.get("text", "")
+
+    print("You:", final_text)
+    return final_text
+
+# ---------------- SPEAKING + SERVO ----------------
+def speak(text):
+    show_status("SPEAKING")
+    servo1.angle = 0
+    servo2.angle = 90
+
+    try:
+        subprocess.run(
+            ["espeak-ng", "-s", "145", "-v", "en", text],
+            check=False
+        )
+    finally:
+        servo1.angle = 90
+        servo2.angle = 90
+        show_status("READY")
+
+# ---------------- MAIN ----------------
+print("====================================")
+print(" OFFLINE RASPBERRY PI VOICE BUDDY ")
+print("====================================")
+print("Press the button and speak.")
+show_status("READY")
+
+try:
+    while True:
+        button.wait_for_press()
+        command = listen()
+
+        if command:
+            show_status("THINKING")
+            response = get_response(command)
+            print("Buddy:", response)
+            speak(response)
+        else:
+            speak("I did not hear anything.")
+
+        time.sleep(0.3)
+
+except KeyboardInterrupt:
+    print("\nStopping...")
+
+finally:
+    servo1.angle = 90
+    servo2.angle = 90
+    oled.clear()</script>
+<script>
+const program=document.getElementById("program").textContent.trim();
+const lines=program.split("\n");
+const steps=[{"title":"Libraries","search":"import json","text":"Import speech, timing, graphics and GPIO libraries."},{"title":"Configure model","search":"MODEL_PATH =","text":"The Vosk model is stored locally on the Raspberry Pi."},{"title":"Initialize outputs","search":"button = Button","text":"Configure the push button, two servo motors and OLED."},{"title":"Draw OLED face","search":"def show_face","text":"Draw open or closed eyes on the 128×64 OLED."},{"title":"Update status","search":"def show_status","text":"Change OLED expressions for listening, thinking and speaking."},{"title":"Match responses","search":"def get_response","text":"Compare recognized text to predefined offline responses."},{"title":"Initialize Vosk","search":"model = Model","text":"Create the offline speech recognizer."},{"title":"Record microphone","search":"def listen","text":"Listen for up to six seconds and decode the captured speech."},{"title":"Speak and animate","search":"def speak","text":"Run espeak-ng and animate servos while generating speech."},{"title":"Process button input","search":"button.wait_for_press()","text":"Wait for a button press, listen, find a response and speak."}];
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function displayCode(){document.getElementById("code-lines").innerHTML=lines.map((s,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeHtml(s)+'</span></span>').join("");}
+function showStep(i){const s=steps[i];document.querySelectorAll(".step").forEach((b,k)=>b.classList.toggle("active",k===i));document.querySelectorAll(".code-line").forEach(x=>x.classList.remove("selected"));const n=lines.findIndex(x=>x.trim().startsWith(s.search));if(n>=0){let end=n;const startIndent=lines[n].search(/\S/);if(lines[n].trim().endsWith(":")){for(let k=n+1;k<lines.length;k++){if(lines[k].trim()&&lines[k].search(/\S/)<=startIndent){end=k-1;break;}end=k;}}else end=Math.min(n+1,lines.length-1);for(let k=n;k<=end;k++)document.getElementById("line-"+(k+1))?.classList.add("selected");const el=document.getElementById("line-"+(n+1)),panel=document.getElementById("code-body");if(el&&panel)panel.scrollTo({top:el.offsetTop-panel.offsetTop-20,behavior:"smooth"});}document.getElementById("explanation").innerHTML="<h3>"+(i+1)+". "+s.title+"</h3><p>"+s.text+"</p>";}
+async function copyCode(){const b=document.querySelector(".code-top .copy-button");try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const x=document.createElement("textarea");x.value=program;document.body.appendChild(x);x.select();if(!document.execCommand("copy"))throw Error("Cannot copy");x.remove();}b.textContent="Copied!";}catch(e){b.textContent="Copy failed";}setTimeout(()=>b.textContent="Copy Code",1500);}
+displayCode();showStep(0);
+</script></body></html>
