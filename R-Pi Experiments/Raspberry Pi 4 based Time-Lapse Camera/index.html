@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Raspberry Pi 4 based Time-Lapse Camera</title><style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+
+/* PROJECT THUMBNAIL */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .project-thumbnail {
+        padding: 12px;
+    }
+
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:16px;
+}
+
+
+.sensor-box{
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.sensor-box h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+
+.sensor-value{
+
+    font-size:26px;
+
+    color:#2563eb;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style></head><body>
+<header class="header"><img class="header-logo" src="../../Simusoft logo white background.jpeg" alt="SimuSoft logo"><div class="header-content"><h1>SIMUDIY Exploration Kit</h1><p>Raspberry Pi 4 based Time-Lapse Camera</p></div><div class="header-buttons"><div class="header-left-buttons"><a href="../index.html" class="header-nav-btn">← Back</a><a href="../../index.html" class="header-nav-btn home-icon-btn" title="Home" aria-label="Home">⌂</a></div><div class="header-right-buttons"><a href="../../Arduino Experiments/index.html" class="header-nav-btn">Arduino</a><a href="../../ESP32 CAM Experiments/index.html" class="header-nav-btn">ESP</a><a href="../index.html" class="header-nav-btn">R-Pi</a></div></div></header>
+<nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#result">Result</a></nav>
+<main class="container">
+<section class="section project-thumbnail"><img src="../Raspberry Pi 4 based Time-Lapse Camera.png" alt="Raspberry Pi 4 based Time-Lapse Camera thumbnail" onerror="this.hidden=true;document.getElementById('thumb-pending').hidden=false"><div id="thumb-pending" class="note" hidden>Approved experiment thumbnail pending.</div></section>
+<section class="section" id="aim"><h2>Aim</h2><p>To capture photos automatically at selected intervals using Raspberry Pi 4 and a USB webcam, then convert them into a time-lapse MP4 video.</p></section>
+<section class="section"><h2>About the Experiment</h2><p>The Raspberry Pi captures a sequence of 640×480 images from a USB webcam using fswebcam every five seconds for approximately one minute. The saved JPEG files are then combined into an H.264 MP4 video using FFmpeg.</p></section>
+<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B (×1)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Approved component PNG pending upload.</p><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs the Python program and video conversion.</p></div><div class="component-card"><img src="USB Webcam.png" alt="USB Webcam (×1)" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Approved component PNG pending upload.</p><h4>USB Webcam (×1)</h4><p>Captures images through the Pi USB port.</p></div></div><div class="note">A compatible power supply, operating system storage and required software/network setup are explained in the SOP. Per the approved SimuSoft component-card policy, unnecessary accessories are not displayed as image cards.</div></section>
+<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Item</th><th>Connection / Role</th></tr></thead><tbody><tr><td>USB Webcam</td><td>USB port on Raspberry Pi 4B; no GPIO pins used</td></tr><tr><td>Pi power</td><td>Compatible power through Pi USB-C power input</td></tr><tr><td>Camera device</td><td>/dev/video0 in tested setup; verify actual video node</td></tr></tbody></table></div></section>
+<section class="section" id="circuit"><h2>Circuit Diagram</h2><!-- SOP connection image/diagram placeholder; do not generate an imaginary circuit. When an approved PNG is available use class="circuit-img" --> <div class="note">The SOP uses a direct USB camera connection rather than a GPIO circuit. An approved setup/circuit image may be added here later.</div></section>
+<section class="section" id="working"><h2>Working Principle</h2><div class="flow">Raspberry Pi boots<br>↓<br>USB webcam provides frames<br>↓<br>Python calls fswebcam every 5 seconds<br>↓<br>JPEG images saved in photos folder<br>↓<br>FFmpeg combines the images<br>↓<br>MP4 time-lapse plays.</div></section>
+<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect a supported USB webcam to a Raspberry Pi USB port. There are no GPIO connections.</li><li>Boot Raspberry Pi OS and open a terminal. Confirm the correct camera node using lsusb and v4l2-ctl --list-devices.</li><li>Install dependencies with sudo apt update and sudo apt install -y fswebcam ffmpeg v4l-utils.</li><li>Test capture using fswebcam -d /dev/video0 -r 640x480 --no-banner ~/test_photo.jpg.</li><li>Create ~/timelapse_camera/photos, then save the complete Python code as ~/timelapse_camera/timelapse.py.</li><li>Run python3 ~/timelapse_camera/timelapse.py. Expect approximately 12 JPEG files.</li><li>Convert photos to MP4 using the FFmpeg command shown below.</li><li>Verify the video using ffprobe; view it using VLC or another supported player.</li></ol><h3>Convert images to MP4</h3><pre><code>ffmpeg -framerate 4 -pattern_type glob \
+-i '/home/pi/timelapse_camera/photos/*.jpg' \
+-c:v libx264 -pix_fmt yuv420p \
+'/home/pi/timelapse_camera/timelapse_video.mp4'</code></pre></section>
+<section class="section" id="code"><div class="code-lesson"><p class="eyebrow">Raspberry Pi Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Select a step to highlight relevant lines. Complete SOP Python capture program.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">timelapse.py</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Select each step to view its code and explanation.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Import libraries</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Camera settings</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Photo folder</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Capture function</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Capture command</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Check result</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>Start timer</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Capture loop</button><button class="step" onclick="showStep(8)"><span class="step-number">09</span>Wait between frames</button><button class="step" onclick="showStep(9)"><span class="step-number">10</span>Program entry</button></div><div class="explanation" id="explanation" aria-live="polite"></div><details><summary>Check Your Understanding</summary><p>Which tool captures JPEG images, which tool creates the MP4, and how often are photos taken?</p><button class="copy-button" onclick="document.getElementById('quiz-answers').hidden=!document.getElementById('quiz-answers').hidden">Show / Hide Answers</button><p id="quiz-answers" hidden>fswebcam; FFmpeg; every 5 seconds.</p></details></article></div><p class="tip"><strong>Remember:</strong> Use a fresh photos folder to avoid including old images in the new video.</p></div></section>
+<section class="section"><h2>Expected Output</h2><p>The default one-minute capture typically yields around 12 JPEG images at 640×480. Encoding at four frames per second produces an approximately three-second MP4 video.</p></section>
+<section class="section" id="result"><h2>Result</h2><p>The SOP reports successful webcam detection, 12 photos captured over approximately one minute, and a 3-second MP4 video generated using FFmpeg.</p></section>
+<section class="section"><h2>What You Learn</h2><ul><li>Using USB webcams through Linux V4L2</li><li>Capturing photos using fswebcam</li><li>Time-based automation with Python</li><li>Saving time-stamped JPEG images</li><li>Converting images into an H.264 MP4 video using FFmpeg</li><li>Checking video duration with ffprobe</li></ul></section>
+</main><footer><strong>Raspberry Pi Experiment</strong><p>Raspberry Pi 4 based Time-Lapse Camera</p></footer>
+<script type="text/plain" id="program">#!/usr/bin/env python3
+
+import time
+import subprocess
+from datetime import datetime
+from pathlib import Path
+
+# Project settings
+CAMERA = "/dev/video0"
+PHOTO_INTERVAL = 5         # Seconds between photos
+TOTAL_DURATION = 60        # Total capture time in seconds
+RESOLUTION = "640x480"
+
+# Folder where photos will be stored
+PHOTO_DIR = Path.home() / "timelapse_camera" / "photos"
+PHOTO_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def capture_photo(photo_number):
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = PHOTO_DIR / f"photo_{photo_number:04d}_{timestamp}.jpg"
+
+    command = [
+        "fswebcam",
+        "-d", CAMERA,
+        "-r", RESOLUTION,
+        "--no-banner",
+        str(filename)
+    ]
+
+    result = subprocess.run(
+        command,
+        capture_output=True,
+        text=True
+    )
+
+    if result.returncode == 0 and filename.exists():
+        print(f"Photo {photo_number} saved: {filename}")
+    else:
+        print(f"ERROR capturing photo {photo_number}")
+        print(result.stderr)
+
+
+def main():
+    print("Time-lapse capture starting...")
+    print(f"Interval: {PHOTO_INTERVAL} seconds")
+    print(f"Duration: {TOTAL_DURATION} seconds")
+    print(f"Saving photos to: {PHOTO_DIR}")
+    print("Press Ctrl+C to stop early.")
+
+    start_time = time.monotonic()
+    photo_number = 1
+
+    try:
+        while time.monotonic() - start_time &lt; TOTAL_DURATION:
+            capture_photo(photo_number)
+            photo_number += 1
+
+            next_capture = start_time + (photo_number - 1) * PHOTO_INTERVAL
+            remaining = next_capture - time.monotonic()
+
+            if remaining &gt; 0:
+                time.sleep(remaining)
+
+        print("Time-lapse capture finished.")
+
+    except KeyboardInterrupt:
+        print("\nCapture stopped by user.")
+
+
+if __name__ == "__main__":
+    main()</script><script>
+const program=document.getElementById("program").textContent.trim();
+const lines=program.split("\n");
+const steps=[{"title":"Import libraries","search":"import time","text":"Time manages intervals; subprocess runs fswebcam; datetime generates filenames; pathlib manages folders."},{"title":"Camera settings","search":"CAMERA =","text":"The script selects the USB video device and capture interval, duration and resolution."},{"title":"Photo folder","search":"PHOTO_DIR =","text":"The photos folder is created automatically."},{"title":"Capture function","search":"def capture_photo","text":"Each capture is saved as a timestamped JPEG using fswebcam."},{"title":"Capture command","search":"command = [","text":"The command runs fswebcam against /dev/video0 at 640×480."},{"title":"Check result","search":"if result.returncode","text":"The code reports success or capture errors."},{"title":"Start timer","search":"def main","text":"A monotonic clock controls the capture period."},{"title":"Capture loop","search":"while time.monotonic","text":"The script captures photographs every five seconds."},{"title":"Wait between frames","search":"if remaining > 0","text":"Remaining time is used to keep the regular capture schedule."},{"title":"Program entry","search":"if __name__","text":"The main function starts when the script is executed."}];
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function displayCode(){document.getElementById("code-lines").innerHTML=lines.map((s,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeHtml(s)+'</span></span>').join("");}
+function showStep(i){const s=steps[i];document.querySelectorAll(".step").forEach((b,k)=>b.classList.toggle("active",k===i));document.querySelectorAll(".code-line").forEach(x=>x.classList.remove("selected"));const n=lines.findIndex(x=>x.trim().startsWith(s.search));if(n>=0){let end=n;let indent=lines[n].search(/\S/);if(lines[n].trim().endsWith(":")){for(let k=n+1;k<lines.length;k++){if(lines[k].trim()&&lines[k].search(/\S/)<=indent){end=k-1;break;}end=k;}}else{end=Math.min(lines.length-1,n+1);}for(let k=n;k<=end;k++)document.getElementById("line-"+(k+1))?.classList.add("selected");const line=document.getElementById("line-"+(n+1)),panel=document.getElementById("code-body");if(line&&panel)panel.scrollTo({top:line.offsetTop-panel.offsetTop-20,behavior:"smooth"});}document.getElementById("explanation").innerHTML="<h3>"+(i+1)+". "+s.title+"</h3><p>"+s.text+"</p>";}
+async function copyCode(){const b=document.querySelector(".code-top .copy-button");try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const a=document.createElement("textarea");a.value=program;document.body.appendChild(a);a.select();if(!document.execCommand("copy"))throw Error("Copy failed");a.remove();}b.textContent="Copied!";}catch(e){b.textContent="Copy failed";}setTimeout(()=>b.textContent="Copy Code",1500);}
+displayCode();showStep(0);</script></body></html>
