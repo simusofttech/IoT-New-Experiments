@@ -1,15 +1,19 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Adjustable LED Dimmer</title>
+
+<title>Adjustable LED Dimmer</title>
 
 <style>
 
-/* ===============================
+/* =========================
    BASIC PAGE STYLE
-================================ */
+========================= */
 
 * {
     box-sizing: border-box;
@@ -27,10 +31,9 @@ body {
     line-height: 1.7;
 }
 
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+/* =========================
+   HEADER
+========================= */
 
 .header {
     background: #2563eb;
@@ -42,8 +45,6 @@ body {
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -57,8 +58,6 @@ body {
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -76,8 +75,6 @@ body {
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -88,23 +85,12 @@ body {
     background: rgba(0,0,0,0.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -128,8 +114,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* HOME ICON ONLY */
-
 .home-icon-btn {
     width: 40px;
     height: 38px;
@@ -146,7 +130,459 @@ body {
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =========================
+   EXPERIMENT THUMBNAIL
+========================= */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul,
+ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =========================
+   COMPONENT CARDS
+========================= */
+
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* =========================
+   CIRCUIT CONNECTION TABLE
+========================= */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* =========================
+   NOTES
+========================= */
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+/* =========================
+   EXPLORE THE CODE
+========================= */
+
+.code-lesson {
+    color: #142e3a;
+}
+
+.eyebrow {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    color: #1e3a8a !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+    min-width: 0;
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+/* =========================
+   STEP-BY-STEP GUIDE
+========================= */
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+    background: #f8fbff;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+    color: #1e3a8a;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide code {
+    background: #e5ecf4;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
 
 @media (max-width: 900px) {
     .header-content {
@@ -154,7 +590,15 @@ body {
     }
 }
 
-/* MOBILE */
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
 
 @media (max-width: 600px) {
 
@@ -203,379 +647,13 @@ body {
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-
-/* ===============================
-   SECTION NAVIGATION
-================================ */
-
-nav {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 18px;
-    padding: 13px 15px;
-    background: white;
-    border-bottom: 1px solid #ddd;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-nav a {
-    text-decoration: none;
-    color: #1e3a8a;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-nav a:hover {
-    color: #2563eb;
-}
-
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
     .project-thumbnail {
         padding: 12px;
     }
 
     .project-thumbnail img {
         max-height: 280px;
-    }
-}
-
-
-/* ===============================
-   MAIN CONTAINER
-================================ */
-
-.container {
-    width: 90%;
-    max-width: 950px;
-    margin: 35px auto;
-}
-
-/* ===============================
-   CONTENT SECTIONS
-================================ */
-
-.section {
-    background: white;
-    margin-bottom: 24px;
-    padding: 28px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.06);
-    scroll-margin-top: 75px;
-}
-
-.section h2 {
-    margin-top: 0;
-    margin-bottom: 18px;
-    color: #1e3a8a;
-    font-size: 25px;
-    border-bottom: 2px solid #dbeafe;
-    padding-bottom: 8px;
-}
-
-ul, ol {
-    padding-left: 24px;
-}
-
-li {
-    margin-bottom: 8px;
-}
-   
-   /* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
-}
-
-
-/* ===============================
-   TABLE
-================================ */
-
-.table-wrap {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    min-width: 620px;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-th {
-    background: #2563eb;
-    color: white;
-}
-
-tr:nth-child(even) {
-    background: #f8fafc;
-}
-
-/* ===============================
-   WORKING FLOW
-================================ */
-
-.flow {
-    text-align: center;
-    font-weight: bold;
-    color: #1e3a8a;
-    font-size: 18px;
-    line-height: 2;
-}
-
-/* ===============================
-   CODE SECTION
-================================ */
-
-.code-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    background: #1e293b;
-    color: white;
-    border-radius: 8px 8px 0 0;
-}
-
-.copy-button {
-    border: 0;
-    padding: 7px 12px;
-    background: #2563eb;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-pre {
-    margin: 0;
-    padding: 20px;
-    overflow-x: auto;
-    background: #020617;
-    color: #e2e8f0;
-    border-radius: 0 0 8px 8px;
-    font-family: Consolas, monospace;
-    font-size: 14px;
-    line-height: 1.7;
-}
-
-/* ===============================
-   NOTE BOX
-================================ */
-
-.note {
-    margin-top: 15px;
-    padding: 14px;
-    background: #eff6ff;
-    border-left: 5px solid #2563eb;
-    border-radius: 6px;
-}
-
-/* ===============================
-   COMPONENT CARDS
-================================ */
-
-.components-grid {
-    display: grid;
-    grid-template-columns:
-        repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.component-card {
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,.04);
-}
-
-.component-card img {
-    width: 100%;
-    height: 120px;
-    object-fit: contain;
-    margin-bottom: 15px;
-}
-
-.component-card h4 {
-    color: #1e3a8a;
-    margin: 0 0 8px;
-    font-size: 18px;
-}
-
-.component-card p {
-    color: #475569;
-    font-size: 14px;
-    margin: 0;
-    line-height: 1.5;
-}
-
-.circuit-img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    margin: 20px auto 0;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    background: #fff;
-    padding: 10px;
-}
-
-/* ===============================
-   FOOTER
-================================ */
-
-footer {
-    text-align: center;
-    padding: 25px 20px;
-    background: #0f172a;
-    color: #cbd5e1;
-    font-size: 14px;
-}
-
-footer strong {
-    color: white;
-}
-
-/* ===============================
-   TABLET RESPONSIVE
-================================ */
-
-@media (max-width: 900px) {
-
-    .header-content {
-        padding: 65px 20px 35px;
-    }
-
-    .header h1 {
-        font-size: 30px;
-    }
-
-    .header-buttons {
-        padding: 12px 15px;
-    }
-
-    .header-nav-btn {
-        padding: 8px 11px;
-        font-size: 12px;
-    }
-}
-
-/* ===============================
-   MOBILE RESPONSIVE
-================================ */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding-top: 15px;
-        min-height: 230px;
-    }
-
-    .header-logo {
-        width: 95px;
-        max-height: 60px;
-        top: 12px;
-        left: 12px;
-    }
-
-    .header-content {
-        padding: 85px 12px 25px;
-    }
-
-    .header h1 {
-        font-size: 25px;
-    }
-
-    .header p {
-        font-size: 15px;
-    }
-
-    .header-buttons {
-        padding: 10px 8px;
-        gap: 8px;
-        flex-wrap: nowrap;
-    }
-
-    .header-left-buttons,
-    .header-right-buttons {
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 8px 7px;
-        font-size: 11px;
-        min-height: 36px;
-    }
-
-    .home-icon-btn {
-        width: 36px;
-        height: 36px;
-        padding: 7px;
-    }
-
-    .home-icon-btn svg {
-        width: 19px;
-        height: 19px;
     }
 
     .container {
@@ -586,26 +664,12 @@ footer strong {
         padding: 21px 18px;
     }
 
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
     nav {
         gap: 11px;
-    }
-}
-
-@media (max-width: 360px) {
-
-    .header-buttons {
-        gap: 5px;
-        padding: 9px 5px;
-    }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-
-    .home-icon-btn {
-        width: 32px;
-        min-height: 34px;
     }
 }
 
@@ -615,14 +679,11 @@ footer strong {
 
 <body>
 
-<!-- ===============================
-     UPDATED HEADER
-================================ -->
-
+<!-- =========================
+     HEADER
+========================= -->
 
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -630,18 +691,15 @@ footer strong {
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
+
         <h1>SIMUDIY Exploration Kit</h1>
+
         <p>Adjustable LED Dimmer</p>
+
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
@@ -672,8 +730,6 @@ footer strong {
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
             <a
@@ -703,85 +759,136 @@ footer strong {
 
 </header>
 
-
-<!-- ===============================
-     SECTION NAVIGATION
-================================ -->
+<!-- =========================
+     NAVIGATION
+========================= -->
 
 <nav>
+
     <a href="../index.html">
-        &larr; Arduino Experiments
+        &#8592; Arduino Experiments
     </a>
 
     <a href="#aim">Aim</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
-   <a href="#circuit">
-Circuit
-</a>
+    <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
     <a href="#result">Result</a>
+
 </nav>
-
-<!-- ===============================
-     MAIN CONTENT
-================================ -->
-
 
 <main class="container">
 
-<!-- PROJECT THUMBNAIL -->
+<!-- =========================
+     EXPERIMENT THUMBNAIL
+========================= -->
 
 <section class="section project-thumbnail">
 
     <img
         src="../Adjustable LED Dimmer.png"
         alt="Adjustable LED Dimmer Experiment Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
     >
+
+    <div
+        id="thumbnail-placeholder"
+        class="note"
+        hidden
+    >
+        The approved experiment thumbnail
+        will appear here once uploaded.
+    </div>
 
 </section>
 
-<!-- AIM -->
+<!-- =========================
+     AIM
+========================= -->
 
 <section class="section" id="aim">
-
 
     <h2>Aim</h2>
 
     <p>
-        To control the brightness of an LED using a
-        10K potentiometer and Arduino UNO.
+        To control the brightness of an LED
+        using a 10kΩ potentiometer and
+        Arduino UNO through Pulse Width
+        Modulation (PWM).
     </p>
 
 </section>
 
-<!-- ABOUT THE EXPERIMENT -->
+<!-- =========================
+     ABOUT THE EXPERIMENT
+========================= -->
 
 <section class="section">
 
     <h2>About the Experiment</h2>
 
     <p>
-        Arduino reads the potentiometer value through
-        analog pin A0. The analog value from 0 to 1023
-        is converted into a PWM brightness value
-        from 0 to 255.
+        The Adjustable LED Dimmer experiment
+        demonstrates how the Arduino UNO
+        controls LED brightness using
+        an analog input and PWM output.
     </p>
 
     <p>
-        The PWM signal is sent to the LED through D9.
-        Rotating the potentiometer changes the LED
-        brightness from very dim or OFF to
+        A 10kΩ potentiometer is connected
+        to analog pin A0.
+    </p>
+
+    <p>
+        When the potentiometer is rotated,
+        its output voltage changes.
+        The Arduino converts this voltage
+        into a digital value ranging
+        from 0 to 1023.
+    </p>
+
+    <p>
+        The Arduino maps the analog
+        value to a PWM brightness
+        value from 0 to 255.
+    </p>
+
+    <p>
+        This PWM signal is sent to
+        the LED through digital pin D9.
+    </p>
+
+    <p>
+        Rotating the potentiometer
+        changes the LED brightness
+        gradually from OFF to
         maximum brightness.
     </p>
 
+    <div class="note">
+
+        <strong>Key Concept:</strong>
+
+        PWM controls LED brightness
+        by rapidly switching the output
+        ON and OFF at different duty cycles.
+
+        Higher duty cycles produce
+        greater average brightness.
+
+    </div>
+
 </section>
 
-<!-- ===============================
-     COMPONENTS
-================================ -->
+<!-- =========================
+     COMPONENTS REQUIRED
+========================= -->
 
 <section class="section" id="components">
 
@@ -790,83 +897,120 @@ Circuit
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO"
+            >
+
             <h4>Arduino UNO R3 (×1)</h4>
+
             <p>
-                Main controller for reading the
-                potentiometer and controlling LED brightness.
+                Main controller used
+                to read the potentiometer
+                and generate PWM signals.
             </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Potentiometer.png" alt="Potentiometer">
-            <h4>10K Potentiometer (×1)</h4>
+
+            <img
+                src="Potentiometer.png"
+                alt="10k Potentiometer"
+            >
+
+            <h4>10kΩ Potentiometer (×1)</h4>
+
             <p>
-                Provides the adjustable analog input
+                Provides the adjustable
+                analog voltage input
                 for brightness control.
             </p>
+
         </div>
 
         <div class="component-card">
-            <img src="LED.png" alt="LED">
+
+            <img
+                src="LED.png"
+                alt="LED"
+            >
+
             <h4>LED (×1)</h4>
+
             <p>
-                Changes brightness according to
-                the potentiometer position.
+                Changes its brightness
+                according to the
+                potentiometer position.
             </p>
+
         </div>
 
         <div class="component-card">
+
             <img
                 src="220 ohm resistor.png"
-                alt="220 ohm resistor"
+                alt="220 Ohm Resistor"
             >
+
             <h4>220Ω Resistor (×1)</h4>
+
             <p>
-                Limits current through the LED.
+                Limits the current
+                flowing through the LED
+                to a safe level.
             </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
             <h4>Breadboard (×1)</h4>
-            <p>Used for circuit assembly.</p>
+
+            <p>
+                Provides a convenient
+                platform for assembling
+                the electrical circuit.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
             <h4>Jumper Wires</h4>
-            <p>Used for electrical connections.</p>
+
+            <p>
+                Used to connect Arduino,
+                potentiometer, LED
+                and breadboard.
+            </p>
+
         </div>
 
     </div>
 
 </section>
 
-   <!-- ===============================
-     CIRCUIT
-================================ -->
-
-<section
-class="section"
-id="circuit">
-
-<h2>Circuit Diagram</h2>
-
-<img
-src="Adjustable LED Dimmer.png"
-alt="Adjustable LED Dimmer Circuit"
-class="circuit-image">
-
-</section>
-
-<!-- ===============================
+<!-- =========================
      CIRCUIT CONNECTIONS
-================================ -->
+========================= -->
 
 <section class="section" id="connections">
 
     <h2>Circuit Connections</h2>
+
+    <h3>Potentiometer → Arduino UNO</h3>
 
     <div class="table-wrap">
 
@@ -874,36 +1018,63 @@ class="circuit-image">
 
             <thead>
                 <tr>
-                    <th>Component</th>
-                    <th>Connection</th>
+                    <th>Potentiometer Terminal</th>
+                    <th>Arduino UNO Pin</th>
+                    <th>Function</th>
                 </tr>
             </thead>
 
             <tbody>
+
                 <tr>
-                    <td>Potentiometer Left Pin</td>
+                    <td>Left Terminal</td>
                     <td>5V</td>
+                    <td>Reference supply</td>
                 </tr>
 
                 <tr>
-                    <td>Potentiometer Middle Pin (Wiper)</td>
+                    <td>Middle Terminal (Wiper)</td>
                     <td>A0</td>
+                    <td>Analog input</td>
                 </tr>
 
                 <tr>
-                    <td>Potentiometer Right Pin</td>
+                    <td>Right Terminal</td>
+                    <td>GND</td>
+                    <td>Ground</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>LED → Arduino UNO</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>LED Connection</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Anode (+)</td>
+                    <td>D9 through 220Ω Resistor</td>
+                </tr>
+
+                <tr>
+                    <td>Cathode (−)</td>
                     <td>GND</td>
                 </tr>
 
-                <tr>
-                    <td>LED Anode (+)</td>
-                    <td>220Ω Resistor → D9</td>
-                </tr>
-
-                <tr>
-                    <td>LED Cathode (−)</td>
-                    <td>GND</td>
-                </tr>
             </tbody>
 
         </table>
@@ -911,96 +1082,806 @@ class="circuit-image">
     </div>
 
     <div class="note">
-        <strong>Potentiometer Input:</strong> A0<br>
-        <strong>LED PWM Output:</strong> D9<br>
-        <strong>Analog Range:</strong> 0–1023<br>
-        <strong>PWM Brightness Range:</strong> 0–255
+
+        <strong>Important Pin Summary:</strong>
+
+        <ul>
+            <li>Potentiometer Wiper → A0</li>
+            <li>LED PWM Output → D9</li>
+            <li>Potentiometer Supply → 5V</li>
+            <li>Potentiometer Ground → GND</li>
+            <li>LED Current-Limiting Resistor → 220Ω</li>
+        </ul>
+
+        <p>
+            All circuit components must
+            share a common ground.
+        </p>
+
+        <p>
+            Ensure correct LED polarity.
+            Never connect an LED directly
+            to the Arduino output without
+            an appropriate current-limiting
+            resistor.
+        </p>
+
     </div>
 
 </section>
 
-<!-- ===============================
+<!-- =========================
+     CIRCUIT DIAGRAM
+========================= -->
+
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <!--
+        Insert the approved circuit PNG:
+
+        <img
+            src="Adjustable LED Dimmer Circuit.png"
+            alt="Adjustable LED Dimmer Circuit Diagram"
+            class="circuit-img"
+        >
+    -->
+
+    <div class="note">
+        The approved Circuit Diagram PNG
+        will appear here once available.
+    </div>
+
+</section>
+
+<!-- =========================
      WORKING PRINCIPLE
-================================ -->
+========================= -->
 
 <section class="section" id="working">
 
     <h2>Working Principle</h2>
 
+    <p>
+        The Arduino reads the voltage
+        from the potentiometer through
+        analog pin A0.
+    </p>
+
     <div class="flow">
-        Arduino Starts<br>
-        ↓<br>
-        Potentiometer value is read through A0<br>
-        ↓<br>
-        Analog value ranges from 0 to 1023<br>
-        ↓<br>
-        Arduino maps the value to PWM range 0 to 255<br>
-        ↓<br>
-        PWM signal is sent to LED through D9<br>
-        ↓<br>
-        Rotating the potentiometer changes LED brightness
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Potentiometer Connected to A0
+
+        <br>↓<br>
+
+        User Rotates Potentiometer
+
+        <br>↓<br>
+
+        Arduino Reads Analog Value
+
+        <br>↓<br>
+
+        Analog Range: 0 to 1023
+
+        <br>↓<br>
+
+        Map Analog Value to PWM
+
+        <br>↓<br>
+
+        PWM Range: 0 to 255
+
+        <br>↓<br>
+
+        Generate PWM on D9
+
+        <br>↓<br>
+
+        LED Brightness Changes
+
+        <br>↓<br>
+
+        Repeat Continuously
+
     </div>
 
+    <h3>Analog Input</h3>
+
+    <p>
+        The potentiometer changes
+        the analog voltage received
+        at Arduino pin A0.
+    </p>
+
+    <p>
+        The analogRead() function
+        converts the voltage into
+        a value between 0 and 1023.
+    </p>
+
+    <h3>Mapping Values</h3>
+
+    <p>
+        Arduino uses the map()
+        function to convert the
+        analog input range
+        into the PWM output range.
+    </p>
+
     <div class="note">
-        <strong>Minimum Potentiometer Value:</strong>
-        LED OFF or very dim<br>
 
-        <strong>Maximum Potentiometer Value:</strong>
-        LED at maximum brightness<br>
+        <strong>Mapping:</strong>
 
-        <strong>Serial Monitor:</strong>
-        Shows potentiometer and brightness values
+        <p>
+            0–1023 → 0–255
+        </p>
+
+    </div>
+
+    <h3>PWM Output</h3>
+
+    <p>
+        The analogWrite() function
+        produces a PWM signal
+        on digital pin D9.
+    </p>
+
+    <p>
+        Changing the PWM duty cycle
+        changes the average power
+        delivered to the LED.
+    </p>
+
+    <h3>LED Brightness</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Potentiometer Reading</th>
+                    <th>PWM Value</th>
+                    <th>LED Condition</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>OFF</td>
+                </tr>
+
+                <tr>
+                    <td>Approximately 512</td>
+                    <td>Approximately 127</td>
+                    <td>Medium brightness</td>
+                </tr>
+
+                <tr>
+                    <td>1023</td>
+                    <td>255</td>
+                    <td>Maximum brightness</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
 
 </section>
 
-<!-- ===============================
+<!-- =========================
      PROCEDURE
-================================ -->
+========================= -->
 
 <section class="section" id="procedure">
 
     <h2>Procedure</h2>
 
     <ol>
-        <li>Connect the left pin of the potentiometer to Arduino 5V.</li>
-        <li>Connect the middle pin of the potentiometer to Arduino A0.</li>
-        <li>Connect the right pin of the potentiometer to Arduino GND.</li>
-        <li>Connect the LED anode to Arduino D9 through a 220Ω resistor.</li>
-        <li>Connect the LED cathode to GND.</li>
-        <li>Connect Arduino UNO to the computer using the USB A-B cable.</li>
-        <li>Open Arduino IDE.</li>
-        <li>Enter the program given below.</li>
-        <li>Select Arduino UNO and the correct COM port.</li>
-        <li>Verify and upload the program.</li>
-        <li>Open Serial Monitor at 9600 baud.</li>
-        <li>Rotate the potentiometer and observe the LED brightness.</li>
+
+        <li>
+            Place the Arduino UNO
+            and breadboard on
+            a stable surface.
+        </li>
+
+        <li>
+            Insert the 10kΩ potentiometer
+            into the breadboard.
+        </li>
+
+        <li>
+            Connect one outer terminal
+            of the potentiometer to
+            Arduino 5V.
+        </li>
+
+        <li>
+            Connect the middle terminal
+            of the potentiometer
+            to Arduino A0.
+        </li>
+
+        <li>
+            Connect the remaining outer
+            terminal to Arduino GND.
+        </li>
+
+        <li>
+            Place the LED on
+            the breadboard.
+        </li>
+
+        <li>
+            Connect the LED anode
+            to D9 through a
+            220Ω resistor.
+        </li>
+
+        <li>
+            Connect the LED cathode
+            to Arduino GND.
+        </li>
+
+        <li>
+            Verify the circuit
+            connections and LED polarity.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create a sketch named
+            Adjustable_LED_Dimmer.ino.
+        </li>
+
+        <li>
+            Copy the complete program
+            from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            under Tools → Board.
+        </li>
+
+        <li>
+            Select the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 9600 baud.
+        </li>
+
+        <li>
+            Rotate the potentiometer
+            clockwise and anticlockwise.
+        </li>
+
+        <li>
+            Observe the change
+            in LED brightness.
+        </li>
+
+        <li>
+            Observe the potentiometer
+            value and calculated
+            PWM brightness value
+            in Serial Monitor.
+        </li>
+
     </ol>
 
 </section>
 
-<!-- ===============================
-     ARDUINO CODE
-================================ -->
+<!-- =========================
+     EXPLORE THE CODE
+========================= -->
 
 <section class="section" id="code">
 
-    <h2>Arduino Code</h2>
+    <div class="code-lesson">
 
-    <div class="code-header">
+        <p class="eyebrow">
+            Arduino Experiment · Code Review
+        </p>
 
-        <span>Adjustable_LED_Dimmer.ino</span>
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
 
-        <button
-            class="copy-button"
-            onclick="copyCode()"
-        >
-            Copy Code
-        </button>
+        <p class="intro">
+            Adjustable LED Dimmer ·
+            Select a step to understand
+            the complete Arduino program.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        Adjustable_LED_Dimmer.ino
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        type="button"
+                        onclick="copyCode()"
+                    >
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div
+                    class="code-body"
+                    id="code-body"
+                >
+                    <code id="code-lines"></code>
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step.
+                    The matching code lines
+                    will automatically highlight
+                    and scroll into view.
+                </p>
+
+                <div class="steps">
+
+                    <button
+                        class="step active"
+                        type="button"
+                        onclick="showStep(0)"
+                    >
+                        <span class="step-number">01</span>
+                        Define pins
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(1)"
+                    >
+                        <span class="step-number">02</span>
+                        Setup function
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(2)"
+                    >
+                        <span class="step-number">03</span>
+                        Set LED output
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(3)"
+                    >
+                        <span class="step-number">04</span>
+                        Start Serial Monitor
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(4)"
+                    >
+                        <span class="step-number">05</span>
+                        Read potentiometer
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(5)"
+                    >
+                        <span class="step-number">06</span>
+                        Map values
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(6)"
+                    >
+                        <span class="step-number">07</span>
+                        Generate PWM
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(7)"
+                    >
+                        <span class="step-number">08</span>
+                        Print readings
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(8)"
+                    >
+                        <span class="step-number">09</span>
+                        Update delay
+                    </button>
+
+                </div>
+
+                <div
+                    class="explanation"
+                    id="explanation"
+                    aria-live="polite"
+                >
+                </div>
+
+                <details>
+
+                    <summary>
+                        Explore more: Analog Input
+                    </summary>
+
+                    <p>
+                        The Arduino UNO includes
+                        a 10-bit Analog-to-Digital
+                        Converter (ADC).
+                    </p>
+
+                    <p>
+                        It converts the voltage
+                        at A0 into an integer
+                        between 0 and 1023.
+                    </p>
+
+                    <p>
+                        The analogRead() function
+                        reads this value.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Explore more: PWM
+                    </summary>
+
+                    <p>
+                        PWM stands for
+                        Pulse Width Modulation.
+                    </p>
+
+                    <p>
+                        Arduino rapidly switches
+                        the LED output HIGH
+                        and LOW.
+                    </p>
+
+                    <p>
+                        The duty cycle controls
+                        the LED brightness.
+                    </p>
+
+                    <ul>
+                        <li>0 → LED OFF</li>
+                        <li>127 → Medium brightness</li>
+                        <li>255 → Maximum brightness</li>
+                    </ul>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Check Your Understanding
+                    </summary>
+
+                    <ol>
+
+                        <li>
+                            Which analog pin reads
+                            the potentiometer?
+                        </li>
+
+                        <li>
+                            Which Arduino pin
+                            controls the LED?
+                        </li>
+
+                        <li>
+                            What is the range
+                            of analogRead()?
+                        </li>
+
+                        <li>
+                            What is the PWM
+                            output range?
+                        </li>
+
+                        <li>
+                            Which function generates
+                            the PWM output?
+                        </li>
+
+                    </ol>
+
+                    <button
+                        class="copy-button"
+                        type="button"
+                        onclick="toggleAnswers()"
+                    >
+                        Show / Hide Answers
+                    </button>
+
+                    <div id="quiz-answers" hidden>
+
+                        <ol>
+                            <li>A0</li>
+                            <li>D9</li>
+                            <li>0 to 1023</li>
+                            <li>0 to 255</li>
+                            <li>analogWrite()</li>
+                        </ol>
+
+                    </div>
+
+                </details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">
+
+            <strong>Try it:</strong>
+
+            Rotate the potentiometer
+            from minimum to maximum
+            and observe the change
+            in LED brightness.
+
+            Compare the analog input
+            values with the generated
+            PWM values in Serial Monitor.
+
+        </p>
 
     </div>
 
-<pre><code id="arduinoCode">#define POT_PIN A0
+</section>
+
+<!-- =========================
+     EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        When the Arduino starts,
+        the potentiometer position
+        determines the PWM output
+        applied to the LED.
+    </p>
+
+    <p>
+        Rotating the potentiometer
+        changes the LED brightness
+        gradually.
+    </p>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Potentiometer Position</th>
+                    <th>PWM Value</th>
+                    <th>LED Output</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Minimum</td>
+                    <td>0</td>
+                    <td>OFF</td>
+                </tr>
+
+                <tr>
+                    <td>Middle</td>
+                    <td>Approximately 127</td>
+                    <td>Medium brightness</td>
+                </tr>
+
+                <tr>
+                    <td>Maximum</td>
+                    <td>255</td>
+                    <td>Maximum brightness</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Serial Monitor Output</h3>
+
+    <div class="note">
+
+        <strong>Example:</strong>
+
+        <pre style="
+            white-space:pre-wrap;
+            background:transparent;
+            color:#1e3a8a;
+            padding:10px;
+            margin:0;
+        ">Potentiometer: 0 Brightness: 0
+Potentiometer: 256 Brightness: 63
+Potentiometer: 512 Brightness: 127
+Potentiometer: 768 Brightness: 191
+Potentiometer: 1023 Brightness: 255</pre>
+
+    </div>
+
+    <p>
+        Actual readings depend on
+        the potentiometer position
+        and may vary slightly.
+    </p>
+
+</section>
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Adjustable LED Dimmer
+        demonstrates how Arduino UNO
+        reads an analog voltage from
+        a 10kΩ potentiometer and converts
+        it into a PWM brightness value.
+    </p>
+
+    <p>
+        Rotating the potentiometer
+        changes the LED brightness
+        from OFF to maximum.
+    </p>
+
+    <p>
+        The Serial Monitor displays
+        the potentiometer reading
+        and calculated PWM value.
+    </p>
+
+</section>
+
+<!-- =========================
+     WHAT YOU LEARN
+========================= -->
+
+<section class="section">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+
+        <li>
+            Understanding the working
+            principle of a potentiometer.
+        </li>
+
+        <li>
+            Reading analog voltage
+            using Arduino pin A0.
+        </li>
+
+        <li>
+            Understanding analog
+            input values from 0 to 1023.
+        </li>
+
+        <li>
+            Converting analog readings
+            into PWM values using map().
+        </li>
+
+        <li>
+            Generating PWM signals
+            using analogWrite().
+        </li>
+
+        <li>
+            Controlling LED brightness
+            through PWM duty cycles.
+        </li>
+
+        <li>
+            Understanding why LEDs
+            require current-limiting resistors.
+        </li>
+
+        <li>
+            Displaying sensor readings
+            through Serial Monitor.
+        </li>
+
+        <li>
+            Understanding continuous
+            program execution
+            using loop().
+        </li>
+
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <strong>Arduino Experiment</strong>
+
+    <p>Adjustable LED Dimmer</p>
+
+</footer>
+
+<!-- =========================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+========================================= -->
+
+<script type="text/plain" id="arduino-program">
+#define POT_PIN A0
 #define LED_PIN 9
 
 void setup()
@@ -1024,113 +1905,361 @@ void loop()
   Serial.println(brightness);
 
   delay(20);
-}</code></pre>
+}
+</script>
 
-</section>
-
-<!-- ===============================
-     EXPECTED OUTPUT
-================================ -->
-
-<section class="section">
-
-    <h2>Expected Output</h2>
-
-    <p>
-        Rotating the potentiometer changes the brightness
-        of the LED. The potentiometer value and calculated
-        brightness value are displayed on the Serial Monitor.
-    </p>
-
-    <div class="note">
-
-        <strong>Potentiometer Minimum:</strong>
-        LED OFF or very dim<br>
-
-        <strong>Potentiometer Maximum:</strong>
-        LED at maximum brightness<br>
-
-        <strong>Serial Monitor:</strong>
-        Potentiometer value and brightness value
-
-    </div>
-
-</section>
-
-<!-- ===============================
-     RESULT
-================================ -->
-
-<section class="section" id="result">
-
-    <h2>Result</h2>
-
-    <p>
-        The Adjustable LED Dimmer experiment was implemented
-        using Arduino UNO, a 10K potentiometer, an LED and a
-        220Ω resistor. The LED brightness changes according
-        to the potentiometer position.
-    </p>
-
-</section>
-
-<!-- ===============================
-     WHAT YOU LEARN
-================================ -->
-
-<section class="section">
-
-    <h2>What You Learn</h2>
-
-    <ul>
-        <li>How to read an analog potentiometer using Arduino A0.</li>
-        <li>How analog values range from 0 to 1023.</li>
-        <li>How to map an analog value to a PWM range of 0 to 255.</li>
-        <li>How to control LED brightness using analogWrite().</li>
-        <li>How to use a 220Ω resistor with an LED.</li>
-        <li>How to view potentiometer and brightness values in the Serial Monitor.</li>
-    </ul>
-
-</section>
-
-</main>
-
-<!-- ===============================
-     FOOTER
-================================ -->
-
-<footer>
-    <strong>Arduino Experiment</strong><br>
-    Adjustable LED Dimmer
-</footer>
-
-<!-- ===============================
-     COPY CODE FUNCTION
-================================ -->
+<!-- =========================================
+     CODE EXPLORER JAVASCRIPT
+========================================= -->
 
 <script>
 
-function copyCode() {
+/* =========================
+   COMPLETE PROGRAM
+========================= */
 
-    const code = document.getElementById(
-        "arduinoCode"
-    ).innerText;
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
 
-    navigator.clipboard.writeText(code);
+const lines = program.split("\n");
 
-    const button = document.querySelector(
-        ".copy-button"
-    );
+/* =========================
+   EXPLANATION STEPS
+========================= */
 
-    button.innerText = "Copied!";
+const steps = [
 
-    setTimeout(function() {
-        button.innerText = "Copy Code";
-    }, 1500);
+    {
+        title: "Define pins",
+        search: "#define POT_PIN",
+        count: 2,
+        text:
+            "POT_PIN defines Arduino A0 as the " +
+            "potentiometer input, while LED_PIN " +
+            "defines D9 as the LED PWM output."
+    },
+
+    {
+        title: "Setup function",
+        search: "void setup()",
+        count: 5,
+        text:
+            "The setup function runs once " +
+            "when Arduino starts. It configures " +
+            "the LED output and initializes " +
+            "Serial communication."
+    },
+
+    {
+        title: "Set LED output",
+        search: "pinMode(LED_PIN, OUTPUT)",
+        count: 1,
+        text:
+            "The pinMode function configures " +
+            "digital pin D9 as an output so " +
+            "Arduino can control the LED."
+    },
+
+    {
+        title: "Start Serial Monitor",
+        search: "Serial.begin(9600)",
+        count: 1,
+        text:
+            "Serial communication starts " +
+            "at 9600 baud so sensor and " +
+            "brightness values can be " +
+            "viewed on Serial Monitor."
+    },
+
+    {
+        title: "Read potentiometer",
+        search: "int potValue = analogRead(POT_PIN)",
+        count: 1,
+        text:
+            "The analogRead function reads " +
+            "the voltage at A0 and produces " +
+            "a numerical value from 0 to 1023."
+    },
+
+    {
+        title: "Map values",
+        search: "int brightness = map(",
+        count: 1,
+        text:
+            "The map function converts " +
+            "the potentiometer reading " +
+            "from the range 0–1023 into " +
+            "the PWM range 0–255."
+    },
+
+    {
+        title: "Generate PWM",
+        search: "analogWrite(LED_PIN, brightness)",
+        count: 1,
+        text:
+            "The analogWrite function " +
+            "outputs a PWM signal on D9. " +
+            "Its duty cycle controls " +
+            "the LED brightness."
+    },
+
+    {
+        title: "Print readings",
+        search: 'Serial.print("Potentiometer: ")',
+        count: 5,
+        text:
+            "The program prints the " +
+            "potentiometer reading and " +
+            "calculated brightness value " +
+            "to Serial Monitor."
+    },
+
+    {
+        title: "Update delay",
+        search: "delay(20)",
+        count: 1,
+        text:
+            "The delay function waits " +
+            "20 milliseconds before " +
+            "the next reading."
+    }
+
+];
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 
 }
+
+/* =========================
+   DISPLAY CODE WITH LINE NUMBERS
+========================= */
+
+function displayCode() {
+
+    let output = "";
+
+    lines.forEach(function(line, index) {
+
+        output +=
+            '<span class="code-line" id="line-' +
+            (index + 1) +
+            '">' +
+            '<span class="line-number">' +
+            (index + 1) +
+            '</span>' +
+            '<span>' +
+            escapeHtml(line) +
+            '</span>' +
+            '</span>';
+
+    });
+
+    document
+        .getElementById("code-lines")
+        .innerHTML = output;
+
+}
+
+/* =========================
+   SHOW SELECTED STEP
+========================= */
+
+function showStep(index) {
+
+    const step = steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+
+        });
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+
+        });
+
+    const foundLine = lines.findIndex(function(line) {
+
+        return line
+            .trim()
+            .startsWith(step.search);
+
+    });
+
+    if (foundLine >= 0) {
+
+        const lastLine = Math.min(
+            foundLine + step.count - 1,
+            lines.length - 1
+        );
+
+        for (
+            let i = foundLine;
+            i <= lastLine;
+            i++
+        ) {
+
+            const selected = document
+                .getElementById(
+                    "line-" + (i + 1)
+                );
+
+            if (selected) {
+                selected.classList.add("selected");
+            }
+
+        }
+
+        const selectedLine = document
+            .getElementById(
+                "line-" + (foundLine + 1)
+            );
+
+        const codeBody = document
+            .getElementById("code-body");
+
+        if (selectedLine && codeBody) {
+
+            codeBody.scrollTo({
+
+                top:
+                    selectedLine.offsetTop -
+                    codeBody.offsetTop -
+                    20,
+
+                behavior: "smooth"
+
+            });
+
+        }
+
+    }
+
+    document
+        .getElementById("explanation")
+        .innerHTML =
+            "<h3>" +
+            (index + 1) +
+            ". " +
+            step.title +
+            "</h3>" +
+            "<p>" +
+            step.text +
+            "</p>";
+
+}
+
+/* =========================
+   COPY COMPLETE ARDUINO CODE
+========================= */
+
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.innerText = "Copied!";
+
+        setTimeout(function() {
+            button.innerText = "Copy Code";
+        }, 1500);
+
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document
+            .createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        const copied = document.execCommand("copy");
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.innerText = "Copy failed";
+        }
+
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(program);
+
+            showSuccess();
+
+        } catch (error) {
+
+            fallbackCopy();
+
+        }
+
+    } else {
+
+        fallbackCopy();
+
+    }
+
+}
+
+/* =========================
+   CHECK YOUR UNDERSTANDING
+========================= */
+
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+
+}
+
+/* =========================
+   INITIALIZE CODE VIEWER
+========================= */
+
+displayCode();
+
+showStep(0);
 
 </script>
 
 </body>
+
 </html>
