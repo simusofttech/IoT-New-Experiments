@@ -1,17 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment- Digital Tone Generator</title>
-<style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+<title>Digital Tone Generator</title>
 
+<style>
+/* ==================================
+   BASIC PAGE STYLE
+================================== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* ==================================
+   HEADER
+================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -22,8 +39,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -37,8 +52,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -56,8 +69,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -65,26 +76,15 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -100,15 +100,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -126,18 +124,455 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* ==================================
+   NAVIGATION
+================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
-@media (max-width: 900px) {
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* ==================================
+   MAIN CONTENT
+================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 20px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* ==================================
+   THUMBNAIL
+================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* ==================================
+   COMPONENT CARDS
+================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ==================================
+   TABLES
+================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* ==================================
+   NOTES AND CIRCUIT
+================================== */
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* ==================================
+   WORKING PRINCIPLE
+================================== */
+.flow {
+    text-align: center;
+    font-weight: bold;
+    color: #1e3a8a;
+    font-size: 18px;
+    line-height: 2;
+}
+
+/* ==================================
+   EXPLORE THE CODE
+================================== */
+.code-lesson {
+    color: #142e3a;
+}
+
+.eyebrow {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    color: #1e3a8a !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr)
+        minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+    min-width: 0;
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas,Monaco,monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas,Monaco,monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+    background: #f8fbff;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* ==================================
+   FOOTER
+================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* ==================================
+   RESPONSIVE DESIGN
+================================== */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
-@media (max-width: 600px) {
+    .code-body {
+        height: 450px;
+    }
+}
 
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -183,48 +618,32 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}nav a:hover{color:#2563eb}
-.container{width:90%;max-width:950px;margin:35px auto}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
-.section h3{color:#1e3a8a;margin-top:22px}.section p{margin-bottom:10px}
-ul,ol{padding-left:24px}li{margin-bottom:8px}.table-wrap{overflow-x:auto}
-table{width:100%;min-width:560px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}
-th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
-.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:white;border-radius:8px 8px 0 0}
-.copy-button{border:0;padding:7px 12px;background:#2563eb;color:white;border-radius:5px;cursor:pointer;font-weight:bold}
-pre{margin:0;padding:20px;overflow-x:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font-family:Consolas,monospace;font-size:14px;line-height:1.7}
-.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:box-shadow .2s,transform .2s}
-.component-card:hover{box-shadow:0 6px 15px rgba(0,0,0,.08);transform:translateY(-2px)}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
-.component-card p{color:#475569;font-size:14px;margin:0;line-height:1.5}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}footer strong{color:white}
-@media(max-width:600px){.header{padding:35px 15px}.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}nav{gap:11px}}
 </style>
 </head>
-<body>
-<header class="header">
 
-    <!-- COMPANY LOGO - TOP LEFT -->
+<body>
+
+<!-- ==================================
+     HEADER
+================================== -->
+<header class="header">
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -232,40 +651,27 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Digital Tone Generator</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -274,28 +680,20 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
@@ -305,102 +703,1028 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
 
 </header>
 
+<!-- ==================================
+     NAVIGATION
+================================== -->
 <nav>
-<a href="../index.html">← Arduino Projects</a>
-<a href="#aim">Aim</a>
-<a href="#components">Components</a>
-<a href="#connections">Connections</a>
-<a href="#working">Working</a>
-<a href="#procedure">Procedure</a>
-<a href="#code">Code</a>
-<a href="#result">Result</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
 </nav>
 
 <main class="container">
 
+<!-- ==================================
+     THUMBNAIL
+================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Digital Tone Generator.png"
+        alt="Digital Tone Generator Thumbnail"
+        onerror="
+            this.hidden=true;
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- ==================================
+     1. AIM
+================================== -->
 <section class="section" id="aim">
-<h2>Aim</h2>
-<p>To create a Digital Tone Generator using Arduino UNO, a 10 kΩ potentiometer and an active buzzer, where rotating the potentiometer changes the pitch of the sound.</p>
+
+    <h2>Aim</h2>
+
+    <p>
+        To create a Digital Tone Generator
+        using Arduino UNO, a 10 kΩ
+        potentiometer and a buzzer,
+        where rotating the potentiometer
+        changes the generated sound frequency
+        and therefore the pitch.
+    </p>
+
 </section>
 
+<!-- ==================================
+     2. ABOUT THE EXPERIMENT
+================================== -->
 <section class="section">
-<h2>About the Project</h2>
-<p>The potentiometer provides an analog value to Arduino through pin A0. Arduino converts this value into a sound frequency between 100 Hz and 2000 Hz.</p>
-<p>The buzzer connected to digital pin 8 produces the corresponding tone. Rotating the potentiometer changes the frequency and therefore changes the pitch.</p>
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Digital Tone Generator
+        demonstrates how Arduino UNO
+        can generate different sound
+        frequencies using a potentiometer.
+    </p>
+
+    <p>
+        The 10 kΩ potentiometer works
+        as an adjustable voltage divider.
+        Its middle terminal provides
+        a variable analog voltage
+        to Arduino input A0.
+    </p>
+
+    <p>
+        Arduino reads the analog value
+        using analogRead(), producing
+        a value from 0 to 1023.
+    </p>
+
+    <p>
+        The map() function converts
+        this reading into a frequency
+        between 100 Hz and 2000 Hz.
+    </p>
+
+    <p>
+        Arduino then uses tone()
+        to generate a square-wave
+        signal on digital pin D8.
+    </p>
+
+    <p>
+        As the potentiometer rotates,
+        the frequency changes and
+        a compatible buzzer produces
+        a different sound pitch.
+    </p>
+
+    <div class="note">
+
+        <strong>Hardware Compatibility:</strong>
+
+        The uploaded experiment specifies
+        an active buzzer. However, an
+        active buzzer with its own fixed
+        oscillator may not reproduce
+        different pitches from tone().
+
+        A passive buzzer is generally
+        more suitable for the
+        variable-frequency behavior.
+
+        The supplied component list
+        and original code are preserved
+        here; verify the actual buzzer
+        before classroom testing.
+
+    </div>
+
 </section>
 
+<!-- ==================================
+     3. COMPONENTS REQUIRED
+================================== -->
 <section class="section" id="components">
-<h2>Components Required</h2>
-<div class="components-grid">
-<div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO R3"><h4>Arduino UNO R3 (×1)</h4><p>Main controller for reading the potentiometer and generating the tone.</p></div>
-<div class="component-card"><img src="Potentiometer.png" alt="10k Potentiometer"><h4>Potentiometer 10 kΩ (×1)</h4><p>Controls the analog input value and therefore the sound pitch.</p></div>
-<div class="component-card"><img src="Buzzer.png" alt="Active Buzzer"><h4>Active Buzzer (×1)</h4><p>Produces the output sound.</p></div>
-<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Used for circuit connections.</p></div>
-<div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard (×1)</h4><p>Used to assemble the circuit.</p></div>
-</div>
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3"
+            >
+
+            <h4>Arduino UNO R3 (×1)</h4>
+
+            <p>
+                Main controller that reads
+                the potentiometer and
+                generates the tone.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Potentiometer.png"
+                alt="10k Potentiometer"
+            >
+
+            <h4>Potentiometer 10 kΩ (×1)</h4>
+
+            <p>
+                Provides adjustable
+                analog input to change
+                the tone frequency.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Buzzer.png"
+                alt="Buzzer"
+            >
+
+            <h4>Active Buzzer (×1)</h4>
+
+            <p>
+                Sound output component
+                listed in the original
+                experiment.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
+            <h4>Breadboard (×1)</h4>
+
+            <p>
+                Used to assemble the
+                experimental circuit.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Used for connections
+                between the Arduino
+                and components.
+            </p>
+
+        </div>
+
+    </div>
+
 </section>
 
+<!-- ==================================
+     4. CIRCUIT CONNECTIONS
+================================== -->
 <section class="section" id="connections">
-<h2>Circuit Connections</h2>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Component</th><th>Pin</th><th>Arduino UNO R3</th></tr></thead>
-<tbody>
-<tr><td>Potentiometer</td><td>Left Pin</td><td>5V</td></tr>
-<tr><td>Potentiometer</td><td>Middle Pin (Wiper)</td><td>A0</td></tr>
-<tr><td>Potentiometer</td><td>Right Pin</td><td>GND</td></tr>
-<tr><td>Active Buzzer</td><td>+</td><td>D8</td></tr>
-<tr><td>Active Buzzer</td><td>−</td><td>GND</td></tr>
-</tbody>
-</table>
-</div>
+
+    <h2>Circuit Connections</h2>
+
+    <h3>Potentiometer Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Potentiometer</td>
+                    <td>Left terminal</td>
+                    <td>5V</td>
+                </tr>
+
+                <tr>
+                    <td>Potentiometer</td>
+                    <td>Middle terminal (Wiper)</td>
+                    <td>A0</td>
+                </tr>
+
+                <tr>
+                    <td>Potentiometer</td>
+                    <td>Right terminal</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Buzzer Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Buzzer</td>
+                    <td>Positive (+)</td>
+                    <td>D8</td>
+                </tr>
+
+                <tr>
+                    <td>Buzzer</td>
+                    <td>Negative (−)</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Pin Summary:</strong>
+
+        <ul>
+            <li>Potentiometer Wiper → A0</li>
+            <li>Potentiometer Outer Pins → 5V and GND</li>
+            <li>Buzzer Positive → D8</li>
+            <li>Buzzer Negative → GND</li>
+        </ul>
+
+        <p>
+            Confirm the buzzer's electrical
+            specifications before connecting
+            it directly to D8. A buzzer
+            requiring more current than
+            the Arduino output can safely
+            supply needs an appropriate
+            driver circuit.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- ==================================
+     5. CIRCUIT DIAGRAM
+================================== -->
 <section class="section" id="circuit">
-<h2>Circuit Diagram</h2>
-<p>Connect the potentiometer to 5V, A0 and GND, and connect the active buzzer between digital pin 8 and GND.</p>
-<img class="circuit-img" src="Digital_Tone_Generator_Circuit.png" alt="Digital Tone Generator Circuit Diagram">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="Digital_Tone_Generator_Circuit.png"
+        alt="Digital Tone Generator Circuit Diagram"
+        onerror="
+            this.hidden=true;
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden
+    >
+        Approved circuit diagram PNG pending.
+        Add the verified circuit image
+        with the filename shown above.
+    </div>
+
 </section>
 
+<!-- ==================================
+     6. WORKING PRINCIPLE
+================================== -->
 <section class="section" id="working">
-<h2>Working Principle</h2>
-<div class="flow">
-Turn the Potentiometer<br>↓<br>
-Arduino reads the value through A0<br>↓<br>
-Analog value ranges from 0 to 1023<br>↓<br>
-Arduino maps the value to 100–2000 Hz<br>↓<br>
-Tone is generated on digital pin 8<br>↓<br>
-Buzzer produces the corresponding sound<br>↓<br>
-Rotating the potentiometer changes the pitch
-</div>
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Potentiometer Supplies Variable Voltage
+
+        <br>↓<br>
+
+        Arduino Reads Analog Input A0
+
+        <br>↓<br>
+
+        Analog Value Ranges from 0 to 1023
+
+        <br>↓<br>
+
+        map() Converts Reading to 100–2000 Hz
+
+        <br>↓<br>
+
+        tone() Generates Signal on D8
+
+        <br>↓<br>
+
+        Compatible Buzzer Produces Sound
+
+        <br>↓<br>
+
+        Rotating Potentiometer Changes Pitch
+
+        <br>↓<br>
+
+        Repeat Every 20 ms
+
+    </div>
+
+    <h3>Analog Input Reading</h3>
+
+    <p>
+        The Arduino UNO reads the
+        potentiometer using the
+        analogRead() function.
+    </p>
+
+    <p>
+        The analog-to-digital converter
+        produces a number between
+        0 and 1023.
+    </p>
+
+    <h3>Frequency Mapping</h3>
+
+    <p>
+        The map() function converts
+        the analog value into
+        a frequency between
+        100 Hz and 2000 Hz.
+    </p>
+
+    <div class="note">
+
+        <strong>Arduino Formula:</strong>
+
+        <p>
+            frequency = map(potValue, 0, 1023, 100, 2000);
+        </p>
+
+    </div>
+
+    <h3>Sound Generation</h3>
+
+    <p>
+        The tone() function produces
+        a square-wave signal at the
+        specified frequency on D8.
+    </p>
+
+    <p>
+        The code repeatedly adjusts
+        the frequency as the
+        potentiometer position changes.
+    </p>
+
 </section>
 
+<!-- ==================================
+     7. PROCEDURE
+================================== -->
 <section class="section" id="procedure">
-<h2>Procedure</h2>
-<ol>
-<li>Place the Arduino UNO, potentiometer, buzzer and breadboard on the working area.</li>
-<li>Connect the left pin of the potentiometer to 5V.</li>
-<li>Connect the middle pin (wiper) of the potentiometer to A0.</li>
-<li>Connect the right pin of the potentiometer to GND.</li>
-<li>Connect the positive terminal of the active buzzer to digital pin 8.</li>
-<li>Connect the negative terminal of the buzzer to GND.</li>
-<li>Connect the Arduino UNO to the computer using USB.</li>
-<li>Open Arduino IDE.</li>
-<li>Enter the program given below.</li>
-<li>Select Arduino UNO from Tools → Board.</li>
-<li>Select the correct COM port.</li>
-<li>Click Verify and then Upload.</li>
-<li>Rotate the potentiometer and observe the change in buzzer pitch.</li>
-</ol>
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Place the Arduino UNO,
+            potentiometer, buzzer
+            and breadboard on
+            the working surface.
+        </li>
+
+        <li>
+            Identify the three
+            potentiometer terminals.
+        </li>
+
+        <li>
+            Connect the left terminal
+            of the potentiometer
+            to Arduino 5V.
+        </li>
+
+        <li>
+            Connect the middle
+            terminal (wiper)
+            to Arduino A0.
+        </li>
+
+        <li>
+            Connect the right terminal
+            to Arduino GND.
+        </li>
+
+        <li>
+            Verify the buzzer's type
+            and electrical requirements.
+        </li>
+
+        <li>
+            Connect the buzzer's
+            positive terminal
+            to D8 if suitable
+            for direct pin drive.
+        </li>
+
+        <li>
+            Connect its negative
+            terminal to GND.
+        </li>
+
+        <li>
+            Check all electrical
+            connections and polarity.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create a sketch named
+            Digital_Tone_Generator.ino.
+        </li>
+
+        <li>
+            Copy the complete Arduino
+            sketch from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Rotate the potentiometer
+            slowly in one direction.
+        </li>
+
+        <li>
+            Observe the generated
+            sound from a compatible buzzer.
+        </li>
+
+        <li>
+            Rotate the potentiometer
+            in the opposite direction.
+        </li>
+
+        <li>
+            Compare the lower
+            and higher sound pitches.
+        </li>
+
+    </ol>
+
 </section>
 
+<!-- ==================================
+     8. EXPLORE THE CODE
+================================== -->
 <section class="section" id="code">
-<h2>Arduino Code</h2>
-<div class="code-header">
-<span>Digital_Tone_Generator.ino</span>
-<button class="copy-button" onclick="copyCode()">Copy Code</button>
-</div>
-<pre><code id="arduinoCode">const int potPin = A0;
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Arduino Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Digital Tone Generator ·
+            Select a step to understand
+            the complete Arduino program.
+        </p>
+
+        <div class="code-layout">
+
+            <!-- CODE PANEL -->
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        Digital_Tone_Generator.ino
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        type="button"
+                        onclick="copyCode()"
+                    >
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div class="code-body" id="code-body">
+                    <code id="code-lines"></code>
+                </div>
+
+            </article>
+
+            <!-- EXPLANATION GUIDE -->
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Select a step to highlight
+                    and scroll to the
+                    matching code lines.
+                </p>
+
+                <div class="steps">
+
+                    <button class="step active"
+                            type="button"
+                            onclick="showStep(0)">
+                        <span class="step-number">01</span>
+                        Define potentiometer pin
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(1)">
+                        <span class="step-number">02</span>
+                        Define buzzer pin
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(2)">
+                        <span class="step-number">03</span>
+                        Start setup function
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(3)">
+                        <span class="step-number">04</span>
+                        Configure buzzer output
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(4)">
+                        <span class="step-number">05</span>
+                        Begin main loop
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(5)">
+                        <span class="step-number">06</span>
+                        Read potentiometer
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(6)">
+                        <span class="step-number">07</span>
+                        Understand ADC range
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(7)">
+                        <span class="step-number">08</span>
+                        Map frequency
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(8)">
+                        <span class="step-number">09</span>
+                        Generate output tone
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(9)">
+                        <span class="step-number">10</span>
+                        Repeat after delay
+                    </button>
+
+                </div>
+
+                <div
+                    class="explanation"
+                    id="explanation"
+                    aria-live="polite"
+                ></div>
+
+                <details>
+
+                    <summary>
+                        Explore more: Frequency and Pitch
+                    </summary>
+
+                    <p>
+                        Frequency represents
+                        the number of
+                        sound vibrations
+                        per second.
+                    </p>
+
+                    <p>
+                        Higher frequencies
+                        normally produce
+                        higher-pitched sounds.
+                        Lower frequencies
+                        produce lower-pitched sounds.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Explore more: Active vs Passive Buzzer
+                    </summary>
+
+                    <p>
+                        A passive buzzer
+                        responds to an
+                        externally generated
+                        oscillating signal.
+                    </p>
+
+                    <p>
+                        An active buzzer
+                        generally contains
+                        an internal oscillator
+                        and is designed to
+                        sound when powered.
+                    </p>
+
+                    <p>
+                        For the variable
+                        tone() frequencies
+                        used in this sketch,
+                        a passive buzzer
+                        is normally preferred.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Check Your Understanding
+                    </summary>
+
+                    <ol>
+                        <li>
+                            Which Arduino pin
+                            reads the potentiometer?
+                        </li>
+                        <li>
+                            Which pin generates
+                            the tone signal?
+                        </li>
+                        <li>
+                            What is the range
+                            of analogRead() values?
+                        </li>
+                        <li>
+                            Which function
+                            converts the analog
+                            value into frequency?
+                        </li>
+                        <li>
+                            What is the
+                            output frequency range?
+                        </li>
+                    </ol>
+
+                    <button
+                        class="copy-button"
+                        type="button"
+                        onclick="toggleAnswers()"
+                    >
+                        Show / Hide Answers
+                    </button>
+
+                    <div id="quiz-answers" hidden>
+
+                        <ol>
+                            <li>A0</li>
+                            <li>D8</li>
+                            <li>0–1023</li>
+                            <li>map()</li>
+                            <li>100–2000 Hz</li>
+                        </ol>
+
+                    </div>
+
+                </details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">
+
+            <strong>Try it:</strong>
+
+            Slowly rotate the potentiometer
+            while listening to a compatible
+            buzzer. Observe how the sound
+            changes as the analog input
+            value increases or decreases.
+
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ==================================
+     9. EXPECTED OUTPUT
+================================== -->
+<section class="section">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        When Arduino is powered,
+        the program continuously reads
+        the potentiometer and generates
+        a corresponding tone signal.
+    </p>
+
+    <p>
+        Rotating the potentiometer
+        changes the output frequency
+        between approximately
+        100 Hz and 2000 Hz.
+    </p>
+
+    <p>
+        With a compatible sound
+        transducer, the output pitch
+        changes as the potentiometer
+        position changes.
+    </p>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Approximate Analog Value</th>
+                    <th>Output Frequency</th>
+                    <th>Expected Pitch</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>100 Hz</td>
+                    <td>Lowest</td>
+                </tr>
+
+                <tr>
+                    <td>256</td>
+                    <td>575 Hz</td>
+                    <td>Low–Medium</td>
+                </tr>
+
+                <tr>
+                    <td>512</td>
+                    <td>1050 Hz</td>
+                    <td>Medium</td>
+                </tr>
+
+                <tr>
+                    <td>768</td>
+                    <td>1526 Hz</td>
+                    <td>Medium–High</td>
+                </tr>
+
+                <tr>
+                    <td>1023</td>
+                    <td>2000 Hz</td>
+                    <td>Highest</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Note:</strong>
+        These are expected mapped
+        frequency values from
+        the Arduino sketch,
+        not measured buzzer frequencies.
+
+        The audible result depends
+        on the buzzer hardware.
+
+    </div>
+
+</section>
+
+<!-- ==================================
+     10. RESULT
+================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Digital Tone Generator
+        experiment demonstrates
+        how Arduino UNO converts
+        a variable potentiometer
+        input into an adjustable
+        output frequency.
+    </p>
+
+    <p>
+        The Arduino uses analogRead(),
+        map() and tone() to generate
+        signals between 100 Hz
+        and 2000 Hz.
+    </p>
+
+    <p>
+        A compatible buzzer converts
+        the changing frequency into
+        audible tones with different
+        pitches.
+    </p>
+
+</section>
+
+<!-- ==================================
+     11. WHAT YOU LEARN
+================================== -->
+<section class="section">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>
+            Connecting a 10 kΩ
+            potentiometer to Arduino UNO.
+        </li>
+
+        <li>
+            Understanding a
+            variable voltage divider.
+        </li>
+
+        <li>
+            Reading analog input
+            using analogRead().
+        </li>
+
+        <li>
+            Understanding the
+            0–1023 ADC range.
+        </li>
+
+        <li>
+            Using map() to convert
+            analog values into
+            output frequencies.
+        </li>
+
+        <li>
+            Generating square-wave
+            signals using tone().
+        </li>
+
+        <li>
+            Understanding frequency
+            and sound pitch.
+        </li>
+
+        <li>
+            Controlling sound frequency
+            through a potentiometer.
+        </li>
+
+        <li>
+            Understanding the difference
+            between active and passive buzzers.
+        </li>
+
+        <li>
+            Creating an adjustable
+            digital tone generator.
+        </li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- ==================================
+     FOOTER
+================================== -->
+<footer>
+    <strong>Arduino Experiment</strong>
+    <p>Digital Tone Generator</p>
+</footer>
+
+<!-- =========================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+========================================= -->
+
+<script type="text/plain" id="arduino-program">
+const int potPin = A0;
 const int buzzerPin = 8;
 
 void setup () {
@@ -418,46 +1742,365 @@ void loop() {
   tone(buzzerPin, frequency);
 
   delay(20);
-}</code></pre>
-</section>
-
-<section class="section">
-<h2>Expected Output</h2>
-<p>When the potentiometer is rotated, the buzzer pitch changes continuously. One direction produces a lower tone while the opposite direction produces a higher tone.</p>
-<div class="note">Potentiometer value: <strong>0–1023</strong><br>Output frequency: <strong>100–2000 Hz</strong></div>
-</section>
-
-<section class="section" id="result">
-<h2>Result</h2>
-<p>The Digital Tone Generator project was implemented using Arduino UNO, a 10 kΩ potentiometer and an active buzzer. Rotating the potentiometer changes the tone frequency and therefore changes the pitch of the sound.</p>
-</section>
-
-<section class="section">
-<h2>What You Learn</h2>
-<ul>
-<li>How to connect a potentiometer to Arduino UNO.</li>
-<li>How to read analog input using analogRead().</li>
-<li>How to map a sensor value using map().</li>
-<li>How to generate a tone using the tone() function.</li>
-<li>How to control sound frequency using an analog input.</li>
-</ul>
-</section>
-
-</main>
-
-<footer>
-<strong>Arduino Project No. 1</strong><br>
-Digital Tone Generator
-</footer>
-
-<script>
-function copyCode(){
-  const code=document.getElementById("arduinoCode").innerText;
-  navigator.clipboard.writeText(code);
-  const button=document.querySelector(".copy-button");
-  button.innerText="Copied!";
-  setTimeout(function(){button.innerText="Copy Code";},1500);
 }
 </script>
+
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
+
+<script>
+
+/* =========================
+   COMPLETE PROGRAM SOURCE
+========================= */
+
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =========================
+   EXPLANATION STEPS
+========================= */
+
+const steps = [
+
+    {
+        title: "Define potentiometer pin",
+        start: "const int potPin = A0;",
+        end: "const int potPin = A0;",
+        text:
+            "The potPin variable identifies " +
+            "analog pin A0 as the input " +
+            "for the potentiometer."
+    },
+
+    {
+        title: "Define buzzer pin",
+        start: "const int buzzerPin = 8;",
+        end: "const int buzzerPin = 8;",
+        text:
+            "The buzzerPin variable " +
+            "identifies digital pin D8 " +
+            "as the output for the tone."
+    },
+
+    {
+        title: "Start setup function",
+        start: "void setup () {",
+        end: "void setup () {",
+        text:
+            "The setup() function runs once " +
+            "when Arduino starts."
+    },
+
+    {
+        title: "Configure buzzer output",
+        start: "pinMode(buzzerPin, OUTPUT);",
+        end: "pinMode(buzzerPin, OUTPUT);",
+        text:
+            "The buzzer pin is configured " +
+            "as an output."
+    },
+
+    {
+        title: "Begin main loop",
+        start: "void loop() {",
+        end: "void loop() {",
+        text:
+            "The loop() function repeats " +
+            "continuously while Arduino " +
+            "is running."
+    },
+
+    {
+        title: "Read potentiometer",
+        start: "int potValue = analogRead(potPin);",
+        end: "int potValue = analogRead(potPin);",
+        text:
+            "analogRead() measures the " +
+            "voltage at A0 and stores " +
+            "the converted digital " +
+            "value in potValue."
+    },
+
+    {
+        title: "Understand ADC range",
+        start: "// Convert potentiometer value (0–1023)",
+        end: "// into frequency (100–2000 Hz)",
+        text:
+            "The Arduino UNO converts the " +
+            "potentiometer voltage into " +
+            "a digital reading between " +
+            "zero and 1023."
+    },
+
+    {
+        title: "Map frequency",
+        start: "int frequency = map(",
+        end: "int frequency = map(",
+        text:
+            "map() converts the analog " +
+            "reading into a frequency " +
+            "between 100 Hz and 2000 Hz."
+    },
+
+    {
+        title: "Generate output tone",
+        start: "tone(buzzerPin, frequency);",
+        end: "tone(buzzerPin, frequency);",
+        text:
+            "tone() generates a square-wave " +
+            "signal on D8 at the " +
+            "calculated frequency."
+    },
+
+    {
+        title: "Repeat after delay",
+        start: "delay(20);",
+        end: "delay(20);",
+        text:
+            "Arduino waits 20 milliseconds " +
+            "before reading the " +
+            "potentiometer again."
+    }
+
+];
+
+/* =========================
+   ESCAPE HTML CHARACTERS
+========================= */
+
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+}
+
+/* =========================
+   DISPLAY CODE WITH LINE NUMBERS
+========================= */
+
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+
+        }).join("");
+
+}
+
+/* =========================
+   FIND MATCHING CODE LINE
+========================= */
+
+function findLine(searchText, startIndex = 0) {
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+
+    }
+
+    return -1;
+
+}
+
+/* =========================
+   SHOW AND HIGHLIGHT CODE STEP
+========================= */
+
+function showStep(index) {
+
+    const step = steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+
+        });
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+        return;
+    }
+
+    let endLine = findLine(
+        step.end,
+        startLine
+    );
+
+    if (endLine < 0) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+
+    }
+
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+
+}
+
+/* =========================
+   COPY COMPLETE ARDUINO CODE
+========================= */
+
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.innerText = "Copied!";
+
+        setTimeout(function() {
+            button.innerText = "Copy Code";
+        }, 1500);
+
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch (error) {
+            success = false;
+        }
+
+        textarea.remove();
+
+        if (success) {
+            showSuccess();
+        } else {
+            button.innerText = "Copy failed";
+        }
+
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+
+}
+
+/* =========================
+   QUIZ ANSWERS
+========================= */
+
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+
+}
+
+/* =========================
+   INITIALIZE CODE VIEWER
+========================= */
+
+displayCode();
+showStep(0);
+
+</script>
+
 </body>
 </html>
