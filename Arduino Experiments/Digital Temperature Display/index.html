@@ -1,26 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Digital Temperature Display</title>
+<title>Digital Temperature Display</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+* {
+    box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =========================
+   HEADER
+========================= */
 
 .header {
     background: #2563eb;
@@ -32,8 +44,6 @@ body{
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -47,8 +57,6 @@ body{
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -66,8 +74,6 @@ body{
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -75,26 +81,15 @@ body{
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -110,15 +105,13 @@ body{
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -136,18 +129,469 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =========================
+   NAVIGATION
+========================= */
 
-@media (max-width: 900px) {
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 22px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =========================
+   EXPERIMENT THUMBNAIL
+========================= */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =========================
+   COMPONENT CARDS
+========================= */
+
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =========================
+   CIRCUIT CONNECTION TABLES
+========================= */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* =========================
+   NOTES AND CIRCUIT
+========================= */
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =========================
+   WORKING PRINCIPLE
+========================= */
+
+.flow {
+    text-align: center;
+    font-weight: bold;
+    color: #1e3a8a;
+    font-size: 18px;
+    line-height: 2;
+}
+
+/* =========================
+   EXPLORE THE CODE
+========================= */
+
+.code-lesson {
+    color: #142e3a;
+}
+
+.eyebrow {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    color: #1e3a8a !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr)
+        minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+/* CODE PANEL */
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+    min-width: 0;
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas,Monaco,monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas,Monaco,monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+/* EXPLANATION GUIDE */
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+    background: #f8fbff;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
-@media (max-width: 600px) {
+    .code-body {
+        height: 450px;
+    }
+}
 
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -193,235 +637,34 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
 
-
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
-
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
-
-nav a:hover{
-    color:#2563eb;
-}
-
-.container{
-    width:90%;
-    max-width:950px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section p{
-    margin-bottom:10px;
-}
-
-ul,ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
-}
-
-.code-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 14px;
-    background:#1e293b;
-    color:white;
-    border-radius:8px 8px 0 0;
-}
-
-.copy-button{
-    border:0;
-    padding:7px 12px;
-    background:#2563eb;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-pre{
-    margin:0;
-    padding:20px;
-    overflow-x:auto;
-    background:#020617;
-    color:#e2e8f0;
-    border-radius:0 0 8px 8px;
-    font-family:Consolas,monospace;
-    font-size:14px;
-    line-height:1.7;
-}
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-top:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:#fff;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-    transition:box-shadow .2s,transform .2s;
-}
-
-.component-card:hover{
-    box-shadow:0 6px 15px rgba(0,0,0,.08);
-    transform:translateY(-2px);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-    line-height:1.5;
-}
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:#fff;
-    padding:10px;
-}
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-@media(max-width:600px){
-    .header{padding:35px 15px}
-    .header h1{font-size:28px}
-    .container{width:92%}
-    .section{padding:21px 18px}
-    nav{gap:11px}
-}
 </style>
 </head>
 
 <body>
 
+<!-- =========================
+     HEADER
+========================= -->
 
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -429,40 +672,27 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Digital Temperature Display</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -471,30 +701,16 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
-                Arduino
-            </a>
+            <a href="../index.html"
+               class="header-nav-btn">Arduino</a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
-                ESP
-            </a>
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">ESP</a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
-                R-Pi
-            </a>
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">R-Pi</a>
 
         </div>
 
@@ -502,12 +718,16 @@ footer strong{
 
 </header>
 
+<!-- =========================
+     NAVIGATION
+========================= -->
 
 <nav>
-    <a href="../index.html">← Arduino Experiments</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
@@ -516,170 +736,1106 @@ footer strong{
 
 <main class="container">
 
-<section class="section" id="aim">
-    <h2>Aim</h2>
-    <p>
-        To measure temperature using an LM35 temperature sensor connected to Arduino UNO
-        and display the temperature in degrees Celsius on a 16×2 I²C LCD and Serial Monitor.
-    </p>
+<!-- =========================
+     EXPERIMENT THUMBNAIL
+========================= -->
+
+<section class="section project-thumbnail">
+
+    <img
+        src="../Digital Temperature Display.png"
+        alt="Digital Temperature Display Thumbnail"
+        onerror="
+            this.hidden=true;
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
 </section>
+
+<!-- =========================
+     1. AIM
+========================= -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To measure temperature using
+        an LM35 temperature sensor
+        connected to Arduino UNO
+        and display the temperature
+        in degrees Celsius on a
+        16×2 I²C LCD and Serial Monitor.
+    </p>
+
+</section>
+
+<!-- =========================
+     2. ABOUT THE EXPERIMENT
+========================= -->
 
 <section class="section">
+
     <h2>About the Experiment</h2>
+
     <p>
-        The LM35 sensor provides an analog voltage proportional to temperature.
-        Arduino reads the signal through analog pin A0, converts the ADC reading to voltage,
-        and then converts the voltage to temperature in degrees Celsius.
+        The Digital Temperature Display
+        experiment demonstrates how an
+        Arduino UNO can measure and display
+        temperature using the LM35
+        analog temperature sensor.
     </p>
+
     <p>
-        The measured temperature is shown on the 16×2 I²C LCD and also sent to the Serial Monitor.
-        The displayed value is updated once every second.
+        The LM35 provides an analog
+        voltage proportional to
+        the surrounding temperature.
     </p>
+
+    <p>
+        Arduino reads this voltage
+        through analog input A0
+        using the analogRead()
+        function.
+    </p>
+
+    <p>
+        The analog-to-digital converter
+        produces a value from 0 to 1023.
+        The program converts this reading
+        into voltage using a nominal
+        5V ADC reference.
+    </p>
+
+    <p>
+        Since the LM35 produces
+        approximately 10 millivolts
+        per degree Celsius, the voltage
+        is converted into temperature.
+    </p>
+
+    <p>
+        The measured temperature is
+        shown on a 16×2 I²C LCD
+        and also printed in
+        Serial Monitor at 9600 baud.
+    </p>
+
+    <p>
+        The display and Serial Monitor
+        readings are refreshed
+        approximately once every second.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        The original sketch assumes
+        a nominal 5V analog reference
+        and uses an LCD I²C
+        address of 0x27.
+
+        The LCD module and installed
+        LiquidCrystal_I2C library
+        must be compatible with
+        these settings.
+
+    </div>
+
 </section>
 
+<!-- =========================
+     3. COMPONENTS REQUIRED
+========================= -->
+
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO"
+            >
+
             <h4>Arduino UNO (×1)</h4>
-            <p>Main controller and ADC reading unit.</p>
+
+            <p>
+                Main controller used
+                to read the LM35 sensor
+                and display temperature.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="LM35 Temperature Sensor.png" alt="LM35 Temperature Sensor">
+
+            <img
+                src="LM35 Temperature Sensor.png"
+                alt="LM35 Temperature Sensor"
+            >
+
             <h4>LM35 Temperature Sensor (×1)</h4>
-            <p>Measures the temperature and provides an analog output.</p>
+
+            <p>
+                Measures temperature
+                and provides a proportional
+                analog voltage.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="LCD 16X2 I2C.png" alt="16x2 I2C LCD">
+
+            <img
+                src="LCD 16X2 I2C.png"
+                alt="16x2 I2C LCD"
+            >
+
             <h4>16×2 I²C LCD (×1)</h4>
-            <p>Displays the measured temperature.</p>
+
+            <p>
+                Displays the measured
+                temperature in degrees
+                Celsius.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
-            <h4>Jumper Wires</h4>
-            <p>Used for electrical connections.</p>
-        </div>
 
-        <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard">
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
             <h4>Breadboard (×1)</h4>
-            <p>Recommended for easy prototyping.</p>
+
+            <p>
+                Used for arranging the
+                sensor and circuit
+                connections.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Used for making electrical
+                connections between
+                Arduino and the components.
+            </p>
+
         </div>
 
     </div>
+
 </section>
+
+<!-- =========================
+     4. CIRCUIT CONNECTIONS
+========================= -->
 
 <section class="section" id="connections">
+
     <h2>Circuit Connections</h2>
 
-    <h3>LM35 Connections</h3>
+    <h3>LM35 Temperature Sensor Connections</h3>
 
     <div class="table-wrap">
+
         <table>
+
             <thead>
                 <tr>
-                    <th>LM35 Pin</th>
+                    <th>LM35 Terminal</th>
                     <th>Arduino UNO Pin</th>
                     <th>Purpose</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr><td>VCC</td><td>5V</td><td>Sensor Power</td></tr>
-                <tr><td>VOUT</td><td>A0</td><td>Analog Temperature Signal</td></tr>
-                <tr><td>GND</td><td>GND</td><td>Common Ground</td></tr>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>5V</td>
+                    <td>Sensor power</td>
+                </tr>
+
+                <tr>
+                    <td>VOUT</td>
+                    <td>A0</td>
+                    <td>Analog temperature signal</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                    <td>Common ground</td>
+                </tr>
+
             </tbody>
+
         </table>
+
     </div>
 
-    <h3>I²C LCD Connections</h3>
+    <h3>16×2 I²C LCD Connections</h3>
 
     <div class="table-wrap">
+
         <table>
+
             <thead>
                 <tr>
-                    <th>I²C LCD Pin</th>
+                    <th>LCD Terminal</th>
                     <th>Arduino UNO Pin</th>
                     <th>Purpose</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr><td>VCC</td><td>5V</td><td>LCD Power</td></tr>
-                <tr><td>GND</td><td>GND</td><td>Common Ground</td></tr>
-                <tr><td>SDA</td><td>A4</td><td>I²C Data</td></tr>
-                <tr><td>SCL</td><td>A5</td><td>I²C Clock</td></tr>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>5V</td>
+                    <td>LCD power</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                    <td>Common ground</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>A4</td>
+                    <td>I²C data</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>A5</td>
+                    <td>I²C clock</td>
+                </tr>
+
             </tbody>
+
         </table>
-    </div>
-</section>
 
-<section class="section" id="working">
-    <h2>Working Principle</h2>
-
-    <div class="flow">
-        Arduino Starts<br>
-        ↓<br>
-        LM35 measures temperature<br>
-        ↓<br>
-        Arduino reads analog value on A0<br>
-        ↓<br>
-        ADC value is converted to voltage<br>
-        ↓<br>
-        Voltage is converted to temperature in °C<br>
-        ↓<br>
-        Temperature is shown on the LCD<br>
-        ↓<br>
-        Same value is shown on Serial Monitor<br>
-        ↓<br>
-        Reading updates every 1 second
     </div>
 
     <div class="note">
-        <strong>LM35 Sensitivity:</strong> 10 mV per °C<br>
-        <strong>LCD Address:</strong> 0x27<br>
-        <strong>Serial Monitor:</strong> 9600 baud<br>
-        <strong>Update Interval:</strong> 1 second
+
+        <strong>Pin Summary:</strong>
+
+        <ul>
+            <li>LM35 VOUT → A0</li>
+            <li>LCD SDA → A4</li>
+            <li>LCD SCL → A5</li>
+            <li>LCD Address → 0x27</li>
+            <li>Serial Monitor → 9600 baud</li>
+        </ul>
+
+        <p>
+            Verify the LM35's physical
+            pin arrangement using the
+            datasheet for your
+            particular sensor package
+            before connecting it.
+        </p>
+
     </div>
+
 </section>
 
+<!-- =========================
+     5. CIRCUIT DIAGRAM
+========================= -->
+
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Digital Temperature Display Circuit.png"
+        alt="Digital Temperature Display Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.hidden=true;
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div id="circuit-placeholder"
+         class="note"
+         hidden>
+        Approved circuit diagram PNG pending.
+        Add the verified circuit image
+        using the filename above.
+    </div>
+
+</section>
+
+<!-- =========================
+     6. WORKING PRINCIPLE
+========================= -->
+
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Initialize Serial Monitor and LCD
+
+        <br>↓<br>
+
+        LM35 Measures Temperature
+
+        <br>↓<br>
+
+        Arduino Reads Analog Input A0
+
+        <br>↓<br>
+
+        ADC Value Converted to Voltage
+
+        <br>↓<br>
+
+        Voltage Converted to Temperature in °C
+
+        <br>↓<br>
+
+        Temperature Displayed on LCD
+
+        <br>↓<br>
+
+        Same Value Printed in Serial Monitor
+
+        <br>↓<br>
+
+        Wait Approximately 1 Second
+
+        <br>↓<br>
+
+        Repeat Measurement
+
+    </div>
+
+    <h3>Temperature Measurement</h3>
+
+    <p>
+        The LM35 is an analog
+        temperature sensor that
+        provides an output voltage
+        proportional to temperature.
+    </p>
+
+    <p>
+        Its nominal sensitivity
+        is 10 mV per degree Celsius.
+    </p>
+
+    <h3>Analog-to-Digital Conversion</h3>
+
+    <p>
+        Arduino uses analogRead(A0)
+        to obtain a digital value
+        corresponding to the sensor
+        output voltage.
+    </p>
+
+    <div class="note">
+
+        <strong>Voltage Formula:</strong>
+
+        <p>
+            Voltage = ADC Reading × (5.0 / 1023.0)
+        </p>
+
+        <strong>Temperature Formula:</strong>
+
+        <p>
+            Temperature (°C) = Voltage × 100
+        </p>
+
+    </div>
+
+    <h3>LCD Display</h3>
+
+    <p>
+        The measured temperature is
+        displayed with one digit
+        after the decimal point
+        followed by the degree
+        Celsius symbol.
+    </p>
+
+    <h3>Serial Monitor</h3>
+
+    <p>
+        Arduino prints the
+        measured temperature
+        through Serial communication
+        at 9600 baud.
+    </p>
+
+</section>
+
+<!-- =========================
+     7. PROCEDURE
+========================= -->
+
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
 
     <ol>
-        <li>Connect the LM35 VCC pin to Arduino 5V.</li>
-        <li>Connect the LM35 VOUT pin to Arduino A0.</li>
-        <li>Connect the LM35 GND pin to Arduino GND.</li>
-        <li>Connect the I²C LCD VCC to 5V.</li>
-        <li>Connect the I²C LCD GND to GND.</li>
-        <li>Connect the I²C LCD SDA pin to A4.</li>
-        <li>Connect the I²C LCD SCL pin to A5.</li>
-        <li>Connect Arduino UNO to the computer using USB.</li>
-        <li>Open Arduino IDE.</li>
-        <li>Install the LiquidCrystal_I2C library if required.</li>
-        <li>Enter the program given below.</li>
-        <li>Select Arduino UNO from Tools → Board.</li>
-        <li>Select the correct COM port.</li>
-        <li>Verify and upload the program.</li>
-        <li>Open Serial Monitor at 9600 baud.</li>
-        <li>Observe the temperature value on the LCD and Serial Monitor.</li>
+
+        <li>
+            Place Arduino UNO and
+            the breadboard on a
+            stable surface.
+        </li>
+
+        <li>
+            Identify the LM35
+            VCC, VOUT and GND
+            terminals using its
+            datasheet.
+        </li>
+
+        <li>
+            Connect LM35 VCC
+            to Arduino 5V.
+        </li>
+
+        <li>
+            Connect LM35 VOUT
+            to Arduino A0.
+        </li>
+
+        <li>
+            Connect LM35 GND
+            to Arduino GND.
+        </li>
+
+        <li>
+            Connect the I²C LCD
+            VCC to Arduino 5V.
+        </li>
+
+        <li>
+            Connect the I²C LCD
+            GND to Arduino GND.
+        </li>
+
+        <li>
+            Connect LCD SDA
+            to Arduino A4.
+        </li>
+
+        <li>
+            Connect LCD SCL
+            to Arduino A5.
+        </li>
+
+        <li>
+            Verify the circuit
+            connections before
+            applying power.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install the compatible
+            LiquidCrystal_I2C
+            library.
+        </li>
+
+        <li>
+            Create a sketch named
+            Digital_Temperature_Display.ino.
+        </li>
+
+        <li>
+            Copy the complete Arduino
+            program from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 9600 baud.
+        </li>
+
+        <li>
+            Observe the measured
+            temperature on the
+            LCD display.
+        </li>
+
+        <li>
+            Compare the displayed
+            value with the
+            Serial Monitor reading.
+        </li>
+
+        <li>
+            Observe how the readings
+            change as the sensor
+            temperature changes.
+        </li>
+
     </ol>
+
 </section>
 
-<section class="section" id="code">
-    <h2>Arduino Code</h2>
+<!-- =========================
+     8. EXPLORE THE CODE
+========================= -->
 
-    <div class="code-header">
-        <span>Digital_Temperature_Display.ino</span>
-        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+<section class="section" id="code">
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Arduino Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Digital Temperature Display ·
+            Select a step to understand
+            the complete Arduino program.
+        </p>
+
+        <div class="code-layout">
+
+            <!-- CODE PANEL -->
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        Digital_Temperature_Display.ino
+                    </span>
+
+                    <button
+                        type="button"
+                        class="copy-button"
+                        onclick="copyCode()"
+                    >
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div class="code-body" id="code-body">
+                    <code id="code-lines"></code>
+                </div>
+
+            </article>
+
+            <!-- EXPLANATION GUIDE -->
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step to highlight
+                    its matching code lines.
+                </p>
+
+                <div class="steps">
+
+                    <button
+                        class="step active"
+                        type="button"
+                        onclick="showStep(0)"
+                    >
+                        <span class="step-number">01</span>
+                        Load libraries
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(1)"
+                    >
+                        <span class="step-number">02</span>
+                        Define sensor pin
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(2)"
+                    >
+                        <span class="step-number">03</span>
+                        Configure LCD
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(3)"
+                    >
+                        <span class="step-number">04</span>
+                        Initialize display
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(4)"
+                    >
+                        <span class="step-number">05</span>
+                        Read sensor input
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(5)"
+                    >
+                        <span class="step-number">06</span>
+                        Convert ADC to voltage
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(6)"
+                    >
+                        <span class="step-number">07</span>
+                        Calculate temperature
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(7)"
+                    >
+                        <span class="step-number">08</span>
+                        Update LCD display
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(8)"
+                    >
+                        <span class="step-number">09</span>
+                        Print Serial output
+                    </button>
+
+                    <button
+                        class="step"
+                        type="button"
+                        onclick="showStep(9)"
+                    >
+                        <span class="step-number">10</span>
+                        Set refresh interval
+                    </button>
+
+                </div>
+
+                <div
+                    class="explanation"
+                    id="explanation"
+                    aria-live="polite"
+                ></div>
+
+                <details>
+
+                    <summary>
+                        Explore more: LM35 Sensor
+                    </summary>
+
+                    <p>
+                        The LM35 produces
+                        approximately 10 mV
+                        per degree Celsius.
+                    </p>
+
+                    <p>
+                        For example, an output
+                        of 0.25 V corresponds
+                        to approximately 25°C.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Explore more: ADC Conversion
+                    </summary>
+
+                    <p>
+                        The original program
+                        uses a nominal 5V
+                        reference when
+                        converting the ADC
+                        reading into voltage.
+                    </p>
+
+                    <p>
+                        If the actual reference
+                        voltage differs from
+                        5V, measurement accuracy
+                        can be affected.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Check Your Understanding
+                    </summary>
+
+                    <ol>
+
+                        <li>
+                            Which Arduino pin
+                            reads the LM35 output?
+                        </li>
+
+                        <li>
+                            What is the nominal
+                            sensitivity of LM35?
+                        </li>
+
+                        <li>
+                            Which pins are
+                            used for I²C
+                            communication?
+                        </li>
+
+                        <li>
+                            What LCD address
+                            is used in the code?
+                        </li>
+
+                        <li>
+                            How often is the
+                            reading updated?
+                        </li>
+
+                    </ol>
+
+                    <button
+                        class="copy-button"
+                        type="button"
+                        onclick="toggleAnswers()"
+                    >
+                        Show / Hide Answers
+                    </button>
+
+                    <div id="quiz-answers" hidden>
+
+                        <ol>
+                            <li>A0</li>
+                            <li>10 mV per °C</li>
+                            <li>A4 (SDA) and A5 (SCL)</li>
+                            <li>0x27</li>
+                            <li>Approximately once every second</li>
+                        </ol>
+
+                    </div>
+
+                </details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">
+
+            <strong>Try it:</strong>
+
+            Observe the temperature
+            on the LCD and Serial Monitor.
+            Allow the sensor temperature
+            to change gradually
+            and compare the updated readings.
+
+        </p>
+
     </div>
 
-<pre><code id="arduinoCode">#include &lt;Wire.h&gt;
-#include &lt;LiquidCrystal_I2C.h&gt;
+</section>
+
+<!-- =========================
+     9. EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        After initialization,
+        the LCD displays the measured
+        temperature in degrees Celsius.
+    </p>
+
+    <p>
+        The Serial Monitor displays
+        the same calculated value
+        at approximately
+        one-second intervals.
+    </p>
+
+    <h3>Example LCD Output</h3>
+
+    <div class="note">
+        <pre style="
+            margin:0;
+            background:transparent;
+            color:#1e3a8a;
+            white-space:pre-wrap;
+        ">Temperature:
+27.5°C</pre>
+    </div>
+
+    <h3>Example Serial Monitor Output</h3>
+
+    <div class="note">
+        <pre style="
+            margin:0;
+            background:transparent;
+            color:#1e3a8a;
+            white-space:pre-wrap;
+        ">Temperature: 27.5 C
+Temperature: 27.8 C
+Temperature: 28.1 C</pre>
+    </div>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Expected Behavior</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Sensor</td>
+                    <td>Reads LM35 analog voltage</td>
+                </tr>
+
+                <tr>
+                    <td>Arduino Input</td>
+                    <td>A0</td>
+                </tr>
+
+                <tr>
+                    <td>LCD</td>
+                    <td>Displays temperature in °C</td>
+                </tr>
+
+                <tr>
+                    <td>Serial Monitor</td>
+                    <td>Displays the temperature value</td>
+                </tr>
+
+                <tr>
+                    <td>Refresh Interval</td>
+                    <td>Approximately one second</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+        The numerical readings above
+        are illustrative examples;
+        actual measurements depend
+        on the sensor temperature
+        and circuit conditions.
+    </div>
+
+</section>
+
+<!-- =========================
+     10. RESULT
+========================= -->
+
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Digital Temperature Display
+        experiment demonstrates
+        temperature measurement using
+        Arduino UNO, an LM35 temperature
+        sensor and a 16×2 I²C LCD.
+    </p>
+
+    <p>
+        Arduino converts the analog
+        sensor reading into temperature
+        in degrees Celsius and displays
+        the calculated value on the
+        LCD and Serial Monitor.
+    </p>
+
+    <p>
+        The temperature measurement
+        is updated approximately
+        once every second.
+    </p>
+
+</section>
+
+<!-- =========================
+     11. WHAT YOU LEARN
+========================= -->
+
+<section class="section">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+
+        <li>
+            Interfacing an LM35
+            temperature sensor
+            with Arduino UNO.
+        </li>
+
+        <li>
+            Reading an analog
+            temperature signal.
+        </li>
+
+        <li>
+            Using analogRead()
+            to read ADC values.
+        </li>
+
+        <li>
+            Converting ADC readings
+            into voltage.
+        </li>
+
+        <li>
+            Understanding LM35
+            sensitivity.
+        </li>
+
+        <li>
+            Calculating temperature
+            in degrees Celsius.
+        </li>
+
+        <li>
+            Using a 16×2 I²C LCD.
+        </li>
+
+        <li>
+            Understanding SDA and
+            SCL communication pins.
+        </li>
+
+        <li>
+            Displaying values
+            with one decimal place.
+        </li>
+
+        <li>
+            Using Serial Monitor
+            to observe measurements.
+        </li>
+
+        <li>
+            Refreshing sensor readings
+            at regular intervals.
+        </li>
+
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <strong>Arduino Experiment</strong>
+
+    <p>Digital Temperature Display</p>
+
+</footer>
+
+<!-- =========================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+========================================= -->
+
+<script type="text/plain" id="arduino-program">
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
 #define LM35_PIN A0
 
@@ -733,68 +1889,386 @@ void loop() {
 
   // Update every 1 second
   delay(1000);
-}</code></pre>
+}
+</script>
 
-</section>
-
-<section class="section">
-    <h2>Expected Output</h2>
-
-    <p>
-        After initialization, the LCD continuously displays the measured temperature
-        in degrees Celsius. The same value is printed on the Serial Monitor.
-    </p>
-
-    <div class="note">
-        <strong>LCD:</strong> Displays temperature in °C<br>
-        <strong>Serial Monitor:</strong> Displays the same temperature value<br>
-        <strong>Refresh:</strong> Every 1 second
-    </div>
-</section>
-
-<section class="section" id="result">
-    <h2>Result</h2>
-
-    <p>
-        The Digital Temperature Display experiment was implemented using Arduino UNO,
-        an LM35 temperature sensor and a 16×2 I²C LCD. The measured temperature is
-        displayed on the LCD and Serial Monitor and updates once every second.
-    </p>
-</section>
-
-<section class="section">
-    <h2>What You Learn</h2>
-
-    <ul>
-        <li>How to interface an LM35 temperature sensor with Arduino UNO.</li>
-        <li>How to read an analog sensor using analogRead().</li>
-        <li>How to convert an ADC reading into voltage.</li>
-        <li>How to convert LM35 voltage into temperature in °C.</li>
-        <li>How to use a 16×2 I²C LCD.</li>
-        <li>How to display sensor values on Serial Monitor.</li>
-        <li>How to update measurements at a fixed interval.</li>
-    </ul>
-</section>
-
-</main>
-
-<footer>
-    <strong>Arduino Experiment</strong><br>
-    Digital Temperature Display
-</footer>
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
 
 <script>
-function copyCode(){
-    const code=document.getElementById("arduinoCode").innerText;
-    navigator.clipboard.writeText(code);
 
-    const button=document.querySelector(".copy-button");
-    button.innerText="Copied!";
+/* =========================
+   COMPLETE PROGRAM SOURCE
+========================= */
 
-    setTimeout(function(){
-        button.innerText="Copy Code";
-    },1500);
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =========================
+   EXPLANATION STEPS
+========================= */
+
+const steps = [
+
+    {
+        title: "Load libraries",
+        start: "#include <Wire.h>",
+        end: "#include <LiquidCrystal_I2C.h>",
+        text:
+            "Wire provides I2C communication. " +
+            "LiquidCrystal_I2C provides " +
+            "functions for controlling " +
+            "the 16x2 LCD."
+    },
+
+    {
+        title: "Define sensor pin",
+        start: "#define LM35_PIN A0",
+        end: "#define LM35_PIN A0",
+        text:
+            "The LM35 analog output " +
+            "is connected to Arduino A0."
+    },
+
+    {
+        title: "Configure LCD",
+        start: "LiquidCrystal_I2C lcd(0x27, 16, 2);",
+        end: "LiquidCrystal_I2C lcd(0x27, 16, 2);",
+        text:
+            "The LCD object uses I2C address " +
+            "0x27 and configures a display " +
+            "with 16 columns and 2 rows."
+    },
+
+    {
+        title: "Initialize display",
+        start: "void setup() {",
+        end: "lcd.clear();",
+        text:
+            "setup() starts Serial communication, " +
+            "initializes the LCD, enables its " +
+            "backlight and briefly displays " +
+            "initialization messages."
+    },
+
+    {
+        title: "Read sensor input",
+        start: "// Read LM35 analog value",
+        end: "int sensorValue = analogRead(LM35_PIN);",
+        text:
+            "analogRead() obtains the " +
+            "ADC reading from the LM35 " +
+            "connected to A0."
+    },
+
+    {
+        title: "Convert ADC to voltage",
+        start: "// Convert ADC reading to voltage",
+        end: "float voltage = sensorValue * (5.0 / 1023.0);",
+        text:
+            "The ADC reading is multiplied " +
+            "by 5.0 divided by 1023.0 " +
+            "to estimate the sensor voltage."
+    },
+
+    {
+        title: "Calculate temperature",
+        start: "// Convert voltage to temperature",
+        end: "float temperatureC = voltage * 100.0;",
+        text:
+            "Since LM35 sensitivity is " +
+            "10 millivolts per degree Celsius, " +
+            "the voltage is multiplied " +
+            "by 100 to calculate temperature."
+    },
+
+    {
+        title: "Update LCD display",
+        start: "// Display on LCD",
+        end: 'lcd.print("C ");',
+        text:
+            "The LCD shows a temperature label, " +
+            "the measured value with one " +
+            "decimal place and the " +
+            "degree Celsius symbol."
+    },
+
+    {
+        title: "Print Serial output",
+        start: "// Display on Serial Monitor",
+        end: 'Serial.println(" C");',
+        text:
+            "The calculated temperature " +
+            "is printed to Serial Monitor " +
+            "at 9600 baud."
+    },
+
+    {
+        title: "Set refresh interval",
+        start: "// Update every 1 second",
+        end: "delay(1000);",
+        text:
+            "The program waits one second " +
+            "before repeating the sensor " +
+            "measurement process."
+    }
+
+];
+
+/* =========================
+   ESCAPE HTML CHARACTERS
+========================= */
+
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
 }
+
+/* =========================
+   DISPLAY CODE WITH LINE NUMBERS
+========================= */
+
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+
+        }).join("");
+
+}
+
+/* =========================
+   FIND MATCHING CODE LINE
+========================= */
+
+function findLine(searchText, startIndex = 0) {
+
+    for (
+        let i = startIndex;
+        i < lines.length;
+        i++
+    ) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+
+    }
+
+    return -1;
+
+}
+
+/* =========================
+   SHOW AND HIGHLIGHT CODE STEP
+========================= */
+
+function showStep(index) {
+
+    const step = steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+
+        });
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+        return;
+    }
+
+    let endLine = findLine(step.end, startLine);
+
+    if (endLine < 0) {
+        endLine = startLine;
+    }
+
+    for (
+        let i = startLine;
+        i <= endLine;
+        i++
+    ) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+
+    }
+
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+
+}
+
+/* =========================
+   COPY COMPLETE ARDUINO CODE
+========================= */
+
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.innerText = "Copied!";
+
+        setTimeout(function() {
+            button.innerText = "Copy Code";
+        }, 1500);
+
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document
+            .createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let success = false;
+
+        try {
+
+            success = document.execCommand("copy");
+
+        } catch (error) {
+
+            success = false;
+
+        }
+
+        textarea.remove();
+
+        if (success) {
+            showSuccess();
+        } else {
+            button.innerText = "Copy failed";
+        }
+
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+
+        } catch (error) {
+
+            fallbackCopy();
+
+        }
+
+    } else {
+
+        fallbackCopy();
+
+    }
+
+}
+
+/* =========================
+   QUIZ ANSWERS
+========================= */
+
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+
+}
+
+/* =========================
+   INITIALIZE CODE VIEWER
+========================= */
+
+displayCode();
+showStep(0);
+
 </script>
 
 </body>
