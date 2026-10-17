@@ -1,16 +1,36 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Automatic Pet Feeder</title>
-<style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+<title>Automatic Pet Feeder</title>
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+<style>
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =========================
+   HEADER
+========================= */
 
 .header {
     background: #2563eb;
@@ -22,8 +42,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -37,8 +55,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -56,8 +72,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -68,23 +82,12 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     background: rgba(0,0,0,0.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -100,15 +103,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -126,18 +127,466 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =========================
+   EXPERIMENT THUMBNAIL
+========================= */
 
-@media (max-width: 900px) {
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =========================
+   COMPONENT CARDS
+========================= */
+
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =========================
+   CIRCUIT TABLE
+========================= */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* =========================
+   NOTES
+========================= */
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =========================
+   WORKING FLOW
+========================= */
+
+.flow {
+    text-align: center;
+    font-weight: bold;
+    color: #1e3a8a;
+    font-size: 18px;
+    line-height: 2;
+}
+
+/* =========================
+   EXPLORE THE CODE
+========================= */
+
+.code-lesson {
+    color: #142e3a;
+}
+
+.eyebrow {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    color: #1e3a8a !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr)
+        minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+/* CODE PANEL */
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+    min-width: 0;
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas,Monaco,monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas,Monaco,monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+/* EXPLANATION GUIDE */
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+    background: #f8fbff;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
-@media (max-width: 600px) {
+    .code-body {
+        height: 450px;
+    }
+}
 
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -183,48 +632,42 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .project-thumbnail {
+        padding: 12px;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 21px 18px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
 
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}nav a:hover{color:#2563eb}
-.container{width:90%;max-width:950px;margin:35px auto}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
-ul,ol{padding-left:24px}li{margin-bottom:8px}.table-wrap{overflow-x:auto}
-table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
-.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:white;border-radius:8px 8px 0 0}
-.copy-button{border:0;padding:7px 12px;background:#2563eb;color:white;border-radius:5px;cursor:pointer;font-weight:bold}
-pre{margin:0;padding:20px;overflow-x:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font-family:Consolas,monospace;font-size:14px;line-height:1.7}
-.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
-.component-card p{color:#475569;font-size:14px;margin:0;line-height:1.5}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}footer strong{color:white}
-@media(max-width:600px){.header{padding:35px 15px}.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}nav{gap:11px}}
 </style>
 </head>
+
 <body>
 
+<!-- =========================
+     HEADER
+========================= -->
 
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -232,25 +675,18 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Automatic Pet Feeder</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-                title="Back to Arduino Experiments"
             >
                 &#8592; Back
             </a>
@@ -274,14 +710,10 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
@@ -305,108 +737,1131 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
 
 </header>
 
+<!-- =========================
+     NAVIGATION
+========================= -->
 
 <nav>
-<a href="../index.html">← Arduino Experiments</a>
-<a href="#aim">Aim</a>
-<a href="#components">Components</a>
-<a href="#connections">Connections</a>
-<a href="#working">Working</a>
-<a href="#procedure">Procedure</a>
-<a href="#code">Code</a>
-<a href="#result">Result</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#result">Result</a>
 </nav>
 
 <main class="container">
 
-<section class="section" id="aim">
-<h2>Aim</h2>
-<p>To create an automatic pet feeder using Arduino UNO, a push button, I²C LCD, buzzer and servo motor to dispense food when the button is pressed.</p>
+<!-- =========================
+     0. THUMBNAIL
+========================= -->
+
+<section class="section project-thumbnail">
+
+    <img
+        src="../Automatic Pet Feeder.png"
+        alt="Automatic Pet Feeder Thumbnail"
+        onerror="
+            this.hidden=true;
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="thumbnail-placeholder"
+        class="note"
+        hidden
+    >
+        Approved experiment thumbnail pending.
+    </div>
+
 </section>
+
+<!-- =========================
+     1. AIM
+========================= -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To create an automatic pet feeder
+        using Arduino UNO, a push button,
+        an I²C LCD, a buzzer and a servo motor
+        to dispense food when the button
+        is pressed.
+    </p>
+
+</section>
+
+<!-- =========================
+     2. ABOUT THE EXPERIMENT
+========================= -->
 
 <section class="section">
-<h2>About the Experiment</h2>
-<p>The system waits for the user to press the feed button. When pressed, the buzzer gives a short beep, the servo opens the feeding mechanism, and the LCD displays the feeding status.</p>
-<p>After dispensing food, the servo returns to its original position and the system becomes ready for the next feeding cycle.</p>
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Automatic Pet Feeder uses
+        an Arduino UNO to operate a
+        button-controlled food
+        dispensing mechanism.
+    </p>
+
+    <p>
+        The system waits for the
+        push button to be pressed.
+        When a button press is detected,
+        Arduino starts one complete
+        feeding sequence.
+    </p>
+
+    <p>
+        A buzzer provides a short
+        confirmation beep and
+        a servo motor rotates to
+        open the dispensing mechanism.
+    </p>
+
+    <p>
+        The 16×2 I²C LCD displays
+        status messages throughout
+        the feeding process.
+    </p>
+
+    <p>
+        After dispensing, the servo
+        returns to its original position
+        and the system becomes ready
+        for the next feeding cycle.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        This is a button-triggered
+        feeding demonstration,
+        not a time-scheduled feeder.
+
+        The Arduino sketch controls
+        a servo position for a fixed
+        interval; it does not measure
+        the quantity of food dispensed.
+
+    </div>
+
 </section>
+
+<!-- =========================
+     3. COMPONENTS
+========================= -->
 
 <section class="section" id="components">
-<h2>Components Required</h2>
-<div class="components-grid">
-<div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO R3"><h4>Arduino UNO R3 (×1)</h4><p>Main controller for the feeding sequence.</p></div>
-<div class="component-card"><img src="Push Button.png" alt="Push Button"><h4>Push Button (×1)</h4><p>Starts the food dispensing cycle.</p></div>
-<div class="component-card"><img src="LCD 16X2 I2C.png" alt="LCD I2C"><h4>LCD 16×2 I²C (×1)</h4><p>Displays feeding status messages.</p></div>
-<div class="component-card"><img src="Buzzer.png" alt="Buzzer"><h4>Buzzer (×1)</h4><p>Provides a short feeding confirmation sound.</p></div>
-<div class="component-card"><img src="Servo motor.png" alt="Servo Motor"><h4>Servo Motor (×1)</h4><p>Opens and closes the food dispensing mechanism.</p></div>
-<div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Used for circuit assembly.</p></div>
-<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Used for electrical connections.</p></div>
-</div>
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3"
+            >
+
+            <h4>Arduino UNO R3 (×1)</h4>
+
+            <p>
+                Main microcontroller
+                controlling the feeding
+                sequence.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Push Button.png"
+                alt="Push Button"
+            >
+
+            <h4>Push Button (×1)</h4>
+
+            <p>
+                Provides the user
+                input that starts
+                dispensing.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="LCD 16X2 I2C.png"
+                alt="16×2 I2C LCD"
+            >
+
+            <h4>16×2 I²C LCD (×1)</h4>
+
+            <p>
+                Displays readiness,
+                dispensing status
+                and completion messages.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Buzzer.png"
+                alt="Buzzer"
+            >
+
+            <h4>Buzzer (×1)</h4>
+
+            <p>
+                Provides a short
+                audible indication
+                before dispensing.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Servo motor.png"
+                alt="Servo Motor"
+            >
+
+            <h4>Servo Motor (×1)</h4>
+
+            <p>
+                Opens and closes
+                the dispensing
+                mechanism.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
+            <h4>Breadboard (×1)</h4>
+
+            <p>
+                Used for circuit
+                assembly.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Used for electrical
+                connections.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        The servo must be connected
+        to a suitable regulated
+        5V supply with a common
+        ground to Arduino.
+
+        Ensure that the LCD hardware
+        is compatible with the library
+        used in the supplied program.
+
+    </div>
+
 </section>
+
+<!-- =========================
+     4. CIRCUIT CONNECTIONS
+========================= -->
 
 <section class="section" id="connections">
-<h2>Circuit Connections</h2>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Component</th><th>Connection</th></tr></thead>
-<tbody>
-<tr><td>Push Button</td><td>One side → D2</td></tr>
-<tr><td>Push Button</td><td>Opposite side → GND</td></tr>
-<tr><td>Servo</td><td>Signal → D9</td></tr>
-<tr><td>Servo</td><td>VCC → 5V</td></tr>
-<tr><td>Servo</td><td>GND → GND</td></tr>
-<tr><td>LCD (I²C)</td><td>GND → GND</td></tr>
-<tr><td>LCD (I²C)</td><td>VCC → 5V</td></tr>
-<tr><td>LCD (I²C)</td><td>SDA → A4</td></tr>
-<tr><td>LCD (I²C)</td><td>SCL → A5</td></tr>
-<tr><td>Buzzer</td><td>Positive (+) → D8</td></tr>
-<tr><td>Buzzer</td><td>Negative (−) → GND</td></tr>
-</tbody>
-</table>
-</div>
-<div class="note">The push button uses <strong>INPUT_PULLUP</strong>, so it is connected between D2 and GND.</div>
+
+    <h2>Circuit Connections</h2>
+
+    <h3>Push Button Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Button Connection</th>
+                    <th>Arduino Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>One side of button</td>
+                    <td>D2</td>
+                </tr>
+                <tr>
+                    <td>Opposite side</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Servo Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Servo Wire</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Signal</td>
+                    <td>D9</td>
+                </tr>
+                <tr>
+                    <td>VCC</td>
+                    <td>Suitable regulated 5V</td>
+                </tr>
+                <tr>
+                    <td>GND</td>
+                    <td>Common GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>16×2 I²C LCD Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>LCD Pin</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>VCC</td>
+                    <td>5V</td>
+                </tr>
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>SDA</td>
+                    <td>A4</td>
+                </tr>
+                <tr>
+                    <td>SCL</td>
+                    <td>A5</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Buzzer Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Buzzer Terminal</th>
+                    <th>Arduino Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Positive (+)</td>
+                    <td>D8</td>
+                </tr>
+                <tr>
+                    <td>Negative (−)</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        The push button uses
+        INPUT_PULLUP.
+
+        When released, the Arduino
+        input normally reads HIGH.
+
+        When pressed, the pin
+        is connected to GND
+        and reads LOW.
+
+        <p>
+            Use a buzzer suitable for
+            the tone() function and
+            direct Arduino-pin drive,
+            or an appropriate driver
+            circuit if necessary.
+        </p>
+
+    </div>
+
 </section>
+
+<!-- =========================
+     5. CIRCUIT DIAGRAM
+========================= -->
+
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <!--
+    Insert approved circuit PNG here:
+
+    <img
+        src="Automatic Pet Feeder Circuit.png"
+        alt="Automatic Pet Feeder Circuit Diagram"
+        class="circuit-img"
+    >
+    -->
+
+    <div class="note">
+
+        The circuit diagram image
+        is pending. Add the approved
+        PNG after verifying the
+        LCD module, servo supply,
+        and component connections.
+
+    </div>
+
+</section>
+
+<!-- =========================
+     6. WORKING PRINCIPLE
+========================= -->
 
 <section class="section" id="working">
-<h2>Working Principle</h2>
-<div class="flow">
-Arduino Starts<br>↓<br>
-LCD shows "Pet Feeder - Ready"<br>↓<br>
-LCD shows "Press Button to Feed"<br>↓<br>
-User presses the push button<br>↓<br>
-LCD shows "Dispensing Food"<br>↓<br>
-Buzzer gives a short beep<br>↓<br>
-Servo rotates to 90°<br>↓<br>
-Food dispensing mechanism opens<br>↓<br>
-After 1.5 seconds servo returns to 0°<br>↓<br>
-LCD shows "Food Dispensed"<br>↓<br>
-System returns to ready state
-</div>
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        LCD Displays Pet Feeder Ready
+
+        <br>↓<br>
+
+        LCD Shows Press Button to Feed
+
+        <br>↓<br>
+
+        Wait for Button Press
+
+        <br>↓<br>
+
+        LCD Displays Dispensing Food
+
+        <br>↓<br>
+
+        Buzzer Beeps for 300 ms
+
+        <br>↓<br>
+
+        Servo Rotates to 90°
+
+        <br>↓<br>
+
+        Servo Remains Open for 1.5 Seconds
+
+        <br>↓<br>
+
+        Servo Returns to 0°
+
+        <br>↓<br>
+
+        LCD Displays Food Dispensed
+
+        <br>↓<br>
+
+        Return to Ready State
+
+    </div>
+
+    <h3>Button Operation</h3>
+
+    <p>
+        The program uses Arduino's
+        internal pull-up resistor,
+        so no external pull-up
+        resistor is required.
+    </p>
+
+    <p>
+        When the button is pressed,
+        the input becomes LOW
+        and the feeding cycle begins.
+    </p>
+
+    <h3>Dispensing Operation</h3>
+
+    <p>
+        The buzzer sounds at 1000 Hz
+        for approximately 300 milliseconds.
+    </p>
+
+    <p>
+        The servo rotates from 0°
+        to 90°, waits 1.5 seconds
+        and returns to 0°.
+    </p>
+
+    <h3>LCD Feedback</h3>
+
+    <p>
+        The LCD displays the current
+        status, including readiness,
+        dispensing and completion.
+    </p>
+
+    <div class="note">
+
+        <strong>Important Timing:</strong>
+
+        <ul>
+            <li>Startup Ready Message: 2 seconds</li>
+            <li>Buzzer: 300 milliseconds</li>
+            <li>Servo Open Time: 1.5 seconds</li>
+            <li>Servo Return Delay: 500 milliseconds</li>
+            <li>Completion Message: 2 seconds</li>
+        </ul>
+
+    </div>
+
 </section>
+
+<!-- =========================
+     7. PROCEDURE
+========================= -->
 
 <section class="section" id="procedure">
-<h2>Procedure</h2>
-<ol>
-<li>Connect one side of the push button to D2 and the other side to GND.</li>
-<li>Connect the servo signal wire to D9, VCC to 5V and GND to GND.</li>
-<li>Connect the buzzer positive terminal to D8 and negative terminal to GND.</li>
-<li>Connect LCD VCC to 5V and GND to GND.</li>
-<li>Connect LCD SDA to A4 and SCL to A5.</li>
-<li>Connect Arduino UNO to the computer and open Arduino IDE.</li>
-<li>Enter the program given below.</li>
-<li>Select Arduino UNO and the correct COM port.</li>
-<li>Verify and upload the program.</li>
-<li>Press the button and observe the LCD, buzzer and servo.</li>
-</ol>
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Place the Arduino UNO
+            and breadboard on a
+            stable surface.
+        </li>
+
+        <li>
+            Connect one side
+            of the push button
+            to Arduino D2.
+        </li>
+
+        <li>
+            Connect the opposite
+            button side to GND.
+        </li>
+
+        <li>
+            Verify the button's
+            internal terminal pairs
+            to avoid connecting
+            two permanently common pins.
+        </li>
+
+        <li>
+            Connect the servo
+            signal wire to D9.
+        </li>
+
+        <li>
+            Connect the servo
+            to a suitable regulated
+            5V supply.
+        </li>
+
+        <li>
+            Connect servo ground
+            and Arduino ground
+            together.
+        </li>
+
+        <li>
+            Connect the buzzer
+            positive terminal
+            to D8.
+        </li>
+
+        <li>
+            Connect the buzzer
+            negative terminal
+            to GND.
+        </li>
+
+        <li>
+            Connect LCD VCC
+            to 5V.
+        </li>
+
+        <li>
+            Connect LCD GND
+            to GND.
+        </li>
+
+        <li>
+            Connect LCD SDA
+            to Arduino A4.
+        </li>
+
+        <li>
+            Connect LCD SCL
+            to Arduino A5.
+        </li>
+
+        <li>
+            Verify the LCD library
+            matches your particular
+            I²C LCD hardware.
+        </li>
+
+        <li>
+            Confirm all connections
+            before applying power.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create the sketch
+            Automatic_Pet_Feeder.ino.
+        </li>
+
+        <li>
+            Copy the complete code
+            from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Check that the LCD
+            displays the ready
+            message.
+        </li>
+
+        <li>
+            Press the button
+            and observe the buzzer,
+            servo movement and
+            LCD status.
+        </li>
+
+        <li>
+            Confirm that the servo
+            returns to its original
+            position.
+        </li>
+
+    </ol>
+
 </section>
 
+<!-- =========================
+     8. EXPLORE THE CODE
+========================= -->
+
 <section class="section" id="code">
-<h2>Arduino Code</h2>
-<div class="code-header">
-<span>Automatic_Pet_Feeder.ino</span>
-<button class="copy-button" onclick="copyCode()">Copy Code</button>
-</div>
-<pre><code id="arduinoCode">#include &lt;Adafruit_LiquidCrystal.h&gt;
-#include &lt;Servo.h&gt;
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            Arduino Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Automatic Pet Feeder ·
+            Select a step to understand
+            the complete Arduino program.
+        </p>
+
+        <div class="code-layout">
+
+            <!-- CODE PANEL -->
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        Automatic_Pet_Feeder.ino
+                    </span>
+
+                    <button
+                        class="copy-button"
+                        type="button"
+                        onclick="copyCode()"
+                    >
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div class="code-body" id="code-body">
+                    <code id="code-lines"></code>
+                </div>
+
+            </article>
+
+            <!-- EXPLANATION GUIDE -->
+
+            <article class="guide">
+
+                <h2>
+                    Understand it step by step
+                </h2>
+
+                <p>
+                    Choose a step to highlight
+                    and scroll to its matching
+                    code lines.
+                </p>
+
+                <div class="steps">
+
+                    <button class="step active"
+                            type="button"
+                            onclick="showStep(0)">
+                        <span class="step-number">01</span>
+                        Load libraries
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(1)">
+                        <span class="step-number">02</span>
+                        Create LCD and servo
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(2)">
+                        <span class="step-number">03</span>
+                        Define pins
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(3)">
+                        <span class="step-number">04</span>
+                        Initialize hardware
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(4)">
+                        <span class="step-number">05</span>
+                        Display ready message
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(5)">
+                        <span class="step-number">06</span>
+                        Detect button press
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(6)">
+                        <span class="step-number">07</span>
+                        Display dispensing
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(7)">
+                        <span class="step-number">08</span>
+                        Sound buzzer
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(8)">
+                        <span class="step-number">09</span>
+                        Operate servo
+                    </button>
+
+                    <button class="step"
+                            type="button"
+                            onclick="showStep(9)">
+                        <span class="step-number">10</span>
+                        Complete feeding
+                    </button>
+
+                </div>
+
+                <div
+                    class="explanation"
+                    id="explanation"
+                    aria-live="polite"
+                ></div>
+
+                <details>
+
+                    <summary>
+                        Explore more: INPUT_PULLUP
+                    </summary>
+
+                    <p>
+                        INPUT_PULLUP enables
+                        Arduino's internal
+                        pull-up resistor.
+                    </p>
+
+                    <p>
+                        The button reads HIGH
+                        when released and LOW
+                        when pressed.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Explore more: Servo Control
+                    </summary>
+
+                    <p>
+                        Servo.h provides
+                        the functions used
+                        to control servo
+                        motor position.
+                    </p>
+
+                    <p>
+                        The supplied sketch
+                        uses two positions:
+                        0° and 90°.
+                    </p>
+
+                    <p>
+                        The servo remains
+                        at 90° for
+                        1.5 seconds before
+                        returning to 0°.
+                    </p>
+
+                </details>
+
+                <details>
+
+                    <summary>
+                        Check Your Understanding
+                    </summary>
+
+                    <ol>
+                        <li>
+                            Which Arduino pin
+                            reads the button?
+                        </li>
+                        <li>
+                            Which Arduino pin
+                            controls the buzzer?
+                        </li>
+                        <li>
+                            Which Arduino pin
+                            controls the servo?
+                        </li>
+                        <li>
+                            What servo angle
+                            opens the mechanism?
+                        </li>
+                        <li>
+                            How long does the
+                            servo remain open?
+                        </li>
+                    </ol>
+
+                    <button
+                        class="copy-button"
+                        type="button"
+                        onclick="toggleAnswers()"
+                    >
+                        Show / Hide Answers
+                    </button>
+
+                    <div id="quiz-answers" hidden>
+                        <ol>
+                            <li>D2</li>
+                            <li>D8</li>
+                            <li>D9</li>
+                            <li>90 degrees</li>
+                            <li>1500 milliseconds</li>
+                        </ol>
+                    </div>
+
+                </details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">
+
+            <strong>Try it:</strong>
+
+            Press the push button
+            and observe how the buzzer,
+            servo and LCD operate
+            in sequence.
+
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     9. EXPECTED OUTPUT
+========================= -->
+
+<section class="section">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        After uploading the program,
+        the LCD displays:
+    </p>
+
+    <div class="note">
+        <strong>Startup:</strong>
+        Pet Feeder / Ready
+    </div>
+
+    <p>
+        After the initial delay,
+        the LCD displays:
+    </p>
+
+    <div class="note">
+        <strong>Ready State:</strong>
+        Press Button / to Feed
+    </div>
+
+    <p>
+        When the button is pressed,
+        the buzzer sounds and the servo
+        moves to 90° to open the
+        dispensing mechanism.
+    </p>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Expected Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>System Starts</td>
+                    <td>LCD shows Ready</td>
+                </tr>
+                <tr>
+                    <td>Button Press</td>
+                    <td>Feeding sequence begins</td>
+                </tr>
+                <tr>
+                    <td>Buzzer</td>
+                    <td>1000 Hz for approximately 300 ms</td>
+                </tr>
+                <tr>
+                    <td>Servo Opens</td>
+                    <td>90° for 1.5 seconds</td>
+                </tr>
+                <tr>
+                    <td>Servo Closes</td>
+                    <td>Returns to 0°</td>
+                </tr>
+                <tr>
+                    <td>Feeding Completes</td>
+                    <td>LCD shows Food Dispensed</td>
+                </tr>
+                <tr>
+                    <td>Ready Again</td>
+                    <td>LCD prompts for the next button press</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     10. RESULT
+========================= -->
+
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Automatic Pet Feeder
+        experiment demonstrates
+        a push-button-controlled
+        dispensing sequence
+        using Arduino UNO.
+    </p>
+
+    <p>
+        Pressing the button activates
+        the buzzer and servo, while
+        the LCD displays the current
+        feeding status.
+    </p>
+
+    <p>
+        Once the dispensing cycle
+        is complete, the servo
+        returns to its initial
+        position and the system
+        becomes ready again.
+    </p>
+
+</section>
+
+<!-- =========================
+     11. WHAT YOU LEARN
+========================= -->
+
+<section class="section">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>
+            Reading a push button
+            using INPUT_PULLUP.
+        </li>
+        <li>
+            Using digitalRead()
+            to detect button presses.
+        </li>
+        <li>
+            Controlling a servo motor
+            through the Servo library.
+        </li>
+        <li>
+            Operating a 16×2 I²C LCD.
+        </li>
+        <li>
+            Generating a buzzer
+            tone using tone().
+        </li>
+        <li>
+            Creating timed
+            automation sequences.
+        </li>
+        <li>
+            Displaying process
+            status messages.
+        </li>
+        <li>
+            Waiting for a button
+            to be released before
+            allowing another cycle.
+        </li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+    <strong>Arduino Experiment</strong>
+    <p>Automatic Pet Feeder</p>
+</footer>
+
+<!-- =========================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+========================================= -->
+
+<script type="text/plain" id="arduino-program">
+#include <Adafruit_LiquidCrystal.h>
+#include <Servo.h>
 
 Adafruit_LiquidCrystal lcd(0);
 Servo feederServo;
@@ -477,52 +1932,319 @@ void loop() {
 
     delay(200);
   }
-}</code></pre>
-</section>
+}
+</script>
 
-<section class="section">
-<h2>Expected Output</h2>
-<p>The LCD initially shows that the feeder is ready. Pressing the button starts one food dispensing cycle.</p>
-<div class="note">
-<strong>Ready:</strong> "Press Button to Feed"<br>
-<strong>Button Press:</strong> Buzzer beeps and servo opens to 90°<br>
-<strong>Dispensing Time:</strong> 1.5 seconds<br>
-<strong>Completion:</strong> Servo returns to 0° and LCD shows "Food Dispensed"
-</div>
-</section>
-
-<section class="section" id="result">
-<h2>Result</h2>
-<p>The Automatic Pet Feeder experiment was implemented using Arduino UNO, a push button, I²C LCD, buzzer and servo motor. Pressing the button starts a feeding cycle, operates the servo, gives a buzzer indication, and updates the LCD with the current feeding status.</p>
-</section>
-
-<section class="section">
-<h2>What You Learn</h2>
-<ul>
-<li>How to use a push button with INPUT_PULLUP.</li>
-<li>How to control a servo motor with Arduino.</li>
-<li>How to operate an I²C LCD.</li>
-<li>How to generate a buzzer tone using tone().</li>
-<li>How to create a sequence-based automation system.</li>
-<li>How to display process status messages on an LCD.</li>
-</ul>
-</section>
-
-</main>
-
-<footer>
-<strong>Arduino Experiment</strong><br>
-Automatic Pet Feeder
-</footer>
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
 
 <script>
-function copyCode(){
-  const code=document.getElementById("arduinoCode").innerText;
-  navigator.clipboard.writeText(code);
-  const button=document.querySelector(".copy-button");
-  button.innerText="Copied!";
-  setTimeout(function(){button.innerText="Copy Code";},1500);
+
+/* PROGRAM SOURCE */
+
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* EXPLANATION STEPS */
+
+const steps = [
+
+    {
+        title: "Load libraries",
+        search: "#include <Adafruit_LiquidCrystal.h>",
+        count: 2,
+        text:
+            "The LCD library provides display " +
+            "functions, while Servo.h controls " +
+            "the servo motor."
+    },
+
+    {
+        title: "Create LCD and servo",
+        search: "Adafruit_LiquidCrystal lcd(0)",
+        count: 2,
+        text:
+            "These statements create the " +
+            "LCD and servo objects used " +
+            "throughout the program."
+    },
+
+    {
+        title: "Define pins",
+        search: "#define BUTTON_PIN",
+        count: 3,
+        text:
+            "D2 reads the button, " +
+            "D8 controls the buzzer " +
+            "and D9 controls the servo."
+    },
+
+    {
+        title: "Initialize hardware",
+        search: "void setup()",
+        count: 12,
+        text:
+            "setup() configures the button " +
+            "and buzzer, attaches the servo, " +
+            "sets its initial angle and " +
+            "initializes the LCD."
+    },
+
+    {
+        title: "Display ready message",
+        search: 'lcd.print("Pet Feeder")',
+        count: 17,
+        text:
+            "The LCD first displays " +
+            "Pet Feeder and Ready. " +
+            "It then asks the user " +
+            "to press the button."
+    },
+
+    {
+        title: "Detect button press",
+        search: "if (digitalRead(BUTTON_PIN) == LOW)",
+        count: 1,
+        text:
+            "With INPUT_PULLUP, " +
+            "a pressed button produces " +
+            "a LOW input and starts " +
+            "the feeding cycle."
+    },
+
+    {
+        title: "Display dispensing",
+        search: 'lcd.print("Dispensing Food")',
+        count: 1,
+        text:
+            "The LCD informs the user " +
+            "that dispensing has started."
+    },
+
+    {
+        title: "Sound buzzer",
+        search: "tone(BUZZER_PIN, 1000)",
+        count: 3,
+        text:
+            "The buzzer sounds at 1000 Hz " +
+            "for 300 milliseconds before " +
+            "the sound is stopped."
+    },
+
+    {
+        title: "Operate servo",
+        search: "feederServo.write(90)",
+        count: 5,
+        text:
+            "The servo rotates to 90 degrees, " +
+            "waits 1.5 seconds and then " +
+            "returns to 0 degrees."
+    },
+
+    {
+        title: "Complete feeding",
+        search: 'lcd.print("Food Dispensed")',
+        count: 18,
+        text:
+            "After the feeding cycle, " +
+            "the LCD displays a completion " +
+            "message and then returns " +
+            "to the ready prompt. " +
+            "The program waits for " +
+            "the button to be released."
+    }
+
+];
+
+/* ESCAPE HTML */
+
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
 }
+
+/* DISPLAY CODE WITH LINE NUMBERS */
+
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+
+        }).join("");
+
+}
+
+/* SHOW STEP AND HIGHLIGHT CODE */
+
+function showStep(index) {
+
+    const step = steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line) {
+            line.classList.remove("selected");
+        });
+
+    const foundLine = lines.findIndex(function(line) {
+        return line.trim().startsWith(step.search);
+    });
+
+    if (foundLine >= 0) {
+
+        const lastLine = Math.min(
+            foundLine + step.count - 1,
+            lines.length - 1
+        );
+
+        for (
+            let i = foundLine;
+            i <= lastLine;
+            i++
+        ) {
+
+            const selected = document
+                .getElementById("line-" + (i + 1));
+
+            if (selected) {
+                selected.classList.add("selected");
+            }
+        }
+
+        const selectedLine = document
+            .getElementById("line-" + (foundLine + 1));
+
+        const codeBody = document
+            .getElementById("code-body");
+
+        if (selectedLine && codeBody) {
+
+            codeBody.scrollTo({
+                top:
+                    selectedLine.offsetTop -
+                    codeBody.offsetTop -
+                    20,
+                behavior: "smooth"
+            });
+
+        }
+    }
+
+    document
+        .getElementById("explanation")
+        .innerHTML =
+            "<h3>" +
+            (index + 1) +
+            ". " +
+            step.title +
+            "</h3>" +
+            "<p>" +
+            step.text +
+            "</p>";
+}
+
+/* COPY COMPLETE CODE */
+
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showCopied() {
+
+        button.innerText = "Copied!";
+
+        setTimeout(function() {
+            button.innerText = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        const success = document.execCommand("copy");
+        textarea.remove();
+
+        if (success) {
+            showCopied();
+        } else {
+            button.innerText = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(program);
+            showCopied();
+
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* CHECK YOUR UNDERSTANDING */
+
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* INITIALIZE VIEWER */
+
+displayCode();
+showStep(0);
+
 </script>
 
 </body>
