@@ -1,26 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Electronic Dice</title>
+<title>Electronic Dice</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
 }
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+html {
+    scroll-behavior: smooth;
+}
 
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -32,22 +40,17 @@ body{
     text-align: center;
 }
 
-/* COMPANY LOGO - TOP LEFT */
-
 .header-logo {
     position: absolute;
     top: 15px;
     left: 20px;
     width: 135px;
     max-height: 75px;
-    height: auto;
     object-fit: contain;
     background: white;
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -65,8 +68,6 @@ body{
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -74,26 +75,15 @@ body{
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -109,15 +99,13 @@ body{
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -135,18 +123,466 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
-@media (max-width: 900px) {
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 22px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =====================================
+   CIRCUIT TABLES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* =====================================
+   NOTES AND CIRCUIT
+===================================== */
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.dice-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0,1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.dice-value {
+    text-align: center;
+    padding: 13px 5px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #1e3a8a;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 9px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.code-lesson {
+    color: #142e3a;
+}
+
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns: minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas,Monaco,monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas,Monaco,monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+    background: #f8fbff;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
-@media (max-width: 600px) {
+    .code-body {
+        height: 450px;
+    }
+}
 
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -192,233 +628,36 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
     }
-}
 
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
+    .steps {
+        grid-template-columns: 1fr;
+    }
 
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
+    .dice-grid {
+        grid-template-columns: repeat(3,1fr);
+    }
 
-nav a:hover{
-    color:#2563eb;
-}
-
-.container{
-    width:90%;
-    max-width:950px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section p{
-    margin-bottom:10px;
-}
-
-ul,ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
-}
-
-.code-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 14px;
-    background:#1e293b;
-    color:white;
-    border-radius:8px 8px 0 0;
-}
-
-.copy-button{
-    border:0;
-    padding:7px 12px;
-    background:#2563eb;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-pre{
-    margin:0;
-    padding:20px;
-    overflow-x:auto;
-    background:#020617;
-    color:#e2e8f0;
-    border-radius:0 0 8px 8px;
-    font-family:Consolas,monospace;
-    font-size:14px;
-    line-height:1.7;
-}
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-top:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:#fff;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-    transition:box-shadow .2s,transform .2s;
-}
-
-.component-card:hover{
-    box-shadow:0 6px 15px rgba(0,0,0,.08);
-    transform:translateY(-2px);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-    line-height:1.5;
-}
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:#fff;
-    padding:10px;
-}
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-@media(max-width:600px){
-    .header{padding:35px 15px}
-    .header h1{font-size:28px}
-    .container{width:92%}
-    .section{padding:21px 18px}
-    nav{gap:11px}
+    nav {
+        gap: 11px;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -426,70 +665,51 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Electronic Dice</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               aria-label="Home"
+               title="Home">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
+
             </a>
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
@@ -498,8 +718,12 @@ footer strong{
     </div>
 
 </header>
+
+<!-- =====================================
+     NAVIGATION
+===================================== -->
 <nav>
-    <a href="../index.html">← Arduino Experiments</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
@@ -507,103 +731,274 @@ footer strong{
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Electronic Dice.png"
+        alt="Electronic Dice Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
+
     <h2>Aim</h2>
+
     <p>
-        To create an electronic dice using Arduino UNO, a push button and a
-        single-digit common-cathode 7-segment display.
+        To create an electronic dice
+        using Arduino UNO, a push button
+        and a single-digit common-cathode
+        7-segment display.
     </p>
+
+    <p>
+        Pressing the button generates
+        a rolling-number animation
+        followed by a random dice
+        result from 1 to 6.
+    </p>
+
 </section>
 
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
 <section class="section">
+
     <h2>About the Experiment</h2>
+
     <p>
-        The display initially shows 1. When the push button is pressed,
-        Arduino rapidly shows different numbers from 1 to 6 to create a dice-rolling effect.
+        Electronic Dice is an Arduino
+        experiment that simulates
+        rolling a six-sided dice.
     </p>
+
     <p>
-        After the rolling sequence, Arduino generates a random number from 1 to 6
-        and displays the final dice result on the 7-segment display.
-        The same result is also shown on the Serial Monitor.
+        A single-digit common-cathode
+        7-segment display shows
+        the generated dice number.
     </p>
+
+    <p>
+        At startup, the display
+        initially shows 1.
+    </p>
+
+    <p>
+        When the push button is pressed,
+        Arduino displays several
+        changing random numbers
+        between 1 and 6.
+    </p>
+
+    <p>
+        The rolling animation
+        gradually slows down
+        before the final random
+        number is selected.
+    </p>
+
+    <p>
+        The selected number is
+        displayed on the 7-segment
+        display and printed
+        to Serial Monitor.
+    </p>
+
+    <p>
+        The system then waits
+        for the push button
+        to be released before
+        accepting another roll.
+    </p>
+
+    <div class="note">
+        <strong>Important:</strong>
+        The program uses pseudo-random
+        number generation through
+        random() and randomSeed().
+        It is intended for educational
+        dice simulation.
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO R3">
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3"
+            >
             <h4>Arduino UNO R3 (×1)</h4>
-            <p>Main controller for button input, random number generation and display control.</p>
+            <p>
+                Controls the display,
+                reads the button and
+                generates dice values.
+            </p>
         </div>
 
         <div class="component-card">
-            <img src="Single Digit 7 Segment Display.png" alt="Single Digit 7 Segment Display">
-            <h4>1-Digit Common-Cathode 7-Segment Display (×1)</h4>
-            <p>Displays the dice value from 1 to 6.</p>
+            <img
+                src="Single Digit 7 Segment Display.png"
+                alt="Single-Digit 7-Segment Display"
+            >
+            <h4>
+                1-Digit Common-Cathode
+                7-Segment Display (×1)
+            </h4>
+            <p>
+                Displays random dice
+                values from 1 to 6.
+            </p>
         </div>
 
         <div class="component-card">
-            <img src="Push Button.png" alt="Push Button">
+            <img
+                src="Push Button.png"
+                alt="Push Button"
+            >
             <h4>Push Button (×1)</h4>
-            <p>Starts the electronic dice roll.</p>
+            <p>
+                Starts a new dice roll
+                when pressed.
+            </p>
         </div>
 
         <div class="component-card">
-            <img src="220 ohm resistor.png" alt="220 Ohm Resistor">
+            <img
+                src="220 ohm resistor.png"
+                alt="220 Ohm Resistor"
+            >
             <h4>220Ω Resistor (×7)</h4>
-            <p>Protects the seven segments of the display.</p>
+            <p>
+                Limits current through
+                each display segment.
+            </p>
         </div>
 
         <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard">
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
             <h4>Breadboard (×1)</h4>
-            <p>Used for circuit assembly.</p>
+            <p>
+                Used to assemble
+                the circuit.
+            </p>
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
             <h4>Jumper Wires</h4>
-            <p>Used for electrical connections.</p>
+            <p>
+                Used for electrical
+                connections.
+            </p>
         </div>
 
     </div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
 <section class="section" id="connections">
+
     <h2>Circuit Connections</h2>
 
-    <h3>7-Segment Display</h3>
+    <h3>7-Segment Display Connections</h3>
 
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
                     <th>Display Segment</th>
-                    <th>Arduino UNO Connection</th>
+                    <th>Arduino UNO Pin</th>
+                    <th>Connection</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr><td>Segment A</td><td>D2 through 220Ω resistor</td></tr>
-                <tr><td>Segment B</td><td>D3 through 220Ω resistor</td></tr>
-                <tr><td>Segment C</td><td>D4 through 220Ω resistor</td></tr>
-                <tr><td>Segment D</td><td>D5 through 220Ω resistor</td></tr>
-                <tr><td>Segment E</td><td>D6 through 220Ω resistor</td></tr>
-                <tr><td>Segment F</td><td>D7 through 220Ω resistor</td></tr>
-                <tr><td>Segment G</td><td>D8 through 220Ω resistor</td></tr>
-                <tr><td>Common Cathode</td><td>5V</td></tr>
+                <tr>
+                    <td>Segment A</td>
+                    <td>D2</td>
+                    <td>Through 220Ω resistor</td>
+                </tr>
+                <tr>
+                    <td>Segment B</td>
+                    <td>D3</td>
+                    <td>Through 220Ω resistor</td>
+                </tr>
+                <tr>
+                    <td>Segment C</td>
+                    <td>D4</td>
+                    <td>Through 220Ω resistor</td>
+                </tr>
+                <tr>
+                    <td>Segment D</td>
+                    <td>D5</td>
+                    <td>Through 220Ω resistor</td>
+                </tr>
+                <tr>
+                    <td>Segment E</td>
+                    <td>D6</td>
+                    <td>Through 220Ω resistor</td>
+                </tr>
+                <tr>
+                    <td>Segment F</td>
+                    <td>D7</td>
+                    <td>Through 220Ω resistor</td>
+                </tr>
+                <tr>
+                    <td>Segment G</td>
+                    <td>D8</td>
+                    <td>Through 220Ω resistor</td>
+                </tr>
+                <tr>
+                    <td>Common Cathode</td>
+                    <td>GND</td>
+                    <td>Common ground connection</td>
+                </tr>
             </tbody>
         </table>
     </div>
 
-    <h3>Push Button</h3>
+    <h3>Push Button Connections</h3>
 
     <div class="table-wrap">
         <table>
@@ -614,98 +1009,719 @@ footer strong{
                 </tr>
             </thead>
             <tbody>
-                <tr><td>One Terminal</td><td>A0</td></tr>
-                <tr><td>Other Terminal</td><td>GND</td></tr>
+                <tr>
+                    <td>One terminal</td>
+                    <td>A0</td>
+                </tr>
+                <tr>
+                    <td>Opposite terminal</td>
+                    <td>GND</td>
+                </tr>
             </tbody>
         </table>
     </div>
 
     <div class="note">
-        <strong>Display Segments:</strong> D2 to D8<br>
-        <strong>Push Button:</strong> A0<br>
-        <strong>Display Type:</strong> Common Cathode<br>
-        <strong>Dice Range:</strong> 1 to 6
+
+        <strong>Pin Summary:</strong>
+
+        <ul>
+            <li>Display Segments A–G → D2–D8</li>
+            <li>Common Cathode → GND</li>
+            <li>Push Button → A0 and GND</li>
+            <li>Resistors → 220Ω ×7</li>
+            <li>Serial Monitor → 9600 baud</li>
+        </ul>
+
+        <p>
+            The push button uses
+            INPUT_PULLUP, so it
+            reads LOW when pressed.
+        </p>
+
+        <p>
+            A common-cathode segment
+            turns ON when the appropriate
+            segment pin is driven HIGH.
+        </p>
+
+        <p>
+            Check the physical display
+            pinout in its datasheet
+            before connecting segments.
+        </p>
+
     </div>
+
 </section>
 
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
 <section class="section" id="circuit">
+
     <h2>Circuit Diagram</h2>
 
-    <p>
-        Connect display segments A to G through individual 220Ω resistors
-        to Arduino pins D2 to D8. Connect the common cathode to 5V.
-        Connect the push button between A0 and GND.
-    </p>
+    <img
+        class="circuit-img"
+        src="Electronic_Dice_Circuit.png"
+        alt="Electronic Dice Circuit Diagram"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
 
-    <img class="circuit-img"
-         src="Electronic_Dice_Circuit.png"
-         alt="Electronic Dice Circuit Diagram">
+    <div id="circuit-placeholder"
+         class="note"
+         hidden>
+        Verified circuit diagram PNG pending.
+        Ensure that the common-cathode
+        display is connected to GND
+        in the approved diagram.
+    </div>
+
 </section>
 
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
 
     <div class="flow">
-        Arduino Starts<br>
-        ↓<br>
-        Display initially shows 1<br>
-        ↓<br>
-        Push button is pressed<br>
-        ↓<br>
-        Random numbers 1 to 6 appear rapidly<br>
-        ↓<br>
-        Rolling effect slows down<br>
-        ↓<br>
-        Final random number is generated<br>
-        ↓<br>
-        Final dice value is shown on display<br>
-        ↓<br>
-        Result is printed on Serial Monitor<br>
-        ↓<br>
-        System waits for the next button press
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Display Shows 1
+
+        <br>↓<br>
+
+        Wait for Push Button
+
+        <br>↓<br>
+
+        Button Press Detected
+
+        <br>↓<br>
+
+        Generate Random Values from 1 to 6
+
+        <br>↓<br>
+
+        Display Rolling Animation
+
+        <br>↓<br>
+
+        Rolling Animation Gradually Slows
+
+        <br>↓<br>
+
+        Generate Final Random Number
+
+        <br>↓<br>
+
+        Display Final Dice Result
+
+        <br>↓<br>
+
+        Print Result on Serial Monitor
+
+        <br>↓<br>
+
+        Wait for Button Release
+
     </div>
 
-    <div class="note">
-        <strong>Dice Values:</strong> 1 to 6<br>
-        <strong>Button:</strong> A0 using INPUT_PULLUP<br>
-        <strong>Serial Monitor:</strong> 9600 baud<br>
-        <strong>Initial Display:</strong> 1
+    <h3>Dice Number Range</h3>
+
+    <div class="dice-grid">
+        <div class="dice-value">1</div>
+        <div class="dice-value">2</div>
+        <div class="dice-value">3</div>
+        <div class="dice-value">4</div>
+        <div class="dice-value">5</div>
+        <div class="dice-value">6</div>
     </div>
+
+    <h3>Button Detection</h3>
+
+    <p>
+        The push button connects
+        between Arduino A0 and GND.
+        INPUT_PULLUP keeps the
+        normal reading HIGH.
+    </p>
+
+    <p>
+        Pressing the button
+        produces a LOW signal
+        and starts the roll.
+    </p>
+
+    <h3>Rolling Animation</h3>
+
+    <p>
+        Arduino generates 15
+        temporary random values
+        between 1 and 6.
+    </p>
+
+    <p>
+        The delay increases
+        during successive numbers,
+        creating a slowing
+        dice-rolling effect.
+    </p>
+
+    <h3>Final Dice Result</h3>
+
+    <p>
+        After the animation,
+        Arduino generates a
+        new random number
+        from 1 to 6.
+    </p>
+
+    <p>
+        This number remains
+        on the display until
+        the next roll begins.
+    </p>
+
 </section>
 
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
 
     <ol>
-        <li>Connect display segment A to D2 through a 220Ω resistor.</li>
-        <li>Connect display segment B to D3 through a 220Ω resistor.</li>
-        <li>Connect display segment C to D4 through a 220Ω resistor.</li>
-        <li>Connect display segment D to D5 through a 220Ω resistor.</li>
-        <li>Connect display segment E to D6 through a 220Ω resistor.</li>
-        <li>Connect display segment F to D7 through a 220Ω resistor.</li>
-        <li>Connect display segment G to D8 through a 220Ω resistor.</li>
-        <li>Connect the common cathode of the display to Arduino 5V.</li>
-        <li>Connect one terminal of the push button to A0.</li>
-        <li>Connect the other terminal of the push button to GND.</li>
-        <li>Connect Arduino UNO to the computer.</li>
-        <li>Open Arduino IDE.</li>
-        <li>Enter the program given below.</li>
-        <li>Select Arduino UNO and the correct COM port.</li>
-        <li>Verify and upload the program.</li>
-        <li>Open Serial Monitor at 9600 baud.</li>
-        <li>Press the push button and observe the electronic dice roll.</li>
+        <li>
+            Place Arduino UNO and
+            the breadboard on a
+            stable working surface.
+        </li>
+
+        <li>
+            Verify that the 7-segment
+            display is common-cathode.
+        </li>
+
+        <li>
+            Identify the physical
+            segment pins A–G.
+        </li>
+
+        <li>
+            Place the display
+            on the breadboard.
+        </li>
+
+        <li>
+            Connect segment A to
+            D2 through a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect segment B to
+            D3 through a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect segment C to
+            D4 through a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect segment D to
+            D5 through a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect segment E to
+            D6 through a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect segment F to
+            D7 through a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect segment G to
+            D8 through a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect the display's
+            common-cathode pins to GND.
+        </li>
+
+        <li>
+            Connect the push button
+            between A0 and GND.
+        </li>
+
+        <li>
+            Verify all connections
+            and component polarity.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create a sketch named
+            Electronic_Dice.ino.
+        </li>
+
+        <li>
+            Copy the complete corrected
+            sketch from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno and
+            the correct communication port.
+        </li>
+
+        <li>
+            Verify and upload the program.
+        </li>
+
+        <li>
+            Open Serial Monitor at
+            9600 baud.
+        </li>
+
+        <li>
+            Observe the initial
+            display value of 1.
+        </li>
+
+        <li>
+            Press the button
+            to start a dice roll.
+        </li>
+
+        <li>
+            Observe the changing
+            display values.
+        </li>
+
+        <li>
+            Record the final
+            number between 1 and 6.
+        </li>
+
+        <li>
+            Compare the final display
+            with Serial Monitor.
+        </li>
+
+        <li>
+            Repeat the roll
+            several times.
+        </li>
     </ol>
+
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-    <h2>Arduino Code</h2>
 
-    <div class="code-header">
-        <span>Electronic_Dice.ino</span>
-        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Electronic Dice · Select a step
+        to highlight and understand
+        the Arduino program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Electronic_Dice.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Select a step to highlight
+                its matching code lines.
+            </p>
+
+            <div class="steps">
+
+                <button class="step active"
+                        type="button"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Define display pins
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Define button pin
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Set digit patterns
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Display selected number
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Configure Arduino pins
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Initialize random seed
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Detect button press
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Animate dice roll
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Generate final result
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Wait for button release
+                </button>
+
+            </div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>
+                    Explore more: Common-Cathode Display
+                </summary>
+
+                <p>
+                    A common-cathode display
+                    has a shared negative
+                    connection to GND.
+                </p>
+
+                <p>
+                    A segment turns ON
+                    when the corresponding
+                    Arduino output is HIGH.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Random Numbers
+                </summary>
+
+                <p>
+                    random(1, 7) generates
+                    integers from 1 through 6.
+                    The upper limit 7
+                    is excluded.
+                </p>
+
+                <p>
+                    randomSeed(analogRead(A1))
+                    initializes the pseudo-random
+                    sequence using an analog reading.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>
+                        Which pins control
+                        display segments A–G?
+                    </li>
+                    <li>
+                        Which pin reads
+                        the push button?
+                    </li>
+                    <li>
+                        Where does the
+                        common cathode connect?
+                    </li>
+                    <li>
+                        Which function
+                        generates dice values?
+                    </li>
+                    <li>
+                        How many temporary
+                        rolling values are shown?
+                    </li>
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>D2–D8</li>
+                        <li>A0</li>
+                        <li>GND</li>
+                        <li>random(1, 7)</li>
+                        <li>15 values</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
     </div>
 
-<pre><code id="arduinoCode">#define SEG_A 2
+    <p class="tip">
+        <strong>Try it:</strong>
+        Press the push button several
+        times and compare the final
+        dice value on the display
+        with Serial Monitor.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        The 7-segment display
+        initially shows 1.
+    </p>
+
+    <p>
+        Pressing the push button
+        starts a rolling animation
+        showing different numbers
+        from 1 to 6.
+    </p>
+
+    <p>
+        The animation slows
+        before the final
+        random dice result
+        is displayed.
+    </p>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Expected Output</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Power ON</td>
+                    <td>Display shows 1</td>
+                </tr>
+                <tr>
+                    <td>Button Press</td>
+                    <td>Dice rolling animation starts</td>
+                </tr>
+                <tr>
+                    <td>Rolling Animation</td>
+                    <td>Random values from 1–6 appear</td>
+                </tr>
+                <tr>
+                    <td>End of Animation</td>
+                    <td>Final dice result from 1–6</td>
+                </tr>
+                <tr>
+                    <td>Serial Monitor</td>
+                    <td>Prints final dice result</td>
+                </tr>
+                <tr>
+                    <td>After Button Release</td>
+                    <td>Ready for next roll</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Example Serial Monitor Output</h3>
+
+    <div class="note">
+        <pre style="
+            margin:0;
+            padding:10px;
+            color:#1e3a8a;
+            background:transparent;
+            white-space:pre-wrap;
+        ">ELECTRONIC DICE READY
+Dice Result: 4
+Dice Result: 2
+Dice Result: 6</pre>
+    </div>
+
+    <div class="note">
+        The example values are illustrative.
+        The actual results depend on
+        the pseudo-random sequence.
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Electronic Dice experiment
+        demonstrates a push-button
+        controlled dice simulation
+        using Arduino UNO and
+        a common-cathode 7-segment display.
+    </p>
+
+    <p>
+        Each valid button press
+        generates a rolling animation
+        followed by a random
+        number from 1 to 6.
+    </p>
+
+    <p>
+        The final result appears
+        on the display and
+        in Serial Monitor.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Controlling a common-cathode 7-segment display.</li>
+        <li>Connecting individual segments through resistors.</li>
+        <li>Displaying numerical patterns on a 7-segment display.</li>
+        <li>Using a push button with INPUT_PULLUP.</li>
+        <li>Reading input with digitalRead().</li>
+        <li>Generating pseudo-random numbers using random().</li>
+        <li>Initializing random sequences using randomSeed().</li>
+        <li>Using loops to create a rolling animation.</li>
+        <li>Using delay() to control animation speed.</li>
+        <li>Displaying a final result through Serial Monitor.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>Arduino Experiment</strong>
+    <p>Electronic Dice</p>
+</footer>
+
+<!-- ==========================================
+     CORRECTED ARDUINO PROGRAM
+========================================== -->
+<script type="text/plain" id="arduino-program">
 #define SEG_A 2
 #define SEG_B 3
 #define SEG_C 4
@@ -718,7 +1734,8 @@ footer strong{
 
 int segments[] = {2, 3, 4, 5, 6, 7, 8};
 
-// Numbers 0-6 for COMMON ANODE
+// Numbers 0-6 for COMMON CATHODE
+// HIGH = ON, LOW = OFF
 byte numbers[7][7] = {
   {1,1,1,1,1,1,0}, // 0
   {0,1,1,0,0,0,0}, // 1
@@ -786,71 +1803,289 @@ void loop() {
     }
   }
 }
-}</code></pre>
-
-</section>
-
-<section class="section">
-    <h2>Expected Output</h2>
-
-    <p>
-        The display initially shows 1. When the push button is pressed,
-        rapidly changing values create a rolling effect before the final
-        random dice result from 1 to 6 is displayed.
-    </p>
-
-    <div class="note">
-        <strong>Initial Display:</strong> 1<br>
-        <strong>Button Press:</strong> Starts dice roll<br>
-        <strong>Final Result:</strong> Random value from 1 to 6<br>
-        <strong>Serial Monitor:</strong> Displays the final dice result
-    </div>
-</section>
-
-<section class="section" id="result">
-    <h2>Result</h2>
-
-    <p>
-        The Electronic Dice experiment was implemented using Arduino UNO,
-        a push button and a common-cathode 7-segment display.
-        Each button press generates and displays a random dice value from 1 to 6.
-    </p>
-</section>
-
-<section class="section">
-    <h2>What You Learn</h2>
-
-    <ul>
-        <li>How to control a common-cathode 7-segment display.</li>
-        <li>How to display numbers from 1 to 6.</li>
-        <li>How to use a push button with INPUT_PULLUP.</li>
-        <li>How to generate random numbers using random().</li>
-        <li>How to use randomSeed() to vary the random sequence.</li>
-        <li>How to create a simple rolling animation.</li>
-        <li>How to display the final result on the Serial Monitor.</li>
-    </ul>
-</section>
-
-</main>
-
-<footer>
-    <strong>Arduino Experiment</strong><br>
-    Electronic Dice
-</footer>
-
-<script>
-function copyCode(){
-    const code=document.getElementById("arduinoCode").innerText;
-    navigator.clipboard.writeText(code);
-
-    const button=document.querySelector(".copy-button");
-    button.innerText="Copied!";
-
-    setTimeout(function(){
-        button.innerText="Copy Code";
-    },1500);
-}
 </script>
 
+<!-- ==========================================
+     INTERACTIVE CODE EXPLORER
+========================================== -->
+<script>
+
+/* PROGRAM SOURCE */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* EXPLANATION STEPS */
+const steps = [
+    {
+        title: "Define display pins",
+        start: "#define SEG_A 2",
+        end: "#define SEG_G 8",
+        text:
+            "The seven segments are connected " +
+            "to Arduino digital pins D2-D8."
+    },
+    {
+        title: "Define button pin",
+        start: "#define BUTTON_PIN A0",
+        end: "#define BUTTON_PIN A0",
+        text:
+            "The push button connects " +
+            "between A0 and GND."
+    },
+    {
+        title: "Set digit patterns",
+        start: "byte numbers[7][7]",
+        end: "};",
+        text:
+            "This array stores the HIGH/LOW " +
+            "patterns used to display digits " +
+            "0 through 6 on a common-cathode " +
+            "display."
+    },
+    {
+        title: "Display selected number",
+        start: "void displayNumber(int num)",
+        end: "}",
+        count: 7,
+        text:
+            "The function checks the digit " +
+            "and sends its segment pattern " +
+            "to the output pins."
+    },
+    {
+        title: "Configure Arduino pins",
+        start: "void setup()",
+        end: "pinMode(BUTTON_PIN, INPUT_PULLUP);",
+        text:
+            "setup() starts Serial communication, " +
+            "configures the seven outputs " +
+            "and enables the button's " +
+            "internal pull-up resistor."
+    },
+    {
+        title: "Initialize random seed",
+        start: "randomSeed(analogRead(A1));",
+        end: 'Serial.println("ELECTRONIC DICE READY");',
+        text:
+            "The random seed uses an analog " +
+            "reading. Arduino then displays " +
+            "1 and prints a ready message."
+    },
+    {
+        title: "Detect button press",
+        start: "if (digitalRead(BUTTON_PIN) == LOW)",
+        end: "if (digitalRead(BUTTON_PIN) == LOW)",
+        count: 5,
+        text:
+            "A LOW signal indicates " +
+            "a button press. A 50 ms " +
+            "delay helps debounce it."
+    },
+    {
+        title: "Animate dice roll",
+        start: "// Rolling animation",
+        end: "delay(80 + i * 15);",
+        text:
+            "The program shows 15 random " +
+            "dice values. The increasing " +
+            "delay makes the animation " +
+            "gradually slow down."
+    },
+    {
+        title: "Generate final result",
+        start: "// Final dice result",
+        end: "Serial.println(result);",
+        text:
+            "Arduino selects the final " +
+            "number from 1 to 6, displays it " +
+            "and prints it to Serial Monitor."
+    },
+    {
+        title: "Wait for button release",
+        start: "// Wait for button release",
+        end: "delay(200);",
+        text:
+            "Arduino waits for button release " +
+            "and applies a short delay before " +
+            "another roll can begin."
+    }
+];
+
+/* ESCAPE HTML */
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* SHOW CODE WITH LINE NUMBERS */
+function displayCode() {
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+                '<span class="line-number">' +
+                (index + 1) + '</span>' +
+                '<span>' + escapeHtml(line) + '</span>' +
+                '</span>'
+            );
+        }).join("");
+}
+
+/* FIND CODE LINE */
+function findLine(searchText, startIndex = 0) {
+    for (let i = startIndex; i < lines.length; i++) {
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+/* HIGHLIGHT AND EXPLAIN */
+function showStep(index) {
+    const step = steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
+            button.classList.toggle("active", i === index);
+        });
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line) {
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
+        return;
+    }
+
+    let endLine;
+
+    if (typeof step.count === "number") {
+        endLine = Math.min(
+            startLine + step.count - 1,
+            lines.length - 1
+        );
+    } else {
+        endLine = findLine(step.end, startLine);
+
+        if (endLine < 0) {
+            endLine = startLine;
+        }
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+        const selected = document.getElementById(
+            "line-" + (i + 1)
+        );
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const selectedLine = document.getElementById(
+        "line-" + (startLine + 1)
+    );
+    const codeBody = document.getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document.getElementById("explanation");
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* COPY COMPLETE ARDUINO CODE */
+async function copyCode() {
+    const button = document.querySelector(
+        ".code-top .copy-button"
+    );
+
+    function showSuccess() {
+        button.textContent = "Copied!";
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+        const textarea = document.createElement("textarea");
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* QUIZ ANSWERS */
+function toggleAnswers() {
+    const answers = document.getElementById("quiz-answers");
+    answers.hidden = !answers.hidden;
+}
+
+/* INITIALIZE */
+displayCode();
+showStep(0);
+
+</script>
 </body>
 </html>
