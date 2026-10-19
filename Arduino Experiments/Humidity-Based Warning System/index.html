@@ -1,26 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Humidity-Based Warning System</title>
+<title>Humidity-Based Warning System</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
 }
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+html {
+    scroll-behavior: smooth;
+}
 
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -32,22 +40,17 @@ body{
     text-align: center;
 }
 
-/* COMPANY LOGO - TOP LEFT */
-
 .header-logo {
     position: absolute;
     top: 15px;
     left: 20px;
     width: 135px;
     max-height: 75px;
-    height: auto;
     object-fit: contain;
     background: white;
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -65,8 +68,6 @@ body{
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -74,26 +75,15 @@ body{
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -109,15 +99,13 @@ body{
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -135,18 +123,467 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
-@media (max-width: 900px) {
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 22px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px,1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    padding: 14px;
+}
+
+.state-card strong {
+    display: block;
+    color: #1e3a8a;
+    margin-bottom: 5px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas,Monaco,monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas,Monaco,monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    color: #1e3a8a;
+    margin: 0 0 7px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
-@media (max-width: 600px) {
+    .code-body {
+        height: 450px;
+    }
+}
 
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -192,232 +629,32 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
     }
-}
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
 
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
+    .steps {
+        grid-template-columns: 1fr;
+    }
 
-nav a:hover{
-    color:#2563eb;
-}
-
-.container{
-    width:90%;
-    max-width:950px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section p{
-    margin-bottom:10px;
-}
-
-ul,ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
-}
-
-.code-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 14px;
-    background:#1e293b;
-    color:white;
-    border-radius:8px 8px 0 0;
-}
-
-.copy-button{
-    border:0;
-    padding:7px 12px;
-    background:#2563eb;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-pre{
-    margin:0;
-    padding:20px;
-    overflow-x:auto;
-    background:#020617;
-    color:#e2e8f0;
-    border-radius:0 0 8px 8px;
-    font-family:Consolas,monospace;
-    font-size:14px;
-    line-height:1.7;
-}
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-top:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:#fff;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-    transition:box-shadow .2s,transform .2s;
-}
-
-.component-card:hover{
-    box-shadow:0 6px 15px rgba(0,0,0,.08);
-    transform:translateY(-2px);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-    line-height:1.5;
-}
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:#fff;
-    padding:10px;
-}
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-@media(max-width:600px){
-    .header{padding:35px 15px}
-    .header h1{font-size:28px}
-    .container{width:92%}
-    .section{padding:21px 18px}
-    nav{gap:11px}
+    nav {
+        gap: 11px;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -425,70 +662,51 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Humidity-Based Warning System</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
+
             </a>
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
@@ -498,183 +716,1390 @@ footer strong{
 
 </header>
 
+<!-- =====================================
+     NAVIGATION
+===================================== -->
 <nav>
-    <a href="../index.html">← Arduino Experiments</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Humidity-Based Warning System.png"
+        alt="Humidity-Based Warning System Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
+
     <h2>Aim</h2>
+
     <p>
-        To demonstrate a humidity monitoring and warning system using Arduino UNO,
-        a sensor input, a 16×2 I²C LCD and a buzzer.
+        To develop a humidity-based
+        warning system using Arduino UNO,
+        a humidity sensor, a 16×2 I²C LCD
+        and a buzzer.
     </p>
+
+    <p>
+        The intended system displays
+        humidity and activates an
+        audible warning when the
+        calculated value reaches
+        or exceeds 50%.
+    </p>
+
+    <div class="note">
+
+        <strong>Sensor Compatibility:</strong>
+
+        The supplied sketch requires
+        an analog voltage on A0.
+
+        A DHT11 provides a digital
+        humidity signal and cannot
+        be read using the supplied
+        analogRead() calculation.
+
+        Therefore, the original
+        sketch needs correction
+        before this can function as
+        a DHT11 humidity experiment.
+
+    </div>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
     <h2>About the Experiment</h2>
+
     <p>
-        Arduino continuously reads the sensor input from A0 and calculates a humidity value.
-        The calculated humidity is displayed on the 16×2 I²C LCD.
+        The Humidity-Based Warning System
+        is intended to demonstrate
+        environmental monitoring
+        and automatic warning generation
+        using Arduino UNO.
     </p>
+
     <p>
-        When the humidity reaches or exceeds the programmed threshold of 50%,
-        the LCD shows a HIGH warning and the buzzer sounds. Below the threshold,
-        the system displays NORMAL status and keeps the buzzer OFF.
+        The source describes
+        a humidity sensor connected
+        to Arduino analog pin A0.
     </p>
+
+    <p>
+        Arduino reads an analog value
+        and converts it to an
+        estimated voltage.
+    </p>
+
+    <p>
+        The supplied program then
+        applies a mathematical formula
+        and labels the result
+        as a humidity percentage.
+    </p>
+
+    <p>
+        The calculated value
+        is displayed on a
+        16×2 I²C LCD.
+    </p>
+
+    <p>
+        When the calculated value
+        reaches or exceeds
+        the programmed limit of 50,
+        the LCD displays
+        HIGH! BUZZER ON.
+    </p>
+
+    <p>
+        The buzzer receives
+        a 1000 Hz tone signal.
+    </p>
+
+    <p>
+        When the calculated value
+        is below 50,
+        the LCD displays
+        Status: NORMAL and
+        the buzzer is switched OFF.
+    </p>
+
+    <p>
+        Serial Monitor also
+        displays the calculated
+        value and buzzer status
+        at 9600 baud.
+    </p>
+
+    <div class="note">
+
+        <strong>Important Technical Limitation:</strong>
+
+        The supplied sensor image
+        is named DHT11.png,
+        but the sketch does not
+        use a DHT11 library
+        or digital humidity reading.
+
+        The expression
+        (voltage - 0.5) * 100.0
+        is not a valid formula
+        for calculating relative
+        humidity from a DHT11.
+
+        The resulting value
+        must not be treated
+        as measured relative
+        humidity until the
+        sensor and sketch
+        are corrected.
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO">
-            <h4>Arduino UNO (×1)</h4>
-            <p>Main controller for reading the sensor and controlling the LCD and buzzer.</p>
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3"
+            >
+
+            <h4>Arduino UNO R3 (×1)</h4>
+
+            <p>
+                Main controller
+                for sensor readings,
+                LCD display and
+                buzzer operation.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="DHT11.png" alt="Digital Humidity and Temperature Sensor">
-            <h4>Humidity Sensor (×1)</h4>
-            <p>Provides the input used for humidity calculation.</p>
+
+            <img
+                src="DHT11.png"
+                alt="DHT11 Humidity and Temperature Sensor"
+            >
+
+            <h4>DHT11 Humidity Sensor (×1)</h4>
+
+            <p>
+                The sensor depicted
+                in the source component
+                list; requires different
+                reading code.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="LCD 16X2 I2C.png" alt="16x2 I2C LCD">
+
+            <img
+                src="LCD 16X2 I2C.png"
+                alt="16x2 I2C LCD"
+            >
+
             <h4>16×2 I²C LCD (×1)</h4>
-            <p>Displays humidity and normal or warning status.</p>
+
+            <p>
+                Displays the
+                calculated reading
+                and warning status.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Buzzer.png" alt="Buzzer">
+
+            <img
+                src="Buzzer.png"
+                alt="Buzzer"
+            >
+
             <h4>Buzzer (×1)</h4>
-            <p>Provides an audible warning when humidity reaches the threshold.</p>
+
+            <p>
+                Provides an
+                audible warning
+                when the programmed
+                threshold is reached.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
+            <h4>Breadboard (×1)</h4>
+
+            <p>
+                Used to assemble
+                the experiment
+                connections.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
             <h4>Jumper Wires</h4>
-            <p>Used for electrical connections.</p>
-        </div>
 
-        <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard">
-            <h4>Breadboard</h4>
-            <p>Recommended for convenient prototyping.</p>
+            <p>
+                Used for electrical
+                connections between
+                the components.
+            </p>
+
         </div>
 
     </div>
+
+    <div class="note">
+
+        <strong>Libraries in the Original Sketch:</strong>
+
+        <ul>
+            <li>Wire.h</li>
+            <li>LiquidCrystal_I2C.h</li>
+        </ul>
+
+        <p>
+            To use a real DHT11,
+            an appropriate DHT sensor
+            library and digital
+            data-reading code
+            are additionally required.
+        </p>
+
+        <p>
+            Confirm the exact
+            DHT11 module version
+            and its electrical
+            requirements before wiring.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
 <section class="section" id="connections">
-    <h2>Pin Connections</h2>
+
+    <h2>Circuit Connections</h2>
+
+    <h3>Sensor Connections — As Specified in Source</h3>
 
     <div class="table-wrap">
+
         <table>
             <thead>
                 <tr>
-                    <th>Component Pin</th>
+                    <th>Component</th>
+                    <th>Terminal</th>
                     <th>Arduino UNO Connection</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr><td>Sensor VCC</td><td>5V</td></tr>
-                <tr><td>Sensor DATA / OUT</td><td>A0</td></tr>
-                <tr><td>Sensor GND</td><td>GND</td></tr>
-                <tr><td>LCD1602 I²C VCC</td><td>5V</td></tr>
-                <tr><td>LCD1602 I²C GND</td><td>GND</td></tr>
-                <tr><td>LCD1602 I²C SDA</td><td>A4</td></tr>
-                <tr><td>LCD1602 I²C SCL</td><td>A5</td></tr>
-                <tr><td>Buzzer Positive (+)</td><td>D8</td></tr>
-                <tr><td>Buzzer Negative (−)</td><td>GND</td></tr>
+                <tr>
+                    <td>Sensor</td>
+                    <td>VCC</td>
+                    <td>5V</td>
+                </tr>
+
+                <tr>
+                    <td>Sensor</td>
+                    <td>DATA / OUT</td>
+                    <td>A0</td>
+                </tr>
+
+                <tr>
+                    <td>Sensor</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
             </tbody>
+
         </table>
+
     </div>
 
     <div class="note">
-        <strong>Sensor Input:</strong> A0<br>
-        <strong>LCD SDA:</strong> A4<br>
-        <strong>LCD SCL:</strong> A5<br>
-        <strong>Buzzer:</strong> D8<br>
-        <strong>Humidity Threshold:</strong> 50%
+
+        <strong>Sensor Wiring Clarification:</strong>
+
+        This table preserves
+        the connections provided
+        in the original source.
+
+        Connecting a DHT11
+        data pin to A0 does not
+        make it an analog
+        humidity sensor.
+
+        A0 can be used
+        as a digital input,
+        but the sketch must
+        use the correct DHT11
+        digital protocol.
+
     </div>
+
+    <h3>16×2 I²C LCD Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>LCD Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>VCC</td>
+                    <td>5V, if module is compatible</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>A4</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>A5</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Buzzer Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Buzzer Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Positive (+)</td>
+                    <td>D8, if suitable for direct pin drive</td>
+                </tr>
+
+                <tr>
+                    <td>Negative (−)</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Original Pin Summary:</strong>
+
+        <ul>
+            <li>Sensor DATA / OUT → A0</li>
+            <li>LCD SDA → A4</li>
+            <li>LCD SCL → A5</li>
+            <li>Buzzer Positive → D8</li>
+            <li>Common Ground → GND</li>
+            <li>LCD I²C Address → 0x27</li>
+        </ul>
+
+        <p>
+            The source assumes
+            a compatible 5V LCD module.
+            Verify the actual LCD
+            backpack, address and
+            LiquidCrystal_I2C library.
+        </p>
+
+        <p>
+            Verify the buzzer's
+            operating current.
+            A buzzer that exceeds
+            safe GPIO current
+            requires a suitable driver.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Humidity-Based Warning System Circuit.png"
+        alt="Humidity-Based Warning System Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden
+    >
+        Approved circuit diagram PNG pending.
+        Verify the sensor type and
+        corresponding code before
+        adding the final circuit image.
+    </div>
+
+</section>
+
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
 
     <div class="flow">
-        Arduino Starts<br>
-        ↓<br>
-        Sensor value is read from A0<br>
-        ↓<br>
-        Analog value is converted to voltage<br>
-        ↓<br>
-        Humidity value is calculated<br>
-        ↓<br>
-        Humidity is displayed on LCD<br>
-        ↓<br>
-        Humidity &lt; 50% → NORMAL<br>
-        ↓<br>
-        Buzzer OFF<br><br>
 
-        Humidity ≥ 50% → HIGH<br>
-        ↓<br>
-        Buzzer ON
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Initialize LCD and Buzzer
+
+        <br>↓<br>
+
+        Read Analog Input A0
+
+        <br>↓<br>
+
+        Convert ADC Value into Voltage
+
+        <br>↓<br>
+
+        Apply the Source Calculation Formula
+
+        <br>↓<br>
+
+        Display Calculated Value on LCD
+
+        <br>↓<br>
+
+        Compare Value with Threshold 50
+
+        <br>↓<br>
+
+        Value Below 50 → NORMAL, Buzzer OFF
+
+        <br>↓<br>
+
+        Value 50 or Above → HIGH, Buzzer ON
+
+        <br>↓<br>
+
+        Print Reading and Status to Serial Monitor
+
+        <br>↓<br>
+
+        Repeat After 500 ms
+
+    </div>
+
+    <h3>Analog Input Reading</h3>
+
+    <p>
+        The source uses
+        analogRead(A0) to obtain
+        a value between
+        0 and 1023.
+    </p>
+
+    <p>
+        The value is converted
+        to voltage using a
+        5V reference.
+    </p>
+
+    <div class="note">
+
+        <strong>Voltage Formula:</strong>
+
+        <p>
+            voltage =
+            sensorValue × 5.0 / 1023.0
+        </p>
+
+    </div>
+
+    <h3>Source Calculation</h3>
+
+    <p>
+        The sketch uses the
+        following expression
+        to calculate a variable
+        called humidity.
+    </p>
+
+    <div class="note">
+
+        <strong>Original Expression:</strong>
+
+        <p>
+            humidity =
+            (voltage − 0.5) × 100.0
+        </p>
+
+        <p>
+            This expression is
+            not a valid humidity
+            conversion for a DHT11.
+        </p>
+
+    </div>
+
+    <h3>Threshold Comparison</h3>
+
+    <p>
+        The calculated value
+        is compared against
+        a constant of 50.0.
+    </p>
+
+    <p>
+        Values below 50
+        select the NORMAL
+        program branch.
+    </p>
+
+    <p>
+        Values of 50 or higher
+        select the HIGH
+        warning branch.
+    </p>
+
+    <h3>LCD and Buzzer Operation</h3>
+
+    <p>
+        The first LCD row
+        displays the calculated
+        value with a percent sign.
+    </p>
+
+    <p>
+        The second LCD row
+        displays NORMAL
+        or HIGH status.
+    </p>
+
+    <p>
+        When the HIGH branch
+        is active, the sketch
+        calls tone() with
+        a frequency of 1000 Hz.
+    </p>
+
+    <p>
+        When the NORMAL branch
+        is active, noTone()
+        turns the buzzer OFF.
+    </p>
+
+    <div class="state-grid">
+
+        <div class="state-card">
+            <strong>Programmed Threshold</strong>
+            50
+        </div>
+
+        <div class="state-card">
+            <strong>Below Threshold</strong>
+            NORMAL · Buzzer OFF
+        </div>
+
+        <div class="state-card">
+            <strong>At / Above Threshold</strong>
+            HIGH · Buzzer ON
+        </div>
+
+        <div class="state-card">
+            <strong>Update Interval</strong>
+            500 ms
+        </div>
+
     </div>
 
     <div class="note">
-        <strong>Threshold:</strong> 50%<br>
-        <strong>Buzzer Frequency:</strong> 1000 Hz<br>
-        <strong>Serial Monitor:</strong> 9600 baud<br>
-        <strong>Update Interval:</strong> 500 ms
+
+        <strong>Measurement Warning:</strong>
+
+        The operating logic
+        above describes what
+        the supplied code does.
+
+        The displayed percentage
+        is not verified relative
+        humidity when the
+        listed sensor is DHT11.
+
     </div>
+
 </section>
 
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
 
     <ol>
-        <li>Connect the sensor VCC pin to Arduino 5V.</li>
-        <li>Connect the sensor DATA / OUT pin to A0.</li>
-        <li>Connect the sensor GND pin to Arduino GND.</li>
-        <li>Connect the I²C LCD VCC to 5V.</li>
-        <li>Connect the I²C LCD GND to GND.</li>
-        <li>Connect the I²C LCD SDA pin to A4.</li>
-        <li>Connect the I²C LCD SCL pin to A5.</li>
-        <li>Connect the buzzer positive terminal to D8.</li>
-        <li>Connect the buzzer negative terminal to GND.</li>
-        <li>Connect Arduino UNO to the computer.</li>
-        <li>Open Arduino IDE.</li>
-        <li>Install the LiquidCrystal_I2C library if required.</li>
-        <li>Enter the program given below.</li>
-        <li>Select Arduino UNO and the correct COM port.</li>
-        <li>Verify and upload the program.</li>
-        <li>Open Serial Monitor at 9600 baud.</li>
-        <li>Observe humidity, LCD status and buzzer operation.</li>
+
+        <li>
+            Place Arduino UNO,
+            the humidity sensor,
+            LCD, buzzer and
+            breadboard on a
+            stable working surface.
+        </li>
+
+        <li>
+            Confirm the exact
+            sensor model and
+            its pin configuration.
+        </li>
+
+        <li>
+            Check whether the
+            sensor provides
+            a digital data signal
+            or an analog output.
+        </li>
+
+        <li>
+            For the listed DHT11,
+            use an appropriate
+            digital humidity-reading
+            program rather than
+            the supplied analog formula.
+        </li>
+
+        <li>
+            Connect the sensor VCC
+            to its rated supply.
+        </li>
+
+        <li>
+            Connect sensor GND
+            to Arduino GND.
+        </li>
+
+        <li>
+            Connect the sensor
+            data output to the
+            pin selected in the
+            verified sensor code.
+        </li>
+
+        <li>
+            Connect the LCD
+            VCC to a compatible
+            supply.
+        </li>
+
+        <li>
+            Connect LCD GND
+            to Arduino GND.
+        </li>
+
+        <li>
+            Connect LCD SDA
+            to Arduino A4.
+        </li>
+
+        <li>
+            Connect LCD SCL
+            to Arduino A5.
+        </li>
+
+        <li>
+            Connect buzzer positive
+            to D8 if the buzzer
+            is suitable for
+            direct pin drive.
+        </li>
+
+        <li>
+            Connect buzzer negative
+            to GND.
+        </li>
+
+        <li>
+            Verify all wiring
+            and electrical ratings.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install a compatible
+            LiquidCrystal_I2C library.
+        </li>
+
+        <li>
+            If using a DHT11,
+            install a suitable
+            DHT sensor library
+            and update the sketch
+            to read digital humidity.
+        </li>
+
+        <li>
+            Create a sketch named
+            Humidity_Based_Warning_System.ino.
+        </li>
+
+        <li>
+            Review the original
+            program in
+            Explore the Code.
+        </li>
+
+        <li>
+            Use the original sketch
+            only for studying
+            its analog-value
+            threshold logic;
+            correct the sensor
+            reading before real
+            humidity testing.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            a sensor-compatible
+            Arduino program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 9600 baud.
+        </li>
+
+        <li>
+            Observe the LCD
+            reading and status.
+        </li>
+
+        <li>
+            Test the warning
+            threshold using
+            valid sensor readings
+            or controlled test data.
+        </li>
+
+        <li>
+            Confirm that the
+            buzzer activates
+            when the measured
+            humidity reaches
+            the configured threshold
+            in the corrected program.
+        </li>
+
     </ol>
+
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-    <h2>Arduino Code</h2>
 
-    <div class="code-header">
-        <span>Humidity_Based_Warning_System.ino</span>
-        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Humidity-Based Warning System ·
+        Select a step to understand
+        the original Arduino program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Humidity_Based_Warning_System.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Select a step to highlight
+                its matching lines and
+                read an explanation.
+            </p>
+
+            <div class="steps">
+
+                <button
+                    class="step active"
+                    type="button"
+                    onclick="showStep(0)"
+                >
+                    <span class="step-number">01</span>
+                    Load LCD libraries
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(1)"
+                >
+                    <span class="step-number">02</span>
+                    Define sensor and buzzer
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(2)"
+                >
+                    <span class="step-number">03</span>
+                    Set warning threshold
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(3)"
+                >
+                    <span class="step-number">04</span>
+                    Initialize LCD and Serial
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(4)"
+                >
+                    <span class="step-number">05</span>
+                    Read analog sensor
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(5)"
+                >
+                    <span class="step-number">06</span>
+                    Convert analog voltage
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(6)"
+                >
+                    <span class="step-number">07</span>
+                    Apply source formula
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(7)"
+                >
+                    <span class="step-number">08</span>
+                    Display calculated value
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(8)"
+                >
+                    <span class="step-number">09</span>
+                    Control warning buzzer
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(9)"
+                >
+                    <span class="step-number">10</span>
+                    Repeat measurement
+                </button>
+
+            </div>
+
+            <div
+                id="explanation"
+                class="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore more: DHT11 Compatibility
+                </summary>
+
+                <p>
+                    A DHT11 transmits
+                    digital temperature
+                    and humidity data.
+                </p>
+
+                <p>
+                    analogRead() does not
+                    decode the DHT11
+                    communication protocol.
+                </p>
+
+                <p>
+                    A corrected experiment
+                    needs a supported
+                    digital reading method.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: Threshold Logic
+                </summary>
+
+                <p>
+                    The if statement
+                    compares the calculated
+                    reading against 50.
+                </p>
+
+                <p>
+                    If the number reaches
+                    or exceeds 50,
+                    tone() activates
+                    the buzzer signal.
+                </p>
+
+                <p>
+                    Otherwise,
+                    noTone() turns
+                    the signal off.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>
+                        Which pin is used
+                        for the original
+                        analog input?
+                    </li>
+
+                    <li>
+                        Which pin controls
+                        the buzzer?
+                    </li>
+
+                    <li>
+                        What is the
+                        programmed threshold?
+                    </li>
+
+                    <li>
+                        Which LCD address
+                        is used?
+                    </li>
+
+                    <li>
+                        What is the
+                        update interval?
+                    </li>
+
+                    <li>
+                        Can analogRead(A0)
+                        directly measure
+                        DHT11 humidity?
+                    </li>
+
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>A0</li>
+                        <li>D8</li>
+                        <li>50</li>
+                        <li>0x27</li>
+                        <li>500 ms</li>
+                        <li>No, DHT11 uses a digital protocol</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
     </div>
 
-<pre><code id="arduinoCode">#include &lt;Wire.h&gt;
-#include &lt;LiquidCrystal_I2C.h&gt;
+    <p class="tip">
+        <strong>Try it:</strong>
+        Identify the difference
+        between an analog voltage
+        measurement and a digital
+        humidity sensor reading.
+        Explain why the DHT11
+        requires a different
+        Arduino reading method.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        According to the original
+        program logic, the LCD
+        initially displays
+        Humidity Alarm.
+    </p>
+
+    <p>
+        The sketch then calculates
+        a value from A0 and
+        displays it with a
+        percent symbol.
+    </p>
+
+    <p>
+        When this calculated value
+        is below 50, the
+        NORMAL message appears
+        and the buzzer is OFF.
+    </p>
+
+    <p>
+        When the calculated value
+        is 50 or higher, the
+        HIGH warning appears
+        and the buzzer signal
+        is activated.
+    </p>
+
+    <h3>Program Logic Table</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Calculated Value</th>
+                    <th>LCD Status</th>
+                    <th>Buzzer</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>30</td>
+                    <td>Status: NORMAL</td>
+                    <td>OFF</td>
+                </tr>
+
+                <tr>
+                    <td>49.9</td>
+                    <td>Status: NORMAL</td>
+                    <td>OFF</td>
+                </tr>
+
+                <tr>
+                    <td>50.0</td>
+                    <td>HIGH! BUZZER ON</td>
+                    <td>ON</td>
+                </tr>
+
+                <tr>
+                    <td>70</td>
+                    <td>HIGH! BUZZER ON</td>
+                    <td>ON</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Example LCD — Normal Branch</h3>
+
+    <div class="note">
+        <pre style="
+            margin:0;
+            background:transparent;
+            color:#1e3a8a;
+            white-space:pre-wrap;
+        ">Humidity: 35.0%
+Status: NORMAL</pre>
+    </div>
+
+    <h3>Example LCD — Warning Branch</h3>
+
+    <div class="note">
+        <pre style="
+            margin:0;
+            background:transparent;
+            color:#1e3a8a;
+            white-space:pre-wrap;
+        ">Humidity: 65.0%
+HIGH! BUZZER ON</pre>
+    </div>
+
+    <h3>Example Serial Monitor Output</h3>
+
+    <div class="note">
+        <pre style="
+            margin:0;
+            background:transparent;
+            color:#1e3a8a;
+            white-space:pre-wrap;
+        ">Humidity: 35.0% -> BUZZER OFF
+Humidity: 45.0% -> BUZZER OFF
+Humidity: 50.0% -> BUZZER ON
+Humidity: 65.0% -> BUZZER ON</pre>
+    </div>
+
+    <div class="note">
+
+        <strong>Output Clarification:</strong>
+
+        The values above illustrate
+        the intended threshold
+        logic only.
+
+        They are not verified
+        DHT11 humidity measurements.
+
+        Also, the LCD has
+        only 16 columns.
+        Large or unexpected
+        calculated values may
+        not display cleanly.
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The supplied Humidity-Based
+        Warning System sketch
+        demonstrates analog-value
+        calculation, LCD display
+        and buzzer activation
+        using a programmed threshold.
+    </p>
+
+    <p>
+        The control logic displays
+        NORMAL below the threshold
+        and HIGH when the
+        calculated value reaches
+        or exceeds 50.
+    </p>
+
+    <p>
+        However, valid humidity
+        monitoring with the
+        listed DHT11 requires
+        a corrected digital
+        sensor-reading program.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Understanding humidity-monitoring applications.</li>
+        <li>Identifying analog and digital sensor interfaces.</li>
+        <li>Understanding why a DHT11 requires digital communication.</li>
+        <li>Reading an analog input using analogRead().</li>
+        <li>Converting an ADC reading into voltage.</li>
+        <li>Understanding the limitations of sensor conversion formulas.</li>
+        <li>Comparing program values using if and else.</li>
+        <li>Using a programmed warning threshold.</li>
+        <li>Displaying readings on a 16×2 I²C LCD.</li>
+        <li>Using tone() and noTone() to control a buzzer.</li>
+        <li>Printing sensor information in Serial Monitor.</li>
+        <li>Verifying that sensor hardware and Arduino code are compatible.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>Arduino Experiment</strong>
+    <p>Humidity-Based Warning System</p>
+</footer>
+
+<!-- =========================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+========================================= -->
+<script type="text/plain" id="arduino-program">
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
 #define SENSOR_PIN A0
 #define BUZZER_PIN 8
@@ -742,68 +2167,353 @@ void loop()
   }
 
   delay(500);
-}</code></pre>
-
-</section>
-
-<section class="section">
-    <h2>Expected Output</h2>
-
-    <p>
-        The LCD continuously displays the calculated humidity value.
-        When the humidity reaches or exceeds 50%, the buzzer sounds and the LCD shows a HIGH warning.
-    </p>
-
-    <div class="note">
-        <strong>Humidity &lt; 50%:</strong> Status NORMAL, Buzzer OFF<br>
-        <strong>Humidity ≥ 50%:</strong> HIGH warning, Buzzer ON<br>
-        <strong>LCD:</strong> Displays humidity percentage and system status
-    </div>
-</section>
-
-<section class="section" id="result">
-    <h2>Result</h2>
-
-    <p>
-        The Humidity-Based Warning System experiment was implemented using Arduino UNO,
-        a sensor input, a 16×2 I²C LCD and a buzzer. The system continuously displays
-        humidity and activates an audible warning when the programmed threshold is reached.
-    </p>
-</section>
-
-<section class="section">
-    <h2>What You Learn</h2>
-
-    <ul>
-        <li>How to read a sensor signal using Arduino A0.</li>
-        <li>How to convert an analog reading into a calculated value.</li>
-        <li>How to display humidity information on an I²C LCD.</li>
-        <li>How to compare a reading with a programmed threshold.</li>
-        <li>How to activate a buzzer during a warning condition.</li>
-        <li>How to display normal and warning status on an LCD.</li>
-        <li>How to monitor system values through Serial Monitor.</li>
-    </ul>
-</section>
-
-</main>
-
-<footer>
-    <strong>Arduino Experiment</strong><br>
-    Humidity-Based Warning System
-</footer>
-
-<script>
-function copyCode(){
-    const code=document.getElementById("arduinoCode").innerText;
-    navigator.clipboard.writeText(code);
-
-    const button=document.querySelector(".copy-button");
-    button.innerText="Copied!";
-
-    setTimeout(function(){
-        button.innerText="Copy Code";
-    },1500);
 }
+</script>
+
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
+<script>
+
+/* =========================
+   COMPLETE PROGRAM SOURCE
+========================= */
+
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =========================
+   EXPLANATION STEPS
+========================= */
+
+const steps = [
+
+    {
+        title: "Load LCD libraries",
+        start: "#include <Wire.h>",
+        end: "#include <LiquidCrystal_I2C.h>",
+        text:
+            "Wire.h supports I2C communication. " +
+            "LiquidCrystal_I2C.h provides " +
+            "functions to operate the LCD."
+    },
+
+    {
+        title: "Define sensor and buzzer",
+        start: "#define SENSOR_PIN A0",
+        end: "#define BUZZER_PIN 8",
+        text:
+            "The original sketch uses " +
+            "A0 as its analog input " +
+            "and D8 to control the buzzer."
+    },
+
+    {
+        title: "Set warning threshold",
+        start: "const float HUMIDITY_LIMIT = 50.0;",
+        end: "const float HUMIDITY_LIMIT = 50.0;",
+        text:
+            "The constant sets the program " +
+            "threshold to 50.0. The input " +
+            "still needs a valid humidity " +
+            "measurement method."
+    },
+
+    {
+        title: "Initialize LCD and Serial",
+        start: "void setup()",
+        end: "lcd.clear();",
+        text:
+            "setup() starts Serial at " +
+            "9600 baud, initializes " +
+            "the buzzer and LCD, and " +
+            "displays Humidity Alarm."
+    },
+
+    {
+        title: "Read analog sensor",
+        start: "// Read the physical Tinkercad sensor",
+        end: "int sensorValue = analogRead(SENSOR_PIN);",
+        text:
+            "analogRead(A0) produces an " +
+            "ADC reading from 0 to 1023. " +
+            "This does not correctly " +
+            "read a digital DHT11."
+    },
+
+    {
+        title: "Convert analog voltage",
+        start: "// Convert analog value to voltage",
+        end: "float voltage = sensorValue * 5.0 / 1023.0;",
+        text:
+            "The program converts " +
+            "the ADC value to voltage " +
+            "using an assumed 5V reference."
+    },
+
+    {
+        title: "Apply source formula",
+        start: "// Convert sensor reading",
+        end: "float humidity = (voltage - 0.5) * 100.0;",
+        text:
+            "The source applies a voltage " +
+            "formula and names its result " +
+            "humidity. That formula is not " +
+            "valid for DHT11 relative humidity."
+    },
+
+    {
+        title: "Display calculated value",
+        start: "// Display humidity",
+        end: 'lcd.print("% ");',
+        text:
+            "The LCD displays the calculated " +
+            "number with the label Humidity " +
+            "and a percent symbol."
+    },
+
+    {
+        title: "Control warning buzzer",
+        start: "// Humidity threshold = 50%",
+        end: 'Serial.println("% -> BUZZER OFF");',
+        text:
+            "The if branch displays HIGH " +
+            "and activates a 1000 Hz tone " +
+            "at or above 50. The else " +
+            "branch displays NORMAL " +
+            "and turns the buzzer off."
+    },
+
+    {
+        title: "Repeat measurement",
+        start: "delay(500);",
+        end: "delay(500);",
+        text:
+            "The sketch waits 500 ms " +
+            "between readings. A valid " +
+            "DHT11 implementation must " +
+            "also respect the sensor's " +
+            "supported sampling interval."
+    }
+
+];
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =========================
+   DISPLAY CODE WITH LINE NUMBERS
+========================= */
+
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+
+        }).join("");
+}
+
+/* =========================
+   FIND CODE LINE
+========================= */
+
+function findLine(searchText, startIndex = 0) {
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+/* =========================
+   HIGHLIGHT AND EXPLAIN
+========================= */
+
+function showStep(index) {
+
+    const step = steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line) {
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
+        return;
+    }
+
+    let endLine = findLine(step.end, startLine);
+
+    if (endLine < 0) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =========================
+   COPY COMPLETE ARDUINO CODE
+========================= */
+
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =========================
+   QUIZ ANSWERS
+========================= */
+
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =========================
+   INITIALIZE CODE VIEWER
+========================= */
+
+displayCode();
+showStep(0);
+
 </script>
 
 </body>
