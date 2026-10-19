@@ -1,19 +1,35 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Force Sensitive LED Controller</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+* {
+    box-sizing: border-box;
+}
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+html {
+    scroll-behavior: smooth;
+}
 
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =========================
+   HEADER
+========================= */
 .header {
     background: #2563eb;
     color: white;
@@ -24,8 +40,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -39,8 +53,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -58,8 +70,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -67,26 +77,15 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -102,15 +101,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -128,18 +125,467 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =========================
+   NAVIGATION
+========================= */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
-@media (max-width: 900px) {
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 22px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =========================
+   EXPERIMENT THUMBNAIL
+========================= */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: auto;
+    border-radius: 10px;
+}
+
+/* =========================
+   COMPONENT CARDS
+========================= */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =========================
+   TABLES AND NOTES
+========================= */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =========================
+   WORKING PRINCIPLE
+========================= */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(180px,1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    padding: 14px;
+}
+
+.state-card strong {
+    display: block;
+    color: #1e3a8a;
+    margin-bottom: 5px;
+}
+
+/* =========================
+   EXPLORE THE CODE
+========================= */
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas,Monaco,monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas,Monaco,monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    color: #1e3a8a;
+    margin: 0 0 7px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
-@media (max-width: 600px) {
+    .code-body {
+        height: 450px;
+    }
+}
 
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -185,360 +631,21 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
     }
-}
 
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:20;
-}
-
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
-
-.container{
-    width:90%;
-    max-width:1050px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-ul,ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
-}
-
-.note{
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    padding:14px 16px;
-    border-radius:6px;
-    margin-top:18px;
-}
-
-.code-lesson{
-    color:#142e3a;
-}
-
-.eyebrow{
-    color:#2563eb;
-    font-weight:bold;
-    font-size:13px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    margin:0 0 4px;
-}
-
-.lesson-title{
-    font-size:32px!important;
-    margin:0 0 8px!important;
-    color:#1e3a8a!important;
-    border:0!important;
-    padding:0!important;
-}
-
-.intro{
-    color:#526875;
-    margin:0 0 22px;
-}
-
-.code-layout{
-    display:grid;
-    grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);
-    gap:20px;
-    align-items:start;
-}
-
-.code-panel{
-    background:white;
-    border:1px solid #bfdbfe;
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 4px 14px rgba(37,99,235,.10);
-}
-
-.code-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
-    padding:15px 20px;
-    background:#2563eb;
-    color:white;
-}
-
-.filename{
-    color:white;
-    font:bold 14px/1.4 Consolas,Monaco,monospace;
-}
-
-.copy-button{
-    border:1px solid white;
-    background:white;
-    color:#2563eb;
-    border-radius:8px;
-    padding:8px 14px;
-    min-height:40px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.code-body{
-    height:600px;
-    overflow:auto;
-    background:white;
-    padding:16px 0;
-}
-
-.code-line{
-    display:flex;
-    min-width:max-content;
-    min-height:24px;
-    padding-right:22px;
-    white-space:pre;
-    font:13px/24px Consolas,Monaco,monospace;
-    color:#1e293b;
-    border-bottom:1px solid #f1f5f9;
-}
-
-.code-line.selected{
-    background:#dbeafe;
-    box-shadow:inset 4px 0 #2563eb;
-}
-
-.line-number{
-    user-select:none;
-    min-width:52px;
-    text-align:right;
-    padding-right:15px;
-    color:#64748b;
-}
-
-.guide{
-    background:white;
-    border:1px solid #dce6e9;
-    border-radius:14px;
-    padding:22px;
-}
-
-.guide h2{
-    border:0;
-    padding:0;
-    margin:0 0 8px;
-    font-size:21px;
-}
-
-.guide>p{
-    color:#526875;
-    font-size:15px;
-}
-
-.steps{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-    margin:16px 0;
-}
-
-.step{
-    border:1px solid #dce6e9;
-    border-radius:9px;
-    padding:10px;
-    min-height:65px;
-    background:white;
-    text-align:left;
-    font-size:13px;
-    font-weight:bold;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-    color:#1e3a8a;
-}
-
-.step.active{
-    background:#eff6ff;
-    border-color:#60a5fa;
-}
-
-.step-number{
-    color:#2563eb;
-    font-size:12px;
-    flex-shrink:0;
-}
-
-.explanation{
-    background:#eff6ff;
-    border-radius:9px;
-    padding:16px;
-    min-height:130px;
-}
-
-.explanation h3{
-    font-size:17px;
-    margin:0 0 7px;
-    color:#1e3a8a;
-}
-
-.explanation p{
-    margin:0;
-    color:#526875;
-    font-size:15px;
-}
-
-.guide details{
-    border-top:1px solid #dce6e9;
-    margin-top:15px;
-}
-
-.guide summary{
-    cursor:pointer;
-    color:#2563eb;
-    font-weight:bold;
-    padding:13px 0;
-}
-
-.tip{
-    background:#eff6ff;
-    color:#234e87;
-    padding:14px 17px;
-    border-radius:9px;
-    margin-top:20px;
-    font-size:14px;
-}
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-@media(max-width:850px){
-    .code-layout{
-        grid-template-columns:1fr;
+    .steps {
+        grid-template-columns: 1fr;
     }
-}
 
-@media(max-width:600px){
-    .steps{
-        grid-template-columns:1fr;
+    nav {
+        gap: 11px;
     }
 }
 </style>
@@ -546,9 +653,10 @@ footer strong{
 
 <body>
 
+<!-- =========================
+     HEADER
+========================= -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -556,40 +664,27 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Force Sensitive LED Controller</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -598,75 +693,191 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
         </div>
 
     </div>
-
 </header>
 
+<!-- =========================
+     NAVIGATION
+========================= -->
 <nav>
-    <a href="../index.html">← Arduino Experiments</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
     <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
 </nav>
 
 <main class="container">
 
-<section class="section" id="aim">
-    <h2>Aim</h2>
-    <p>
-        To control the brightness of an LED according to the force applied
-        to an FSR402 Force Sensitive Resistor using Arduino UNO R3.
-    </p>
+<!-- =========================
+     EXPERIMENT THUMBNAIL
+========================= -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Force Sensitive LED Controller.png"
+        alt="Force Sensitive LED Controller Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
 </section>
 
-<section class="section">
+<!-- =========================
+     1. AIM
+========================= -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To control the brightness
+        of a red LED according
+        to the force applied
+        to an FSR402 Force
+        Sensitive Resistor
+        using Arduino UNO R3.
+    </p>
+
+    <p>
+        The system measures
+        the sensor signal
+        through analog input A0
+        and uses PWM output D9
+        to adjust LED brightness.
+    </p>
+
+</section>
+
+<!-- =========================
+     2. ABOUT THE EXPERIMENT
+========================= -->
+<section class="section" id="about">
+
     <h2>About the Experiment</h2>
 
     <p>
-        The FSR402 changes its resistance when pressure is applied to its sensing surface.
-        The Arduino reads this change as an analog value using pin A0.
+        The Force Sensitive LED
+        Controller demonstrates
+        how Arduino can control
+        LED brightness based
+        on applied force.
     </p>
 
     <p>
-        The analog sensor value is converted into a PWM value from 0 to 255.
-        Arduino then uses PWM pin D9 to change the brightness of the red LED.
-        More force produces a higher sensor value and therefore a brighter LED.
+        The FSR402 is a
+        force-sensitive resistor
+        whose resistance changes
+        when pressure is applied
+        to its sensing surface.
     </p>
+
+    <p>
+        The FSR402 and a
+        10 kΩ resistor form
+        a voltage-divider circuit.
+    </p>
+
+    <p>
+        Arduino reads the voltage
+        at the divider's junction
+        using analog input A0.
+    </p>
+
+    <p>
+        The analogRead() function
+        returns a digital value
+        between 0 and 1023.
+    </p>
+
+    <p>
+        The map() function converts
+        this value into a
+        PWM brightness value
+        between 0 and 255.
+    </p>
+
+    <p>
+        Arduino sends the calculated
+        PWM value to digital pin D9
+        using analogWrite().
+    </p>
+
+    <p>
+        As the force on the
+        sensor increases, the
+        voltage at A0 generally
+        increases, producing a
+        brighter LED.
+    </p>
+
+    <p>
+        Serial Monitor displays
+        both the raw FSR402
+        reading and calculated
+        LED brightness value.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        The program maps the
+        ADC reading directly
+        to LED brightness.
+
+        It does not calculate
+        actual force in newtons
+        or calibrated pressure.
+
+        The relationship between
+        applied force and sensor
+        resistance is nonlinear,
+        so the displayed values
+        represent relative readings.
+
+    </div>
+
 </section>
 
+<!-- =========================
+     3. COMPONENTS REQUIRED
+========================= -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
@@ -675,25 +886,23 @@ footer strong{
             <img
                 src="Arduino UNO.png"
                 alt="Arduino UNO R3">
-            <h4>
-                Arduino UNO R3 (×1)
-            </h4>
+            <h4>Arduino UNO R3 (×1)</h4>
             <p>
-                Reads the force sensor
-                and controls LED brightness.
+                Reads the force
+                sensor and controls
+                the LED brightness.
             </p>
         </div>
 
         <div class="component-card">
             <img
                 src="FSR402 Force Sensor.png"
-                alt="FSR402 Force Sensor">
-            <h4>
-                FSR402 Force Sensitive Resistor (×1)
-            </h4>
+                alt="FSR402 Force Sensitive Resistor">
+            <h4>FSR402 Force Sensitive Resistor (×1)</h4>
             <p>
-                Detects applied force
-                or pressure.
+                Detects changes
+                in applied force
+                through resistance variation.
             </p>
         </div>
 
@@ -701,12 +910,11 @@ footer strong{
             <img
                 src="Red LED.png"
                 alt="Red LED">
-            <h4>
-                Red LED (×1)
-            </h4>
+            <h4>Red LED (×1)</h4>
             <p>
-                Brightness changes
-                according to applied force.
+                Changes its brightness
+                according to the
+                sensor reading.
             </p>
         </div>
 
@@ -714,11 +922,9 @@ footer strong{
             <img
                 src="10K Ohm Resistor.png"
                 alt="10K Ohm Resistor">
-            <h4>
-                10KΩ Resistor (×1)
-            </h4>
+            <h4>10 kΩ Resistor (×1)</h4>
             <p>
-                Forms the voltage divider
+                Forms a voltage divider
                 with the FSR402.
             </p>
         </div>
@@ -727,12 +933,11 @@ footer strong{
             <img
                 src="220 Ohm Resistor.png"
                 alt="220 Ohm Resistor">
-            <h4>
-                220Ω Resistor (×1)
-            </h4>
+            <h4>220Ω Resistor (×1)</h4>
             <p>
-                Limits current
-                through the LED.
+                Limits the current
+                flowing through
+                the red LED.
             </p>
         </div>
 
@@ -740,12 +945,11 @@ footer strong{
             <img
                 src="Breadboard.png"
                 alt="Breadboard">
-            <h4>
-                Breadboard (×1)
-            </h4>
+            <h4>Breadboard (×1)</h4>
             <p>
                 Used to assemble
-                the practical circuit.
+                the voltage divider
+                and LED circuit.
             </p>
         </div>
 
@@ -753,28 +957,34 @@ footer strong{
             <img
                 src="Jumper Wires.png"
                 alt="Jumper Wires">
-            <h4>
-                Jumper Wires
-            </h4>
+            <h4>Jumper Wires</h4>
             <p>
-                Used for making
-                electrical connections.
+                Used for electrical
+                connections between
+                the components.
             </p>
         </div>
 
     </div>
+
 </section>
 
+<!-- =========================
+     4. CIRCUIT CONNECTIONS
+========================= -->
 <section class="section" id="connections">
+
     <h2>Circuit Connections</h2>
+
+    <h3>FSR402 Voltage Divider Connections</h3>
 
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
                     <th>Component</th>
-                    <th>Pin / Terminal</th>
-                    <th>Arduino UNO R3 / Connection</th>
+                    <th>Terminal</th>
+                    <th>Arduino Connection</th>
                 </tr>
             </thead>
 
@@ -784,347 +994,891 @@ footer strong{
                     <td>Terminal 1</td>
                     <td>5V</td>
                 </tr>
-
                 <tr>
                     <td>FSR402</td>
                     <td>Terminal 2</td>
                     <td>A0 sensing junction</td>
                 </tr>
-
                 <tr>
-                    <td>10KΩ Resistor</td>
+                    <td>10 kΩ Resistor</td>
                     <td>Terminal 1</td>
-                    <td>A0 sensing junction</td>
+                    <td>Same A0 sensing junction</td>
                 </tr>
-
                 <tr>
-                    <td>10KΩ Resistor</td>
+                    <td>10 kΩ Resistor</td>
                     <td>Terminal 2</td>
-                    <td>GND</td>
-                </tr>
-
-                <tr>
-                    <td>Red LED</td>
-                    <td>Anode (+)</td>
-                    <td>D9 through 220Ω resistor</td>
-                </tr>
-
-                <tr>
-                    <td>Red LED</td>
-                    <td>Cathode (−)</td>
                     <td>GND</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="note">
-        The FSR402 and 10KΩ resistor form a voltage divider.
-        Arduino reads the divider output through <strong>A0</strong>.
+    <h3>Red LED Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>LED Terminal</th>
+                    <th>Arduino Connection</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Anode (+)</td>
+                    <td>D9 through 220Ω resistor</td>
+                    <td>PWM brightness control</td>
+                </tr>
+                <tr>
+                    <td>Cathode (−)</td>
+                    <td>GND</td>
+                    <td>Ground connection</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
+    <div class="note">
+
+        <strong>Pin Summary:</strong>
+
+        <ul>
+            <li>FSR402 Terminal 1 → 5V</li>
+            <li>FSR402 Terminal 2 → A0</li>
+            <li>10 kΩ Resistor → A0 to GND</li>
+            <li>Red LED Anode → D9 through 220Ω</li>
+            <li>Red LED Cathode → GND</li>
+            <li>Serial Monitor → 9600 baud</li>
+        </ul>
+
+        <p>
+            <strong>Voltage Divider:</strong>
+            5V → FSR402 → A0 Junction
+            → 10 kΩ Resistor → GND.
+        </p>
+
+        <p>
+            The FSR402 and 10 kΩ resistor
+            must connect together at A0.
+            The 220Ω resistor is
+            required in series with
+            the LED.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =========================
+     5. CIRCUIT DIAGRAM
+========================= -->
 <section class="section" id="circuit">
+
     <h2>Circuit Diagram</h2>
 
     <img
-        class="circuit-img"
         src="Force Sensitive LED Controller Circuit.png"
-        alt="Force Sensitive LED Controller Circuit">
+        alt="Force Sensitive LED Controller Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden
+    >
+        Approved circuit diagram PNG pending.
+        Add the verified image using
+        the filename referenced above.
+    </div>
+
 </section>
 
+<!-- =========================
+     6. WORKING PRINCIPLE
+========================= -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
 
     <div class="flow">
-        Apply force to FSR402
+
+        Arduino UNO Starts
+
         <br>↓<br>
-        FSR resistance changes
+
+        Initialize LED PWM Output and Serial Monitor
+
         <br>↓<br>
-        Arduino reads analog value on A0
+
+        Apply Force to FSR402
+
         <br>↓<br>
-        Value is mapped from 0–1023 to 0–255
+
+        FSR402 Resistance Changes
+
         <br>↓<br>
-        PWM output is generated on D9
+
+        Voltage at A0 Changes
+
         <br>↓<br>
-        Red LED brightness changes with force
-    </div>
-</section>
 
-<section class="section" id="procedure">
-    <h2>Procedure</h2>
+        Arduino Reads Analog Input A0
 
-    <ol>
-        <li>Place Arduino UNO R3, FSR402, resistors and the red LED on the breadboard setup.</li>
-        <li>Connect one FSR402 terminal to 5V.</li>
-        <li>Connect the second FSR402 terminal to the A0 sensing junction.</li>
-        <li>Connect the 10KΩ resistor between the A0 sensing junction and GND.</li>
-        <li>Connect the red LED anode to D9 through the 220Ω resistor.</li>
-        <li>Connect the red LED cathode to GND.</li>
-        <li>Open Arduino IDE and enter the program shown below.</li>
-        <li>Select Arduino UNO and the correct port.</li>
-        <li>Verify and upload the program.</li>
-        <li>Open Serial Monitor at 9600 baud.</li>
-        <li>Apply different pressure levels to the FSR402.</li>
-        <li>Observe the sensor reading and corresponding LED brightness.</li>
-    </ol>
-</section>
+        <br>↓<br>
 
-<section class="section" id="code">
+        Convert ADC Reading from 0–1023
 
-    <div class="code-lesson">
+        <br>↓<br>
 
-        <p class="eyebrow">
-            Arduino Experiment · Code Review
-        </p>
+        Map ADC Value to PWM Range 0–255
 
-        <h2 class="lesson-title">
-            Explore the Code
-        </h2>
+        <br>↓<br>
 
-        <p class="intro">
-            Force Sensitive LED Controller · Select a step to highlight
-            the matching code lines.
-        </p>
+        Generate PWM Output on D9
 
-        <div class="code-layout">
+        <br>↓<br>
 
-            <article class="code-panel">
+        Red LED Brightness Changes
 
-                <div class="code-top">
+        <br>↓<br>
 
-                    <span class="filename">
-                        Force_Sensitive_LED_Controller.ino
-                    </span>
+        Display Readings on Serial Monitor
 
-                    <button
-                        class="copy-button"
-                        onclick="copyCode()">
-                        Copy Code
-                    </button>
+        <br>↓<br>
 
-                </div>
-
-                <div
-                    class="code-body"
-                    id="code-body">
-
-                    <code id="code-lines"></code>
-
-                </div>
-
-            </article>
-
-            <article class="guide">
-
-                <h2>
-                    Understand it step by step
-                </h2>
-
-                <p>
-                    Choose a step.
-                    The matching code will light up on the left.
-                </p>
-
-                <div class="steps">
-
-                    <button
-                        class="step active"
-                        onclick="showStep(0)">
-
-                        <span class="step-number">
-                            01
-                        </span>
-
-                        Define the pins
-
-                    </button>
-
-                    <button
-                        class="step"
-                        onclick="showStep(1)">
-
-                        <span class="step-number">
-                            02
-                        </span>
-
-                        Configure Arduino
-
-                    </button>
-
-                    <button
-                        class="step"
-                        onclick="showStep(2)">
-
-                        <span class="step-number">
-                            03
-                        </span>
-
-                        Read the FSR
-
-                    </button>
-
-                    <button
-                        class="step"
-                        onclick="showStep(3)">
-
-                        <span class="step-number">
-                            04
-                        </span>
-
-                        Map brightness
-
-                    </button>
-
-                    <button
-                        class="step"
-                        onclick="showStep(4)">
-
-                        <span class="step-number">
-                            05
-                        </span>
-
-                        Control the LED
-
-                    </button>
-
-                    <button
-                        class="step"
-                        onclick="showStep(5)">
-
-                        <span class="step-number">
-                            06
-                        </span>
-
-                        Display readings
-
-                    </button>
-
-                </div>
-
-                <div
-                    class="explanation"
-                    id="explanation">
-
-                    <h3>
-                        1. Define the pins
-                    </h3>
-
-                    <p>
-                        A0 is used for the FSR402 analog input,
-                        while D9 is used as the PWM output for the LED.
-                    </p>
-
-                </div>
-
-                <details>
-
-                    <summary>
-                        Explore more: FSR voltage divider
-                    </summary>
-
-                    <p>
-                        The FSR402 does not provide a direct voltage by itself.
-                        The 10KΩ resistor forms a voltage divider so Arduino
-                        can measure the change in resistance as a changing
-                        analog voltage on A0.
-                    </p>
-
-                </details>
-
-                <details>
-
-                    <summary>
-                        Check your understanding
-                    </summary>
-
-                    <ul>
-                        <li>
-                            Which Arduino pin reads the FSR402?
-                            <strong>A0</strong>
-                        </li>
-
-                        <li>
-                            Which PWM pin controls the LED?
-                            <strong>D9</strong>
-                        </li>
-
-                        <li>
-                            What PWM range is used?
-                            <strong>0–255</strong>
-                        </li>
-                    </ul>
-
-                </details>
-
-            </article>
-
-        </div>
-
-        <p class="tip">
-            <strong>Try it:</strong>
-            Apply light, medium and firm pressure to the FSR402
-            and compare both the LED brightness and Serial Monitor values.
-        </p>
+        Repeat After 100 ms
 
     </div>
 
-</section>
-
-<section class="section">
-    <h2>Expected Output</h2>
+    <h3>Force-Sensitive Resistance</h3>
 
     <p>
-        The red LED becomes brighter as more force is applied to the FSR402.
-        Serial Monitor continuously displays the force sensor value and the
-        calculated LED brightness.
+        The FSR402 changes its
+        electrical resistance
+        when force is applied
+        to the sensing area.
+    </p>
+
+    <p>
+        As the resistance changes,
+        the voltage at A0 changes
+        because of the
+        voltage-divider circuit.
+    </p>
+
+    <h3>Analog-to-Digital Conversion</h3>
+
+    <p>
+        Arduino UNO uses a
+        10-bit analog-to-digital
+        converter for analogRead().
+    </p>
+
+    <p>
+        The resulting value
+        ranges from 0 to 1023.
+    </p>
+
+    <h3>Brightness Mapping</h3>
+
+    <p>
+        The Arduino sketch
+        maps the ADC reading
+        to a PWM output value
+        between 0 and 255.
     </p>
 
     <div class="note">
-        <strong>No / very low force:</strong> LED OFF or very dim
-        <br>
-        <strong>Light pressure:</strong> LED glows at low brightness
-        <br>
-        <strong>More pressure:</strong> LED becomes brighter
+
+        <strong>Program Formula:</strong>
+
+        <p>
+            brightness =
+            map(fsrValue, 0, 1023, 0, 255)
+        </p>
+
+        <p>
+            The constrain() function
+            keeps the value
+            within 0–255.
+        </p>
+
     </div>
+
+    <h3>PWM Control</h3>
+
+    <p>
+        analogWrite() changes
+        the duty cycle of
+        the signal on pin D9.
+    </p>
+
+    <p>
+        A low duty cycle
+        produces a dimmer LED,
+        while a high duty cycle
+        produces a brighter LED.
+    </p>
+
+    <div class="state-grid">
+
+        <div class="state-card">
+            <strong>No / Low Force</strong>
+            LED OFF or Very Dim
+        </div>
+
+        <div class="state-card">
+            <strong>Light Force</strong>
+            Low LED Brightness
+        </div>
+
+        <div class="state-card">
+            <strong>Medium Force</strong>
+            Medium LED Brightness
+        </div>
+
+        <div class="state-card">
+            <strong>Higher Force</strong>
+            Higher LED Brightness
+        </div>
+
+    </div>
+
 </section>
 
+<!-- =========================
+     7. PROCEDURE
+========================= -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Place Arduino UNO R3,
+            the FSR402, resistors,
+            red LED and breadboard
+            on a stable surface.
+        </li>
+
+        <li>
+            Identify the two
+            FSR402 terminals.
+        </li>
+
+        <li>
+            Connect the first
+            FSR402 terminal to
+            Arduino 5V.
+        </li>
+
+        <li>
+            Connect the second
+            FSR402 terminal to
+            the A0 sensing junction.
+        </li>
+
+        <li>
+            Connect one terminal
+            of the 10 kΩ resistor
+            to the same A0 junction.
+        </li>
+
+        <li>
+            Connect the other
+            10 kΩ resistor terminal
+            to Arduino GND.
+        </li>
+
+        <li>
+            Connect the red LED
+            anode to D9 through
+            a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect the red LED
+            cathode to Arduino GND.
+        </li>
+
+        <li>
+            Verify all circuit
+            connections and
+            LED polarity.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create a sketch named
+            Force_Sensitive_LED_Controller.ino.
+        </li>
+
+        <li>
+            Copy the complete
+            Arduino program from
+            Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct port.
+        </li>
+
+        <li>
+            Verify and upload
+            the Arduino program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 9600 baud.
+        </li>
+
+        <li>
+            Observe the initial
+            FSR reading and
+            LED brightness.
+        </li>
+
+        <li>
+            Apply gentle pressure
+            to the FSR402.
+        </li>
+
+        <li>
+            Observe the LED
+            brightness increasing
+            as force increases.
+        </li>
+
+        <li>
+            Reduce the force
+            applied to the sensor.
+        </li>
+
+        <li>
+            Observe the LED
+            becoming dimmer.
+        </li>
+
+        <li>
+            Compare the sensor
+            values and PWM
+            brightness readings
+            in Serial Monitor.
+        </li>
+
+        <li>
+            Avoid bending or
+            overloading the FSR402
+            beyond its manufacturer's
+            recommended limits.
+        </li>
+
+    </ol>
+
+</section>
+
+<!-- =========================
+     8. EXPLORE THE CODE
+========================= -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Force Sensitive LED Controller ·
+        Select a step to understand
+        the complete Arduino program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Force_Sensitive_LED_Controller.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Select a step to highlight
+                and scroll to its
+                matching code lines.
+            </p>
+
+            <div class="steps">
+
+                <button
+                    class="step active"
+                    type="button"
+                    onclick="showStep(0)"
+                >
+                    <span class="step-number">01</span>
+                    Define FSR pin
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(1)"
+                >
+                    <span class="step-number">02</span>
+                    Define LED pin
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(2)"
+                >
+                    <span class="step-number">03</span>
+                    Configure LED output
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(3)"
+                >
+                    <span class="step-number">04</span>
+                    Initialize Serial Monitor
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(4)"
+                >
+                    <span class="step-number">05</span>
+                    Read FSR402
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(5)"
+                >
+                    <span class="step-number">06</span>
+                    Map PWM brightness
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(6)"
+                >
+                    <span class="step-number">07</span>
+                    Limit brightness value
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(7)"
+                >
+                    <span class="step-number">08</span>
+                    Control LED using PWM
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(8)"
+                >
+                    <span class="step-number">09</span>
+                    Print sensor and PWM values
+                </button>
+
+                <button
+                    class="step"
+                    type="button"
+                    onclick="showStep(9)"
+                >
+                    <span class="step-number">10</span>
+                    Set update interval
+                </button>
+
+            </div>
+
+            <div
+                id="explanation"
+                class="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore more: FSR402 Voltage Divider
+                </summary>
+
+                <p>
+                    The FSR402 is a
+                    variable resistance sensor.
+                </p>
+
+                <p>
+                    A 10 kΩ resistor
+                    is used with it
+                    to create a
+                    voltage-divider circuit.
+                </p>
+
+                <p>
+                    The junction voltage
+                    is measured by
+                    Arduino A0.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: PWM Brightness
+                </summary>
+
+                <p>
+                    PWM stands for
+                    Pulse Width Modulation.
+                </p>
+
+                <p>
+                    Arduino UNO supports
+                    PWM output on pin D9.
+                </p>
+
+                <p>
+                    analogWrite() accepts
+                    values from 0 to 255.
+                </p>
+
+                <p>
+                    A value of 0 means
+                    the output stays LOW.
+                    A value of 255 means
+                    the output stays HIGH.
+                </p>
+
+                <p>
+                    Intermediate values
+                    change the duty cycle,
+                    producing different
+                    perceived LED brightness.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>
+                        Which Arduino pin
+                        reads the FSR402?
+                    </li>
+
+                    <li>
+                        Which PWM pin
+                        controls the red LED?
+                    </li>
+
+                    <li>
+                        What resistor value
+                        forms the voltage divider?
+                    </li>
+
+                    <li>
+                        What is the ADC
+                        reading range?
+                    </li>
+
+                    <li>
+                        What is the
+                        PWM brightness range?
+                    </li>
+
+                    <li>
+                        Which function
+                        controls LED brightness?
+                    </li>
+
+                    <li>
+                        What is the
+                        Serial Monitor baud rate?
+                    </li>
+
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>A0</li>
+                        <li>D9</li>
+                        <li>10 kΩ</li>
+                        <li>0–1023</li>
+                        <li>0–255</li>
+                        <li>analogWrite()</li>
+                        <li>9600 baud</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try it:</strong>
+        Apply light, medium and
+        firmer pressure to
+        the FSR402.
+        Compare the LED brightness
+        with the corresponding
+        Serial Monitor readings.
+    </p>
+
+</section>
+
+<!-- =========================
+     9. EXPECTED OUTPUT
+========================= -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        After Arduino starts,
+        the LED brightness
+        changes according to
+        the FSR402 sensor reading.
+    </p>
+
+    <p>
+        Without significant force,
+        the LED is normally
+        OFF or very dim.
+    </p>
+
+    <p>
+        Applying additional force
+        generally increases the
+        raw sensor value and
+        the calculated PWM brightness.
+    </p>
+
+    <p>
+        The program continuously
+        displays the sensor reading
+        and calculated brightness
+        in Serial Monitor.
+    </p>
+
+    <h3>Example Serial Monitor Output</h3>
+
+    <div class="note">
+        <pre style="
+            margin:0;
+            background:transparent;
+            color:#1e3a8a;
+            white-space:pre-wrap;
+        ">==============================
+ FORCE SENSITIVE LED CONTROLLER
+==============================
+FSR Value: 0 | LED Brightness: 0
+FSR Value: 256 | LED Brightness: 63
+FSR Value: 512 | LED Brightness: 127
+FSR Value: 768 | LED Brightness: 191
+FSR Value: 1023 | LED Brightness: 255</pre>
+    </div>
+
+    <h3>Analog Reading and Brightness</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Example ADC Reading</th>
+                    <th>Mapped PWM Value</th>
+                    <th>LED Output</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>256</td>
+                    <td>63</td>
+                    <td>Low brightness</td>
+                </tr>
+                <tr>
+                    <td>512</td>
+                    <td>127</td>
+                    <td>Medium brightness</td>
+                </tr>
+                <tr>
+                    <td>768</td>
+                    <td>191</td>
+                    <td>High brightness</td>
+                </tr>
+                <tr>
+                    <td>1023</td>
+                    <td>255</td>
+                    <td>Maximum brightness</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Note:</strong>
+
+        The example sensor readings
+        are illustrative ADC values.
+        They do not correspond
+        to calibrated force levels.
+
+        Actual LED brightness depends
+        on the FSR402 characteristics,
+        applied force and circuit setup.
+
+    </div>
+
+</section>
+
+<!-- =========================
+     10. RESULT
+========================= -->
 <section class="section" id="result">
+
     <h2>Result</h2>
 
     <p>
-        The Force Sensitive LED Controller was successfully implemented.
-        The Arduino reads the FSR402 sensor and varies the LED brightness
-        according to the amount of force applied.
+        The Force Sensitive LED
+        Controller demonstrates
+        LED brightness control
+        using Arduino UNO
+        and an FSR402 Force
+        Sensitive Resistor.
     </p>
+
+    <p>
+        Arduino reads the
+        force-sensitive voltage
+        through analog input A0,
+        converts it into a
+        PWM brightness value
+        and controls the red LED
+        through digital pin D9.
+    </p>
+
+    <p>
+        The sensor and brightness
+        values are also displayed
+        in Serial Monitor.
+    </p>
+
 </section>
 
+<!-- =========================
+     11. WHAT YOU LEARN
+========================= -->
 <section class="section">
+
     <h2>What You Learn</h2>
 
     <ul>
-        <li>How to interface an FSR402 Force Sensitive Resistor with Arduino UNO.</li>
-        <li>How a voltage divider is used with a resistive sensor.</li>
-        <li>How to read analog values using <code>analogRead()</code>.</li>
-        <li>How to convert sensor values using <code>map()</code>.</li>
-        <li>How to limit a PWM value using <code>constrain()</code>.</li>
-        <li>How to control LED brightness using <code>analogWrite()</code>.</li>
-        <li>How to observe sensor values using Serial Monitor.</li>
+        <li>Interfacing an FSR402 Force Sensitive Resistor with Arduino UNO.</li>
+        <li>Understanding how resistance changes with applied force.</li>
+        <li>Building a voltage-divider circuit.</li>
+        <li>Reading sensor voltage using analogRead().</li>
+        <li>Understanding the ADC range of 0–1023.</li>
+        <li>Converting ADC readings using map().</li>
+        <li>Restricting output values using constrain().</li>
+        <li>Understanding Pulse Width Modulation (PWM).</li>
+        <li>Controlling LED brightness using analogWrite().</li>
+        <li>Using a 220Ω resistor for LED current limiting.</li>
+        <li>Printing sensor values through Serial Monitor.</li>
+        <li>Understanding relative force readings versus calibrated force measurements.</li>
     </ul>
+
 </section>
 
 </main>
 
+<!-- =========================
+     FOOTER
+========================= -->
 <footer>
-    <strong>
-        Force Sensitive LED Controller
-    </strong>
+    <strong>Arduino Experiment</strong>
+    <p>Force Sensitive LED Controller</p>
 </footer>
 
-<script>
-
-const program=
-`// ==========================================
+<!-- =========================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+========================================= -->
+<script type="text/plain" id="arduino-program">
+// ==========================================
 // FORCE SENSITIVE LED CONTROLLER
 // Arduino UNO R3 + FSR402
 // ==========================================
@@ -1165,259 +1919,350 @@ void loop() {
   Serial.println(brightness);
 
   delay(100);
-}`;
+}
+</script>
 
-const lines=
-    program.split("\n");
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
+<script>
 
-const steps=[
+/* =========================
+   COMPLETE PROGRAM SOURCE
+========================= */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =========================
+   EXPLANATION STEPS
+========================= */
+const steps = [
+
     {
-        title:"Define the pins",
-        start:"const int FSR_PIN = A0;",
-        end:"const int LED_PIN = 9;",
-        text:"A0 reads the FSR402 voltage divider and D9 provides PWM output to the red LED."
+        title: "Define FSR pin",
+        start: "const int FSR_PIN = A0;",
+        end: "const int FSR_PIN = A0;",
+        text:
+            "FSR_PIN identifies A0 as " +
+            "the analog input connected " +
+            "to the FSR402 voltage divider."
     },
+
     {
-        title:"Configure Arduino",
-        start:"void setup() {",
-        end:'Serial.println("==============================");',
-        text:"D9 is configured as an output and Serial communication starts at 9600 baud."
+        title: "Define LED pin",
+        start: "const int LED_PIN = 9;",
+        end: "const int LED_PIN = 9;",
+        text:
+            "LED_PIN defines digital pin D9 " +
+            "as the PWM output that controls " +
+            "the brightness of the red LED."
     },
+
     {
-        title:"Read the FSR",
-        start:"// Read the FSR402 sensor",
-        end:"int fsrValue = analogRead(FSR_PIN);",
-        text:"analogRead() measures the voltage from the FSR402 voltage divider on A0."
+        title: "Configure LED output",
+        start: "pinMode(LED_PIN, OUTPUT);",
+        end: "pinMode(LED_PIN, OUTPUT);",
+        text:
+            "The pinMode() function " +
+            "configures D9 as an output."
     },
+
     {
-        title:"Map brightness",
-        start:"// Convert sensor value to LED brightness",
-        end:"brightness = constrain(brightness, 0, 255);",
-        text:"The 0–1023 sensor range is converted into the 0–255 PWM brightness range and constrained to valid limits."
+        title: "Initialize Serial Monitor",
+        start: "Serial.begin(9600);",
+        end: 'Serial.println("==============================");',
+        after: "Serial.begin(9600);",
+        text:
+            "Serial communication begins " +
+            "at 9600 baud and the program " +
+            "prints its startup heading."
     },
+
     {
-        title:"Control the LED",
-        start:"// Control LED brightness",
-        end:"analogWrite(LED_PIN, brightness);",
-        text:"analogWrite() sends the calculated PWM value to D9 to control LED brightness."
+        title: "Read FSR402",
+        start: "// Read the FSR402 sensor",
+        end: "int fsrValue = analogRead(FSR_PIN);",
+        text:
+            "analogRead() measures the " +
+            "voltage at Arduino A0 " +
+            "and returns a raw ADC " +
+            "value between 0 and 1023."
     },
+
     {
-        title:"Display readings",
-        start:"// Display values in Serial Monitor",
-        end:"delay(100);",
-        text:"The program displays the force reading and LED brightness, then waits briefly before taking the next reading."
+        title: "Map PWM brightness",
+        start: "// Convert sensor value to LED brightness",
+        end: "int brightness = map(fsrValue, 0, 1023, 0, 255);",
+        text:
+            "The map() function " +
+            "converts the 0-1023 " +
+            "analog range into the " +
+            "0-255 PWM brightness range."
+    },
+
+    {
+        title: "Limit brightness value",
+        start: "// Keep brightness inside the PWM range",
+        end: "brightness = constrain(brightness, 0, 255);",
+        text:
+            "The constrain() function " +
+            "ensures brightness stays " +
+            "between 0 and 255."
+    },
+
+    {
+        title: "Control LED using PWM",
+        start: "// Control LED brightness",
+        end: "analogWrite(LED_PIN, brightness);",
+        text:
+            "analogWrite() produces " +
+            "a PWM signal on D9 " +
+            "with the calculated " +
+            "brightness value."
+    },
+
+    {
+        title: "Print sensor and PWM values",
+        start: "// Display values in Serial Monitor",
+        end: "Serial.println(brightness);",
+        text:
+            "The Serial Monitor displays " +
+            "the raw FSR402 reading " +
+            "and the corresponding " +
+            "LED brightness value."
+    },
+
+    {
+        title: "Set update interval",
+        start: "delay(100);",
+        end: "delay(100);",
+        text:
+            "Arduino waits 100 milliseconds " +
+            "before repeating the " +
+            "sensor measurement and " +
+            "brightness update."
     }
+
 ];
 
-function escapeHtml(text){
+/* =========================
+   ESCAPE HTML CHARACTERS
+========================= */
+function escapeHtml(text) {
 
     return text
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
-
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
-function displayCode(){
+/* =========================
+   DISPLAY CODE WITH LINE NUMBERS
+========================= */
+function displayCode() {
 
-    document
-        .getElementById("code-lines")
-        .innerHTML=
-        lines.map(function(line,index){
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
 
             return (
-                '<span class="code-line" id="line-'+
-                (index+1)+
+                '<span class="code-line" id="line-' +
+                (index + 1) +
                 '">' +
-                '<span class="line-number">'+
-                (index+1)+
+                '<span class="line-number">' +
+                (index + 1) +
                 '</span>' +
-                '<span>'+
-                escapeHtml(line)+
+                '<span>' +
+                escapeHtml(line) +
                 '</span>' +
                 '</span>'
             );
 
         }).join("");
-
 }
 
-function findLine(searchText,startIndex){
+/* =========================
+   FIND MATCHING CODE LINE
+========================= */
+function findLine(searchText, startIndex = 0) {
 
-    startIndex=startIndex || 0;
-
-    for(
-        let i=startIndex;
-        i<lines.length;
+    for (
+        let i = startIndex;
+        i < lines.length;
         i++
-    ){
+    ) {
 
-        if(
-            lines[i].includes(searchText)
-        ){
-
+        if (lines[i].trim().startsWith(searchText)) {
             return i;
-
         }
-
     }
 
     return -1;
-
 }
 
-function showStep(index){
+/* =========================
+   HIGHLIGHT AND EXPLAIN CODE
+========================= */
+function showStep(index) {
 
-    const step=
-        steps[index];
+    const step = steps[index];
 
-    const buttons=
-        document.querySelectorAll(".step");
-
-    buttons.forEach(function(button){
-
-        button.classList.remove("active");
-
-    });
-
-    if(
-        buttons[index]
-    ){
-
-        buttons[index]
-            .classList
-            .add("active");
-
-    }
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
 
     document
         .querySelectorAll(".code-line")
-        .forEach(function(line){
-
+        .forEach(function(line) {
             line.classList.remove("selected");
-
         });
 
-    const startLine=
-        findLine(
-            step.start,
-            0
-        );
+    const startLine = findLine(step.start);
 
-    if(
-        startLine===-1
-    ){
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
 
         return;
-
     }
 
-    let endLine=
-        findLine(
-            step.end,
-            startLine
-        );
+    let endLine = findLine(step.end, startLine);
 
-    if(
-        endLine===-1
-    ){
-
-        endLine=startLine;
-
+    if (endLine < 0) {
+        endLine = startLine;
     }
 
-    for(
-        let i=startLine;
-        i<=endLine;
+    for (
+        let i = startLine;
+        i <= endLine;
         i++
-    ){
+    ) {
 
-        const line=
-            document.getElementById(
-                "line-"+(i+1)
-            );
+        const selected = document
+            .getElementById("line-" + (i + 1));
 
-        if(
-            line
-        ){
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
 
-            line.classList.add(
-                "selected"
-            );
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
 
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =========================
+   COPY COMPLETE ARDUINO CODE
+========================= */
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
         }
 
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
     }
 
-    const selected=
-        document.getElementById(
-            "line-"+(startLine+1)
-        );
+    if (navigator.clipboard && window.isSecureContext) {
 
-    const body=
-        document.getElementById(
-            "code-body"
-        );
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
 
-    if(
-        selected &&
-        body
-    ){
-
-        body.scrollTo({
-            top:
-                selected.offsetTop -
-                body.offsetTop -
-                20,
-            behavior:"smooth"
-        });
-
+    } else {
+        fallbackCopy();
     }
-
-    document
-        .getElementById(
-            "explanation"
-        )
-        .innerHTML=
-        "<h3>"+
-        (index+1)+
-        ". "+
-        step.title+
-        "</h3><p>"+
-        step.text+
-        "</p>";
-
 }
 
-function copyCode(){
+/* =========================
+   QUIZ ANSWERS
+========================= */
+function toggleAnswers() {
 
-    navigator
-        .clipboard
-        .writeText(program)
-        .then(function(){
+    const answers = document
+        .getElementById("quiz-answers");
 
-            const button=
-                document.querySelector(
-                    ".copy-button"
-                );
-
-            button.innerText=
-                "Copied!";
-
-            setTimeout(
-                function(){
-
-                    button.innerText=
-                        "Copy Code";
-
-                },
-                1500
-            );
-
-        });
-
+    answers.hidden = !answers.hidden;
 }
 
+/* =========================
+   INITIALIZE CODE VIEWER
+========================= */
 displayCode();
 showStep(0);
 
