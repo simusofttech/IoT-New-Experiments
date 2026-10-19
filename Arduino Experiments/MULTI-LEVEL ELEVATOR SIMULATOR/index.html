@@ -1,19 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Multi-Level Elevator Simulator</title>
+
 <style>
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
+}
 
+html {
+    scroll-behavior: smooth;
+}
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
 
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -24,8 +39,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -39,8 +52,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -58,8 +69,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -67,26 +76,15 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -102,15 +100,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -128,18 +124,467 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   STICKY NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 22px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    font-weight: bold;
+    color: #1e3a8a;
+    font-size: 18px;
+    line-height: 2;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(165px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    padding: 15px;
+}
+
+.state-card strong {
+    display: block;
+    color: #1e3a8a;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    background: white;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    color: #1e3a8a;
+    font-size: 17px;
+    margin: 0 0 7px;
+}
+
+.explanation p {
+    color: #526875;
+    font-size: 15px;
+    margin: 0;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    color: #234e87;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
 
 @media (max-width: 600px) {
-
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -176,8 +621,8 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
 
     .header-nav-btn {
         padding: 8px 7px;
-        font-size: 11px;
         min-height: 36px;
+        font-size: 11px;
     }
 
     .home-icon-btn {
@@ -185,78 +630,32 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}
-.container{width:90%;max-width:1050px;margin:35px auto}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
-ul,ol{padding-left:24px}
-li{margin-bottom:8px}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
-.component-card p{color:#475569;font-size:14px;margin:0}
-.table-wrap{overflow-x:auto}
-table{width:100%;min-width:620px;border-collapse:collapse}
-th,td{padding:12px;border:1px solid #ddd;text-align:left}
-th{background:#2563eb;color:white}
-tr:nth-child(even){background:#f8fafc}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px}
-.note{background:#eff6ff;border-left:5px solid #2563eb;padding:14px 16px;border-radius:6px;margin-top:18px}
-.code-lesson{color:#142e3a}
-.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px}
-.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important}
-.intro{color:#526875;margin:0 0 22px}
-.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
-.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10)}
-.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
-.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace}
-.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer}
-.code-body{height:600px;overflow:auto;background:white;padding:16px 0}
-.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
-.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
-.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b}
-.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px}
-.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px}
-.guide>p{color:#526875;font-size:15px}
-.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
-.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a}
-.step.active{background:#eff6ff;border-color:#60a5fa}
-.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
-.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px}
-.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a}
-.explanation p{margin:0;color:#526875;font-size:15px}
-.guide details{border-top:1px solid #dce6e9;margin-top:15px}
-.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0}
-.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}
-footer strong{color:white}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr}}
-@media(max-width:600px){.steps{grid-template-columns:1fr}}
-
-
 </style>
 </head>
+
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -264,25 +663,18 @@ footer strong{color:white}
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
-        <p>Adjustable LED Dimmer</p>
+        <p>Multi-Level Elevator Simulator</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-                title="Back to Arduino Experiments"
             >
                 &#8592; Back
             </a>
@@ -293,11 +685,9 @@ footer strong{color:white}
                 title="Home"
                 aria-label="Home"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -306,330 +696,2031 @@ footer strong{color:white}
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-            >
-                Arduino
-            </a>
+            >Arduino</a>
 
             <a
                 href="../../ESP32 CAM Experiments/index.html"
                 class="header-nav-btn"
-            >
-                ESP
-            </a>
+            >ESP</a>
 
             <a
                 href="../../R-Pi Experiments/index.html"
                 class="header-nav-btn"
-            >
-                R-Pi
-            </a>
+            >R-Pi</a>
 
         </div>
 
     </div>
-
 </header>
 
+<!-- =====================================
+     NAVIGATION
+===================================== -->
 <nav>
-    <a href="../index.html">← Arduino Experiments</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
     <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Multi-Level Elevator Simulator.png"
+        alt="Multi-Level Elevator Simulator Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="thumbnail-placeholder"
+        class="note"
+        hidden
+    >
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
+
     <h2>Aim</h2>
-    <p>To simulate a multi-floor elevator using a 4×4 keypad, 28BYJ-48 stepper motor, ULN2003 driver and a 1-digit common-cathode 7-segment display.</p>
+
+    <p>
+        To simulate the movement of
+        a multi-floor elevator using
+        Arduino UNO, a 4×4 matrix keypad,
+        a 28BYJ-48 stepper motor,
+        a ULN2003 motor driver and
+        a single-digit common-cathode
+        7-segment display.
+    </p>
+
+    <p>
+        The user selects a destination
+        floor using the keypad.
+        Arduino calculates the required
+        movement relative to the
+        current floor and commands
+        the stepper motor accordingly.
+    </p>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
     <h2>About the Experiment</h2>
-    <p>The user selects a floor number on the 4×4 keypad. The Arduino compares the target floor with the current floor and calculates the required motor steps.</p>
-<p>The ULN2003 drives the 28BYJ-48 stepper motor while the 7-segment display shows the selected/current floor.</p>
+
+    <p>
+        The Multi-Level Elevator Simulator
+        demonstrates the basic control
+        logic of an elevator using
+        an Arduino-based electromechanical
+        model.
+    </p>
+
+    <p>
+        A 4×4 matrix keypad is used
+        to enter a destination floor.
+        The numeric keys 0–9 represent
+        the available floor numbers.
+    </p>
+
+    <p>
+        The selected floor is compared
+        with the current floor stored
+        in Arduino memory.
+    </p>
+
+    <p>
+        If the requested floor is
+        greater than the current floor,
+        the stepper motor is commanded
+        to rotate in one direction.
+    </p>
+
+    <p>
+        If the requested floor is
+        lower than the current floor,
+        the motor is commanded
+        to rotate in the
+        opposite direction.
+    </p>
+
+    <p>
+        The 28BYJ-48 stepper motor
+        is controlled through
+        a ULN2003 motor driver.
+    </p>
+
+    <p>
+        A one-digit 7-segment display
+        shows the selected destination
+        floor during motor movement.
+        When movement completes,
+        the program records that
+        floor as the current floor.
+    </p>
+
+    <p>
+        The simulation starts at
+        Floor 0 and uses an initial
+        calibration of
+        512 motor steps per floor.
+    </p>
+
+    <p>
+        This step value can be
+        adjusted to match the
+        movement required by the
+        particular elevator model.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        The experiment does not
+        include a physical floor sensor,
+        home switch or motor encoder.
+        Arduino assumes that the motor
+        completes every commanded step.
+        Therefore, the displayed and
+        stored floor may differ from
+        the actual mechanical position
+        if the motor stalls or slips.
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
+
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO R3 (×1)">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3"
+            >
+
             <h4>Arduino UNO R3 (×1)</h4>
-            <p>Main controller.</p>
+
+            <p>
+                Reads keypad input,
+                calculates floor differences,
+                controls the stepper motor
+                and drives the display.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Stepper Motor.png" alt="28BYJ-48 Stepper Motor (×1)">
+
+            <img
+                src="Stepper Motor.png"
+                alt="28BYJ-48 Stepper Motor"
+            >
+
             <h4>28BYJ-48 Stepper Motor (×1)</h4>
-            <p>Moves the elevator mechanism.</p>
+
+            <p>
+                Provides step-by-step
+                movement to simulate
+                the elevator mechanism.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Driver Board Stepper Motor.png" alt="ULN2003 Stepper Motor Driver (×1)">
+
+            <img
+                src="Driver Board Stepper Motor.png"
+                alt="ULN2003 Motor Driver"
+            >
+
             <h4>ULN2003 Stepper Motor Driver (×1)</h4>
-            <p>Drives the stepper motor coils.</p>
+
+            <p>
+                Controls motor coil
+                switching using
+                Arduino digital signals.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="4x4 Keypad.png" alt="4×4 Keypad (×1)">
-            <h4>4×4 Keypad (×1)</h4>
-            <p>Selects the destination floor.</p>
+
+            <img
+                src="4x4 Keypad.png"
+                alt="4x4 Matrix Keypad"
+            >
+
+            <h4>4×4 Matrix Keypad (×1)</h4>
+
+            <p>
+                Allows the user
+                to choose a
+                destination floor.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Single Digit 7 Segment Display.png" alt="1-Digit 7-Segment Display – Common Cathode (×1)">
-            <h4>1-Digit 7-Segment Display – Common Cathode (×1)</h4>
-            <p>Shows the floor number.</p>
+
+            <img
+                src="Single Digit 7 Segment Display.png"
+                alt="Single Digit Common Cathode 7 Segment Display"
+            >
+
+            <h4>1-Digit 7-Segment Display (×1)</h4>
+
+            <p>
+                Common-cathode type.
+                Displays floor numbers
+                from 0 through 9.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="220 Ohm Resistor.png" alt="220Ω Resistors (×7)">
+
+            <img
+                src="220 Ohm Resistor.png"
+                alt="220 Ohm Resistor"
+            >
+
             <h4>220Ω Resistors (×7)</h4>
-            <p>One resistor for each segment.</p>
+
+            <p>
+                One current-limiting
+                resistor for each
+                segment a–g.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
-            <h4>Jumper Wires</h4>
-            <p>Circuit interconnections.</p>
-        </div>
 
-        <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard (×1)">
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
             <h4>Breadboard (×1)</h4>
-            <p>Used to assemble the display wiring.</p>
+
+            <p>
+                Used to assemble
+                the display and
+                circuit connections.
+            </p>
+
         </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Connect the keypad,
+                driver, display
+                and Arduino pins.
+            </p>
+
+        </div>
+
     </div>
+
+    <div class="note">
+
+        <strong>Required Arduino Libraries:</strong>
+
+        <ul>
+            <li>Keypad.h</li>
+            <li>Stepper.h</li>
+        </ul>
+
+        <p>
+            The Stepper library
+            is generally included
+            with Arduino IDE.
+            Install a compatible
+            Keypad library if
+            it is not available.
+        </p>
+
+        <p>
+            The 28BYJ-48 motor must
+            be powered through
+            the ULN2003 board using
+            a supply appropriate
+            for the motor's voltage
+            and current requirements.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
 <section class="section" id="connections">
+
     <h2>Circuit Connections</h2>
+
+    <h3>4×4 Matrix Keypad Connections</h3>
+
     <div class="table-wrap">
         <table>
-            <thead><tr><th>Component</th><th>Pin / Connection</th><th>Arduino UNO R3</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>Keypad Terminal</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+
             <tbody>
-<tr><td>Keypad</td><td>R1–R4</td><td>D2–D5</td></tr>
-<tr><td>Keypad</td><td>C1–C4</td><td>D6–D9</td></tr>
-<tr><td>ULN2003</td><td>IN1 / IN2 / IN3 / IN4</td><td>D10 / D11 / D12 / D13</td></tr>
-<tr><td>ULN2003</td><td>VCC / GND</td><td>5V / GND</td></tr>
-<tr><td>7-Segment</td><td>a–f</td><td>A0–A5 through 220Ω</td></tr>
-<tr><td>7-Segment</td><td>g</td><td>D0 through 220Ω</td></tr>
-<tr><td>7-Segment</td><td>COM</td><td>GND</td></tr>
+                <tr><td>Row 1 (R1)</td><td>D2</td></tr>
+                <tr><td>Row 2 (R2)</td><td>D3</td></tr>
+                <tr><td>Row 3 (R3)</td><td>D4</td></tr>
+                <tr><td>Row 4 (R4)</td><td>D5</td></tr>
+                <tr><td>Column 1 (C1)</td><td>D6</td></tr>
+                <tr><td>Column 2 (C2)</td><td>D7</td></tr>
+                <tr><td>Column 3 (C3)</td><td>D8</td></tr>
+                <tr><td>Column 4 (C4)</td><td>D9</td></tr>
             </tbody>
         </table>
     </div>
+
+    <h3>ULN2003 Stepper Driver Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ULN2003 Terminal</th>
+                    <th>Arduino Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr><td>IN1</td><td>D10</td></tr>
+                <tr><td>IN2</td><td>D11</td></tr>
+                <tr><td>IN3</td><td>D12</td></tr>
+                <tr><td>IN4</td><td>D13</td></tr>
+                <tr>
+                    <td>Motor Supply VCC</td>
+                    <td>Suitable regulated motor supply</td>
+                </tr>
+                <tr>
+                    <td>GND</td>
+                    <td>Common GND with Arduino</td>
+                </tr>
+                <tr>
+                    <td>Motor Connector</td>
+                    <td>28BYJ-48 motor connector</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Stepper Library Pin Order:</strong>
+
+        <p>
+            The sketch uses:
+            <code>Stepper elevatorMotor(2048, 10, 12, 11, 13);</code>
+        </p>
+
+        <p>
+            This constructor order is
+            intentionally different from
+            the sequential ULN2003 input
+            wiring shown above. Preserve
+            the original sketch's ordering
+            unless you verify that another
+            ordering is required by
+            the particular motor and driver.
+        </p>
+
+    </div>
+
+    <h3>Common-Cathode 7-Segment Display Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Display Segment</th>
+                    <th>Arduino Pin</th>
+                    <th>Series Resistor</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr><td>a</td><td>A0</td><td>220Ω</td></tr>
+                <tr><td>b</td><td>A1</td><td>220Ω</td></tr>
+                <tr><td>c</td><td>A2</td><td>220Ω</td></tr>
+                <tr><td>d</td><td>A3</td><td>220Ω</td></tr>
+                <tr><td>e</td><td>A4</td><td>220Ω</td></tr>
+                <tr><td>f</td><td>A5</td><td>220Ω</td></tr>
+                <tr><td>g</td><td>D0</td><td>220Ω</td></tr>
+                <tr><td>Common Cathode</td><td>GND</td><td>None</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Important Hardware Precautions:</strong>
+
+        <p>
+            The seven display segments
+            each require an individual
+            current-limiting resistor.
+            Connect all designated
+            common-cathode pins to GND
+            according to the actual
+            display's datasheet.
+        </p>
+
+        <p>
+            The physical pin numbers
+            of a 7-segment display
+            are not necessarily
+            arranged in a–g order.
+            Verify the exact model
+            before connecting.
+        </p>
+
+        <p>
+            D0 is Arduino's
+            hardware serial RX pin.
+            Because the original
+            sketch assigns segment g
+            to D0, disconnecting
+            the display signal during
+            sketch uploading may
+            be necessary if it
+            interferes with programming.
+        </p>
+
+        <p>
+            Check the motor supply
+            requirements before
+            powering the ULN2003.
+            Do not drive the stepper
+            coils directly from
+            Arduino digital pins.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
 <section class="section" id="circuit">
+
     <h2>Circuit Diagram</h2>
-    <img class="circuit-img" src="MULTI-LEVEL ELEVATOR SIMULATOR Circuit.png" alt="MULTI-LEVEL ELEVATOR SIMULATOR Circuit">
+
+    <img
+        src="MULTI-LEVEL ELEVATOR SIMULATOR Circuit.png"
+        alt="Multi-Level Elevator Simulator Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden
+    >
+        Approved circuit diagram pending.
+        Add the image using the original
+        filename:
+        MULTI-LEVEL ELEVATOR SIMULATOR Circuit.png.
+    </div>
+
 </section>
 
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
-    <div class="flow">4×4 Keypad<br>↓<br>Arduino UNO R3<br>↓<br>Target floor calculation<br>↓<br>ULN2003 Driver<br>↓<br>28BYJ-48 Stepper Motor<br>↓<br>7-Segment shows floor</div>
-</section>
 
-<section class="section" id="procedure">
-    <h2>Procedure</h2>
-    <ol>
-        <li>Connect keypad rows R1–R4 to D2–D5 and columns C1–C4 to D6–D9.</li>
-        <li>Connect ULN2003 IN1–IN4 to D10–D13, VCC to 5V and GND to GND.</li>
-        <li>Plug the 28BYJ-48 5-wire connector into the ULN2003 motor socket.</li>
-        <li>Connect 7-segment a–f to A0–A5 and g to D0, each through a 220Ω resistor; connect common cathode to GND.</li>
-        <li>Install the Keypad library. The sketch also uses the Stepper library.</li>
-        <li>Upload the program.</li>
-        <li>Press a numeric keypad key to select a floor and observe motor movement and display.</li>
-        <li>Calibrate STEPS_PER_FLOOR from the starting value of 512 to suit the mechanical model.</li>
-    </ol>
-</section>
+    <div class="flow">
 
-<section class="section" id="code">
-    <div class="code-lesson">
-        <p class="eyebrow">Arduino Experiment · Code Review</p>
-        <h2 class="lesson-title">Explore the Code</h2>
-        <p class="intro">MULTI-LEVEL ELEVATOR SIMULATOR · Select a step to highlight the matching code lines.</p>
+        Arduino UNO Starts
 
-        <div class="code-layout">
-            <article class="code-panel">
-                <div class="code-top">
-                    <span class="filename">Multi_Level_Elevator_Simulator.ino</span>
-                    <button class="copy-button" onclick="copyCode()">Copy Code</button>
-                </div>
-                <div class="code-body" id="code-body">
-                    <code id="code-lines"></code>
-                </div>
-            </article>
+        <br>↓<br>
 
-            <article class="guide">
-                <h2>Understand it step by step</h2>
-                <p>Choose a step. The matching code will light up on the left.</p>
-                <div class="steps">
+        Initialize 7-Segment Display
 
-                    <button class="step active" onclick="showStep(0)">
-                        <span class="step-number">01</span>
-                        Load libraries
-                    </button>
+        <br>↓<br>
 
-                    <button class="step" onclick="showStep(1)">
-                        <span class="step-number">02</span>
-                        Configure motor
-                    </button>
+        Set Stepper Speed to 10 RPM
 
-                    <button class="step" onclick="showStep(2)">
-                        <span class="step-number">03</span>
-                        Configure keypad
-                    </button>
+        <br>↓<br>
 
-                    <button class="step" onclick="showStep(3)">
-                        <span class="step-number">04</span>
-                        Configure display
-                    </button>
+        Set Current Floor to 0
 
-                    <button class="step" onclick="showStep(4)">
-                        <span class="step-number">05</span>
-                        Show floor number
-                    </button>
+        <br>↓<br>
 
-                    <button class="step" onclick="showStep(5)">
-                        <span class="step-number">06</span>
-                        Move elevator
-                    </button>
+        Display Floor 0
 
-                    <button class="step" onclick="showStep(6)">
-                        <span class="step-number">07</span>
-                        Initialize system
-                    </button>
+        <br>↓<br>
 
-                    <button class="step" onclick="showStep(7)">
-                        <span class="step-number">08</span>
-                        Read floor request
-                    </button>
-                </div>
+        Read 4×4 Keypad Input
 
-                <div class="explanation" id="explanation">
-                    <h3>1. Load libraries</h3>
-                    <p>Keypad reads floor requests and Stepper controls the 28BYJ-48 motor.</p>
-                </div>
+        <br>↓<br>
 
-                <details>
-                    <summary>Explore more</summary>
-                    <p>The SOP starts with STEPS_PER_FLOOR = 512. Increase it if the model moves too little and decrease it if it moves too far.</p>
-                </details>
+        User Selects Floor 0–9
 
-                <details>
-                    <summary>Check your understanding</summary>
-                    <ul>
-                        <li>Which pins connect keypad rows? <strong>D2–D5</strong></li>
-                        <li>Which pins drive the ULN2003? <strong>D10–D13</strong></li>
-                        <li>What display type is assumed? <strong>Common cathode</strong></li>
-                    </ul>
-                </details>
-            </article>
+        <br>↓<br>
+
+        Compare Target Floor with Current Floor
+
+        <br>↓<br>
+
+        Calculate Floor Difference
+
+        <br>↓<br>
+
+        Multiply Difference by 512 Steps
+
+        <br>↓<br>
+
+        Display Requested Floor
+
+        <br>↓<br>
+
+        ULN2003 Drives Stepper Motor
+
+        <br>↓<br>
+
+        Update Current Floor
+
+        <br>↓<br>
+
+        Switch Motor Driver Inputs LOW
+
+        <br>↓<br>
+
+        Wait for Next Floor Request
+
+    </div>
+
+    <h3>Floor Selection</h3>
+
+    <p>
+        The keypad is scanned
+        using the Keypad library.
+        Only numeric keys
+        between '0' and '9'
+        are processed.
+    </p>
+
+    <p>
+        When a numeric key is
+        pressed, Arduino converts
+        that character into
+        an integer floor number
+        using:
+    </p>
+
+    <div class="note">
+        <code>int targetFloor = key - '0';</code>
+    </div>
+
+    <h3>Floor Difference Calculation</h3>
+
+    <p>
+        Arduino calculates the
+        difference between the
+        requested floor and
+        the current floor.
+    </p>
+
+    <div class="note">
+
+        <strong>Formula:</strong>
+
+        <p>
+            Floor Difference =
+            Target Floor − Current Floor
+        </p>
+
+        <p>
+            Required Steps =
+            Floor Difference × 512
+        </p>
+
+        <p>
+            The sign of the
+            calculated steps
+            controls motor direction.
+        </p>
+
+    </div>
+
+    <h3>Stepper Motor Movement</h3>
+
+    <p>
+        The program uses
+        the Stepper library
+        to command a
+        28BYJ-48 motor
+        through the ULN2003
+        driver module.
+    </p>
+
+    <p>
+        A positive step value
+        commands movement
+        in one direction,
+        while a negative value
+        commands movement
+        in the opposite direction.
+    </p>
+
+    <p>
+        The motor speed is
+        set to 10 RPM
+        by the original sketch.
+    </p>
+
+    <h3>7-Segment Floor Display</h3>
+
+    <p>
+        The program contains
+        a digitPattern array
+        defining the segments
+        needed to display
+        digits 0–9.
+    </p>
+
+    <p>
+        The showDigit()
+        function sets the seven
+        segment pins HIGH or LOW
+        according to the
+        requested digit.
+    </p>
+
+    <p>
+        Because this is a
+        common-cathode display,
+        a HIGH signal
+        activates an individual
+        segment through
+        its series resistor.
+    </p>
+
+    <h3>Example Floor Movements</h3>
+
+    <div class="state-grid">
+
+        <div class="state-card">
+            <strong>0 → 1</strong>
+            +512 steps
         </div>
 
-        <p class="tip"><strong>Try it:</strong> Calibrate movement with the elevator mechanism unloaded before full operation.</p>
+        <div class="state-card">
+            <strong>0 → 3</strong>
+            +1536 steps
+        </div>
+
+        <div class="state-card">
+            <strong>3 → 1</strong>
+            −1024 steps
+        </div>
+
+        <div class="state-card">
+            <strong>5 → 5</strong>
+            No movement
+        </div>
+
     </div>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        The steps-per-floor value
+        is a calibration constant.
+        It must be adjusted
+        according to the
+        actual elevator model.
+        The source does not specify
+        a pulley, gear arrangement
+        or mechanical dimensions
+        from which a universal
+        floor spacing could
+        be calculated.
+    </div>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Place the Arduino UNO,
+            28BYJ-48 stepper motor,
+            ULN2003 driver,
+            4×4 keypad and
+            7-segment display
+            on the work surface.
+        </li>
+
+        <li>
+            Connect keypad rows
+            R1–R4 to Arduino
+            D2, D3, D4 and D5.
+        </li>
+
+        <li>
+            Connect keypad columns
+            C1–C4 to Arduino
+            D6, D7, D8 and D9.
+        </li>
+
+        <li>
+            Connect the ULN2003
+            IN1 pin to D10.
+        </li>
+
+        <li>
+            Connect ULN2003
+            IN2 to D11.
+        </li>
+
+        <li>
+            Connect ULN2003
+            IN3 to D12.
+        </li>
+
+        <li>
+            Connect ULN2003
+            IN4 to D13.
+        </li>
+
+        <li>
+            Plug the 28BYJ-48
+            motor connector into
+            the ULN2003 motor socket.
+        </li>
+
+        <li>
+            Connect the ULN2003
+            to a suitable
+            regulated motor supply.
+        </li>
+
+        <li>
+            Connect the driver
+            ground to Arduino GND.
+        </li>
+
+        <li>
+            Verify the physical
+            pinout of the
+            common-cathode display.
+        </li>
+
+        <li>
+            Connect display
+            segments a–f to
+            A0–A5 respectively,
+            through individual
+            220Ω resistors.
+        </li>
+
+        <li>
+            Connect segment g
+            to D0 through
+            a 220Ω resistor.
+        </li>
+
+        <li>
+            Connect the display's
+            common-cathode
+            terminals to GND.
+        </li>
+
+        <li>
+            Inspect the full
+            circuit for incorrect
+            polarity or shorts.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install the Keypad
+            library and ensure
+            the Stepper library
+            is available.
+        </li>
+
+        <li>
+            Create a sketch named
+            Multi_Level_Elevator_Simulator.ino.
+        </li>
+
+        <li>
+            Copy the complete
+            Arduino sketch from
+            Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Upload the program.
+            If D0 wiring interferes
+            with uploading,
+            disconnect that
+            signal during programming
+            and reconnect it
+            safely afterward.
+        </li>
+
+        <li>
+            Observe the display
+            showing Floor 0
+            at startup.
+        </li>
+
+        <li>
+            Press 1 to select
+            Floor 1 and observe
+            stepper motor movement.
+        </li>
+
+        <li>
+            Press 3 and observe
+            the motor moving
+            toward Floor 3.
+        </li>
+
+        <li>
+            Press 1 again
+            and observe reverse
+            motor movement.
+        </li>
+
+        <li>
+            Press the currently
+            selected floor
+            and observe that
+            no additional movement
+            is commanded.
+        </li>
+
+        <li>
+            Check the actual
+            mechanical travel
+            for each floor.
+        </li>
+
+        <li>
+            Adjust STEPS_PER_FLOOR
+            if the motor travels
+            too little or too far.
+        </li>
+
+        <li>
+            Verify reliable
+            operation at each
+            floor with the
+            mechanical system
+            appropriately supported.
+        </li>
+
+    </ol>
+
+</section>
+
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Multi-Level Elevator Simulator ·
+        Select a step to highlight
+        and understand the
+        complete Arduino sketch.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Multi_Level_Elevator_Simulator.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Choose a step to highlight
+                and scroll to the
+                corresponding Arduino code.
+            </p>
+
+            <div class="steps">
+
+                <button class="step active"
+                        type="button"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Load libraries
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Configure stepper motor
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Configure keypad
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Configure 7-segment display
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Define floor calibration
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Display floor number
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Calculate movement
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Move stepper and update floor
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Initialize elevator
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Read destination floor
+                </button>
+
+            </div>
+
+            <div
+                id="explanation"
+                class="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore more: Stepper Library
+                </summary>
+
+                <p>
+                    The Stepper library
+                    provides simple
+                    functions for
+                    controlling stepper
+                    motor movement.
+                </p>
+
+                <p>
+                    setSpeed() specifies
+                    the requested speed,
+                    while step() commands
+                    a number of
+                    motor steps.
+                </p>
+
+                <p>
+                    The original sketch
+                    uses 2048 steps
+                    per revolution
+                    in the library
+                    configuration.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: 7-Segment Display
+                </summary>
+
+                <p>
+                    A 7-segment display
+                    contains seven
+                    LED segments,
+                    identified as
+                    a, b, c, d,
+                    e, f and g.
+                </p>
+
+                <p>
+                    Different combinations
+                    of illuminated segments
+                    create digits 0–9.
+                </p>
+
+                <p>
+                    The digitPattern array
+                    stores the segment
+                    combinations needed
+                    to display each digit.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: Floor Calculation
+                </summary>
+
+                <p>
+                    currentFloor stores
+                    the last completed
+                    destination in software.
+                </p>
+
+                <p>
+                    The difference between
+                    targetFloor and
+                    currentFloor is
+                    multiplied by
+                    STEPS_PER_FLOOR.
+                </p>
+
+                <p>
+                    Positive and negative
+                    step counts command
+                    opposite directions.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: Open-Loop Control
+                </summary>
+
+                <p>
+                    The elevator simulator
+                    does not measure
+                    physical movement.
+                </p>
+
+                <p>
+                    It assumes that
+                    the commanded number
+                    of motor steps
+                    was completed.
+                </p>
+
+                <p>
+                    The currentFloor
+                    variable is therefore
+                    an estimated software
+                    position, not a
+                    measured floor.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+
+                    <li>
+                        Which Arduino pins
+                        connect to the
+                        keypad rows?
+                    </li>
+
+                    <li>
+                        Which motor driver
+                        is used?
+                    </li>
+
+                    <li>
+                        What is the
+                        initial floor?
+                    </li>
+
+                    <li>
+                        How many motor
+                        steps are initially
+                        assigned per floor?
+                    </li>
+
+                    <li>
+                        Which function
+                        displays a floor
+                        digit?
+                    </li>
+
+                    <li>
+                        Which statement
+                        moves the
+                        stepper motor?
+                    </li>
+
+                    <li>
+                        Can this sketch
+                        detect a missed
+                        motor step?
+                    </li>
+
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    style="border:1px solid #bfdbfe"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>D2, D3, D4, D5</li>
+                        <li>ULN2003</li>
+                        <li>Floor 0</li>
+                        <li>512 steps</li>
+                        <li>showDigit()</li>
+                        <li>elevatorMotor.step(steps)</li>
+                        <li>No, it has no position feedback</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try it:</strong>
+        Starting from Floor 0,
+        press 2, then 5,
+        then 1. Calculate the
+        motor steps required
+        for each movement and
+        compare them with
+        the experiment.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
     <h2>Expected Output</h2>
-    <p>At power-up the display shows floor 0. Pressing a numeric key moves the stepper by the calculated floor difference and updates the display.</p>
+
+    <p>
+        At startup,
+        the 7-segment display
+        shows digit 0,
+        indicating the
+        initial software floor.
+    </p>
+
+    <p>
+        When the user presses
+        a numeric keypad key,
+        Arduino calculates
+        the floor difference
+        and commands the motor
+        to move the corresponding
+        number of steps.
+    </p>
+
+    <p>
+        The display immediately
+        shows the requested
+        destination floor.
+        The motor then performs
+        its commanded movement.
+    </p>
+
+    <h3>Example Floor Movements</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Current Floor</th>
+                    <th>Target Floor</th>
+                    <th>Commanded Steps</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>+512</td>
+                </tr>
+
+                <tr>
+                    <td>0</td>
+                    <td>3</td>
+                    <td>+1536</td>
+                </tr>
+
+                <tr>
+                    <td>3</td>
+                    <td>5</td>
+                    <td>+1024</td>
+                </tr>
+
+                <tr>
+                    <td>5</td>
+                    <td>2</td>
+                    <td>−1536</td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>0 (no movement)</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Floor Display Behavior</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Key Pressed</th>
+                    <th>Display Digit</th>
+                    <th>Motor Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>Move to software Floor 0</td>
+                </tr>
+
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>Move to software Floor 1</td>
+                </tr>
+
+                <tr>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>Move to software Floor 5</td>
+                </tr>
+
+                <tr>
+                    <td>9</td>
+                    <td>9</td>
+                    <td>Move to software Floor 9</td>
+                </tr>
+
+                <tr>
+                    <td>A, B, C or D</td>
+                    <td>Unchanged</td>
+                    <td>No requested movement</td>
+                </tr>
+
+                <tr>
+                    <td>* or #</td>
+                    <td>Unchanged</td>
+                    <td>No requested movement</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Important Output Notes:</strong>
+
+        <p>
+            The original sketch
+            does not use Serial.begin()
+            or Serial.println().
+            Therefore, no Serial
+            Monitor output is expected.
+        </p>
+
+        <p>
+            The display changes to
+            the destination digit
+            before the stepper
+            completes its movement.
+            It is not a live
+            floor-by-floor indicator
+            during travel.
+        </p>
+
+        <p>
+            The actual motor movement
+            must be verified and
+            calibrated against
+            the mechanical model.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     10. RESULT
+===================================== -->
 <section class="section" id="result">
+
     <h2>Result</h2>
-    <p>The simulator successfully accepts floor selections, drives the stepper motor and displays the selected/current floor.</p>
+
+    <p>
+        The Multi-Level Elevator
+        Simulator demonstrates
+        basic floor selection
+        using an Arduino UNO,
+        a 4×4 keypad,
+        a 28BYJ-48 stepper motor,
+        a ULN2003 driver and
+        a single-digit 7-segment
+        display.
+    </p>
+
+    <p>
+        Arduino calculates
+        the difference between
+        the selected and
+        current software floors
+        and commands the
+        corresponding motor movement.
+    </p>
+
+    <p>
+        The selected destination
+        is displayed on the
+        7-segment display.
+        The experiment illustrates
+        relative position control,
+        user input processing
+        and basic elevator
+        movement logic.
+    </p>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
     <h2>What You Learn</h2>
+
     <ul>
-        <li>Matrix keypad interfacing</li>
-        <li>Stepper motor control</li>
-        <li>ULN2003 driver operation</li>
-        <li>7-segment display control</li>
-        <li>Relative floor movement calculations</li>
+        <li>Interfacing a 4×4 matrix keypad with Arduino UNO.</li>
+        <li>Reading keypad input with the Keypad library.</li>
+        <li>Understanding the operation of a stepper motor.</li>
+        <li>Using the ULN2003 driver with a 28BYJ-48 motor.</li>
+        <li>Controlling motor direction using positive and negative steps.</li>
+        <li>Using the Stepper library and setSpeed().</li>
+        <li>Calculating relative movement from floor differences.</li>
+        <li>Using a calibration constant for steps per floor.</li>
+        <li>Interfacing a common-cathode 7-segment display.</li>
+        <li>Using individual current-limiting resistors for display segments.</li>
+        <li>Displaying digits with a segment pattern array.</li>
+        <li>Understanding Arduino arrays and loops.</li>
+        <li>Converting numeric keypad characters into integer values.</li>
+        <li>Using functions to organize program logic.</li>
+        <li>Tracking software positions with variables.</li>
+        <li>Understanding open-loop control and its limitations.</li>
+        <li>Recognizing the purpose of motor driver circuits.</li>
+        <li>Verifying practical hardware calibration and wiring.</li>
     </ul>
+
 </section>
 
 </main>
 
+<!-- =====================================
+     FOOTER
+===================================== -->
 <footer>
-    <strong>Arduino Experiment</strong><br>
-    MULTI-LEVEL ELEVATOR SIMULATOR
+    <strong>Arduino Experiment</strong>
+    <p>Multi-Level Elevator Simulator</p>
 </footer>
 
-<script>
-const program="#include <Keypad.h>\n#include <Stepper.h>\n\nconst int STEPS_PER_REV = 2048;\n\nStepper elevatorMotor(\n  STEPS_PER_REV,\n  10, 12, 11, 13\n);\n\nconst byte ROWS = 4;\nconst byte COLS = 4;\n\nchar keys[ROWS][COLS] = {\n  {'1', '2', '3', 'A'},\n  {'4', '5', '6', 'B'},\n  {'7', '8', '9', 'C'},\n  {'*', '0', '#', 'D'}\n};\n\nbyte rowPins[ROWS] = {2, 3, 4, 5};\nbyte colPins[COLS] = {6, 7, 8, 9};\n\nKeypad keypad = Keypad(\n  makeKeymap(keys),\n  rowPins,\n  colPins,\n  ROWS,\n  COLS\n);\n\nconst int segmentPins[7] = {\n  A0, A1, A2, A3, A4, A5, 0\n};\n\nbyte digitPattern[10][7] = {\n  {1,1,1,1,1,1,0},\n  {0,1,1,0,0,0,0},\n  {1,1,0,1,1,0,1},\n  {1,1,1,1,0,0,1},\n  {0,1,1,0,0,1,1},\n  {1,0,1,1,0,1,1},\n  {1,0,1,1,1,1,1},\n  {1,1,1,0,0,0,0},\n  {1,1,1,1,1,1,1},\n  {1,1,1,1,0,1,1}\n};\n\nconst int STEPS_PER_FLOOR = 512;\nint currentFloor = 0;\n\nvoid showDigit(int digit)\n{\n  if (digit < 0 || digit > 9) return;\n\n  for (int i = 0; i < 7; i++) {\n    digitalWrite(\n      segmentPins[i],\n      digitPattern[digit][i]\n    );\n  }\n}\n\nvoid moveElevator(int targetFloor)\n{\n  if (targetFloor == currentFloor) return;\n\n  int floorDifference =\n    targetFloor - currentFloor;\n\n  long steps =\n    (long)floorDifference *\n    STEPS_PER_FLOOR;\n\n  showDigit(targetFloor);\n\n  elevatorMotor.step(steps);\n\n  currentFloor = targetFloor;\n\n  digitalWrite(10, LOW);\n  digitalWrite(11, LOW);\n  digitalWrite(12, LOW);\n  digitalWrite(13, LOW);\n}\n\nvoid setup()\n{\n  for (int i = 0; i < 7; i++) {\n    pinMode(segmentPins[i], OUTPUT);\n  }\n\n  elevatorMotor.setSpeed(10);\n\n  currentFloor = 0;\n  showDigit(currentFloor);\n}\n\nvoid loop()\n{\n  char key = keypad.getKey();\n\n  if (key) {\n\n    if (\n      key >= '0' &&\n      key <= '9'\n    ) {\n\n      int targetFloor =\n        key - '0';\n\n      moveElevator(targetFloor);\n\n    }\n\n  }\n}";
-const lines=program.split("\n");
-const steps=[{"title":"Load libraries","start":"#include <Keypad.h>","end":"#include <Stepper.h>","text":"Keypad reads floor requests and Stepper controls the 28BYJ-48 motor."},{"title":"Configure motor","start":"const int STEPS_PER_REV = 2048;","end":"10, 12, 11, 13","text":"The stepper motor uses 2048 steps per revolution and the Arduino-to-ULN2003 sequence required by the Stepper library."},{"title":"Configure keypad","start":"const byte ROWS = 4;","end":"COLS","text":"The 4×4 keypad layout and row/column pins are defined."},{"title":"Configure display","start":"const int segmentPins[7] = {","end":"};","text":"Seven output pins are assigned to segments a–g."},{"title":"Show floor number","start":"void showDigit(int digit)","end":"}","text":"The digit pattern array controls the common-cathode display segments."},{"title":"Move elevator","start":"void moveElevator(int targetFloor)","end":"digitalWrite(13, LOW);","text":"The target-current floor difference determines motor direction and step count."},{"title":"Initialize system","start":"void setup()","end":"showDigit(currentFloor);","text":"Display pins, motor speed and starting floor are initialized."},{"title":"Read floor request","start":"void loop()","end":"moveElevator(targetFloor);","text":"Numeric keypad keys 0–9 are converted to destination floors."}];
+<!-- =========================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+========================================= -->
+<script type="text/plain" id="arduino-program">
+#include <Keypad.h>
+#include <Stepper.h>
 
-function escapeHtml(text){
-    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const int STEPS_PER_REV = 2048;
+
+Stepper elevatorMotor(
+  STEPS_PER_REV,
+  10, 12, 11, 13
+);
+
+const byte ROWS = 4;
+const byte COLS = 4;
+
+char keys[ROWS][COLS] = {
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+};
+
+byte rowPins[ROWS] = {2, 3, 4, 5};
+byte colPins[COLS] = {6, 7, 8, 9};
+
+Keypad keypad = Keypad(
+  makeKeymap(keys),
+  rowPins,
+  colPins,
+  ROWS,
+  COLS
+);
+
+const int segmentPins[7] = {
+  A0, A1, A2, A3, A4, A5, 0
+};
+
+byte digitPattern[10][7] = {
+  {1,1,1,1,1,1,0},
+  {0,1,1,0,0,0,0},
+  {1,1,0,1,1,0,1},
+  {1,1,1,1,0,0,1},
+  {0,1,1,0,0,1,1},
+  {1,0,1,1,1,1,1},
+  {1,1,1,0,0,0,0},
+  {1,1,1,1,1,1,1},
+  {1,1,1,1,0,1,1}
+};
+
+const int STEPS_PER_FLOOR = 512;
+int currentFloor = 0;
+
+void showDigit(int digit)
+{
+  if (digit < 0 || digit > 9) return;
+
+  for (int i = 0; i < 7; i++) {
+    digitalWrite(
+      segmentPins[i],
+      digitPattern[digit][i]
+    );
+  }
 }
-function displayCode(){
-    document.getElementById("code-lines").innerHTML=lines.map(function(line,index){
-        return '<span class="code-line" id="line-'+(index+1)+'"><span class="line-number">'+(index+1)+'</span><span>'+escapeHtml(line)+'</span></span>';
-    }).join("");
+
+void moveElevator(int targetFloor)
+{
+  if (targetFloor == currentFloor) return;
+
+  int floorDifference =
+    targetFloor - currentFloor;
+
+  long steps =
+    (long)floorDifference *
+    STEPS_PER_FLOOR;
+
+  showDigit(targetFloor);
+
+  elevatorMotor.step(steps);
+
+  currentFloor = targetFloor;
+
+  digitalWrite(10, LOW);
+  digitalWrite(11, LOW);
+  digitalWrite(12, LOW);
+  digitalWrite(13, LOW);
 }
-function findLine(searchText,startIndex){
-    startIndex=startIndex||0;
-    for(let i=startIndex;i<lines.length;i++){
-        if(lines[i].includes(searchText)) return i;
+
+void setup()
+{
+  for (int i = 0; i < 7; i++) {
+    pinMode(segmentPins[i], OUTPUT);
+  }
+
+  elevatorMotor.setSpeed(10);
+
+  currentFloor = 0;
+  showDigit(currentFloor);
+}
+
+void loop()
+{
+  char key = keypad.getKey();
+
+  if (key) {
+
+    if (
+      key >= '0' &&
+      key <= '9'
+    ) {
+
+      int targetFloor =
+        key - '0';
+
+      moveElevator(targetFloor);
+
     }
-    return -1;
+
+  }
 }
-function showStep(index){
-    const step=steps[index];
-    const buttons=document.querySelectorAll(".step");
-    buttons.forEach(b=>b.classList.remove("active"));
-    if(buttons[index]) buttons[index].classList.add("active");
-    document.querySelectorAll(".code-line").forEach(l=>l.classList.remove("selected"));
-
-    const startLine=findLine(step.start,0);
-    if(startLine===-1) return;
-    let endLine=findLine(step.end,startLine);
-    if(endLine===-1) endLine=startLine;
-
-    for(let i=startLine;i<=endLine;i++){
-        const line=document.getElementById("line-"+(i+1));
-        if(line) line.classList.add("selected");
-    }
-
-    const selected=document.getElementById("line-"+(startLine+1));
-    const body=document.getElementById("code-body");
-    if(selected && body){
-        body.scrollTo({top:selected.offsetTop-body.offsetTop-20,behavior:"smooth"});
-    }
-
-    document.getElementById("explanation").innerHTML=
-        "<h3>"+(index+1)+". "+step.title+"</h3><p>"+step.text+"</p>";
-}
-function copyCode(){
-    navigator.clipboard.writeText(program).then(function(){
-        const button=document.querySelector(".copy-button");
-        button.innerText="Copied!";
-        setTimeout(()=>button.innerText="Copy Code",1500);
-    });
-}
-displayCode();
-showStep(0);
 </script>
 
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
+<script>
+
+/* =========================
+   COMPLETE PROGRAM SOURCE
+========================= */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =========================
+   EXPLANATION STEPS
+========================= */
+const steps = [
+
+    {
+        title: "Load libraries",
+        start: "#include <Keypad.h>",
+        end: "#include <Stepper.h>",
+        text:
+            "Keypad.h reads the matrix " +
+            "keypad. Stepper.h controls " +
+            "the motor through the " +
+            "ULN2003 driver."
+    },
+
+    {
+        title: "Configure stepper motor",
+        start: "const int STEPS_PER_REV = 2048;",
+        end: "10, 12, 11, 13",
+        text:
+            "The Stepper object uses " +
+            "2048 steps per revolution " +
+            "and the specific output " +
+            "order D10, D12, D11, D13."
+    },
+
+    {
+        title: "Configure keypad",
+        start: "const byte ROWS = 4;",
+        end: "COLS",
+        text:
+            "A four-row, four-column " +
+            "keypad is defined. " +
+            "Rows connect to D2-D5 " +
+            "and columns to D6-D9."
+    },
+
+    {
+        title: "Configure 7-segment display",
+        start: "const int segmentPins[7] = {",
+        end: "{1,1,1,1,0,1,1}",
+        text:
+            "The seven segment pins " +
+            "are mapped to A0-A5 and D0. " +
+            "digitPattern stores the " +
+            "seven ON/OFF states for " +
+            "each number from 0 to 9."
+    },
+
+    {
+        title: "Define floor calibration",
+        start: "const int STEPS_PER_FLOOR = 512;",
+        end: "int currentFloor = 0;",
+        text:
+            "STEPS_PER_FLOOR sets the " +
+            "calibration value to 512. " +
+            "currentFloor tracks the " +
+            "software floor, initially 0."
+    },
+
+    {
+        title: "Display floor number",
+        start: "void showDigit(int digit)",
+        end: "digitPattern[digit][i]",
+        text:
+            "showDigit() checks that the " +
+            "number is between 0 and 9, " +
+            "then writes its segment " +
+            "pattern to the display."
+    },
+
+    {
+        title: "Calculate movement",
+        start: "void moveElevator(int targetFloor)",
+        end: "STEPS_PER_FLOOR;",
+        text:
+            "The destination is compared " +
+            "with currentFloor. The floor " +
+            "difference is multiplied " +
+            "by 512 to calculate " +
+            "the commanded steps."
+    },
+
+    {
+        title: "Move stepper and update floor",
+        start: "showDigit(targetFloor);",
+        end: "digitalWrite(13, LOW);",
+        text:
+            "The destination digit is " +
+            "displayed before movement. " +
+            "The Stepper library commands " +
+            "the motor, currentFloor is " +
+            "updated and driver outputs " +
+            "are switched LOW afterward."
+    },
+
+    {
+        title: "Initialize elevator",
+        start: "void setup()",
+        end: "showDigit(currentFloor);",
+        text:
+            "setup() configures all seven " +
+            "display pins, sets the motor " +
+            "speed to 10 RPM and " +
+            "displays the starting Floor 0."
+    },
+
+    {
+        title: "Read destination floor",
+        start: "void loop()",
+        end: "moveElevator(targetFloor);",
+        text:
+            "The program waits for " +
+            "a keypad press. Numeric " +
+            "characters 0-9 are converted " +
+            "into destination floors " +
+            "and passed to moveElevator()."
+    }
+
+];
+
+/* =========================
+   ESCAPE HTML CHARACTERS
+========================= */
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =========================
+   DISPLAY NUMBERED CODE
+========================= */
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span></span>'
+            );
+
+        }).join("");
+}
+
+/* =========================
+   FIND A CODE LINE
+========================= */
+function findLine(searchText, startIndex = 0) {
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+/* =========================
+   HIGHLIGHT AND EXPLAIN
+========================= */
+function showStep(index) {
+
+    const step = steps[index];
+
+    document.querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document.querySelectorAll(".code-line")
+        .forEach(function(line) {
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
+
+        return;
+    }
+
+    let endLine = findLine(step.end, startLine);
+
+    if (endLine < 0) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =========================
+   COPY COMPLETE ARDUINO CODE
+========================= */
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =========================
+   QUIZ ANSWERS
+========================= */
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =========================
+   INITIALIZE CODE VIEWER
+========================= */
+displayCode();
+showStep(0);
+
+</script>
 </body>
 </html>
