@@ -1,48 +1,42 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Keypad-Based Stepper Motor Angle Controller</title>
 
 <style>
-
 /* =========================
    BASIC PAGE STYLE
 ========================= */
-
-*{
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
 }
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
+/* =========================
+   HEADER
+========================= */
 .header {
     background: #2563eb;
     color: white;
-    position: relative;
     display: flex;
     flex-direction: column;
     min-height: 230px;
-    padding: 25px 0 0;
+    padding-top: 25px;
+    position: relative;
     text-align: center;
 }
 
@@ -52,7 +46,6 @@ body{
     left: 20px;
     width: 135px;
     max-height: 75px;
-    height: auto;
     object-fit: contain;
     background: white;
     border-radius: 5px;
@@ -80,9 +73,10 @@ body{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
+    flex-wrap: wrap;
+    gap: 12px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
 .header-left-buttons,
@@ -98,15 +92,15 @@ body{
     justify-content: center;
     min-height: 38px;
     padding: 9px 14px;
-    background: white;
     color: #1e3a8a;
+    background: white;
     border: 1px solid #dbeafe;
     border-radius: 7px;
     font-size: 13px;
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .2s ease;
 }
 
 .header-nav-btn:hover {
@@ -130,16 +124,467 @@ body{
     stroke-linejoin: round;
 }
 
+/* =========================
+   NAVIGATION
+========================= */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav a {
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =========================
+   MAIN
+========================= */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    color: #1e3a8a;
+    font-size: 25px;
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =========================
+   THUMBNAIL
+========================= */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =========================
+   COMPONENT CARDS
+========================= */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: .2s ease;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* =========================
+   TABLE AND NOTE
+========================= */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    color: white;
+    background: #2563eb;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =========================
+   WORKING PRINCIPLE
+========================= */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    text-align: center;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    padding: 14px;
+    background: #f8fafc;
+}
+
+.state-card strong {
+    display: block;
+    color: #1e3a8a;
+    margin-bottom: 5px;
+}
+
+/* =========================
+   EXPLORE THE CODE
+========================= */
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    background: white;
+    color: #2563eb;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    font-size: 21px;
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    background: white;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    color: #1e3a8a;
+    margin: 0 0 7px;
+}
+
+.explanation p {
+    font-size: 15px;
+    color: #526875;
+    margin: 0;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+    cursor: pointer;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    color: #234e87;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
+
 @media (max-width: 600px) {
     .header {
-        padding: 15px 0 0;
         min-height: 230px;
+        padding-top: 15px;
     }
 
     .header-logo {
@@ -182,549 +627,24 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
+    .section {
+        padding: 21px 18px;
     }
 
-    .project-thumbnail img {
-        max-height: 280px;
-    }
-}
-
-/* =========================
-   NAVIGATION
-========================= */
-
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:20;
-}
-
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
-
-nav a:hover{
-    color:#2563eb;
-}
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-    width:90%;
-    max-width:1050px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section h3{
-    color:#1e3a8a;
-}
-
-ul,
-ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-    display:grid;
-    grid-template-columns:
-        repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-}
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,
-td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-/* =========================
-   NOTE
-========================= */
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-/* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:#fff;
-    padding:10px;
-}
-
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-    text-align:center;
-    color:#1e3a8a;
-    font-size:18px;
-    font-weight:bold;
-    line-height:2;
-}
-
-/* =========================
-   SENSOR CARDS
-========================= */
-
-.sensor-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:16px;
-}
-
-.sensor-box{
-    text-align:center;
-    padding:20px;
-    border-radius:12px;
-    border:1px solid #bfdbfe;
-    background:#f8fbff;
-}
-
-.sensor-box h3{
-    margin-top:0;
-    color:#1e3a8a;
-}
-
-.sensor-value{
-    font-size:26px;
-    color:#2563eb;
-    font-weight:bold;
-}
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-    color:#142e3a;
-}
-
-.eyebrow{
-    color:#2563eb;
-    font-weight:bold;
-    font-size:13px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    margin:0 0 4px;
-}
-
-.lesson-title{
-    font-size:32px !important;
-    margin:0 0 8px !important;
-    color:#1e3a8a !important;
-    border:0 !important;
-    padding:0 !important;
-}
-
-.intro{
-    color:#526875;
-    margin:0 0 22px;
-}
-
-/* CODE + EXPLANATION */
-
-.code-layout{
-    display:grid;
-    grid-template-columns:
-        minmax(0,1.45fr)
-        minmax(300px,1fr);
-    gap:20px;
-    align-items:start;
-}
-
-/* =========================
-   CODE PANEL
-========================= */
-
-.code-panel{
-    background:white;
-    border:1px solid #bfdbfe;
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 4px 14px rgba(37,99,235,.10);
-}
-
-.code-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
-    padding:15px 20px;
-    background:#2563eb;
-    color:white;
-}
-
-.filename{
-    color:white;
-    font:bold 14px/1.4 Consolas,Monaco,monospace;
-}
-
-.copy-button{
-    border:1px solid white;
-    background:white;
-    color:#2563eb;
-    border-radius:8px;
-    padding:8px 14px;
-    min-height:40px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.copy-button:hover{
-    background:#eff6ff;
-}
-
-.code-body{
-    height:600px;
-    overflow:auto;
-    background:white;
-    padding:16px 0;
-}
-
-.code-line{
-    display:flex;
-    min-width:max-content;
-    min-height:24px;
-    padding-right:22px;
-    white-space:pre;
-    font:13px/24px Consolas,Monaco,monospace;
-    color:#1e293b;
-    border-bottom:1px solid #f1f5f9;
-}
-
-.code-line:hover{
-    background:#f8fbff;
-}
-
-.code-line.selected{
-    background:#dbeafe;
-    box-shadow:inset 4px 0 #2563eb;
-}
-
-.line-number{
-    user-select:none;
-    min-width:52px;
-    text-align:right;
-    padding-right:15px;
-    color:#64748b;
-}
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-    background:white;
-    border:1px solid #dce6e9;
-    border-radius:14px;
-    padding:22px;
-}
-
-.guide h2{
-    border:0;
-    padding:0;
-    margin:0 0 8px;
-    font-size:21px;
-}
-
-.guide > p{
-    color:#526875;
-    font-size:15px;
-}
-
-.steps{
-    display:grid;
-    grid-template-columns:
-        repeat(2,minmax(0,1fr));
-    gap:8px;
-    margin:16px 0;
-}
-
-.step{
-    border:1px solid #dce6e9;
-    border-radius:9px;
-    padding:10px;
-    min-height:65px;
-    background:white;
-    text-align:left;
-    font-size:13px;
-    font-weight:bold;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-    color:#1e3a8a;
-}
-
-.step:hover{
-    border-color:#60a5fa;
-    background:#f8fbff;
-}
-
-.step.active{
-    background:#eff6ff;
-    border-color:#60a5fa;
-    color:#1e3a8a;
-}
-
-.step-number{
-    color:#2563eb;
-    font-size:12px;
-    flex-shrink:0;
-}
-
-.explanation{
-    background:#eff6ff;
-    border-radius:9px;
-    padding:16px;
-    min-height:130px;
-}
-
-.explanation h3{
-    font-size:17px;
-    margin:0 0 7px;
-    color:#1e3a8a;
-}
-
-.explanation p{
-    margin:0;
-    color:#526875;
-    font-size:15px;
-}
-
-.guide details{
-    border-top:1px solid #dce6e9;
-    margin-top:15px;
-}
-
-.guide summary{
-    cursor:pointer;
-    color:#2563eb;
-    font-weight:bold;
-    padding:13px 0;
-}
-
-.guide details p,
-.guide details li{
-    color:#526875;
-    font-size:15px;
-}
-
-.guide code{
-    background:#e5ecf4;
-    padding:2px 4px;
-    border-radius:4px;
-}
-
-.tip{
-    background:#eff6ff;
-    color:#234e87;
-    padding:14px 17px;
-    border-radius:9px;
-    margin-top:20px;
-    font-size:14px;
-}
-
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:850px){
-
-    .code-layout{
-        grid-template-columns:1fr;
+    .steps {
+        grid-template-columns: 1fr;
     }
 
-    .code-body{
-        height:450px;
-    }
-
-    .sensor-grid{
-        grid-template-columns:1fr;
+    nav {
+        gap: 11px;
     }
 }
-
-@media(max-width:600px){
-
-    .header{
-        padding:35px 15px;
-    }
-
-    .header h1{
-        font-size:28px;
-    }
-
-    .container{
-        width:92%;
-    }
-
-    .section{
-        padding:21px 18px;
-    }
-
-    .steps{
-        grid-template-columns:1fr;
-    }
-}
-
 </style>
-
 </head>
 
 <body>
@@ -732,7 +652,6 @@ footer strong{
 <!-- =========================
      HEADER
 ========================= -->
-
 <header class="header">
 
     <img
@@ -742,38 +661,26 @@ footer strong{
     >
 
     <div class="header-content">
-
         <h1>SIMUDIY Exploration Kit</h1>
-
-        <p>
-            Keypad-Based Stepper Motor Angle Controller
-        </p>
-
+        <p>Keypad-Based Stepper Motor Angle Controller</p>
     </div>
 
     <div class="header-buttons">
 
         <div class="header-left-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -784,24 +691,18 @@ footer strong{
 
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
@@ -814,22 +715,19 @@ footer strong{
 <!-- =========================
      NAVIGATION
 ========================= -->
-
 <nav>
-
-    <a href="../index.html">
-        &#8592; Arduino Experiments
-    </a>
-
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
     <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
-
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
@@ -837,119 +735,144 @@ footer strong{
 <!-- =========================
      EXPERIMENT THUMBNAIL
 ========================= -->
-
 <section class="section project-thumbnail">
 
     <img
-        src="../Keypad-Based Stepper Motor Angle Controller Using Arduino UNO.png"
-        alt="Keypad-Based Stepper Motor Angle Controller Using Arduino UNO Thumbnail"
+        src="../Keypad-Based Stepper Motor Angle Controller.png"
+        alt="Keypad-Based Stepper Motor Angle Controller Thumbnail"
         onerror="
             this.style.display='none';
             document.getElementById('thumbnail-placeholder').hidden=false;
         "
     >
 
-    <div
-        id="thumbnail-placeholder"
-        class="note"
-        hidden
-    >
-        The experiment thumbnail will appear
-        here when the approved PNG is available.
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
     </div>
 
 </section>
 
 <!-- =========================
-     AIM
+     1. AIM
 ========================= -->
-
 <section class="section" id="aim">
 
     <h2>Aim</h2>
 
     <p>
-        To control the rotation angle of a
-        28BYJ-48 Stepper Motor using Arduino UNO,
-        a 4×4 Matrix Keypad, ULN2003 Motor Driver
-        and 16×2 I2C LCD Display.
+        To control the angular movement
+        of a 28BYJ-48 stepper motor using
+        Arduino UNO, a ULN2003 motor driver,
+        a 4×4 matrix keypad and a
+        16×2 I²C LCD.
     </p>
 
     <p>
         The user can enter a target angle
-        between 0° and 360° and command
-        the stepper motor to move to the
-        selected angular position.
+        from 0° to 360° through the keypad.
+        Arduino converts the angle into
+        motor steps and controls the
+        stepper motor accordingly.
     </p>
 
 </section>
 
 <!-- =========================
-     ABOUT THE EXPERIMENT
+     2. ABOUT THE EXPERIMENT
 ========================= -->
-
-<section class="section">
+<section class="section" id="about">
 
     <h2>About the Experiment</h2>
 
     <p>
-        The Keypad-Based Stepper Motor Angle
-        Controller demonstrates how an Arduino
-        UNO can control the angular movement
-        of a stepper motor using keypad input.
+        The Keypad-Based Stepper Motor
+        Angle Controller demonstrates
+        how Arduino can perform
+        position-based motor control
+        using user-entered commands.
     </p>
 
     <p>
-        The user enters the required rotation
-        angle using a 4×4 Matrix Keypad.
-        The entered value is displayed on
-        a 16×2 I2C LCD.
+        A stepper motor rotates in
+        small increments known as steps.
+        By controlling the number and
+        direction of these steps,
+        Arduino estimates the
+        angular position of the motor.
     </p>
 
     <p>
-        When the user presses the # key,
-        the Arduino converts the entered
-        angle into the required number
-        of motor steps.
+        The experiment uses a
+        28BYJ-48 stepper motor
+        driven through a ULN2003
+        motor driver module.
     </p>
 
     <p>
-        The ULN2003 Motor Driver receives
-        control signals from Arduino and
-        energizes the coils of the
-        28BYJ-48 Stepper Motor.
+        The ULN2003 driver switches
+        the motor coils according to
+        control signals received from
+        Arduino UNO.
     </p>
 
     <p>
-        The motor rotates toward the
-        selected target angle, while the
-        LCD displays the estimated
-        current and target positions.
+        The 4×4 keypad allows the user
+        to enter a target angle
+        and issue movement commands.
     </p>
 
     <p>
-        Additional keypad functions allow
-        the user to clear input, stop
-        movement, display current position
-        and reset the software angle reference.
+        The program converts the angle
+        into the corresponding
+        number of motor steps using
+        an approximate value of
+        4096 half-steps per revolution.
+    </p>
+
+    <p>
+        During movement, Arduino updates
+        the estimated current position
+        and displays the information
+        on the 16×2 I²C LCD.
+    </p>
+
+    <p>
+        When the requested position
+        is reached, the motor coil
+        outputs are switched OFF and
+        the LCD displays
+        TARGET REACHED.
+    </p>
+
+    <p>
+        The keypad also provides
+        functions for clearing the
+        input, requesting a stop,
+        displaying the current position
+        and resetting software
+        position values.
     </p>
 
     <div class="note">
-
         <strong>Important:</strong>
-
-        The displayed position is calculated
-        from commanded motor steps.
-        It is not measured by a physical encoder.
-
+        The experiment uses
+        open-loop positioning.
+        The displayed current angle
+        is calculated from commanded
+        steps, not measured by an
+        encoder or position sensor.
+        Missed steps may cause
+        actual and displayed
+        positions to differ.
     </div>
 
 </section>
 
 <!-- =========================
-     COMPONENTS REQUIRED
+     3. COMPONENTS REQUIRED
 ========================= -->
-
 <section class="section" id="components">
 
     <h2>Components Required</h2>
@@ -957,1107 +880,873 @@ footer strong{
     <div class="components-grid">
 
         <div class="component-card">
-
             <img
                 src="Arduino UNO.png"
-                alt="Arduino UNO"
-            >
-
-            <h4>Arduino UNO (×1)</h4>
-
+                alt="Arduino UNO">
+            <h4>Arduino UNO R3 (×1)</h4>
             <p>
-                Main microcontroller used
-                to process keypad inputs
-                and control motor movement.
+                Processes keypad commands
+                and generates control
+                signals for the motor driver.
             </p>
-
         </div>
 
         <div class="component-card">
-
             <img
                 src="28BYJ-48 Stepper Motor.png"
-                alt="28BYJ-48 Stepper Motor"
-            >
-
+                alt="28BYJ-48 Stepper Motor">
             <h4>28BYJ-48 Stepper Motor (×1)</h4>
-
             <p>
                 Rotates in small steps
                 to reach the selected
                 angular position.
             </p>
-
         </div>
 
         <div class="component-card">
-
             <img
                 src="ULN2003 Motor Driver.png"
-                alt="ULN2003 Stepper Motor Driver"
-            >
-
+                alt="ULN2003 Motor Driver">
             <h4>ULN2003 Motor Driver (×1)</h4>
-
             <p>
-                Drives the stepper motor
-                coils according to the
-                Arduino control signals.
+                Provides the switching
+                current required to
+                energize the motor coils.
             </p>
-
         </div>
 
         <div class="component-card">
-
             <img
                 src="4x4 Matrix Keypad.png"
-                alt="4x4 Matrix Keypad"
-            >
-
+                alt="4x4 Matrix Keypad">
             <h4>4×4 Matrix Keypad (×1)</h4>
-
             <p>
-                Allows the user to enter
-                the target angle and
-                control motor operation.
+                Used to enter target
+                angles and control
+                motor operation.
             </p>
-
         </div>
 
         <div class="component-card">
-
             <img
                 src="LCD Display.png"
-                alt="16x2 I2C LCD Display"
-            >
-
-            <h4>16×2 I2C LCD (×1)</h4>
-
+                alt="16x2 I2C LCD">
+            <h4>16×2 I²C LCD (×1)</h4>
             <p>
-                Displays the entered
-                target angle and estimated
-                current motor position.
+                Displays target angle,
+                estimated position
+                and motor status.
             </p>
-
         </div>
 
         <div class="component-card">
+            <img
+                src="Breadboard.png"
+                alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>
+                Helps organize
+                suitable low-current
+                interconnections.
+            </p>
+        </div>
 
+        <div class="component-card">
             <img
                 src="Jumper Wires.png"
-                alt="Jumper Wires"
-            >
-
+                alt="Jumper Wires">
             <h4>Jumper Wires</h4>
-
             <p>
                 Connect the Arduino,
-                keypad, motor driver
-                and LCD display.
+                keypad, LCD and
+                motor driver signals.
             </p>
-
         </div>
 
     </div>
 
     <div class="note">
-
         <strong>Motor Power Requirement:</strong>
+        A regulated supply suitable for
+        the actual 28BYJ-48 motor's rated
+        voltage and current is required.
 
         <p>
-            The SOP specifies a suitable motor
-            power supply for the 28BYJ-48
-            and ULN2003 driver.
+            Connect the motor supply to
+            the ULN2003 board, not directly
+            to Arduino GPIO pins.
+            The Arduino and driver must
+            share a common ground.
         </p>
 
         <p>
-            A regulated supply matching the
-            motor's rated voltage and current
-            is required. The motor must not
-            be powered directly from
-            Arduino GPIO pins.
+            The source specifies
+            a motor power supply but
+            does not provide its exact
+            voltage rating or a component
+            PNG. Check the motor label
+            before powering the circuit.
         </p>
+    </div>
 
-        <p>
-            Connect the motor supply ground
-            to Arduino GND.
-        </p>
-
+    <div class="note">
+        <strong>Arduino Libraries:</strong>
+        <ul>
+            <li>Keypad.h</li>
+            <li>Wire.h</li>
+            <li>LiquidCrystal_I2C.h</li>
+        </ul>
     </div>
 
 </section>
 
 <!-- =========================
-     CIRCUIT CONNECTIONS
+     4. CIRCUIT CONNECTIONS
 ========================= -->
-
 <section class="section" id="connections">
 
     <h2>Circuit Connections</h2>
 
-    <h3>ULN2003 Motor Driver → Arduino UNO</h3>
+    <h3>ULN2003 Motor Driver to Arduino UNO</h3>
 
     <div class="table-wrap">
-
         <table>
-
             <thead>
                 <tr>
-                    <th>ULN2003 Pin</th>
-                    <th>Arduino UNO Pin</th>
+                    <th>Driver Pin</th>
+                    <th>Arduino Connection</th>
                     <th>Function</th>
                 </tr>
             </thead>
-
             <tbody>
-
                 <tr>
                     <td>IN1</td>
                     <td>D12</td>
-                    <td>Motor control input 1</td>
+                    <td>Coil control 1</td>
                 </tr>
-
                 <tr>
                     <td>IN2</td>
                     <td>D13</td>
-                    <td>Motor control input 2</td>
+                    <td>Coil control 2</td>
                 </tr>
-
                 <tr>
                     <td>IN3</td>
                     <td>A0</td>
-                    <td>Motor control input 3</td>
+                    <td>Coil control 3</td>
                 </tr>
-
                 <tr>
                     <td>IN4</td>
                     <td>A1</td>
-                    <td>Motor control input 4</td>
+                    <td>Coil control 4</td>
                 </tr>
-
                 <tr>
-                    <td>VCC</td>
-                    <td>Suitable Motor Supply</td>
+                    <td>Motor VCC</td>
+                    <td>Compatible regulated motor supply</td>
                     <td>Motor power</td>
                 </tr>
-
                 <tr>
                     <td>GND</td>
                     <td>Common GND</td>
                     <td>Ground reference</td>
                 </tr>
-
             </tbody>
-
         </table>
-
     </div>
 
     <div class="note">
-
         <strong>Stepper Motor Connection:</strong>
-
-        <p>
-            Connect the 28BYJ-48 Stepper Motor
-            to the matching motor connector
-            provided on the ULN2003 driver board.
-        </p>
-
-        <p>
-            The driver board supplies the
-            switching current required by
-            the stepper motor coils.
-        </p>
-
+        Plug the 28BYJ-48 stepper motor
+        into the matching motor connector
+        on the ULN2003 driver board.
+        Do not connect the motor coils
+        directly to Arduino pins.
     </div>
 
-    <h3>4×4 Matrix Keypad → Arduino UNO</h3>
+    <h3>4×4 Matrix Keypad to Arduino UNO</h3>
 
     <div class="table-wrap">
-
         <table>
-
             <thead>
                 <tr>
-                    <th>Keypad Pin</th>
-                    <th>Arduino UNO Pin</th>
+                    <th>Keypad Terminal</th>
+                    <th>Arduino Pin</th>
                 </tr>
             </thead>
-
             <tbody>
-
-                <tr>
-                    <td>R1</td>
-                    <td>D4</td>
-                </tr>
-
-                <tr>
-                    <td>R2</td>
-                    <td>D5</td>
-                </tr>
-
-                <tr>
-                    <td>R3</td>
-                    <td>D6</td>
-                </tr>
-
-                <tr>
-                    <td>R4</td>
-                    <td>D7</td>
-                </tr>
-
-                <tr>
-                    <td>C1</td>
-                    <td>D8</td>
-                </tr>
-
-                <tr>
-                    <td>C2</td>
-                    <td>D9</td>
-                </tr>
-
-                <tr>
-                    <td>C3</td>
-                    <td>D10</td>
-                </tr>
-
-                <tr>
-                    <td>C4</td>
-                    <td>D11</td>
-                </tr>
-
+                <tr><td>R1</td><td>D4</td></tr>
+                <tr><td>R2</td><td>D5</td></tr>
+                <tr><td>R3</td><td>D6</td></tr>
+                <tr><td>R4</td><td>D7</td></tr>
+                <tr><td>C1</td><td>D8</td></tr>
+                <tr><td>C2</td><td>D9</td></tr>
+                <tr><td>C3</td><td>D10</td></tr>
+                <tr><td>C4</td><td>D11</td></tr>
             </tbody>
-
         </table>
-
     </div>
 
-    <h3>16×2 I2C LCD → Arduino UNO</h3>
+    <h3>16×2 I²C LCD to Arduino UNO</h3>
 
     <div class="table-wrap">
-
         <table>
-
             <thead>
                 <tr>
-                    <th>LCD Pin</th>
-                    <th>Arduino UNO Pin</th>
-                    <th>Function</th>
+                    <th>LCD Terminal</th>
+                    <th>Arduino Pin</th>
                 </tr>
             </thead>
-
             <tbody>
-
-                <tr>
-                    <td>VCC</td>
-                    <td>5V</td>
-                    <td>LCD power</td>
-                </tr>
-
-                <tr>
-                    <td>GND</td>
-                    <td>GND</td>
-                    <td>Common ground</td>
-                </tr>
-
-                <tr>
-                    <td>SDA</td>
-                    <td>A4</td>
-                    <td>I2C data</td>
-                </tr>
-
-                <tr>
-                    <td>SCL</td>
-                    <td>A5</td>
-                    <td>I2C clock</td>
-                </tr>
-
+                <tr><td>VCC</td><td>5V, if supported by module</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>SDA</td><td>A4</td></tr>
+                <tr><td>SCL</td><td>A5</td></tr>
             </tbody>
-
         </table>
-
     </div>
 
     <div class="note">
-
-        <strong>Important Pin Summary:</strong>
-
-        <ul>
-            <li>ULN2003 IN1 → D12</li>
-            <li>ULN2003 IN2 → D13</li>
-            <li>ULN2003 IN3 → A0</li>
-            <li>ULN2003 IN4 → A1</li>
-            <li>Keypad Rows → D4 to D7</li>
-            <li>Keypad Columns → D8 to D11</li>
-            <li>LCD SDA → A4</li>
-            <li>LCD SCL → A5</li>
-            <li>LCD I2C Address → 0x27</li>
-        </ul>
+        <strong>Important:</strong>
+        Arduino UNO pins A0 and A1
+        are used as digital outputs
+        to the motor driver.
+        A4 and A5 provide I²C
+        communication for the LCD.
 
         <p>
-            Connect the external motor supply
-            GND to Arduino GND.
-            Do not power the motor from
-            Arduino GPIO pins.
+            The supplied sketch assumes
+            LCD address <strong>0x27</strong>.
+            Verify the actual address and
+            keypad ribbon-pin order.
         </p>
 
+        <p>
+            The order of motor coil inputs
+            and the half-step sequence
+            must match the driver and
+            motor wiring. If the motor
+            only vibrates or rotates
+            incorrectly, check that
+            correspondence before testing.
+        </p>
     </div>
 
 </section>
 
 <!-- =========================
-     CIRCUIT DIAGRAM
+     5. CIRCUIT DIAGRAM
 ========================= -->
-
 <section class="section" id="circuit">
 
     <h2>Circuit Diagram</h2>
 
-    <!--
-        Replace this placeholder with
-        the approved circuit PNG:
+    <img
+        src="Keypad-Based Stepper Motor Angle Controller Circuit.png"
+        alt="Keypad-Based Stepper Motor Angle Controller Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
 
-        <img
-            class="circuit-img"
-            src="Keypad-Based Stepper Motor Angle Controller Using Arduino UNO Circuit.png"
-            alt="Stepper Motor Angle Controller Circuit Diagram"
-        >
-    -->
-
-    <div class="note">
-        The approved circuit diagram image
-        will be displayed here when the
-        separate PNG is available.
+    <div id="circuit-placeholder"
+         class="note"
+         hidden>
+        Approved circuit diagram PNG pending.
+        Add the verified image using
+        the filename referenced above.
     </div>
 
 </section>
 
 <!-- =========================
-     WORKING PRINCIPLE
+     6. WORKING PRINCIPLE
 ========================= -->
-
 <section class="section" id="working">
 
     <h2>Working Principle</h2>
 
-    <p>
-        The user enters a target angle
-        through the 4×4 Matrix Keypad.
-        The Arduino converts the selected
-        angle into motor steps and controls
-        the ULN2003 driver accordingly.
-    </p>
-
     <div class="flow">
-
         Arduino UNO Starts
 
         <br>↓<br>
 
-        Keypad and LCD Initialize
+        Initialize Keypad and LCD
 
         <br>↓<br>
 
-        User Enters Target Angle
+        Set ULN2003 Pins as Outputs
 
         <br>↓<br>
 
-        LCD Displays Entered Angle
+        Display Target and Current Angle
 
         <br>↓<br>
 
-        User Presses # Key
+        Enter Target Angle on Keypad
 
         <br>↓<br>
 
-        Arduino Validates the Angle
+        Press # to Confirm
 
         <br>↓<br>
 
-        Angle Converted Into Motor Steps
+        Validate Target Angle (0°–360°)
 
         <br>↓<br>
 
-        ULN2003 Driver Receives Signals
+        Convert Angle into Motor Steps
 
         <br>↓<br>
 
-        Stepper Motor Rotates
+        Determine Rotation Direction
 
         <br>↓<br>
 
-        Estimated Angle Updates
+        Apply Eight-State Half-Step Sequence
 
         <br>↓<br>
 
-        Target Position Reached
+        Update Estimated Current Position
 
         <br>↓<br>
 
-        Motor Coils Turn OFF
+        Repeat Until Target Reached or B Pressed
 
         <br>↓<br>
 
-        LCD Displays TARGET REACHED
+        Turn Motor Coils OFF
 
+        <br>↓<br>
+
+        Display Motor Status
     </div>
 
-    <h3>Angle Conversion</h3>
+    <h3>Angle-to-Step Conversion</h3>
 
     <p>
-        The SOP uses approximately
-        4096 half-steps for one complete
-        360° output-shaft rotation.
-    </p>
-
-    <p>
-        The target step position is
-        calculated using:
+        The source uses approximately
+        4096 half-steps for one
+        complete output-shaft revolution.
     </p>
 
     <div class="note">
-        Target Steps = Target Angle × 4096 / 360
+        <strong>Target Steps:</strong>
+        <p>
+            Target Steps =
+            (Target Angle × 4096) / 360
+        </p>
+        <p>
+            Arduino performs this
+            calculation using integer
+            arithmetic, which truncates
+            fractional steps.
+        </p>
     </div>
 
-    <h3>Motor Movement</h3>
+    <h3>Half-Step Sequence</h3>
 
     <p>
-        The ULN2003 driver energizes
-        the stepper motor coils in an
-        eight-state half-step sequence.
+        The program stores eight
+        coil activation patterns
+        in stepSequence.
     </p>
 
     <p>
-        The Arduino tracks commanded
-        steps to estimate the motor angle.
-        This is open-loop positioning.
+        The ULN2003 board uses these
+        signals to switch motor
+        coil currents in sequence.
+        Changing the step index
+        in one direction commands
+        forward motion; reversing
+        it commands reverse motion.
     </p>
 
-    <h3>Keypad Operation</h3>
+    <h3>Keypad Controls</h3>
 
     <div class="table-wrap">
-
         <table>
-
             <thead>
                 <tr>
                     <th>Key</th>
                     <th>Function</th>
                 </tr>
             </thead>
-
             <tbody>
-
-                <tr>
-                    <td>0–9</td>
-                    <td>Enter target angle</td>
-                </tr>
-
-                <tr>
-                    <td>#</td>
-                    <td>Confirm angle and move motor</td>
-                </tr>
-
-                <tr>
-                    <td>*</td>
-                    <td>Clear entered value</td>
-                </tr>
-
-                <tr>
-                    <td>A</td>
-                    <td>Set software position reference to 0°</td>
-                </tr>
-
-                <tr>
-                    <td>B</td>
-                    <td>Request motor stop</td>
-                </tr>
-
-                <tr>
-                    <td>C</td>
-                    <td>Display current and target angles</td>
-                </tr>
-
-                <tr>
-                    <td>D</td>
-                    <td>Reset software position and target</td>
-                </tr>
-
+                <tr><td>0–9</td><td>Enter target angle</td></tr>
+                <tr><td>#</td><td>Confirm target and start movement</td></tr>
+                <tr><td>*</td><td>Clear entered digits</td></tr>
+                <tr><td>A</td><td>Set software current position to 0</td></tr>
+                <tr><td>B</td><td>Request stop during movement</td></tr>
+                <tr><td>C</td><td>Display current and target angles</td></tr>
+                <tr><td>D</td><td>Reset software current and target positions</td></tr>
             </tbody>
-
         </table>
+    </div>
 
+    <div class="state-grid">
+        <div class="state-card">
+            <strong>90°</strong>
+            Approximately 1024 steps
+        </div>
+        <div class="state-card">
+            <strong>180°</strong>
+            Approximately 2048 steps
+        </div>
+        <div class="state-card">
+            <strong>270°</strong>
+            Approximately 3072 steps
+        </div>
+        <div class="state-card">
+            <strong>360°</strong>
+            Approximately 4096 steps
+        </div>
     </div>
 
     <div class="note">
+        <strong>Software Position Tracking:</strong>
+        The controller increments or
+        decrements currentPosition after
+        every commanded step.
+        It does not verify physical
+        shaft movement.
 
-        <strong>Important:</strong>
-
-        Keys A and D reset software position
-        values. They do not physically move
-        the motor to a mechanical zero point.
-
+        <p>
+            During movement, only the
+            B key is checked by the
+            motion loop. Other keypad
+            functions are processed
+            after movement finishes.
+        </p>
     </div>
 
 </section>
 
 <!-- =========================
-     PROCEDURE
+     7. PROCEDURE
 ========================= -->
-
 <section class="section" id="procedure">
 
     <h2>Procedure</h2>
 
     <ol>
-
-        <li>
-            Connect the 28BYJ-48 Stepper Motor
-            to the ULN2003 Motor Driver.
-        </li>
-
-        <li>
-            Connect ULN2003 IN1 to Arduino D12.
-        </li>
-
-        <li>
-            Connect ULN2003 IN2 to Arduino D13.
-        </li>
-
-        <li>
-            Connect ULN2003 IN3 to Arduino A0.
-        </li>
-
-        <li>
-            Connect ULN2003 IN4 to Arduino A1.
-        </li>
-
-        <li>
-            Connect the driver to a suitable
-            regulated motor power supply.
-        </li>
-
-        <li>
-            Connect the motor power supply
-            GND to Arduino GND.
-        </li>
-
-        <li>
-            Connect keypad rows R1–R4
-            to Arduino D4–D7.
-        </li>
-
-        <li>
-            Connect keypad columns C1–C4
-            to Arduino D8–D11.
-        </li>
-
-        <li>
-            Connect LCD VCC to Arduino 5V.
-        </li>
-
-        <li>
-            Connect LCD GND to Arduino GND.
-        </li>
-
-        <li>
-            Connect LCD SDA to Arduino A4.
-        </li>
-
-        <li>
-            Connect LCD SCL to Arduino A5.
-        </li>
-
-        <li>
-            Check all connections
-            before applying power.
-        </li>
-
-        <li>
-            Open Arduino IDE.
-        </li>
-
-        <li>
-            Install the Keypad library.
-        </li>
-
-        <li>
-            Install a compatible
-            LiquidCrystal_I2C library.
-        </li>
-
-        <li>
-            Create a sketch named
-            Keypad_Stepper_Angle_Controller.ino.
-        </li>
-
-        <li>
-            Copy the complete Arduino program
-            from Explore the Code.
-        </li>
-
-        <li>
-            Select Arduino Uno
-            under Tools → Board.
-        </li>
-
-        <li>
-            Select the correct
-            communication port.
-        </li>
-
-        <li>
-            Verify and upload the program.
-        </li>
-
-        <li>
-            Wait for the LCD to display
-            the target and current angles.
-        </li>
-
-        <li>
-            Enter an angle such as 90
-            using the keypad.
-        </li>
-
-        <li>
-            Press # to start motor movement.
-        </li>
-
-        <li>
-            Observe the motor rotate
-            toward the selected target.
-        </li>
-
-        <li>
-            Press C to display current
-            and target angle values.
-        </li>
-
-        <li>
-            Use B to request a stop
-            while the motor is moving.
-        </li>
-
-        <li>
-            Use A or D to reset the
-            software position reference
-            as described in the SOP.
-        </li>
-
+        <li>Place the Arduino UNO, stepper motor, driver, keypad and LCD on the working surface.</li>
+        <li>Connect the 28BYJ-48 motor to its matching ULN2003 connector.</li>
+        <li>Connect ULN2003 IN1 to Arduino D12.</li>
+        <li>Connect ULN2003 IN2 to Arduino D13.</li>
+        <li>Connect ULN2003 IN3 to Arduino A0.</li>
+        <li>Connect ULN2003 IN4 to Arduino A1.</li>
+        <li>Connect the ULN2003 board to a suitable regulated motor supply.</li>
+        <li>Connect the motor supply ground to Arduino GND.</li>
+        <li>Connect keypad rows R1–R4 to Arduino D4–D7 respectively.</li>
+        <li>Connect keypad columns C1–C4 to Arduino D8–D11 respectively.</li>
+        <li>Connect LCD VCC and GND to compatible 5V and GND terminals.</li>
+        <li>Connect LCD SDA to Arduino A4 and SCL to A5.</li>
+        <li>Verify wiring, keypad terminal order and motor supply polarity.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Install the Keypad library and a compatible LiquidCrystal_I2C library.</li>
+        <li>Create a sketch named Keypad_Stepper_Angle_Controller.ino.</li>
+        <li>Copy the complete Arduino code from Explore the Code.</li>
+        <li>Select Arduino Uno and the correct communication port.</li>
+        <li>Verify and upload the program.</li>
+        <li>Observe the LCD startup message.</li>
+        <li>Enter 90 on the keypad.</li>
+        <li>Press # to command the motor to approximately 90°.</li>
+        <li>Observe the current angle estimate on the LCD.</li>
+        <li>Enter 180, press # and observe further movement.</li>
+        <li>Try 360 and press # to command approximately one full output-shaft revolution relative to software zero.</li>
+        <li>Press C to display target and current positions.</li>
+        <li>During movement, press B to request a stop.</li>
+        <li>Press * to clear the entered angle.</li>
+        <li>Use A or D only when you understand their software-reference reset behavior.</li>
     </ol>
 
 </section>
 
-<!-- =========================================
-     EXPLORE THE CODE
-========================================= -->
-
+<!-- =========================
+     8. EXPLORE THE CODE
+========================= -->
 <section class="section" id="code">
 
-    <div class="code-lesson">
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
 
-        <p class="eyebrow">
-            Arduino Experiment · Code Review
-        </p>
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
 
-        <h2 class="lesson-title">
-            Explore the Code
-        </h2>
+    <p class="intro">
+        Keypad-Based Stepper Motor Angle Controller ·
+        Select a step to highlight
+        the corresponding Arduino code
+        and understand how it works.
+    </p>
 
-        <p class="intro">
-            Keypad-Based Stepper Motor Angle Controller ·
-            Select a step to understand what each
-            part of the program does.
-        </p>
+    <div class="code-layout">
 
-        <div class="code-layout">
+        <article class="code-panel">
 
-            <article class="code-panel">
+            <div class="code-top">
+                <span class="filename">
+                    Keypad_Stepper_Angle_Controller.ino
+                </span>
 
-                <div class="code-top">
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()">
+                    Copy Code
+                </button>
+            </div>
 
-                    <span class="filename">
-                        Keypad_Stepper_Angle_Controller.ino
-                    </span>
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
 
-                    <button
-                        class="copy-button"
-                        onclick="copyCode()"
-                    >
-                        Copy Code
-                    </button>
+        </article>
 
-                </div>
+        <article class="guide">
 
-                <div
-                    class="code-body"
-                    id="code-body"
-                >
-                    <code id="code-lines"></code>
-                </div>
+            <h2>Understand it step by step</h2>
 
-            </article>
+            <p>
+                Choose a step. The matching
+                code lines will be highlighted
+                on the left.
+            </p>
 
-            <article class="guide">
+            <div class="steps">
 
-                <h2>
-                    Understand it step by step
-                </h2>
+                <button class="step active"
+                        type="button"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Load libraries
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Configure LCD
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Set up keypad
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Define driver pins
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Define step sequence
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Initialize system
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Read keypad
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Set target angle
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Move motor
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Update LCD
+                </button>
+
+            </div>
+
+            <div id="explanation"
+                 class="explanation"
+                 aria-live="polite">
+            </div>
+
+            <details>
+                <summary>Explore more: Half-Step Control</summary>
 
                 <p>
-                    Choose a step.
-                    The corresponding program
-                    section will be highlighted
-                    on the left.
+                    An eight-state half-step
+                    sequence changes the
+                    energization pattern of
+                    the motor coils.
                 </p>
 
-                <div class="steps">
+                <p>
+                    The ULN2003 driver
+                    supplies the required
+                    switching current.
+                </p>
 
-                    <button class="step active"
-                            onclick="showStep(0)">
-                        <span class="step-number">01</span>
-                        Load libraries
-                    </button>
+                <p>
+                    The original program
+                    waits 2 milliseconds
+                    after each commanded step.
+                    Motor response depends on
+                    mechanical load, supply
+                    voltage and motor capability.
+                </p>
+            </details>
 
-                    <button class="step"
-                            onclick="showStep(1)">
-                        <span class="step-number">02</span>
-                        Configure LCD
-                    </button>
+            <details>
+                <summary>Explore more: Motor Position</summary>
 
-                    <button class="step"
-                            onclick="showStep(2)">
-                        <span class="step-number">03</span>
-                        Setup keypad
-                    </button>
+                <p>
+                    The variables currentPosition
+                    and targetPosition represent
+                    software tracking values.
+                </p>
 
-                    <button class="step"
-                            onclick="showStep(3)">
-                        <span class="step-number">04</span>
-                        Driver pins
-                    </button>
+                <p>
+                    Without an encoder or homing
+                    sensor, Arduino cannot
+                    determine whether the motor
+                    actually reaches the expected
+                    mechanical position.
+                </p>
 
-                    <button class="step"
-                            onclick="showStep(4)">
-                        <span class="step-number">05</span>
-                        Step sequence
-                    </button>
+                <p>
+                    Keys A and D change the
+                    software coordinate values
+                    without mechanically
+                    returning the shaft to zero.
+                </p>
+            </details>
 
-                    <button class="step"
-                            onclick="showStep(5)">
-                        <span class="step-number">06</span>
-                        Initialize system
-                    </button>
+            <details>
+                <summary>Explore more: Keypad Stop</summary>
 
-                    <button class="step"
-                            onclick="showStep(6)">
-                        <span class="step-number">07</span>
-                        Read keypad
-                    </button>
+                <p>
+                    While moveToTarget() runs,
+                    Arduino repeatedly checks
+                    the keypad for B.
+                </p>
 
-                    <button class="step"
-                            onclick="showStep(7)">
-                        <span class="step-number">08</span>
-                        Set target
-                    </button>
+                <p>
+                    If B is detected,
+                    the motor outputs turn OFF,
+                    the LCD displays
+                    MOTOR STOPPED, and the
+                    movement function returns.
+                </p>
 
-                    <button class="step"
-                            onclick="showStep(8)">
-                        <span class="step-number">09</span>
-                        Move motor
-                    </button>
+                <p>
+                    The program does not monitor
+                    all keypad commands during
+                    motor movement.
+                </p>
+            </details>
 
-                    <button class="step"
-                            onclick="showStep(9)">
-                        <span class="step-number">10</span>
-                        Update display
-                    </button>
+            <details>
+                <summary>Check Your Understanding</summary>
 
-                </div>
+                <ol>
+                    <li>Which driver controls the stepper motor?</li>
+                    <li>Which Arduino pins connect to IN1–IN4?</li>
+                    <li>Which key starts movement?</li>
+                    <li>What is the maximum allowed target angle?</li>
+                    <li>Which key requests a stop during movement?</li>
+                    <li>How many states are in the half-step sequence?</li>
+                    <li>Does the program measure the actual motor angle?</li>
+                </ol>
 
-                <div
-                    class="explanation"
-                    id="explanation"
-                    aria-live="polite"
-                >
-
-                    <h3>1. Load libraries</h3>
-
-                    <p>
-                        The program loads the
-                        Keypad, Wire and LCD libraries.
-                    </p>
-
-                </div>
-
-                <details>
-
-                    <summary>
-                        Explore more: Half-Step Control
-                    </summary>
-
-                    <p>
-                        The 28BYJ-48 Stepper Motor
-                        is driven using an eight-state
-                        half-step sequence.
-                    </p>
-
-                    <p>
-                        Arduino sends the required
-                        control signals to the
-                        ULN2003 Motor Driver.
-                    </p>
-
-                    <p>
-                        The driver energizes the
-                        motor coils in sequence,
-                        producing controlled
-                        angular movement.
-                    </p>
-
-                </details>
-
-                <details>
-
-                    <summary>
-                        Explore more: Motor Position
-                    </summary>
-
-                    <p>
-                        The program estimates
-                        the angular position
-                        using commanded steps.
-                    </p>
-
-                    <p>
-                        It does not measure the
-                        actual shaft angle with
-                        a position sensor.
-                    </p>
-
-                    <p>
-                        Actual accuracy depends
-                        on the motor gearing,
-                        calibration, mechanical
-                        loading and missed steps.
-                    </p>
-
-                </details>
-
-                <details>
-
-                    <summary>
-                        Check your understanding
-                    </summary>
-
-                    <ol>
-                        <li>
-                            Which driver controls
-                            the stepper motor?
-                        </li>
-
-                        <li>
-                            Which Arduino pins
-                            connect to IN1–IN4?
-                        </li>
-
-                        <li>
-                            Which keypad key
-                            starts motor movement?
-                        </li>
-
-                        <li>
-                            What is the maximum
-                            selectable target angle?
-                        </li>
-
-                        <li>
-                            Which keypad key
-                            requests a motor stop?
-                        </li>
-                    </ol>
-
-                    <button
+                <button type="button"
                         class="copy-button"
-                        type="button"
                         onclick="toggleAnswers()"
-                        style="border:1px solid #bfdbfe"
-                    >
-                        Show / Hide Answers
-                    </button>
+                        style="border:1px solid #bfdbfe">
+                    Show / Hide Answers
+                </button>
 
-                    <div id="quiz-answers" hidden>
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>ULN2003</li>
+                        <li>D12, D13, A0 and A1</li>
+                        <li>#</li>
+                        <li>360°</li>
+                        <li>B</li>
+                        <li>Eight states</li>
+                        <li>No; position is estimated from steps</li>
+                    </ol>
+                </div>
+            </details>
 
-                        <ol>
-                            <li>ULN2003 Motor Driver</li>
-                            <li>D12, D13, A0 and A1</li>
-                            <li>#</li>
-                            <li>360°</li>
-                            <li>B</li>
-                        </ol>
-
-                    </div>
-
-                </details>
-
-            </article>
-
-        </div>
-
-        <p class="tip">
-
-            <strong>Try it:</strong>
-
-            Enter 90 and press #.
-            Observe the stepper motor
-            rotating toward approximately
-            90 degrees.
-
-            Try 180 and 360 to compare
-            the motor movement.
-
-        </p>
+        </article>
 
     </div>
+
+    <p class="tip">
+        <strong>Try it:</strong>
+        Enter 90 and press #.
+        Observe the estimated angle
+        increasing on the LCD.
+        Then enter 180 and compare
+        the movement. During a longer
+        movement, press B to test
+        the stop function.
+    </p>
 
 </section>
 
 <!-- =========================
-     EXPECTED OUTPUT
+     9. EXPECTED OUTPUT
 ========================= -->
-
-<section class="section">
+<section class="section" id="output">
 
     <h2>Expected Output</h2>
 
     <p>
-        When Arduino starts, the LCD
-        displays the startup message:
+        After powering up,
+        the LCD displays the
+        startup message:
     </p>
 
     <div class="note">
-
-        <strong>STEPPER CONTROL</strong>
-
-        <br>
-
-        Enter Angle
-
+        <pre style="margin:0;white-space:pre-wrap">STEPPER CONTROL
+Enter Angle</pre>
     </div>
 
     <p>
-        After initialization, the
-        LCD displays the target
-        and estimated current angle.
+        After approximately
+        1.5 seconds, the LCD
+        displays the target
+        and current estimated angles.
     </p>
 
-    <h3>Example Test: 90 Degrees</h3>
+    <h3>Initial Display</h3>
 
     <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">Target:0 deg
+Current:0 deg</pre>
+    </div>
 
-        Target:90 deg
+    <h3>Example: Enter 90 and Press #</h3>
 
-        <br>
-
-        Current:0 deg
-
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">Moving to 90 deg
+Angle:45 deg</pre>
     </div>
 
     <p>
-        When 90 is entered and
-        # is pressed, the motor
-        moves toward approximately
-        90 degrees.
+        The second line changes
+        as the stepper motor
+        advances toward the target.
     </p>
 
-    <h3>Example Test: 180 Degrees</h3>
+    <h3>When Target Is Reached</h3>
 
-    <p>
-        Enter 180 and press #.
-        The motor rotates toward
-        approximately 180 degrees.
-    </p>
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">TARGET REACHED
+Angle:90 deg</pre>
+    </div>
 
-    <h3>Example Test: 360 Degrees</h3>
+    <h3>When B Is Pressed During Movement</h3>
 
-    <p>
-        Enter 360 and press #.
-        The controller commands
-        approximately one complete
-        output-shaft revolution
-        relative to the software zero.
-    </p>
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">MOTOR STOPPED
+Angle:45</pre>
+    </div>
 
-    <h3>Expected Test Results</h3>
+    <h3>Example Test Table</h3>
 
     <div class="table-wrap">
-
         <table>
-
             <thead>
                 <tr>
                     <th>Keypad Input</th>
-                    <th>Expected Result</th>
+                    <th>Expected Behavior</th>
                 </tr>
             </thead>
-
             <tbody>
-
                 <tr>
                     <td>9, 0, #</td>
-                    <td>Move to approximately 90°</td>
+                    <td>Move toward approximately 90°</td>
                 </tr>
-
                 <tr>
                     <td>1, 8, 0, #</td>
-                    <td>Move to approximately 180°</td>
+                    <td>Move toward approximately 180°</td>
                 </tr>
-
                 <tr>
                     <td>3, 6, 0, #</td>
-                    <td>Move to approximately 360°</td>
+                    <td>Move toward approximately 360°</td>
                 </tr>
-
-                <tr>
-                    <td>C</td>
-                    <td>Display current and target angles</td>
-                </tr>
-
                 <tr>
                     <td>*</td>
-                    <td>Clear entered angle</td>
+                    <td>Clear entered digits</td>
                 </tr>
-
+                <tr>
+                    <td>C</td>
+                    <td>Show current and target values</td>
+                </tr>
                 <tr>
                     <td>B during movement</td>
                     <td>Request motor stop</td>
                 </tr>
-
+                <tr>
+                    <td>A</td>
+                    <td>Set software current position to zero</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>Reset software current and target values</td>
+                </tr>
             </tbody>
-
         </table>
-
     </div>
 
     <div class="note">
+        <strong>Testing Note:</strong>
+        The 4096-step value is approximate.
+        A real 28BYJ-48 motor's gearing
+        and mechanical behavior can differ
+        from the idealized calculation.
+        Verify shaft movement experimentally.
 
-        <strong>Important:</strong>
-
-        The displayed angle is an
-        estimated software position.
-        Actual motor movement may
-        differ slightly because of
-        gearing, loading and lost steps.
-
+        <p>
+            The current sketch does
+            not use Serial Monitor for
+            status messages. Its feedback
+            is provided through the LCD.
+        </p>
     </div>
 
 </section>
 
 <!-- =========================
-     RESULT
+     10. RESULT
 ========================= -->
-
 <section class="section" id="result">
 
     <h2>Result</h2>
@@ -2065,110 +1754,54 @@ footer strong{
     <p>
         The Keypad-Based Stepper Motor
         Angle Controller demonstrates
-        how Arduino UNO can accept
-        an angle entered through a
-        4×4 Matrix Keypad and generate
-        the corresponding stepper
-        motor movement.
+        target-position commands
+        using Arduino UNO, a 4×4 keypad,
+        a ULN2003 motor driver and
+        a 28BYJ-48 stepper motor.
     </p>
 
     <p>
-        The ULN2003 Motor Driver
-        controls the 28BYJ-48 Stepper
-        Motor using an eight-state
-        half-step sequence.
+        The entered target angle is
+        converted into motor steps,
+        and Arduino applies a
+        half-step sequence to
+        rotate toward the target.
     </p>
 
     <p>
-        The LCD displays the selected
-        target and estimated current
-        angular position.
-    </p>
-
-    <p>
-        The experiment illustrates
-        keypad-based control, stepper
-        motor interfacing, angle-to-step
-        conversion and position tracking.
+        The 16×2 I²C LCD displays
+        the requested angle and
+        estimated current position.
+        The keypad also allows
+        stopping motion and resetting
+        software tracking values.
     </p>
 
 </section>
 
 <!-- =========================
-     WHAT YOU LEARN
+     11. WHAT YOU LEARN
 ========================= -->
-
-<section class="section">
+<section class="section" id="learn">
 
     <h2>What You Learn</h2>
 
     <ul>
-
-        <li>
-            Understanding the operation
-            of stepper motors.
-        </li>
-
-        <li>
-            Interfacing a 28BYJ-48
-            Stepper Motor with Arduino.
-        </li>
-
-        <li>
-            Using the ULN2003
-            Motor Driver.
-        </li>
-
-        <li>
-            Interfacing a 4×4
-            Matrix Keypad.
-        </li>
-
-        <li>
-            Reading keypad input
-            using the Keypad library.
-        </li>
-
-        <li>
-            Understanding half-step
-            motor control sequences.
-        </li>
-
-        <li>
-            Converting angles
-            into motor steps.
-        </li>
-
-        <li>
-            Controlling forward
-            and reverse rotation.
-        </li>
-
-        <li>
-            Using conditional statements
-            to process keypad commands.
-        </li>
-
-        <li>
-            Displaying information
-            on a 16×2 I2C LCD.
-        </li>
-
-        <li>
-            Understanding software
-            position tracking.
-        </li>
-
-        <li>
-            Using external motor power
-            and common-ground connections.
-        </li>
-
-        <li>
-            Understanding the limits
-            of open-loop positioning.
-        </li>
-
+        <li>Understanding the operation of a stepper motor.</li>
+        <li>Interfacing a 28BYJ-48 motor with Arduino UNO.</li>
+        <li>Using the ULN2003 motor driver.</li>
+        <li>Connecting a 4×4 matrix keypad.</li>
+        <li>Reading keys using the Keypad library.</li>
+        <li>Configuring Arduino pins A0 and A1 as digital outputs.</li>
+        <li>Understanding eight-state half-step sequences.</li>
+        <li>Converting a target angle into motor steps.</li>
+        <li>Controlling forward and reverse step movement.</li>
+        <li>Tracking target and current software positions.</li>
+        <li>Using conditional statements for keypad controls.</li>
+        <li>Displaying information on a 16×2 I²C LCD.</li>
+        <li>Stopping movement using keypad input.</li>
+        <li>Understanding external motor power requirements.</li>
+        <li>Recognizing the limitations of open-loop positioning.</li>
     </ul>
 
 </section>
@@ -2178,21 +1811,13 @@ footer strong{
 <!-- =========================
      FOOTER
 ========================= -->
-
 <footer>
-
-    <strong>Arduino Experiment</strong>
-
-    <br>
-
-    Keypad-Based Stepper Motor Angle Controller Using Arduino UNO
-
+    <strong>Keypad-Based Stepper Motor Angle Controller</strong>
 </footer>
 
 <!-- =========================================
-     COMPLETE ARDUINO PROGRAM
+     COMPLETE ORIGINAL ARDUINO PROGRAM
 ========================================= -->
-
 <script type="text/plain" id="arduino-program">
 #include <Keypad.h>
 #include <Wire.h>
@@ -2468,15 +2093,13 @@ void showTarget() {
 </script>
 
 <!-- =========================================
-     CODE EXPLORER JAVASCRIPT
+     INTERACTIVE CODE EXPLORER
 ========================================= -->
-
 <script>
 
 /* =========================
    COMPLETE PROGRAM
 ========================= */
-
 const program = document
     .getElementById("arduino-program")
     .textContent
@@ -2485,116 +2108,106 @@ const program = document
 const lines = program.split("\n");
 
 /* =========================
-   CODE STEPS
+   EXPLANATION STEPS
 ========================= */
-
 const steps = [
-
     {
         title: "Load libraries",
-        search: "#include <Keypad.h>",
+        start: "#include <Keypad.h>",
+        end: "#include <LiquidCrystal_I2C.h>",
         text:
-            "The Keypad library reads the 4×4 keypad. " +
-            "Wire.h enables I2C communication, and " +
-            "LiquidCrystal_I2C controls the LCD."
+            "Keypad.h reads the matrix keypad. " +
+            "Wire.h supports I2C communication, " +
+            "and LiquidCrystal_I2C.h provides " +
+            "functions for the LCD."
     },
-
     {
         title: "Configure LCD",
-        search: "LiquidCrystal_I2C lcd",
+        start: "LiquidCrystal_I2C lcd(0x27, 16, 2);",
+        end: "LiquidCrystal_I2C lcd(0x27, 16, 2);",
         text:
-            "The 16×2 LCD is initialized with I2C " +
-            "address 0x27. It displays the target " +
-            "angle and estimated current position."
+            "The LCD is configured with I2C " +
+            "address 0x27, 16 columns and 2 rows."
     },
-
     {
-        title: "Setup keypad",
-        search: "const byte ROWS",
+        title: "Set up keypad",
+        start: "const byte ROWS = 4;",
+        end: "colPins,",
         text:
-            "The keypad has four rows and four " +
-            "columns. Its row pins use D4 to D7, " +
-            "and column pins use D8 to D11."
+            "The program defines the 4x4 keypad " +
+            "layout. Rows are connected to D4-D7 " +
+            "and columns to D8-D11."
     },
-
     {
-        title: "Driver pins",
-        search: "const int IN1",
+        title: "Define driver pins",
+        start: "const int IN1 = 12;",
+        end: "const int IN4 = A1;",
         text:
-            "The ULN2003 driver input pins are " +
-            "connected to D12, D13, A0 and A1. " +
-            "Arduino controls the stepper motor " +
-            "through these four signals."
+            "Four Arduino outputs control the " +
+            "ULN2003 driver: D12, D13, A0 and A1."
     },
-
     {
-        title: "Step sequence",
-        search: "const byte stepSequence",
+        title: "Define step sequence",
+        start: "const byte stepSequence[8][4] = {",
+        end: "{1, 0, 0, 1}",
         text:
-            "The program defines an eight-state " +
-            "half-step sequence. Each state " +
-            "controls which motor coils are " +
-            "energized by the ULN2003 driver."
+            "The program stores an eight-state " +
+            "half-step sequence. Each row defines " +
+            "which motor coil inputs are active."
     },
-
     {
         title: "Initialize system",
-        search: "void setup()",
+        start: "void setup() {",
+        end: "showTarget();",
         text:
-            "The setup function configures all " +
-            "driver pins as outputs, switches " +
-            "the motor coils OFF and initializes " +
-            "the LCD display."
+            "setup() configures the motor pins, " +
+            "disables the coils, initializes the " +
+            "LCD and displays the startup message."
     },
-
     {
         title: "Read keypad",
-        search: "void loop()",
+        start: "void loop() {",
+        end: "if (!key) return;",
         text:
-            "The main loop waits for keypad " +
-            "input and determines which key " +
-            "the user pressed."
+            "The main loop reads one keypad key. " +
+            "If no key is pressed, the function returns."
     },
-
     {
-        title: "Set target",
-        search: "else if (key == '#')",
+        title: "Set target angle",
+        start: "else if (key == '#') {",
+        end: "moveToTarget();",
         text:
-            "Pressing # confirms the entered " +
-            "target angle. If it is 360 degrees " +
-            "or less, the motor movement " +
-            "function is called."
+            "Pressing # converts the entered " +
+            "digits to a target angle. Values " +
+            "above 360 are rejected. Valid " +
+            "targets start the movement function."
     },
-
     {
         title: "Move motor",
-        search: "void moveToTarget()",
+        start: "void moveToTarget() {",
+        end: "delay(2);",
         text:
-            "The target angle is converted " +
-            "into motor steps. The program " +
-            "uses an eight-state half-step " +
-            "sequence to rotate toward " +
-            "the selected position."
+            "moveToTarget() converts the target " +
+            "to steps, checks the B stop key, " +
+            "selects direction and applies the " +
+            "half-step outputs until the target " +
+            "is reached or motion is stopped."
     },
-
     {
-        title: "Update display",
-        search: "void showTarget()",
+        title: "Update LCD",
+        start: "void showTarget() {",
+        end: "lcd.print(\" deg\");",
         text:
-            "The showTarget function clears " +
-            "the LCD and displays the target " +
-            "angle and estimated current " +
-            "motor position."
+            "showTarget() displays the selected " +
+            "target angle and estimated current " +
+            "angle on the two LCD rows."
     }
-
 ];
 
 /* =========================
    ESCAPE HTML
 ========================= */
-
-function escapeHtml(text)
-{
+function escapeHtml(text) {
     return text
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -2602,200 +2215,122 @@ function escapeHtml(text)
 }
 
 /* =========================
-   DISPLAY CODE
+   DISPLAY NUMBERED CODE
 ========================= */
-
-function displayCode()
-{
-    let output = "";
-
-    lines.forEach(function(line, index)
-    {
-        output +=
-            '<span class="code-line" id="line-' +
-            (index + 1) +
-            '">' +
-            '<span class="line-number">' +
-            (index + 1) +
-            '</span>' +
-            '<span>' +
-            escapeHtml(line) +
-            '</span>' +
-            '</span>';
-    });
-
-    document
-        .getElementById("code-lines")
-        .innerHTML = output;
+function displayCode() {
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+                '<span class="line-number">' +
+                (index + 1) + '</span>' +
+                '<span>' + escapeHtml(line) +
+                '</span></span>'
+            );
+        }).join("");
 }
 
 /* =========================
-   SHOW STEP
+   FIND CODE LINE
 ========================= */
+function findLine(searchText, startIndex = 0) {
+    for (let i = startIndex; i < lines.length; i++) {
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+    }
+    return -1;
+}
 
-function showStep(index)
-{
+/* =========================
+   HIGHLIGHT CODE
+========================= */
+function showStep(index) {
     const step = steps[index];
 
-    document
-        .querySelectorAll(".step")
-        .forEach(function(button, i)
-        {
-            button.classList.toggle(
-                "active",
-                i === index
-            );
-        });
+    document.querySelectorAll(".step").forEach(
+        function(button, i) {
+            button.classList.toggle("active", i === index);
+        }
+    );
 
-    document
-        .querySelectorAll(".code-line")
-        .forEach(function(line)
-        {
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
             line.classList.remove("selected");
-        });
+        }
+    );
 
-    // Find the matching code statement.
+    const startLine = findLine(step.start);
+    let endLine = findLine(step.end, Math.max(startLine, 0));
 
-    let foundLine = lines.findIndex(function(line)
-    {
-        return line
-            .trim()
-            .startsWith(step.search.trim());
-    });
-
-    if (foundLine < 0)
-    {
-        foundLine = lines.findIndex(function(line)
-        {
-            return line.includes(step.search);
-        });
+    if (startLine < 0) {
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
+        return;
     }
 
-    if (foundLine >= 0)
-    {
-        let lastLine = foundLine;
-        let depth = 0;
-        let blockStarted = false;
+    if (endLine < 0) {
+        endLine = startLine;
+    }
 
-        for (
-            let i = foundLine;
-            i < lines.length;
-            i++
-        )
-        {
-            const current = lines[i];
+    for (let i = startLine; i <= endLine; i++) {
+        const selected = document.getElementById(
+            "line-" + (i + 1)
+        );
 
-            for (const ch of current)
-            {
-                if (ch === "{")
-                {
-                    depth++;
-                    blockStarted = true;
-                }
-
-                if (ch === "}")
-                {
-                    depth--;
-                }
-            }
-
-            lastLine = i;
-
-            if (blockStarted && depth <= 0)
-            {
-                break;
-            }
-
-            if (
-                !blockStarted &&
-                i > foundLine &&
-                current.trim() === ""
-            )
-            {
-                lastLine = i - 1;
-                break;
-            }
-
-            if (i - foundLine >= 35)
-            {
-                break;
-            }
-        }
-
-        for (
-            let i = foundLine;
-            i <= lastLine;
-            i++
-        )
-        {
-            const selected = document
-                .getElementById(
-                    "line-" + (i + 1)
-                );
-
-            if (selected)
-            {
-                selected.classList.add("selected");
-            }
-        }
-
-        const selectedLine = document
-            .getElementById(
-                "line-" + (foundLine + 1)
-            );
-
-        const codeBody = document
-            .getElementById("code-body");
-
-        if (selectedLine && codeBody)
-        {
-            codeBody.scrollTo({
-                top:
-                    selectedLine.offsetTop -
-                    codeBody.offsetTop -
-                    20,
-                behavior: "smooth"
-            });
+        if (selected) {
+            selected.classList.add("selected");
         }
     }
 
-    document
-        .getElementById("explanation")
-        .innerHTML =
-        "<h3>" +
-        (index + 1) +
-        ". " +
-        step.title +
-        "</h3>" +
-        "<p>" +
-        step.text +
-        "</p>";
+    const selectedLine = document.getElementById(
+        "line-" + (startLine + 1)
+    );
+
+    const codeBody = document.getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document.getElementById("explanation");
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+    heading.textContent = (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
 }
 
 /* =========================
-   COPY CODE
+   COPY COMPLETE ARDUINO CODE
 ========================= */
+async function copyCode() {
+    const button = document.querySelector(
+        ".code-top .copy-button"
+    );
 
-function copyCode()
-{
-    const button = document
-        .querySelector(".copy-button");
+    function showSuccess() {
+        button.textContent = "Copied!";
 
-    function showSuccess()
-    {
-        button.innerText = "Copied!";
-
-        setTimeout(function()
-        {
-            button.innerText = "Copy Code";
+        setTimeout(function() {
+            button.textContent = "Copy Code";
         }, 1500);
     }
 
-    function fallbackCopy()
-    {
-        const textarea = document
-            .createElement("textarea");
-
+    function fallbackCopy() {
+        const textarea = document.createElement("textarea");
         textarea.value = program;
         textarea.style.position = "fixed";
         textarea.style.opacity = "0";
@@ -2803,58 +2338,49 @@ function copyCode()
         document.body.appendChild(textarea);
         textarea.select();
 
-        const copied = document.execCommand("copy");
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
 
         textarea.remove();
 
-        if (copied)
-        {
+        if (copied) {
             showSuccess();
-        }
-        else
-        {
-            button.innerText = "Copy failed";
+        } else {
+            button.textContent = "Copy failed";
         }
     }
 
-    if (
-        navigator.clipboard &&
-        window.isSecureContext
-    )
-    {
-        navigator.clipboard
-            .writeText(program)
-            .then(showSuccess)
-            .catch(fallbackCopy);
-    }
-    else
-    {
+    if (navigator.clipboard && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+    } else {
         fallbackCopy();
     }
 }
 
 /* =========================
-   CHECK YOUR UNDERSTANDING
+   QUIZ ANSWERS
 ========================= */
-
-function toggleAnswers()
-{
-    const answers = document
-        .getElementById("quiz-answers");
-
+function toggleAnswers() {
+    const answers = document.getElementById("quiz-answers");
     answers.hidden = !answers.hidden;
 }
 
 /* =========================
-   START
+   INITIALIZE CODE VIEWER
 ========================= */
-
 displayCode();
-
 showStep(0);
 
 </script>
-
 </body>
-
 </html>
