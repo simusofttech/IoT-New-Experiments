@@ -1,53 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Force Sensor Controlled Servo Motor</title>
 
-
 <style>
-
-/* =========================
+/* =====================================
    BASIC PAGE STYLE
-========================= */
-
-*{
-    box-sizing:border-box;
+===================================== */
+* {
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-
-    margin:0;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:#f4f7fb;
-
-    color:#222;
-
-    line-height:1.7;
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
 }
 
-
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -58,8 +39,6 @@ body{
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -73,8 +52,6 @@ body{
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -92,8 +69,6 @@ body{
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -101,26 +76,15 @@ body{
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -136,15 +100,13 @@ body{
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -162,18 +124,467 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
-@media (max-width: 900px) {
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 22px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    padding: 14px;
+}
+
+.state-card strong {
+    display: block;
+    color: #1e3a8a;
+    margin-bottom: 5px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    color: #1e3a8a;
+    margin: 0 0 7px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
-@media (max-width: 600px) {
+    .code-body {
+        height: 450px;
+    }
+}
 
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -219,879 +630,32 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
+    .section {
+        padding: 21px 18px;
     }
 
-    .project-thumbnail img {
-        max-height: 280px;
-    }
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-nav{
-
-    display:flex;
-
-    justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:18px;
-
-    padding:13px 15px;
-
-    background:white;
-
-    border-bottom:1px solid #ddd;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:20;
-}
-
-
-nav a{
-
-    text-decoration:none;
-
-    color:#1e3a8a;
-
-    font-size:14px;
-
-    font-weight:bold;
-}
-
-
-nav a:hover{
-
-    color:#2563eb;
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-
-    width:90%;
-
-    max-width:1050px;
-
-    margin:35px auto;
-}
-
-
-.section{
-
-    background:white;
-
-    margin-bottom:24px;
-
-    padding:28px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    box-shadow:
-    0 4px 12px
-    rgba(0,0,0,.06);
-}
-
-
-.section h2{
-
-    margin-top:0;
-
-    margin-bottom:18px;
-
-    color:#1e3a8a;
-
-    font-size:25px;
-
-    border-bottom:
-    2px solid #dbeafe;
-
-    padding-bottom:8px;
-}
-
-
-.section h3{
-
-    color:#1e3a8a;
-}
-
-
-ul,
-ol{
-
-    padding-left:24px;
-}
-
-
-li{
-
-    margin-bottom:8px;
-}
-
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px,1fr)
-    );
-
-    gap:20px;
-}
-
-
-.component-card{
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    padding:20px;
-
-    text-align:center;
-
-    background:white;
-
-    box-shadow:
-    0 2px 8px
-    rgba(0,0,0,.04);
-}
-
-
-.component-card img{
-
-    width:100%;
-
-    height:120px;
-
-    object-fit:contain;
-
-    margin-bottom:15px;
-}
-
-
-.component-card h4{
-
-    color:#1e3a8a;
-
-    margin:0 0 8px;
-
-    font-size:18px;
-}
-
-
-.component-card p{
-
-    color:#475569;
-
-    font-size:14px;
-
-    margin:0;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-
-    overflow-x:auto;
-}
-
-
-table{
-
-    width:100%;
-
-    min-width:620px;
-
-    border-collapse:collapse;
-}
-
-
-th,
-td{
-
-    padding:12px;
-
-    border:1px solid #ddd;
-
-    text-align:left;
-}
-
-
-th{
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-tr:nth-child(even){
-
-    background:#f8fafc;
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-.note{
-
-    margin-top:15px;
-
-    padding:14px;
-
-    background:#eff6ff;
-
-    border-left:
-    5px solid #2563eb;
-
-    border-radius:6px;
-}
-
-
-/* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
-}
-
-
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-
-    text-align:center;
-
-    color:#1e3a8a;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    line-height:2;
-}
-
-
-/* =========================
-   SENSOR CARDS
-========================= */
-
-.sensor-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(3,1fr);
-
-    gap:16px;
-}
-
-
-.sensor-box{
-
-    text-align:center;
-
-    padding:20px;
-
-    border-radius:12px;
-
-    border:1px solid #bfdbfe;
-
-    background:#f8fbff;
-}
-
-
-.sensor-box h3{
-
-    margin-top:0;
-
-    color:#1e3a8a;
-}
-
-
-.sensor-value{
-
-    font-size:26px;
-
-    color:#2563eb;
-
-    font-weight:bold;
-}
-
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-
-    color:#142e3a;
-}
-
-
-.eyebrow{
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    letter-spacing:.08em;
-
-    text-transform:uppercase;
-
-    margin:0 0 4px;
-}
-
-
-.lesson-title{
-
-    font-size:32px !important;
-
-    margin:0 0 8px !important;
-
-    color:#1e3a8a !important;
-
-    border:0 !important;
-
-    padding:0 !important;
-}
-
-
-.intro{
-
-    color:#526875;
-
-    margin:0 0 22px;
-}
-
-
-/* CODE + EXPLANATION */
-
-.code-layout{
-
-    display:grid;
-
-    grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-
-    gap:20px;
-
-    align-items:start;
-}
-
-
-/* =========================
-   CODE PANEL
-========================= */
-
-.code-panel{
-
-    background:white;
-
-    border:1px solid #bfdbfe;
-
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 4px 14px
-    rgba(37,99,235,.10);
-}
-
-
-.code-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    padding:15px 20px;
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-.filename{
-
-    color:white;
-
-    font:
-    bold 14px/1.4
-    Consolas,
-    Monaco,
-    monospace;
-}
-
-
-.copy-button{
-
-    border:1px solid white;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:8px;
-
-    padding:8px 14px;
-
-    min-height:40px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-
-.copy-button:hover{
-
-    background:#eff6ff;
-}
-
-
-.code-body{
-
-    height:600px;
-
-    overflow:auto;
-
-    background:white;
-
-    padding:16px 0;
-}
-
-
-.code-line{
-
-    display:flex;
-
-    min-width:max-content;
-
-    min-height:24px;
-
-    padding-right:22px;
-
-    white-space:pre;
-
-    font:
-    13px/24px
-    Consolas,
-    Monaco,
-    monospace;
-
-    color:#1e293b;
-
-    border-bottom:
-    1px solid #f1f5f9;
-}
-
-
-.code-line:hover{
-
-    background:#f8fbff;
-}
-
-
-.code-line.selected{
-
-    background:#dbeafe;
-
-    box-shadow:
-    inset 4px 0 #2563eb;
-}
-
-
-.line-number{
-
-    user-select:none;
-
-    min-width:52px;
-
-    text-align:right;
-
-    padding-right:15px;
-
-    color:#64748b;
-}
-
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-
-    background:white;
-
-    border:1px solid #dce6e9;
-
-    border-radius:14px;
-
-    padding:22px;
-}
-
-
-.guide h2{
-
-    border:0;
-
-    padding:0;
-
-    margin:0 0 8px;
-
-    font-size:21px;
-}
-
-
-.guide > p{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.steps{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-    gap:8px;
-
-    margin:16px 0;
-}
-
-
-.step{
-
-    border:1px solid #dce6e9;
-
-    border-radius:9px;
-
-    padding:10px;
-
-    min-height:65px;
-
-    background:white;
-
-    text-align:left;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
-}
-
-
-.step:hover{
-
-    border-color:#60a5fa;
-
-    background:#f8fbff;
-}
-
-
-.step.active{
-
-    background:#eff6ff;
-
-    border-color:#60a5fa;
-
-    color:#1e3a8a;
-}
-
-
-.step-number{
-
-    color:#2563eb;
-
-    font-size:12px;
-
-    flex-shrink:0;
-}
-
-
-.explanation{
-
-    background:#eff6ff;
-
-    border-radius:9px;
-
-    padding:16px;
-
-    min-height:130px;
-}
-
-
-.explanation h3{
-
-    font-size:17px;
-
-    margin:0 0 7px;
-
-    color:#1e3a8a;
-}
-
-
-.explanation p{
-
-    margin:0;
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide details{
-
-    border-top:
-    1px solid #dce6e9;
-
-    margin-top:15px;
-}
-
-
-.guide summary{
-
-    cursor:pointer;
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    padding:13px 0;
-}
-
-
-.guide details p,
-.guide details li{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide code{
-
-    background:#e5ecf4;
-
-    padding:2px 4px;
-
-    border-radius:4px;
-}
-
-
-.tip{
-
-    background:#eff6ff;
-
-    color:#234e87;
-
-    padding:14px 17px;
-
-    border-radius:9px;
-
-    margin-top:20px;
-
-    font-size:14px;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-
-    text-align:center;
-
-    padding:25px 20px;
-
-    background:#0f172a;
-
-    color:#cbd5e1;
-
-    font-size:14px;
-}
-
-
-footer strong{
-
-    color:white;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:850px){
-
-    .code-layout{
-
-        grid-template-columns:1fr;
+    .steps {
+        grid-template-columns: 1fr;
     }
 
-    .code-body{
-
-        height:450px;
+    nav {
+        gap: 11px;
     }
-
-    .sensor-grid{
-
-        grid-template-columns:1fr;
-    }
-
 }
-
-
-@media(max-width:600px){
-
-    .header{
-
-        padding:35px 15px;
-    }
-
-    .header h1{
-
-        font-size:28px;
-    }
-
-    .container{
-
-        width:92%;
-    }
-
-    .section{
-
-        padding:21px 18px;
-    }
-
-    .steps{
-
-        grid-template-columns:1fr;
-    }
-
-}
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================
+<!-- =====================================
      HEADER
-========================= -->
-
-
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -1099,43 +663,28 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
-        <h1>Force Sensor Controlled Servo Motor</h1><p>Arduino Experiments</p>
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Force Sensor Controlled Servo Motor</p>
     </div>
-
-    <!-- BOTTOM BUTTON BAR -->
 
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
 
-            <!-- BACK BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <!-- HOME ICON ONLY -->
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -1144,34 +693,20 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <!-- ARDUINO BUTTON -->
-
-            <a
-                href="../../Arduino Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <!-- ESP BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <!-- RASPBERRY PI BUTTON -->
-
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
@@ -1181,426 +716,1257 @@ footer strong{
 
 </header>
 
-
-
-<!-- =========================
+<!-- =====================================
      NAVIGATION
-========================= -->
-
+===================================== -->
 <nav>
-
-    <a href="../index.html">
-        ← Arduino Experiments
-    </a>
-
-    <a href="#aim">
-        Aim
-    </a>
-
-    <a href="#components">
-        Components
-    </a>
-
-    <a href="#connections">
-        Connections
-    </a>
-
-    <a href="#circuit">
-        Circuit
-    </a>
-
-    <a href="#working">
-        Working
-    </a>
-
-    <a href="#procedure">
-        Procedure
-    </a>
-
-    <a href="#code">
-        Code
-    </a>
-
-    <a href="#result">
-        Result
-    </a>
-
+    <a href="../index.html">&#8592; Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#result">Result</a>
 </nav>
 
+<main class="container">
+
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Force Sensor Controlled Servo Motor.png"
+        alt="Force Sensor Controlled Servo Motor Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To control a servo motor
+        based on the force applied
+        to an FSR402 Force Sensitive
+        Resistor using Arduino UNO.
+    </p>
+
+    <p>
+        When the sensor reading
+        exceeds the programmed
+        threshold of 100,
+        the servo rotates to 90°.
+        Otherwise, it stays
+        at 0°.
+    </p>
+
+</section>
+
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Force Sensor Controlled
+        Servo Motor experiment
+        demonstrates how a
+        force-sensitive resistor
+        can control the position
+        of a servo motor.
+    </p>
+
+    <p>
+        The FSR402 changes
+        its resistance according
+        to the force applied
+        to its sensing surface.
+    </p>
+
+    <p>
+        The FSR402 and a
+        10 kΩ resistor form
+        a voltage-divider circuit.
+    </p>
+
+    <p>
+        Arduino reads the
+        changing divider voltage
+        through analog pin A0.
+    </p>
+
+    <p>
+        The analogRead() function
+        converts the input into
+        a digital value between
+        0 and 1023.
+    </p>
+
+    <p>
+        This value is compared
+        with the programmed
+        threshold of 100.
+    </p>
+
+    <p>
+        When the sensor reading
+        becomes greater than
+        100, the servo
+        moves to 90°.
+    </p>
 
+    <p>
+        When the sensor reading
+        is 100 or lower,
+        the servo moves
+        back to 0°.
+    </p>
 
-<main class="container"><section class="section project-thumbnail"><div class="note">Experiment thumbnail will be added here.</div></section><section class="section" id="aim"><h2>Aim</h2><p>Control a servo motor using the pressure measured by a force-sensitive resistor.</p></section><section class="section"><h2>About the Experiment</h2><p>Control a servo motor using the pressure measured by a force-sensitive resistor. The Arduino UNO processes the inputs and controls the connected outputs according to the supplied program.</p></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO"><p>Arduino UNO</p></div><div class="component-card"><img src="FSR402 Force Sensor.png" alt="FSR402 Force Sensor"><p>FSR402 Force Sensor</p></div><div class="component-card"><img src="Servo motor.png" alt="Servo motor"><p>Servo motor</p></div><div class="component-card"><img src="10K Ohm Resistor.png" alt="10K Ohm Resistor"><p>10K Ohm Resistor</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard"><p>Breadboard</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><p>Jumper Wires</p></div></div></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Arduino UNO Connection</th></tr></thead><tbody><tr><td>FSR terminal 1</td><td>5V</td></tr><tr><td>FSR terminal 2 / resistor junction</td><td>A0</td></tr><tr><td>10kΩ resistor other terminal</td><td>GND</td></tr><tr><td>Servo signal</td><td>D9</td></tr><tr><td>Servo VCC/GND</td><td>5V/GND</td></tr></tbody></table></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><div class="note">Circuit diagram image will be uploaded later.</div></section><section
-class="section"
-id="code">
+    <p>
+        The sensor value and
+        corresponding servo
+        movement are displayed
+        in Serial Monitor
+        at 9600 baud.
+    </p>
 
-<div class="code-lesson">
+    <div class="note">
 
+        <strong>Important:</strong>
 
-<p class="eyebrow">
+        The threshold value
+        of 100 is a raw
+        ADC reading, not
+        a calibrated force
+        measurement in newtons.
 
-Arduino Experiment · Code Review
+        The experiment uses
+        two fixed servo positions.
+        It does not provide
+        proportional movement
+        between 0° and 90°.
 
-</p>
+    </div>
 
+</section>
 
-<h2 class="lesson-title">
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
+<section class="section" id="components">
 
-Explore the Code
+    <h2>Components Required</h2>
 
-</h2>
+    <div class="components-grid">
 
+        <div class="component-card">
 
-<p class="intro">
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3"
+            >
 
-Force Sensor Controlled Servo Motor ·
-Select a step to understand what
-each part of the program does.
+            <h4>Arduino UNO R3 (×1)</h4>
 
-</p>
+            <p>
+                Main controller
+                for reading the
+                sensor and operating
+                the servo.
+            </p>
 
+        </div>
 
-<div class="code-layout">
+        <div class="component-card">
 
+            <img
+                src="FSR402 Force Sensor.png"
+                alt="FSR402 Force Sensor"
+            >
 
-<!-- CODE PANEL -->
+            <h4>FSR402 Force Sensor (×1)</h4>
 
-<article class="code-panel">
+            <p>
+                Detects changes
+                in applied force
+                through its
+                resistance variation.
+            </p>
 
+        </div>
 
-<div class="code-top">
+        <div class="component-card">
 
-<span class="filename">
+            <img
+                src="Servo motor.png"
+                alt="Servo Motor"
+            >
 
-ESP32_Dual_Sensor_Data_Logger.ino
+            <h4>Servo Motor (×1)</h4>
 
-</span>
+            <p>
+                Rotates between
+                0° and 90°
+                based on the
+                sensor reading.
+            </p>
 
+        </div>
 
-<button
-class="copy-button"
-onclick="copyCode()">
+        <div class="component-card">
 
-Copy Code
+            <img
+                src="10K Ohm Resistor.png"
+                alt="10K Ohm Resistor"
+            >
 
-</button>
+            <h4>10 kΩ Resistor (×1)</h4>
 
-</div>
+            <p>
+                Forms a voltage-divider
+                circuit with the
+                force sensor.
+            </p>
 
+        </div>
 
-<div
-class="code-body"
-id="code-body">
+        <div class="component-card">
 
-<code id="code-lines"></code>
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
 
-</div>
+            <h4>Breadboard (×1)</h4>
 
+            <p>
+                Used for assembling
+                the experiment
+                circuit.
+            </p>
 
-</article>
+        </div>
 
+        <div class="component-card">
 
-<!-- GUIDE -->
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
 
-<article class="guide">
+            <h4>Jumper Wires</h4>
 
+            <p>
+                Used for connections
+                between Arduino,
+                the FSR402,
+                resistor and servo.
+            </p>
 
-<h2>
+        </div>
+
+    </div>
 
-Understand it step by step
+    <div class="note">
 
-</h2>
+        <strong>Arduino Library:</strong>
+        Servo.h
 
+        <p>
+            The Servo library
+            is used to control
+            the servo motor
+            position.
+        </p>
 
-<p>
+    </div>
+
+</section>
 
-Choose a step.
-The matching section of code
-will light up on the left.
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
 
-</p>
+    <h2>Circuit Connections</h2>
+
+    <h3>FSR402 and Resistor Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Terminal</th>
+                    <th>Arduino Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>FSR402</td>
+                    <td>Terminal 1</td>
+                    <td>5V</td>
+                </tr>
+
+                <tr>
+                    <td>FSR402</td>
+                    <td>Terminal 2</td>
+                    <td>A0 sensing junction</td>
+                </tr>
+
+                <tr>
+                    <td>10 kΩ Resistor</td>
+                    <td>Terminal 1</td>
+                    <td>Same A0 sensing junction</td>
+                </tr>
+
+                <tr>
+                    <td>10 kΩ Resistor</td>
+                    <td>Terminal 2</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Servo Motor Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Servo Terminal</th>
+                    <th>Connection</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Signal</td>
+                    <td>Arduino D9</td>
+                    <td>Servo position control</td>
+                </tr>
 
+                <tr>
+                    <td>VCC</td>
+                    <td>Suitable regulated 5V supply</td>
+                    <td>Servo power</td>
+                </tr>
 
-<div class="steps">
+                <tr>
+                    <td>GND</td>
+                    <td>Common GND with Arduino</td>
+                    <td>Ground reference</td>
+                </tr>
+            </tbody>
+        </table>
 
+    </div>
 
-<button
-class="step active"
-onclick="showStep(0)">
+    <div class="note">
 
-<span class="step-number">
-01
-</span>
+        <strong>Pin Summary:</strong>
 
-Load libraries
+        <ul>
+            <li>FSR402 Terminal 1 → 5V</li>
+            <li>FSR402 Terminal 2 → A0</li>
+            <li>10 kΩ Resistor → A0 to GND</li>
+            <li>Servo Signal → D9</li>
+            <li>Servo VCC → Suitable 5V supply</li>
+            <li>Servo GND → Common GND</li>
+        </ul>
 
-</button>
+        <p>
+            <strong>Voltage Divider:</strong>
+            5V → FSR402 → A0 Junction
+            → 10 kΩ Resistor → GND.
+        </p>
 
+        <p>
+            The source circuit uses
+            Arduino 5V for the servo.
+            Verify the servo's rated
+            operating current first.
+            A suitable external regulated
+            5V servo supply may be
+            necessary, with grounds
+            connected together.
+        </p>
 
-<button
-class="step"
-onclick="showStep(1)">
+    </div>
 
-<span class="step-number">
-02
-</span>
+</section>
 
-Define pins
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
 
-</button>
+    <h2>Circuit Diagram</h2>
 
+    <img
+        src="Force Sensor Controlled Servo Motor Circuit.png"
+        alt="Force Sensor Controlled Servo Motor Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
 
-<button
-class="step"
-onclick="showStep(2)">
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden
+    >
+        Approved circuit diagram PNG pending.
+        Add the verified circuit image
+        using the filename above.
+    </div>
 
-<span class="step-number">
-03
-</span>
+</section>
 
-Prepare OLED
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
+<section class="section" id="working">
 
-</button>
+    <h2>Working Principle</h2>
 
+    <div class="flow">
 
-<button
-class="step"
-onclick="showStep(3)">
+        Arduino UNO Starts
 
-<span class="step-number">
-04
-</span>
+        <br>↓<br>
 
-Create sensors
+        Initialize Servo at 0°
 
-</button>
+        <br>↓<br>
 
+        Apply Force to FSR402
 
-<button
-class="step"
-onclick="showStep(4)">
+        <br>↓<br>
 
-<span class="step-number">
-05
-</span>
+        Sensor Resistance Changes
 
-Set timing
+        <br>↓<br>
 
-</button>
+        Voltage at A0 Changes
 
+        <br>↓<br>
 
-<button
-class="step"
-onclick="showStep(5)">
+        Arduino Reads Analog Input A0
 
-<span class="step-number">
-06
-</span>
+        <br>↓<br>
 
-Start sensors
+        Compare Reading with Threshold 100
 
-</button>
+        <br>↓<br>
 
+        Reading Above 100 → Servo to 90°
 
-<button
-class="step"
-onclick="showStep(6)">
+        <br>↓<br>
 
-<span class="step-number">
-07
-</span>
+        Reading 100 or Below → Servo to 0°
 
-Read DHT22
+        <br>↓<br>
 
-</button>
+        Print Status to Serial Monitor
 
+        <br>↓<br>
 
-<button
-class="step"
-onclick="showStep(7)">
+        Repeat Every 100 ms
 
-<span class="step-number">
-08
-</span>
+    </div>
 
-Read BMP180
+    <h3>Force Sensor Operation</h3>
 
-</button>
+    <p>
+        The FSR402 changes
+        resistance when force
+        is applied to its surface.
+    </p>
 
+    <p>
+        Its resistance change
+        affects the voltage
+        across the 10 kΩ
+        resistor in the
+        voltage-divider circuit.
+    </p>
 
-<button
-class="step"
-onclick="showStep(8)">
+    <h3>Analog Input Reading</h3>
 
-<span class="step-number">
-09
-</span>
+    <p>
+        Arduino measures the
+        analog voltage through
+        A0 using analogRead().
+    </p>
 
-Serial data
+    <p>
+        The reading ranges
+        from 0 to 1023.
+    </p>
 
-</button>
+    <h3>Threshold Comparison</h3>
 
+    <p>
+        The program compares
+        the sensor value with
+        a threshold of 100.
+    </p>
 
-<button
-class="step"
-onclick="showStep(9)">
+    <div class="note">
 
-<span class="step-number">
-10
-</span>
+        <strong>Program Condition:</strong>
 
-Update OLED
+        <p>
+            if (forceValue > threshold)
+        </p>
 
-</button>
+        <p>
+            A reading greater
+            than 100 commands
+            the servo to 90°.
+        </p>
 
+        <p>
+            A reading of 100
+            or lower commands
+            the servo to 0°.
+        </p>
 
-</div>
+    </div>
 
+    <h3>Servo Movement</h3>
 
-<div
-class="explanation"
-id="explanation">
+    <p>
+        The Servo library
+        generates the required
+        position-control signal
+        on Arduino D9.
+    </p>
 
-<h3>
-1. Load libraries
-</h3>
+    <p>
+        The myServo.write()
+        function sets the
+        programmed servo angle.
+    </p>
 
-<p>
+    <div class="state-grid">
 
-The program loads libraries for
-I²C communication, DHT22,
-BMP180 and SSD1306 OLED control.
+        <div class="state-card">
+            <strong>No Force / Low Reading</strong>
+            Servo at 0°
+        </div>
 
-</p>
+        <div class="state-card">
+            <strong>ADC Reading Above 100</strong>
+            Servo at 90°
+        </div>
 
-</div>
+        <div class="state-card">
+            <strong>Reading Drops to 100 or Below</strong>
+            Servo Returns to 0°
+        </div>
 
+    </div>
 
-<details>
+    <div class="note">
 
-<summary>
-Explore more: shared I²C pins
-</summary>
+        <strong>Important:</strong>
 
-<p>
+        The servo does not move
+        proportionally with increasing
+        force in this experiment.
 
-The BMP180 and OLED both use
-GPIO 21 for SDA and GPIO 22 for SCL.
+        It switches between two
+        fixed positions according
+        to the threshold.
+    </div>
 
-</p>
+</section>
 
-<p>
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
+<section class="section" id="procedure">
 
-I²C allows multiple compatible devices
-to share the same SDA and SCL wires.
+    <h2>Procedure</h2>
 
-</p>
+    <ol>
 
-</details>
+        <li>
+            Place Arduino UNO,
+            the FSR402, resistor,
+            servo and breadboard
+            on a stable surface.
+        </li>
 
+        <li>
+            Identify the two
+            FSR402 terminals.
+        </li>
 
-<details>
+        <li>
+            Connect the first
+            FSR402 terminal to
+            Arduino 5V.
+        </li>
 
-<summary>
-Check your understanding
-</summary>
+        <li>
+            Connect the second
+            FSR402 terminal
+            to the A0 junction.
+        </li>
 
+        <li>
+            Connect one end of
+            the 10 kΩ resistor
+            to the same A0 junction.
+        </li>
 
-<ul>
+        <li>
+            Connect the other end
+            of the resistor
+            to Arduino GND.
+        </li>
 
-<li>
+        <li>
+            Connect the servo
+            signal wire to
+            digital pin D9.
+        </li>
 
-Which GPIO reads the DHT22?
+        <li>
+            Connect servo VCC
+            to a suitable
+            regulated 5V supply.
+        </li>
 
-<strong>
-GPIO 4
-</strong>
+        <li>
+            Connect servo GND
+            to the common ground.
+        </li>
 
-</li>
+        <li>
+            Verify the circuit
+            connections and
+            servo power requirements.
+        </li>
 
+        <li>
+            Open Arduino IDE.
+        </li>
 
-<li>
+        <li>
+            Ensure the Servo
+            library is available.
+        </li>
 
-Which pins are used for I²C?
+        <li>
+            Create a sketch named
+            Force_Sensor_Controlled_Servo_Motor.ino.
+        </li>
 
-<strong>
-GPIO 21 and GPIO 22
-</strong>
+        <li>
+            Copy the complete
+            Arduino program from
+            Explore the Code.
+        </li>
 
-</li>
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
 
+        <li>
+            Verify and upload
+            the program.
+        </li>
 
-<li>
+        <li>
+            Open Serial Monitor
+            at 9600 baud.
+        </li>
 
-Which sensor measures humidity?
+        <li>
+            Observe the initial
+            servo position of 0°.
+        </li>
 
-<strong>
-DHT22
-</strong>
+        <li>
+            Apply gentle pressure
+            to the FSR402.
+        </li>
 
-</li>
+        <li>
+            Observe when the
+            sensor reading exceeds
+            the threshold of 100.
+        </li>
 
-
-<li>
-
-Which sensor measures atmospheric pressure?
-
-<strong>
-BMP180
-</strong>
-
-</li>
-
-
-<li>
-
-How often are new readings taken?
-
-<strong>
-Every 2 seconds
-</strong>
-
-</li>
-
-</ul>
-
-
-</details>
-
-
-</article>
-
-
-</div>
-
-
-<p class="tip">
-
-<strong>
-Try it:
-</strong>
-
-Upload the program,
-open Serial Monitor at
-115200 baud and observe
-how temperature, humidity
-and pressure values change.
-
-</p>
-
-
-</div>
-
-</section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">The FSR detects the force applied to its surface.<br>The sensor circuit converts the force into a changing analog voltage.<br>Arduino reads the voltage through analog pin A0.<br>If the sensor reading exceeds 100, the servo rotates to 90°.<br>When the force is removed and the reading falls below the threshold, the servo returns<br>            to 0°.</div></section><section class="section" id="procedure"><h2>Procedure</h2><p>Connect the FSR to A0 using the 10kΩ resistor as shown in the connection table.<br>Connect the servo signal wire to D9 and its power wires correctly.<br>Connect Arduino UNO R3 to the computer using a computer connection.<br>Open Arduino IDE and install the Servo library if it is not already available.<br>Enter the program and select Arduino UNO R3 and the correct COM port.<br>Upload the program.<br>Open the Serial Monitor and set the baud rate to 9600.<br>Apply pressure to the FSR and observe the servo movement.<br>Release the pressure and confirm that the servo returns to 0°.</p></section><section class="section"><h2>Expected Output</h2><p>Sensor Condition                  Servo Motor Position<br><br> No force applied                  0°<br><br> Force applied above               90°<br> threshold<br><br> Force released                    Returns to 0°</p></section><section class="section" id="result"><h2>Result</h2><p>After wiring and uploading the program, the Force Sensor Controlled Servo Motor experiment demonstrates the intended input and output behaviour.</p></section><section class="section"><h2>What You Learn</h2><ul><li>Arduino UNO pin configuration</li><li>Sensor or keypad input</li><li>Conditional logic and output control</li><li>Reading and understanding the complete Arduino program</li></ul></section></main>
-
-
-<footer><strong>Arduino Experiment</strong><br>Force Sensor Controlled Servo Motor</footer>
-
+        <li>
+            Confirm the servo
+            moves to 90°.
+        </li>
+
+        <li>
+            Release the pressure.
+        </li>
+
+        <li>
+            Confirm that the
+            servo returns to 0°
+            when the reading
+            becomes 100 or lower.
+        </li>
+
+        <li>
+            Repeat with different
+            gentle pressure levels.
+        </li>
+
+    </ol>
+
+</section>
+
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Force Sensor Controlled Servo Motor ·
+        Select a step to highlight
+        and understand the complete
+        Arduino program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Force_Sensor_Controlled_Servo_Motor.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Select a step to highlight
+                and scroll to the
+                matching code lines.
+            </p>
+
+            <div class="steps">
+
+                <button class="step active"
+                        type="button"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Load Servo library
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Define sensor pin
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Define servo pin
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Create servo object
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Set force threshold
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Initialize Serial and servo
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Read FSR402 value
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Compare threshold
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Control servo positions
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Set update interval
+                </button>
+
+            </div>
+
+            <div
+                id="explanation"
+                class="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore more: FSR402 Voltage Divider
+                </summary>
+
+                <p>
+                    The FSR402 changes
+                    resistance with
+                    applied force.
+                </p>
+
+                <p>
+                    A 10 kΩ resistor
+                    is used to form
+                    a voltage divider.
+                </p>
+
+                <p>
+                    Arduino measures
+                    the voltage at
+                    the junction
+                    using A0.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: Servo Motor
+                </summary>
+
+                <p>
+                    A servo motor
+                    moves to a target
+                    position using
+                    a control signal.
+                </p>
+
+                <p>
+                    The Servo library
+                    provides attach()
+                    and write()
+                    functions.
+                </p>
+
+                <p>
+                    In this experiment,
+                    the servo is
+                    commanded to 0°
+                    or 90°.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: Threshold-Based Control
+                </summary>
+
+                <p>
+                    The program does
+                    not calculate a
+                    continuously changing
+                    servo angle.
+                </p>
+
+                <p>
+                    Instead, it compares
+                    the ADC reading
+                    with the threshold.
+                </p>
+
+                <p>
+                    When the value
+                    is greater than
+                    100, the servo
+                    moves to 90°.
+                </p>
+
+                <p>
+                    Otherwise, the servo
+                    moves to 0°.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>
+                        Which Arduino pin
+                        reads the force sensor?
+                    </li>
+
+                    <li>
+                        Which Arduino pin
+                        controls the servo?
+                    </li>
+
+                    <li>
+                        What is the
+                        programmed threshold?
+                    </li>
+
+                    <li>
+                        Which function
+                        reads the sensor?
+                    </li>
+
+                    <li>
+                        What happens when
+                        the reading exceeds 100?
+                    </li>
+
+                    <li>
+                        What happens when
+                        the reading is 100?
+                    </li>
+
+                    <li>
+                        What is the
+                        Serial Monitor baud rate?
+                    </li>
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>A0</li>
+                        <li>D9</li>
+                        <li>100</li>
+                        <li>analogRead()</li>
+                        <li>Servo moves to 90°</li>
+                        <li>Servo moves to 0°</li>
+                        <li>9600 baud</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try it:</strong>
+        Apply pressure to the FSR402
+        and observe the force reading
+        in Serial Monitor.
+        Compare the reading with
+        the threshold of 100
+        and observe the servo position.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        On startup, the
+        servo is commanded
+        to its initial
+        position of 0°.
+    </p>
+
+    <p>
+        Arduino continuously
+        reads the FSR402
+        through analog pin A0.
+    </p>
+
+    <p>
+        If the sensor reading
+        exceeds 100, the
+        servo moves to 90°.
+    </p>
+
+    <p>
+        When the reading becomes
+        100 or lower,
+        the servo returns
+        to 0°.
+    </p>
+
+    <h3>Sensor Reading and Servo Position</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Sensor Reading</th>
+                    <th>Condition</th>
+                    <th>Servo Position</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>No / Low Force</td>
+                    <td>0°</td>
+                </tr>
+
+                <tr>
+                    <td>50</td>
+                    <td>Below Threshold</td>
+                    <td>0°</td>
+                </tr>
+
+                <tr>
+                    <td>100</td>
+                    <td>Equal to Threshold</td>
+                    <td>0°</td>
+                </tr>
+
+                <tr>
+                    <td>101</td>
+                    <td>Above Threshold</td>
+                    <td>90°</td>
+                </tr>
+
+                <tr>
+                    <td>500</td>
+                    <td>Above Threshold</td>
+                    <td>90°</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Example Serial Monitor Output</h3>
+
+    <div class="note">
+
+        <pre style="
+            margin:0;
+            background:transparent;
+            color:#1e3a8a;
+            white-space:pre-wrap;
+        ">Force Sensor Servo Control
+Force Sensor Value: 30
+No Force - Servo at 0 degrees
+Force Sensor Value: 80
+No Force - Servo at 0 degrees
+Force Sensor Value: 150
+Force Applied - Servo at 90 degrees
+Force Sensor Value: 450
+Force Applied - Servo at 90 degrees
+Force Sensor Value: 60
+No Force - Servo at 0 degrees</pre>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Note:</strong>
+
+        The ADC readings above
+        are illustrative examples.
+
+        Actual sensor values
+        depend on the applied
+        force and characteristics
+        of the FSR402.
+
+        The program repeats
+        the status message
+        approximately every
+        100 milliseconds, even
+        when the servo position
+        has not changed.
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Force Sensor Controlled
+        Servo Motor experiment
+        demonstrates threshold-based
+        servo control using
+        Arduino UNO and an
+        FSR402 Force Sensor.
+    </p>
+
+    <p>
+        Arduino measures the
+        analog sensor signal,
+        compares it with
+        a threshold of 100
+        and commands the servo
+        to either 0° or 90°.
+    </p>
+
+    <p>
+        The sensor reading
+        and corresponding
+        servo status are
+        displayed through
+        Serial Monitor.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing an FSR402 Force Sensitive Resistor with Arduino UNO.</li>
+        <li>Understanding how the sensor resistance changes with force.</li>
+        <li>Building a voltage-divider circuit using a 10 kΩ resistor.</li>
+        <li>Reading analog input using analogRead().</li>
+        <li>Understanding the ADC range of 0–1023.</li>
+        <li>Using threshold-based conditional statements.</li>
+        <li>Controlling a servo motor using the Servo library.</li>
+        <li>Configuring a servo using attach().</li>
+        <li>Setting the servo angle using write().</li>
+        <li>Understanding the difference between proportional and threshold-based control.</li>
+        <li>Displaying sensor values and status using Serial Monitor.</li>
+        <li>Using delay() to control the program's update interval.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>Arduino Experiment</strong>
+    <p>Force Sensor Controlled Servo Motor</p>
+</footer>
 
 <!-- =========================================
-     ESP32 PROGRAM
+     COMPLETE ORIGINAL ARDUINO PROGRAM
 ========================================= -->
-
-<script type="text/plain" id="esp32-program">
+<script type="text/plain" id="arduino-program">
 #include <Servo.h>
 
 const int forceSensor = A0;
@@ -1662,255 +2028,373 @@ void loop()
 }
 </script>
 
-
 <!-- =========================================
-     CODE EXPLORER JAVASCRIPT
+     INTERACTIVE CODE EXPLORER
 ========================================= -->
-
 <script>
 
-
-const program =
-
-document
-
-.getElementById(
-    "esp32-program"
-)
-
-.textContent
-
-.trim();
-
-
-const lines =
-
-program.split(
-    "\n"
-);
-
-
 /* =========================
-   CODE STEPS
+   COMPLETE PROGRAM SOURCE
 ========================= */
 
-const steps = [{"title":"Servo library","search":"#include <Servo.h>","text":"Enable servo positioning."},{"title":"Sensor pin","search":"const int forceSensor","text":"Read the FSR on A0."},{"title":"Threshold","search":"int threshold","text":"Define the activation force."},{"title":"Initialize","search":"void setup()","text":"Attach the servo."},{"title":"Control","search":"void loop()","text":"Set the servo angle according to force."}];
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
 
+const lines = program.split("\n");
+
+/* =========================
+   EXPLANATION STEPS
+========================= */
+
+const steps = [
+
+    {
+        title: "Load Servo library",
+        start: "#include <Servo.h>",
+        end: "#include <Servo.h>",
+        text:
+            "The Servo library provides " +
+            "functions for controlling " +
+            "the servo motor position."
+    },
+
+    {
+        title: "Define sensor pin",
+        start: "const int forceSensor = A0;",
+        end: "const int forceSensor = A0;",
+        text:
+            "The FSR402 voltage-divider " +
+            "output connects to analog pin A0."
+    },
+
+    {
+        title: "Define servo pin",
+        start: "const int servoPin = 9;",
+        end: "const int servoPin = 9;",
+        text:
+            "The servo control signal " +
+            "is connected to Arduino D9."
+    },
+
+    {
+        title: "Create servo object",
+        start: "Servo myServo;",
+        end: "Servo myServo;",
+        text:
+            "A Servo object named myServo " +
+            "is created to control " +
+            "the connected motor."
+    },
+
+    {
+        title: "Set force threshold",
+        start: "int forceValue = 0;",
+        end: "int threshold = 100;",
+        text:
+            "forceValue stores the ADC " +
+            "reading and threshold stores " +
+            "the activation limit of 100."
+    },
+
+    {
+        title: "Initialize Serial and servo",
+        start: "void setup()",
+        end: 'Serial.println("Force Sensor Servo Control");',
+        text:
+            "setup() starts Serial at " +
+            "9600 baud, attaches the servo " +
+            "to D9 and moves it to 0 degrees."
+    },
+
+    {
+        title: "Read FSR402 value",
+        start: "forceValue = analogRead(forceSensor);",
+        end: "forceValue = analogRead(forceSensor);",
+        text:
+            "analogRead() measures the " +
+            "sensor-divider voltage " +
+            "through Arduino A0."
+    },
+
+    {
+        title: "Compare threshold",
+        start: "if (forceValue > threshold)",
+        end: "if (forceValue > threshold)",
+        text:
+            "The if statement checks " +
+            "whether the sensor reading " +
+            "is greater than 100."
+    },
+
+    {
+        title: "Control servo positions",
+        start: "if (forceValue > threshold)",
+        end: 'Serial.println("No Force - Servo at 0 degrees");',
+        text:
+            "If the reading exceeds 100, " +
+            "the servo moves to 90 degrees. " +
+            "Otherwise, it moves to 0 degrees."
+    },
+
+    {
+        title: "Set update interval",
+        start: "delay(100);",
+        end: "delay(100);",
+        text:
+            "The program waits " +
+            "100 milliseconds before " +
+            "taking another sensor reading."
+    }
+
+];
 
 /* =========================
    ESCAPE HTML
 ========================= */
 
-function escapeHtml(text)
-{
+function escapeHtml(text) {
 
     return text
-
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-
-    .replace(
-        /</g,
-        "&lt;"
-    )
-
-    .replace(
-        />/g,
-        "&gt;"
-    );
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 
 }
 
-
 /* =========================
-   DISPLAY CODE
+   DISPLAY NUMBERED CODE
 ========================= */
 
-function displayCode()
-{
+function displayCode() {
 
-    let output = "";
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
 
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
 
-    lines.forEach(
+        }).join("");
 
-        function(
-            line,
-            index
-        )
-        {
+}
 
-            output +=
+/* =========================
+   FIND CODE LINE
+========================= */
 
-            '<span class="code-line" ' +
+function findLine(searchText, startIndex = 0) {
 
-            'id="line-' +
+    for (let i = startIndex; i < lines.length; i++) {
 
-            (index + 1) +
-
-            '">' +
-
-            '<span class="line-number">' +
-
-            (index + 1) +
-
-            '</span>' +
-
-            '<span>' +
-
-            escapeHtml(line) +
-
-            '</span>' +
-
-            '</span>';
-
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
         }
 
-    );
+    }
 
+    return -1;
+
+}
+
+/* =========================
+   HIGHLIGHT AND EXPLAIN
+========================= */
+
+function showStep(index) {
+
+    const step = steps[index];
 
     document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
 
-    .getElementById(
-        "code-lines"
-    )
+            button.classList.toggle(
+                "active",
+                i === index
+            );
 
-    .innerHTML =
-    output;
-
-}
-
-
-/* =========================
-   SHOW STEP
-========================= */
-
-function showStep(index)
-{
-    const step = steps[index];
-    document.querySelectorAll(".step").forEach(function(button, i) {
-        button.classList.toggle("active", i === index);
-    });
-    document.querySelectorAll(".code-line").forEach(function(line) {
-        line.classList.remove("selected");
-    });
-
-    // Find the matching source statement. Use the first non-comment
-    // occurrence, and never highlight an unrelated fixed 12-line range.
-    let foundLine = lines.findIndex(function(line) {
-        return line.trim().startsWith(step.search.trim());
-    });
-    if (foundLine < 0) {
-        foundLine = lines.findIndex(function(line) {
-            return line.includes(step.search);
         });
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
+
+        return;
+
     }
 
-    if (foundLine >= 0) {
-        let lastLine = foundLine;
-        // Extend across a declaration or a brace-delimited code block.
-        let depth = 0;
-        let blockStarted = false;
-        for (let i = foundLine; i < lines.length; i++) {
-            const current = lines[i];
-            for (const ch of current) {
-                if (ch === "{") { depth++; blockStarted = true; }
-                if (ch === "}") { depth--; }
-            }
-            lastLine = i;
-            if (blockStarted && depth <= 0) break;
-            if (!blockStarted && i > foundLine && current.trim() === "") {
-                lastLine = i - 1;
-                break;
-            }
-            if (i - foundLine >= 35) break;
-        }
-        for (let i = foundLine; i <= lastLine; i++) {
-            document.getElementById("line-" + (i + 1))?.classList.add("selected");
-        }
-        const selectedLine = document.getElementById("line-" + (foundLine + 1));
-        const codeBody = document.getElementById("code-body");
-        if (selectedLine && codeBody) {
-            codeBody.scrollTo({
-                top: selectedLine.offsetTop - codeBody.offsetTop - 20,
-                behavior: "smooth"
-            });
-        }
+    let endLine = findLine(step.end, startLine);
+
+    if (endLine < 0) {
+        endLine = startLine;
     }
-    document.getElementById("explanation").innerHTML =
-        "<h3>" + (index + 1) + ". " + step.title + "</h3>" +
-        "<p>" + step.text + "</p>";
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+
+    }
+
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+
 }
 
-
 /* =========================
-   COPY CODE
+   COPY COMPLETE ARDUINO CODE
 ========================= */
 
-function copyCode()
-{
+async function copyCode() {
 
-    navigator
+    const button = document
+        .querySelector(".code-top .copy-button");
 
-    .clipboard
+    function showSuccess() {
 
-    .writeText(
-        program
-    )
+        button.textContent = "Copied!";
 
-    .then(
+        setTimeout(function() {
 
-        function()
-        {
+            button.textContent = "Copy Code";
 
-            const button =
+        }, 1500);
 
-            document
+    }
 
-            .querySelector(
-                ".copy-button"
-            );
+    function fallbackCopy() {
 
+        const textarea = document.createElement("textarea");
 
-            button.innerText =
-            "Copied!";
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
 
+        document.body.appendChild(textarea);
+        textarea.select();
 
-            setTimeout(
+        let copied = false;
 
-                function()
-                {
+        try {
 
-                    button.innerText =
-                    "Copy Code";
+            copied = document.execCommand("copy");
 
-                },
+        } catch (error) {
 
-                1500
-
-            );
+            copied = false;
 
         }
 
-    );
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+
+        } catch (error) {
+
+            fallbackCopy();
+
+        }
+
+    } else {
+
+        fallbackCopy();
+
+    }
 
 }
 
+/* =========================
+   QUIZ ANSWERS
+========================= */
+
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+
+}
 
 /* =========================
-   START
+   INITIALIZE CODE VIEWER
 ========================= */
 
 displayCode();
-
 showStep(0);
-
 
 </script>
 
-
 </body>
-
 </html>
