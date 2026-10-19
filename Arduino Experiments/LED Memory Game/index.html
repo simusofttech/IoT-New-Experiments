@@ -1,26 +1,32 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - LED Memory Game</title>
+<title>LED Memory Game</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
 }
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -31,9 +37,6 @@ body{
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
-
 .header-logo {
     position: absolute;
     top: 15px;
@@ -46,27 +49,19 @@ body{
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
-
 .header-content {
     text-align: center;
     margin: auto 0;
     padding: 35px 165px;
 }
-
 .header h1 {
     margin: 0 0 8px;
     font-size: 34px;
 }
-
 .header p {
     margin: 0;
     font-size: 17px;
 }
-
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -74,27 +69,14 @@ body{
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
-
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
-
 .header-nav-btn {
     display: inline-flex;
     align-items: center;
@@ -109,22 +91,17 @@ body{
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
-
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
-
 .home-icon-btn {
     width: 40px;
     height: 38px;
     padding: 8px;
 }
-
 .home-icon-btn svg {
     width: 21px;
     height: 21px;
@@ -135,315 +112,472 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+nav a:hover {
+    color: #2563eb;
+}
 
-@media (max-width: 900px) {
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+.section h2 {
+    margin: 0 0 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 22px;
+}
+ul, ol {
+    padding-left: 24px;
+}
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background: #2563eb;
+    color: white;
+}
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    font-weight: bold;
+    color: #1e3a8a;
+    font-size: 18px;
+    line-height: 2;
+}
+.level-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(170px,1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+.level-card {
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    text-align: center;
+    padding: 16px;
+}
+.level-card strong {
+    display: block;
+    color: #1e3a8a;
+    font-size: 18px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.copy-button:hover {
+    background: #eff6ff;
+}
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+.code-line:hover {
+    background: #f8fbff;
+}
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+.explanation h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+    .code-body {
+        height: 450px;
+    }
+}
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
         min-height: 230px;
     }
-
     .header-logo {
         width: 95px;
         max-height: 60px;
         top: 12px;
         left: 12px;
     }
-
     .header-content {
         padding: 85px 12px 25px;
     }
-
     .header h1 {
         font-size: 25px;
     }
-
     .header p {
         font-size: 15px;
     }
-
     .header-buttons {
         padding: 10px 8px;
         gap: 8px;
     }
-
     .header-left-buttons,
     .header-right-buttons {
         gap: 5px;
     }
-
     .header-nav-btn {
         padding: 8px 7px;
         font-size: 11px;
         min-height: 36px;
     }
-
     .home-icon-btn {
         width: 36px;
         height: 36px;
         padding: 7px;
     }
-}
-
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
     }
-}
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
-
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
-
-nav a:hover{
-    color:#2563eb;
-}
-
-.container{
-    width:90%;
-    max-width:950px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section h3{
-    color:#1e3a8a;
-    margin-top:22px;
-}
-
-.section p{
-    margin-bottom:10px;
-}
-
-ul,ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
-}
-
-.code-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 14px;
-    background:#1e293b;
-    color:white;
-    border-radius:8px 8px 0 0;
-}
-
-.copy-button{
-    border:0;
-    padding:7px 12px;
-    background:#2563eb;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-pre{
-    margin:0;
-    padding:20px;
-    overflow-x:auto;
-    background:#020617;
-    color:#e2e8f0;
-    border-radius:0 0 8px 8px;
-    font-family:Consolas,monospace;
-    font-size:14px;
-    line-height:1.7;
-}
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-top:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:#fff;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-    transition:box-shadow .2s,transform .2s;
-}
-
-.component-card:hover{
-    box-shadow:0 6px 15px rgba(0,0,0,.08);
-    transform:translateY(-2px);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-    line-height:1.5;
-}
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:#fff;
-    padding:10px;
-}
-
-.level-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:14px;
-    margin-top:18px;
-}
-
-.level-card{
-    background:#f8fafc;
-    border:1px solid #dbeafe;
-    border-radius:9px;
-    text-align:center;
-    padding:14px 10px;
-}
-
-.level-card strong{
-    display:block;
-    color:#1e3a8a;
-    font-size:17px;
-}
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-@media(max-width:600px){
-    .header{padding:35px 15px}
-    .header h1{font-size:28px}
-    .container{width:92%}
-    .section{padding:21px 18px}
-    nav{gap:11px}
+    .steps {
+        grid-template-columns: 1fr;
+    }
+    nav {
+        gap: 11px;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -451,40 +585,27 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>LED Memory Game</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -493,219 +614,1737 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
         </div>
 
     </div>
-
 </header>
 
+<!-- =====================================
+     NAVIGATION
+===================================== -->
 <nav>
-    <a href="../index.html">← Arduino Projects</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../LED Memory Game.png"
+        alt="LED Memory Game Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
+
     <h2>Aim</h2>
+
     <p>
-        To create an LED Memory Game using Arduino UNO, four LEDs, four push buttons and a buzzer,
-        where the player watches an LED sequence and repeats the same sequence using the matching buttons.
+        To develop an interactive
+        LED Memory Game using
+        Arduino UNO, four LEDs,
+        four push buttons
+        and a buzzer.
     </p>
+
+    <p>
+        The player observes
+        a randomly generated
+        LED sequence and
+        repeats the same
+        sequence by pressing
+        the corresponding
+        push buttons.
+    </p>
+
+    <p>
+        The game increases
+        in difficulty with
+        each successful level,
+        up to a maximum
+        of 20 levels.
+    </p>
+
 </section>
 
-<section class="section">
-    <h2>About the Project</h2>
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
     <p>
-        Arduino generates a random sequence using four LEDs. The player must remember the order
-        and press the corresponding push buttons in the same sequence.
+        The LED Memory Game
+        is an interactive
+        electronics experiment
+        that tests the player's
+        visual memory and
+        ability to recognize
+        repeating patterns.
     </p>
+
     <p>
-        Each successful round increases the level and makes the sequence longer.
-        A wrong button press activates the buzzer and restarts the game from Level 1.
+        Arduino controls
+        four LEDs connected
+        to digital pins
+        D8, D9, D10
+        and D11.
     </p>
+
+    <p>
+        Four push buttons,
+        connected to pins
+        D2 through D5,
+        allow the player
+        to enter a response.
+    </p>
+
+    <p>
+        Each button corresponds
+        to one LED.
+    </p>
+
+    <p>
+        The buzzer connected
+        to D12 produces
+        different musical tones
+        for sequence playback,
+        correct answers,
+        incorrect answers
+        and game completion.
+    </p>
+
+    <p>
+        At the beginning,
+        Arduino creates
+        a random sequence
+        of 20 LED identifiers,
+        each ranging from
+        0 to 3.
+    </p>
+
+    <p>
+        The game begins
+        with only the
+        first LED in
+        the sequence.
+    </p>
+
+    <p>
+        The player watches
+        the flashing LED
+        and presses the
+        matching button.
+    </p>
+
+    <p>
+        If the response
+        is correct, Arduino
+        plays a success
+        sound and advances
+        to the next level.
+    </p>
+
+    <p>
+        Each higher level
+        displays one
+        additional LED
+        in the sequence.
+    </p>
+
+    <p>
+        If any button
+        is incorrect,
+        the buzzer plays
+        an error tone,
+        all four LEDs
+        flash, and the
+        game starts again
+        from Level 1
+        with a new sequence.
+    </p>
+
+    <p>
+        Successfully completing
+        Level 20 triggers
+        a winning animation
+        and restarts the
+        game with a new
+        sequence.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        The push buttons use
+        Arduino's internal
+        INPUT_PULLUP resistors.
+
+        Each button connects
+        between its digital
+        input pin and GND.
+
+        A pressed button
+        therefore reads LOW.
+
+        No additional external
+        pull-up resistors
+        are required for
+        the specified wiring.
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO R3">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3"
+            >
+
             <h4>Arduino UNO R3 (×1)</h4>
-            <p>Main controller for generating the sequence and checking player input.</p>
+
+            <p>
+                Generates the
+                LED sequences,
+                reads button
+                input and controls
+                the game logic.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="LED.png" alt="LED">
+
+            <img
+                src="LED.png"
+                alt="LED"
+            >
+
             <h4>LEDs (×4)</h4>
-            <p>Display the memory sequence to the player.</p>
+
+            <p>
+                Display the
+                random pattern
+                that the player
+                must remember.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Push Button.png" alt="Push Button">
+
+            <img
+                src="Push Button.png"
+                alt="Push Button"
+            >
+
             <h4>Push Buttons (×4)</h4>
-            <p>Used by the player to repeat the LED sequence.</p>
+
+            <p>
+                Allow the player
+                to repeat the
+                sequence of
+                flashing LEDs.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Buzzer.png" alt="Buzzer">
+
+            <img
+                src="Buzzer.png"
+                alt="Buzzer"
+            >
+
             <h4>Buzzer (×1)</h4>
-            <p>Provides sound feedback for sequence, correct, wrong and win events.</p>
+
+            <p>
+                Produces different
+                tones during
+                sequence playback
+                and game events.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="220 ohm resistor.png" alt="220 Ohm Resistor">
+
+            <img
+                src="220 ohm resistor.png"
+                alt="220 Ohm Resistor"
+            >
+
             <h4>220Ω Resistors (×4)</h4>
-            <p>Limit current through the LEDs.</p>
+
+            <p>
+                Limit current
+                through the
+                four LEDs.
+                Each LED requires
+                its own resistor.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
             <h4>Breadboard (×1)</h4>
-            <p>Used for assembling the circuit.</p>
+
+            <p>
+                Used to assemble
+                the LEDs,
+                buttons, buzzer
+                and connecting
+                wires.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
             <h4>Jumper Wires</h4>
-            <p>Used for making all electrical connections.</p>
+
+            <p>
+                Used for
+                connections between
+                Arduino and
+                the components.
+            </p>
+
         </div>
 
-    </div>
-</section>
-
-<section class="section" id="connections">
-    <h2>Circuit Connections</h2>
-
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>Component</th>
-                    <th>Pin / Connection 1</th>
-                    <th>Arduino Pin</th>
-                    <th>Pin / Connection 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>LED 1</td><td>LED (+)</td><td>D8</td><td>220Ω → GND</td></tr>
-                <tr><td>LED 2</td><td>LED (+)</td><td>D9</td><td>220Ω → GND</td></tr>
-                <tr><td>LED 3</td><td>LED (+)</td><td>D10</td><td>220Ω → GND</td></tr>
-                <tr><td>LED 4</td><td>LED (+)</td><td>D11</td><td>220Ω → GND</td></tr>
-                <tr><td>Button 1</td><td>Button</td><td>D2</td><td>GND</td></tr>
-                <tr><td>Button 2</td><td>Button</td><td>D3</td><td>GND</td></tr>
-                <tr><td>Button 3</td><td>Button</td><td>D4</td><td>GND</td></tr>
-                <tr><td>Button 4</td><td>Button</td><td>D5</td><td>GND</td></tr>
-                <tr><td>Buzzer</td><td>Buzzer (+)</td><td>D12</td><td>Buzzer (−) → GND</td></tr>
-            </tbody>
-        </table>
     </div>
 
     <div class="note">
-        The push buttons use Arduino's <strong>INPUT_PULLUP</strong> mode, so each button connects between its digital pin and GND.
+
+        <strong>Arduino Libraries:</strong>
+
+        No external Arduino
+        libraries are required.
+
+        <p>
+            The sketch uses built-in
+            Arduino functions,
+            including digitalRead(),
+            digitalWrite(),
+            random(),
+            randomSeed(),
+            tone() and noTone().
+        </p>
+
+        <p>
+            <strong>Buzzer compatibility:</strong>
+            The program generates tones
+            at different frequencies.
+            A passive buzzer or
+            suitable piezo sounder
+            is appropriate for
+            demonstrating these tones.
+            Check that the device
+            can be driven safely
+            from D12.
+        </p>
+
     </div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>LED Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>LED</th>
+                    <th>Arduino Connection</th>
+                    <th>Ground Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>LED 1</td>
+                    <td>Anode (+) → D8</td>
+                    <td>Cathode (−) → 220Ω → GND</td>
+                </tr>
+
+                <tr>
+                    <td>LED 2</td>
+                    <td>Anode (+) → D9</td>
+                    <td>Cathode (−) → 220Ω → GND</td>
+                </tr>
+
+                <tr>
+                    <td>LED 3</td>
+                    <td>Anode (+) → D10</td>
+                    <td>Cathode (−) → 220Ω → GND</td>
+                </tr>
+
+                <tr>
+                    <td>LED 4</td>
+                    <td>Anode (+) → D11</td>
+                    <td>Cathode (−) → 220Ω → GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Push Button Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Button</th>
+                    <th>Arduino Pin</th>
+                    <th>Other Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Button 1</td>
+                    <td>D2</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>Button 2</td>
+                    <td>D3</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>Button 3</td>
+                    <td>D4</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>Button 4</td>
+                    <td>D5</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Buzzer Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Buzzer Terminal</th>
+                    <th>Arduino Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Positive (+)</td>
+                    <td>D12, if suitable for direct drive</td>
+                </tr>
+
+                <tr>
+                    <td>Negative (−)</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Complete Pin Summary:</strong>
+
+        <ul>
+            <li>LED 1 → D8</li>
+            <li>LED 2 → D9</li>
+            <li>LED 3 → D10</li>
+            <li>LED 4 → D11</li>
+            <li>Button 1 → D2 and GND</li>
+            <li>Button 2 → D3 and GND</li>
+            <li>Button 3 → D4 and GND</li>
+            <li>Button 4 → D5 and GND</li>
+            <li>Buzzer (+) → D12</li>
+            <li>Buzzer (−) → GND</li>
+        </ul>
+
+        <p>
+            <strong>LED Resistors:</strong>
+            Each LED must have
+            its own 220Ω resistor
+            connected in series.
+        </p>
+
+        <p>
+            The source places
+            the resistors between
+            the LED cathodes
+            and ground.
+            A series resistor
+            can also be placed
+            on the anode side,
+            but the circuit
+            diagram should match
+            the documented wiring.
+        </p>
+
+        <p>
+            <strong>Push Buttons:</strong>
+            Verify which legs
+            are internally connected
+            on the four-pin buttons.
+            Incorrect button
+            orientation can cause
+            an input to remain
+            permanently LOW.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
 <section class="section" id="circuit">
-    <h2>Circuit Diagram</h2>
-    <p>
-        The four LEDs are connected to D8–D11, the four buttons to D2–D5,
-        and the buzzer to D12.
-    </p>
 
-    <img class="circuit-img" src="LED_Memory_Game_Circuit.png" alt="LED Memory Game Circuit Diagram">
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="LED_Memory_Game_Circuit.png"
+        alt="LED Memory Game Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden
+    >
+        Approved circuit diagram PNG pending.
+        Add the circuit image with the
+        filename LED_Memory_Game_Circuit.png.
+    </div>
+
 </section>
 
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
 
     <div class="flow">
-        Game Starts<br>
-        ↓<br>
-        Arduino creates a random LED sequence<br>
-        ↓<br>
-        LEDs flash one by one with sound<br>
-        ↓<br>
-        Player repeats the sequence using buttons<br>
-        ↓<br>
-        Arduino checks each button press<br>
-        ↓<br>
-        Correct → Level increases<br>
-        ↓<br>
-        Wrong → Buzzer sounds and game restarts
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Configure LEDs as Outputs
+
+        <br>↓<br>
+
+        Configure Buttons Using INPUT_PULLUP
+
+        <br>↓<br>
+
+        Initialize Buzzer
+
+        <br>↓<br>
+
+        Generate Random LED Sequence
+
+        <br>↓<br>
+
+        Play Start Sound
+
+        <br>↓<br>
+
+        Flash Sequence for Current Level
+
+        <br>↓<br>
+
+        Player Repeats Sequence Using Buttons
+
+        <br>↓<br>
+
+        Arduino Checks Each Button
+
+        <br>↓<br>
+
+        Correct Sequence → Play Success Sound
+
+        <br>↓<br>
+
+        Increase Level
+
+        <br>↓<br>
+
+        Wrong Sequence → Play Error Sound
+
+        <br>↓<br>
+
+        Flash All LEDs and Restart at Level 1
+
+        <br>↓<br>
+
+        Complete Level 20 → Winning Animation
+
     </div>
+
+    <h3>Random Sequence Generation</h3>
+
+    <p>
+        Arduino generates
+        a sequence of
+        twenty values
+        using random(0, 4).
+    </p>
+
+    <p>
+        Each value corresponds
+        to one of the
+        four LEDs.
+    </p>
+
+    <div class="note">
+
+        <strong>LED Selection:</strong>
+
+        <p>
+            0 → LED 1
+        </p>
+
+        <p>
+            1 → LED 2
+        </p>
+
+        <p>
+            2 → LED 3
+        </p>
+
+        <p>
+            3 → LED 4
+        </p>
+
+        <p>
+            The program initializes
+            the pseudorandom generator
+            using analogRead(A0).
+            The randomness depends
+            on the signal present
+            at A0 and is not
+            guaranteed to be
+            unpredictable.
+        </p>
+
+    </div>
+
+    <h3>LED Sequence Display</h3>
+
+    <p>
+        The showSequence()
+        function flashes
+        the LEDs one at
+        a time according
+        to the stored sequence.
+    </p>
+
+    <p>
+        Each LED remains ON
+        for 400 milliseconds
+        and is followed
+        by a 200 millisecond
+        pause.
+    </p>
+
+    <p>
+        A different tone
+        accompanies each
+        LED identifier.
+    </p>
+
+    <h3>Player Input</h3>
+
+    <p>
+        The player repeats
+        the sequence using
+        the four push buttons.
+    </p>
+
+    <p>
+        Arduino waits for
+        each button press,
+        reads its index
+        and compares it
+        with the corresponding
+        stored sequence value.
+    </p>
+
+    <p>
+        A correctly matched
+        button briefly flashes
+        its LED and produces
+        a tone.
+    </p>
+
+    <h3>Level Progression</h3>
 
     <div class="level-grid">
-        <div class="level-card"><strong>Level 1</strong>1 LED</div>
-        <div class="level-card"><strong>Level 2</strong>2 LEDs</div>
-        <div class="level-card"><strong>Level 3</strong>3 LEDs</div>
-        <div class="level-card"><strong>Up to Level 20</strong>Sequence keeps increasing</div>
+
+        <div class="level-card">
+            <strong>Level 1</strong>
+            Remember 1 LED
+        </div>
+
+        <div class="level-card">
+            <strong>Level 2</strong>
+            Remember 2 LEDs
+        </div>
+
+        <div class="level-card">
+            <strong>Level 3</strong>
+            Remember 3 LEDs
+        </div>
+
+        <div class="level-card">
+            <strong>Level 10</strong>
+            Remember 10 LEDs
+        </div>
+
+        <div class="level-card">
+            <strong>Level 20</strong>
+            Final Sequence
+        </div>
+
     </div>
+
+    <h3>Incorrect Answer</h3>
+
+    <p>
+        When the player
+        presses a wrong
+        button, checkPlayerInput()
+        returns false.
+    </p>
+
+    <p>
+        The program plays
+        a 300 Hz error tone,
+        flashes all four LEDs
+        three times, resets
+        the level to 1
+        and generates a
+        new sequence.
+    </p>
+
+    <h3>Winning the Game</h3>
+
+    <p>
+        After completing
+        Level 20, winGame()
+        performs a three-cycle
+        LED animation with
+        ascending buzzer tones.
+    </p>
+
+    <p>
+        The game then
+        generates a new
+        sequence and restarts
+        from Level 1.
+    </p>
+
+    <div class="note">
+
+        <strong>Game Timing:</strong>
+
+        <p>
+            Sequence playback:
+            400 ms ON + 200 ms OFF
+            per LED.
+        </p>
+
+        <p>
+            Correct input feedback:
+            200 ms LED ON,
+            followed by 100 ms delay.
+        </p>
+
+        <p>
+            Debounce pause:
+            30 ms before waiting
+            for button release.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
 
     <ol>
-        <li>Connect LEDs 1 to 4 to Arduino pins D8, D9, D10 and D11.</li>
-        <li>Connect each LED to GND through a 220Ω resistor.</li>
-        <li>Connect push buttons 1 to 4 to Arduino pins D2, D3, D4 and D5.</li>
-        <li>Connect the other terminal of each push button to GND.</li>
-        <li>Connect the buzzer positive terminal to D12 and negative terminal to GND.</li>
-        <li>Connect Arduino UNO to the computer.</li>
-        <li>Open Arduino IDE.</li>
-        <li>Enter the program given below.</li>
-        <li>Select Arduino UNO from Tools → Board.</li>
-        <li>Select the correct COM port.</li>
-        <li>Verify and upload the program.</li>
-        <li>Watch the LED sequence carefully.</li>
-        <li>Press the matching buttons in the same order.</li>
-        <li>Continue to the next level when the sequence is repeated correctly.</li>
+
+        <li>
+            Place Arduino UNO,
+            four LEDs, four
+            push buttons,
+            four 220Ω resistors
+            and the buzzer
+            on the work surface.
+        </li>
+
+        <li>
+            Place the LEDs
+            in a clear row
+            or square pattern
+            on the breadboard.
+        </li>
+
+        <li>
+            Connect LED 1
+            anode to Arduino D8.
+        </li>
+
+        <li>
+            Connect LED 2
+            anode to Arduino D9.
+        </li>
+
+        <li>
+            Connect LED 3
+            anode to Arduino D10.
+        </li>
+
+        <li>
+            Connect LED 4
+            anode to Arduino D11.
+        </li>
+
+        <li>
+            Connect each LED
+            cathode to ground
+            through its own
+            220Ω resistor.
+        </li>
+
+        <li>
+            Connect Button 1
+            between D2 and GND.
+        </li>
+
+        <li>
+            Connect Button 2
+            between D3 and GND.
+        </li>
+
+        <li>
+            Connect Button 3
+            between D4 and GND.
+        </li>
+
+        <li>
+            Connect Button 4
+            between D5 and GND.
+        </li>
+
+        <li>
+            Connect the buzzer
+            positive terminal
+            to D12 if its
+            electrical requirements
+            permit direct drive.
+        </li>
+
+        <li>
+            Connect buzzer
+            negative to GND.
+        </li>
+
+        <li>
+            Verify LED polarity,
+            resistor positions
+            and button terminal
+            orientation.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create a sketch named
+            LED_Memory_Game.ino.
+        </li>
+
+        <li>
+            Copy the complete
+            Arduino sketch
+            from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Listen for the
+            startup sound.
+        </li>
+
+        <li>
+            Watch the first
+            flashing LED carefully.
+        </li>
+
+        <li>
+            Press its matching
+            push button.
+        </li>
+
+        <li>
+            If correct, observe
+            the success sound
+            and next level.
+        </li>
+
+        <li>
+            Watch the longer
+            sequence and repeat
+            it using the buttons.
+        </li>
+
+        <li>
+            Continue to higher
+            levels by repeating
+            each sequence correctly.
+        </li>
+
+        <li>
+            Press an incorrect
+            button intentionally
+            to observe the
+            error sound and
+            flashing LEDs.
+        </li>
+
+        <li>
+            Observe the game
+            restarting at Level 1
+            with a new sequence.
+        </li>
+
+        <li>
+            Continue playing
+            to test the
+            level progression
+            and sound feedback.
+        </li>
+
     </ol>
+
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-    <h2>Arduino Code</h2>
 
-    <div class="code-header">
-        <span>LED_Memory_Game.ino</span>
-        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        LED Memory Game ·
+        Select a step to
+        highlight and understand
+        the complete Arduino program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    LED_Memory_Game.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Choose a step to highlight
+                and scroll to the
+                matching Arduino code.
+            </p>
+
+            <div class="steps">
+
+                <button class="step active"
+                        type="button"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Define LEDs and buttons
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Define buzzer and levels
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Initialize components
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Generate random sequence
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Control game progression
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Display LED sequence
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Check player response
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Read push buttons
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Generate feedback sounds
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Handle win and restart
+                </button>
+
+            </div>
+
+            <div
+                id="explanation"
+                class="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore more: Memory Sequences
+                </summary>
+
+                <p>
+                    The program stores
+                    twenty randomly
+                    selected LED identifiers
+                    in an array.
+                </p>
+
+                <p>
+                    Each round displays
+                    only the first
+                    level number of
+                    elements in
+                    that array.
+                </p>
+
+                <p>
+                    When the level
+                    increases, the
+                    player must repeat
+                    one extra element.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: INPUT_PULLUP
+                </summary>
+
+                <p>
+                    INPUT_PULLUP enables
+                    the Arduino's
+                    internal pull-up
+                    resistor.
+                </p>
+
+                <p>
+                    An unpressed
+                    button normally
+                    reads HIGH.
+                </p>
+
+                <p>
+                    When pressed,
+                    the corresponding
+                    input connects
+                    to GND and
+                    reads LOW.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: Button Debouncing
+                </summary>
+
+                <p>
+                    Mechanical push
+                    buttons can create
+                    rapid electrical
+                    transitions when
+                    pressed or released.
+                </p>
+
+                <p>
+                    The sketch waits
+                    30 milliseconds
+                    after detecting
+                    a LOW signal
+                    and then waits
+                    for the button
+                    to be released.
+                </p>
+
+                <p>
+                    This is a simple
+                    delay-based approach.
+                    It is not a
+                    complete debouncing
+                    algorithm for
+                    every situation.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore more: Buzzer Tones
+                </summary>
+
+                <p>
+                    tone() generates
+                    a signal with
+                    a selected
+                    frequency.
+                </p>
+
+                <p>
+                    The game assigns
+                    500 Hz, 700 Hz,
+                    900 Hz and
+                    1100 Hz to
+                    the four LED
+                    identifiers.
+                </p>
+
+                <p>
+                    Other tone patterns
+                    indicate success,
+                    failure and winning.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>
+                        How many LEDs
+                        are used in
+                        the experiment?
+                    </li>
+
+                    <li>
+                        Which Arduino pins
+                        are used for
+                        the push buttons?
+                    </li>
+
+                    <li>
+                        Which pin
+                        controls the buzzer?
+                    </li>
+
+                    <li>
+                        What is the
+                        maximum game level?
+                    </li>
+
+                    <li>
+                        What does
+                        INPUT_PULLUP mean?
+                    </li>
+
+                    <li>
+                        Which function
+                        generates random
+                        sequence values?
+                    </li>
+
+                    <li>
+                        What happens
+                        when the player
+                        presses a wrong
+                        button?
+                    </li>
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="toggleAnswers()"
+                    style="border:1px solid #bfdbfe"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>Four LEDs</li>
+                        <li>D2, D3, D4 and D5</li>
+                        <li>D12</li>
+                        <li>Level 20</li>
+                        <li>Internal pull-up resistor; pressed reads LOW</li>
+                        <li>random()</li>
+                        <li>Error sound, LEDs flash, restart at Level 1</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
     </div>
 
-<pre><code id="arduinoCode">// ======================================
+    <p class="tip">
+        <strong>Try it:</strong>
+        Observe the first
+        three levels carefully.
+        Count how many
+        LED flashes appear
+        at each level and
+        repeat the pattern
+        with the corresponding
+        push buttons.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        When Arduino starts,
+        a short ascending
+        startup tone sequence
+        is produced.
+    </p>
+
+    <p>
+        After startup,
+        one randomly selected
+        LED flashes with
+        its corresponding tone.
+    </p>
+
+    <p>
+        The player presses
+        the matching button.
+        If correct, the
+        game plays a
+        success sound and
+        proceeds to Level 2.
+    </p>
+
+    <p>
+        Level 2 displays
+        two LED flashes,
+        and the player
+        must press two
+        matching buttons
+        in the correct order.
+    </p>
+
+    <p>
+        Each level adds
+        one more element
+        to the displayed
+        sequence.
+    </p>
+
+    <h3>LED and Button Mapping</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>LED</th>
+                    <th>Arduino LED Pin</th>
+                    <th>Matching Button Pin</th>
+                    <th>Sequence Tone</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>LED 1</td>
+                    <td>D8</td>
+                    <td>D2</td>
+                    <td>500 Hz</td>
+                </tr>
+
+                <tr>
+                    <td>LED 2</td>
+                    <td>D9</td>
+                    <td>D3</td>
+                    <td>700 Hz</td>
+                </tr>
+
+                <tr>
+                    <td>LED 3</td>
+                    <td>D10</td>
+                    <td>D4</td>
+                    <td>900 Hz</td>
+                </tr>
+
+                <tr>
+                    <td>LED 4</td>
+                    <td>D11</td>
+                    <td>D5</td>
+                    <td>1100 Hz</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Level Progression</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Level</th>
+                    <th>LED Flashes</th>
+                    <th>Player Input Required</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1 matching button</td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>2 matching buttons</td>
+                </tr>
+
+                <tr>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>3 matching buttons</td>
+                </tr>
+
+                <tr>
+                    <td>5</td>
+                    <td>5</td>
+                    <td>5 matching buttons</td>
+                </tr>
+
+                <tr>
+                    <td>10</td>
+                    <td>10</td>
+                    <td>10 matching buttons</td>
+                </tr>
+
+                <tr>
+                    <td>20</td>
+                    <td>20</td>
+                    <td>20 matching buttons</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Correct Answer</h3>
+
+    <div class="note">
+
+        <strong>Expected Behavior:</strong>
+
+        <p>
+            A two-tone success
+            melody plays.
+        </p>
+
+        <p>
+            The level increases
+            by one.
+        </p>
+
+        <p>
+            The next round
+            displays one
+            additional element
+            in the sequence.
+        </p>
+
+    </div>
+
+    <h3>Wrong Answer</h3>
+
+    <div class="note">
+
+        <strong>Expected Behavior:</strong>
+
+        <p>
+            The buzzer plays
+            a low-frequency
+            error tone at 300 Hz
+            for 500 ms.
+        </p>
+
+        <p>
+            All four LEDs
+            flash together
+            three times.
+        </p>
+
+        <p>
+            The game returns
+            to Level 1
+            with a newly
+            generated sequence.
+        </p>
+
+    </div>
+
+    <h3>Winning at Level 20</h3>
+
+    <div class="note">
+
+        <strong>Expected Behavior:</strong>
+
+        <p>
+            The buzzer plays
+            an ascending
+            winning pattern.
+        </p>
+
+        <p>
+            All four LEDs
+            flash three times.
+        </p>
+
+        <p>
+            The game starts
+            again from Level 1.
+        </p>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        The original program
+        contains no Serial.begin()
+        or Serial.print()
+        statements.
+
+        It does not display
+        scores or levels
+        on Serial Monitor.
+
+        All feedback is
+        provided through
+        the LEDs and buzzer.
+
+        The player must
+        remember the current
+        level by observing
+        the game sequence.
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The LED Memory Game
+        experiment demonstrates
+        an interactive memory
+        game using Arduino UNO,
+        four LEDs, four push
+        buttons and a buzzer.
+    </p>
+
+    <p>
+        Arduino generates
+        a random LED sequence
+        and checks whether
+        the player repeats
+        the sequence correctly.
+    </p>
+
+    <p>
+        Correct answers
+        increase the difficulty
+        level, while incorrect
+        answers trigger an
+        error indication
+        and restart the game.
+    </p>
+
+    <p>
+        The experiment demonstrates
+        how digital inputs,
+        digital outputs,
+        arrays, loops,
+        random numbers and
+        sound generation
+        can be combined
+        to create an
+        interactive electronic game.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing four LEDs with Arduino UNO.</li>
+        <li>Connecting LEDs using individual 220Ω resistors.</li>
+        <li>Interfacing four push buttons with Arduino.</li>
+        <li>Using INPUT_PULLUP for digital button inputs.</li>
+        <li>Reading buttons using digitalRead().</li>
+        <li>Understanding active-LOW button operation.</li>
+        <li>Generating pseudorandom numbers using random().</li>
+        <li>Initializing a pseudorandom sequence using randomSeed().</li>
+        <li>Using arrays to store LED and button pin numbers.</li>
+        <li>Storing a sequence in an integer array.</li>
+        <li>Comparing player input with a stored sequence.</li>
+        <li>Creating multiple levels of game difficulty.</li>
+        <li>Using for loops to control repeated actions.</li>
+        <li>Writing reusable functions in Arduino programming.</li>
+        <li>Understanding functions that return true or false.</li>
+        <li>Generating musical tones using tone().</li>
+        <li>Stopping sounds using noTone().</li>
+        <li>Implementing basic button debouncing.</li>
+        <li>Creating success, error and winning animations.</li>
+        <li>Designing an interactive memory-based electronic game.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>LED Memory Game</strong>
+</footer>
+
+<!-- =========================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+========================================= -->
+<script type="text/plain" id="arduino-program">
+// ======================================
 // LED MEMORY GAME
 // Arduino UNO R3
 // ======================================
@@ -974,69 +2613,362 @@ void winGame() {
 
     delay(150);
   }
-}</code></pre>
-
-</section>
-
-<section class="section">
-    <h2>Expected Output</h2>
-
-    <p>
-        The game begins by flashing one LED. The player presses the matching button.
-        At each successful level, the sequence becomes one step longer.
-    </p>
-
-    <div class="note">
-        <strong>Correct sequence:</strong> level increases.<br>
-        <strong>Wrong button:</strong> buzzer sounds, all LEDs flash, and the game restarts from Level 1.<br>
-        <strong>Maximum level:</strong> 20.
-    </div>
-</section>
-
-<section class="section" id="result">
-    <h2>Result</h2>
-
-    <p>
-        The LED Memory Game was implemented using Arduino UNO, four LEDs, four push buttons and a buzzer.
-        The player repeats increasingly longer LED sequences, and the game restarts when an incorrect
-        button is pressed.
-    </p>
-</section>
-
-<section class="section">
-    <h2>What You Learn</h2>
-
-    <ul>
-        <li>How to control multiple LEDs using Arduino.</li>
-        <li>How to read multiple push buttons using INPUT_PULLUP.</li>
-        <li>How to generate random sequences.</li>
-        <li>How arrays are used to store LED and button pin numbers.</li>
-        <li>How to compare user input with a stored sequence.</li>
-        <li>How to generate different buzzer tones.</li>
-        <li>How to create levels in an Arduino game.</li>
-        <li>How to debounce push buttons in software.</li>
-    </ul>
-</section>
-
-</main>
-
-<footer>
-    <strong>Arduino Project No. 2</strong><br>
-    LED Memory Game
-</footer>
-
-<script>
-function copyCode(){
-    const code=document.getElementById("arduinoCode").innerText;
-    navigator.clipboard.writeText(code);
-
-    const button=document.querySelector(".copy-button");
-    button.innerText="Copied!";
-
-    setTimeout(function(){
-        button.innerText="Copy Code";
-    },1500);
 }
+</script>
+
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
+<script>
+
+/* =========================
+   COMPLETE PROGRAM SOURCE
+========================= */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =========================
+   EXPLANATION STEPS
+========================= */
+const steps = [
+
+    {
+        title: "Define LEDs and buttons",
+        start: "const int ledPins[] = {8, 9, 10, 11};",
+        end: "const int buttonPins[] = {2, 3, 4, 5};",
+        text:
+            "Two arrays store the four " +
+            "LED output pins D8-D11 and " +
+            "four push-button input pins " +
+            "D2-D5."
+    },
+
+    {
+        title: "Define buzzer and levels",
+        start: "const int buzzerPin = 12;",
+        end: "int level = 1;",
+        text:
+            "The buzzer is connected " +
+            "to D12. maxLevel defines " +
+            "20 sequence elements, " +
+            "sequence[] stores the pattern, " +
+            "and level starts at 1."
+    },
+
+    {
+        title: "Initialize components",
+        start: "void setup() {",
+        end: "digitalWrite(buzzerPin, LOW);",
+        text:
+            "setup() configures four " +
+            "LEDs as outputs, four " +
+            "buttons as INPUT_PULLUP " +
+            "and the buzzer as an output."
+    },
+
+    {
+        title: "Generate random sequence",
+        start: "randomSeed(analogRead(A0));",
+        end: "sequence[i] = random(0, 4);",
+        text:
+            "randomSeed() initializes " +
+            "the pseudorandom generator. " +
+            "random(0, 4) stores values " +
+            "from 0 to 3 to select " +
+            "one of four LEDs."
+    },
+
+    {
+        title: "Control game progression",
+        start: "void loop() {",
+        end: "if (level > maxLevel) {",
+        text:
+            "The main loop displays " +
+            "the pattern, waits for " +
+            "player input, plays a " +
+            "success sound and increases " +
+            "the level. Completing " +
+            "Level 20 triggers the win."
+    },
+
+    {
+        title: "Display LED sequence",
+        start: "void showSequence() {",
+        end: "delay(200);",
+        text:
+            "showSequence() flashes each " +
+            "LED in the current pattern " +
+            "for 400 milliseconds with " +
+            "a matching tone, followed " +
+            "by a 200 ms pause."
+    },
+
+    {
+        title: "Check player response",
+        start: "bool checkPlayerInput() {",
+        end: "return true;",
+        text:
+            "checkPlayerInput() compares " +
+            "every player response with " +
+            "the stored sequence. " +
+            "It returns false immediately " +
+            "on an incorrect button, " +
+            "or true after all " +
+            "responses are correct."
+    },
+
+    {
+        title: "Read push buttons",
+        start: "int waitForButton() {",
+        end: "return i;",
+        text:
+            "waitForButton() checks " +
+            "four active-LOW inputs. " +
+            "When pressed, it waits " +
+            "30 ms, waits for release " +
+            "and returns the button index."
+    },
+
+    {
+        title: "Generate feedback sounds",
+        start: "void playStartSound() {",
+        end: "void wrongSound() {",
+        text:
+            "The sketch defines " +
+            "startup, correct-answer " +
+            "and wrong-answer sound " +
+            "functions using tone() " +
+            "and noTone()."
+    },
+
+    {
+        title: "Handle win and restart",
+        start: "void winGame() {",
+        end: "delay(150);",
+        text:
+            "winGame() flashes all " +
+            "four LEDs three times " +
+            "and plays rising tones. " +
+            "The main loop then " +
+            "restarts the game at " +
+            "Level 1 with a new sequence."
+    }
+
+];
+
+/* =========================
+   ESCAPE HTML CHARACTERS
+========================= */
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =========================
+   DISPLAY NUMBERED CODE
+========================= */
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+
+        }).join("");
+}
+
+/* =========================
+   FIND MATCHING CODE LINE
+========================= */
+function findLine(searchText, startIndex = 0) {
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+/* =========================
+   HIGHLIGHT AND EXPLAIN CODE
+========================= */
+function showStep(index) {
+
+    const step = steps[index];
+
+    document
+        .querySelectorAll(".step")
+        .forEach(function(button, i) {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document
+        .querySelectorAll(".code-line")
+        .forEach(function(line) {
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
+
+        return;
+    }
+
+    let endLine = findLine(step.end, startLine);
+
+    if (endLine < 0) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =========================
+   COPY COMPLETE ARDUINO CODE
+========================= */
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =========================
+   QUIZ ANSWERS
+========================= */
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =========================
+   INITIALIZE CODE VIEWER
+========================= */
+displayCode();
+showStep(0);
+
 </script>
 
 </body>
