@@ -1,26 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Temperature Threshold Alarm</title>
+<title>Temperature Threshold Alarm</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
 }
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+html {
+    scroll-behavior: smooth;
+}
 
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -31,8 +39,6 @@ body{
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -46,8 +52,6 @@ body{
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -65,35 +69,22 @@ body{
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 15px;
+    width: 100%;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -109,15 +100,13 @@ body{
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -135,21 +124,493 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   STICKY NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
+nav a {
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN SECTIONS
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    margin-top: 22px;
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 18px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.warning-note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #fff7ed;
+    border-left: 5px solid #f59e0b;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+.output-box {
+    margin: 14px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px/1.8 Consolas, Monaco, monospace;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    text-align: center;
+}
+
+.state-card strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #1e3a8a;
+    font-size: 19px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid white;
+    border-radius: 8px;
+    background: white;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    padding: 16px 0;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    color: #234e87;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    text-align: center;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
 
 @media (max-width: 600px) {
-
     .header {
-        padding: 15px 0 0;
         min-height: 230px;
+        padding: 15px 0 0;
     }
 
     .header-logo {
@@ -182,9 +643,9 @@ body{
     }
 
     .header-nav-btn {
+        min-height: 36px;
         padding: 8px 7px;
         font-size: 11px;
-        min-height: 36px;
     }
 
     .home-icon-btn {
@@ -192,241 +653,32 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
     }
-}
 
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
+    .steps {
+        grid-template-columns: 1fr;
+    }
 
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
-
-nav a:hover{
-    color:#2563eb;
-}
-
-.container{
-    width:90%;
-    max-width:950px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section p{
-    margin-bottom:10px;
-}
-
-ul,ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
-}
-
-.code-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 14px;
-    background:#1e293b;
-    color:white;
-    border-radius:8px 8px 0 0;
-}
-
-.copy-button{
-    border:0;
-    padding:7px 12px;
-    background:#2563eb;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-pre{
-    margin:0;
-    padding:20px;
-    overflow-x:auto;
-    background:#020617;
-    color:#e2e8f0;
-    border-radius:0 0 8px 8px;
-    font-family:Consolas,monospace;
-    font-size:14px;
-    line-height:1.7;
-}
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-.warning-note{
-    margin-top:15px;
-    padding:14px;
-    background:#fff7ed;
-    border-left:5px solid #f59e0b;
-    border-radius:6px;
-}
-
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-top:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:#fff;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-    transition:box-shadow .2s,transform .2s;
-}
-
-.component-card:hover{
-    box-shadow:0 6px 15px rgba(0,0,0,.08);
-    transform:translateY(-2px);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-    line-height:1.5;
-}
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:#fff;
-    padding:10px;
-}
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-@media(max-width:600px){
-    .header{padding:35px 15px}
-    .header h1{font-size:28px}
-    .container{width:92%}
-    .section{padding:21px 18px}
-    nav{gap:11px}
+    nav {
+        gap: 11px;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -434,26 +686,18 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
-        <p>Adjustable LED Dimmer</p>
+        <p>Temperature Threshold Alarm</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
             <a
                 href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+                class="header-nav-btn">
                 &#8592; Back
             </a>
 
@@ -461,43 +705,34 @@ footer strong{
                 href="../../index.html"
                 class="header-nav-btn home-icon-btn"
                 title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                aria-label="Home">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
+
             </a>
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
@@ -507,214 +742,1631 @@ footer strong{
 
 </header>
 
+<!-- =====================================
+     NAVIGATION
+===================================== -->
 <nav>
-    <a href="../index.html">← Arduino Experiments</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Temperature Threshold Alarm.png"
+        alt="Temperature Threshold Alarm Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
+
     <h2>Aim</h2>
+
     <p>
-        To continuously monitor temperature using Arduino UNO, display the measured
-        temperature on a 16×2 I²C LCD, show diagnostic information on the Serial Monitor,
-        and activate a buzzer when the programmed temperature threshold is reached.
+        To design and develop a
+        Temperature Threshold Alarm
+        using Arduino UNO R3,
+        an analog temperature sensor,
+        a 16×2 I²C LCD and a buzzer.
     </p>
+
+    <p>
+        The experiment continuously
+        reads the sensor voltage,
+        calculates temperature,
+        displays the result on
+        the LCD and activates
+        the buzzer when the
+        calculated temperature
+        reaches 40°C.
+    </p>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
     <h2>About the Experiment</h2>
+
     <p>
-        Arduino reads the temperature sensor through analog pin A0 and converts the analog
-        reading into a temperature value. The temperature is shown locally on the LCD and
-        diagnostic information is sent to the Serial Monitor.
+        The Temperature Threshold Alarm
+        demonstrates how Arduino UNO
+        can monitor an analog
+        temperature sensor and
+        control an audible warning
+        based on a programmed limit.
     </p>
+
     <p>
-        When the calculated temperature reaches or exceeds 40°C, the buzzer sounds.
-        Below the threshold, the buzzer remains OFF.
+        The temperature sensor
+        provides an analog voltage
+        to Arduino input A0.
     </p>
+
+    <p>
+        Arduino measures this voltage
+        with analogRead(), producing
+        a 10-bit reading normally
+        between 0 and 1023.
+    </p>
+
+    <p>
+        The sketch calculates
+        voltage by multiplying
+        the ADC reading by
+        5.0 divided by 1023.0.
+    </p>
+
+    <p>
+        It then calculates temperature
+        using the formula
+        (voltage - 0.5) × 100.
+    </p>
+
+    <p>
+        The resulting temperature
+        is shown on a
+        16×2 I²C LCD
+        at address 0x27.
+    </p>
+
+    <p>
+        The Serial Monitor displays
+        the raw sensor reading,
+        calculated voltage,
+        temperature and alarm status.
+    </p>
+
+    <p>
+        When the calculated temperature
+        is below 40°C, the buzzer
+        remains OFF.
+    </p>
+
+    <p>
+        When the temperature reaches
+        or exceeds 40°C, Arduino
+        generates a 1000 Hz
+        tone through D8.
+    </p>
+
+    <p>
+        The temperature measurement
+        and alarm decision repeat
+        approximately once per second.
+    </p>
+
+    <div class="warning-note">
+
+        <strong>Source Sensor Mismatch:</strong>
+
+        <p>
+            The uploaded component
+            list specifies an
+            LM35 temperature sensor.
+        </p>
+
+        <p>
+            However, the original
+            Arduino sketch prints
+            "Sensor: TMP36" and
+            uses a TMP36 conversion
+            formula with a
+            500 mV offset.
+        </p>
+
+        <p>
+            LM35 and TMP36 are
+            different sensors.
+            An LM35 normally
+            outputs 10 mV/°C
+            without the TMP36
+            500 mV offset.
+        </p>
+
+        <p>
+            Using the preserved
+            TMP36 formula with an
+            LM35 will produce
+            incorrect temperature values.
+        </p>
+
+        <p>
+            Confirm the actual
+            hardware sensor before
+            running the experiment.
+            The Arduino sketch
+            below is retained
+            exactly as supplied.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO">
-            <h4>Arduino UNO (×1)</h4>
-            <p>Main controller for measurement, display and alarm control.</p>
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3">
+
+            <h4>Arduino UNO R3 (×1)</h4>
+
+            <p>
+                Reads the sensor,
+                calculates temperature,
+                updates the LCD
+                and controls the buzzer.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="LM35 Temperature Sensor.png" alt="LM35 Temperature Sensor">
+
+            <img
+                src="LM35 Temperature Sensor.png"
+                alt="LM35 Temperature Sensor">
+
             <h4>LM35 Temperature Sensor (×1)</h4>
-            <p>Analog temperature sensing device used in the circuit.</p>
+
+            <p>
+                Sensor listed in
+                the uploaded components.
+                The sketch currently
+                uses TMP36 conversion
+                and requires reconciliation.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="LCD 16X2 I2C.png" alt="16x2 I2C LCD">
-            <h4>LCD1602 I²C (×1)</h4>
-            <p>Displays the measured temperature.</p>
+
+            <img
+                src="LCD 16X2 I2C.png"
+                alt="16x2 I2C LCD">
+
+            <h4>16×2 I²C LCD (×1)</h4>
+
+            <p>
+                Displays the calculated
+                temperature in
+                degrees Celsius.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Buzzer.png" alt="Buzzer">
+
+            <img
+                src="Buzzer.png"
+                alt="Buzzer">
+
             <h4>Buzzer (×1)</h4>
-            <p>Provides the audible high-temperature warning.</p>
+
+            <p>
+                Produces the
+                1000 Hz high-temperature
+                warning signal.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard">
+
+            <h4>Breadboard (×1)</h4>
+
+            <p>
+                Used to assemble
+                the temperature
+                sensor and
+                low-voltage connections.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires">
+
             <h4>Jumper Wires</h4>
-            <p>Used for electrical connections.</p>
+
+            <p>
+                Connect the
+                sensor, LCD and
+                buzzer to Arduino.
+            </p>
+
         </div>
 
-        <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard">
-            <h4>Breadboard</h4>
-            <p>Useful for assembling the circuit.</p>
-        </div>
-
-    </div>
-</section>
-
-<section class="section" id="connections">
-    <h2>Circuit Connections</h2>
-
-    <h3>Temperature Sensor</h3>
-
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>Sensor Pin</th>
-                    <th>Arduino UNO</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>Left Pin</td><td>5V</td></tr>
-                <tr><td>Middle Pin</td><td>A0</td></tr>
-                <tr><td>Right Pin</td><td>GND</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <h3>I²C LCD</h3>
-
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>LCD Pin</th>
-                    <th>Arduino UNO</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>VCC</td><td>5V</td></tr>
-                <tr><td>GND</td><td>GND</td></tr>
-                <tr><td>SDA</td><td>A4</td></tr>
-                <tr><td>SCL</td><td>A5</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <h3>Buzzer</h3>
-
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>Buzzer Pin</th>
-                    <th>Arduino UNO</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>Positive (+)</td><td>D8</td></tr>
-                <tr><td>Negative (−)</td><td>GND</td></tr>
-            </tbody>
-        </table>
     </div>
 
     <div class="note">
-        <strong>Temperature Sensor:</strong> A0<br>
-        <strong>LCD SDA:</strong> A4<br>
-        <strong>LCD SCL:</strong> A5<br>
-        <strong>Buzzer:</strong> D8<br>
-        <strong>Temperature Threshold:</strong> 40°C
+
+        <strong>Required Arduino Libraries:</strong>
+
+        <ul>
+            <li>Wire.h</li>
+            <li>LiquidCrystal_I2C.h</li>
+        </ul>
+
+        <p>
+            Wire.h provides
+            I²C communication.
+            The LCD library
+            controls the
+            16×2 display.
+        </p>
+
+        <p>
+            The original sketch
+            uses an LCD address
+            of 0x27 and
+            calls lcd.init().
+        </p>
+
+        <p>
+            Use a compatible
+            LiquidCrystal_I2C
+            library for this API.
+        </p>
+
     </div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>Temperature Sensor Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Sensor Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Left Pin (VCC)</td>
+                    <td>5V</td>
+                </tr>
+                <tr>
+                    <td>Middle Pin (VOUT)</td>
+                    <td>A0</td>
+                </tr>
+                <tr>
+                    <td>Right Pin (GND)</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="warning-note">
+
+        <strong>Temperature Sensor Pinout:</strong>
+
+        <p>
+            The table follows
+            the pin mapping
+            in the uploaded file.
+        </p>
+
+        <p>
+            Left, middle and
+            right assume the
+            correct viewing
+            orientation for
+            the specified
+            sensor package.
+        </p>
+
+        <p>
+            Verify the exact
+            LM35 or TMP36
+            datasheet and
+            package orientation
+            before connecting
+            power.
+        </p>
+
+    </div>
+
+    <h3>16×2 I²C LCD Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>LCD Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>VCC</td>
+                    <td>5V</td>
+                </tr>
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>SDA</td>
+                    <td>A4</td>
+                </tr>
+                <tr>
+                    <td>SCL</td>
+                    <td>A5</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Buzzer Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Buzzer Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Positive (+)</td>
+                    <td>D8, if suitable for direct drive</td>
+                </tr>
+                <tr>
+                    <td>Negative (−)</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Complete Pin Summary:</strong>
+
+        <ul>
+            <li>Temperature Sensor VCC → 5V</li>
+            <li>Temperature Sensor VOUT → A0</li>
+            <li>Temperature Sensor GND → GND</li>
+            <li>LCD VCC → 5V</li>
+            <li>LCD GND → GND</li>
+            <li>LCD SDA → A4</li>
+            <li>LCD SCL → A5</li>
+            <li>Buzzer Positive → D8</li>
+            <li>Buzzer Negative → GND</li>
+        </ul>
+
+        <p>
+            The sketch uses
+            tone() and noTone()
+            to control the buzzer.
+            A suitable passive
+            piezo buzzer works
+            with this waveform.
+        </p>
+
+        <p>
+            A higher-current
+            buzzer requires
+            a suitable driver.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Temperature Threshold Alarm Circuit.png"
+        alt="Temperature Threshold Alarm Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden>
+        Verified circuit diagram PNG pending.
+        Add the approved image named
+        Temperature Threshold Alarm Circuit.png.
+    </div>
+
+</section>
+
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
 
     <div class="flow">
-        Arduino Starts<br>
-        ↓<br>
-        Temperature sensor value is read on A0<br>
-        ↓<br>
-        Analog value is converted to voltage<br>
-        ↓<br>
-        Voltage is converted to temperature<br>
-        ↓<br>
-        Temperature is displayed on LCD<br>
-        ↓<br>
-        Serial Monitor shows diagnostic values<br>
-        ↓<br>
-        Temperature &lt; 40°C → Buzzer OFF<br>
-        ↓<br>
-        Temperature ≥ 40°C → Buzzer ON
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Initialize LCD and Serial Monitor
+
+        <br>↓<br>
+
+        Configure Buzzer on D8
+
+        <br>↓<br>
+
+        Display Startup Message for 2 Seconds
+
+        <br>↓<br>
+
+        Read Analog Sensor on A0
+
+        <br>↓<br>
+
+        Convert ADC Reading to Voltage
+
+        <br>↓<br>
+
+        Calculate Temperature Using TMP36 Formula
+
+        <br>↓<br>
+
+        Display Temperature on LCD
+
+        <br>↓<br>
+
+        Print Reading, Voltage and Temperature
+
+        <br>↓<br>
+
+        Compare Temperature with 40°C
+
+        <br>↓<br>
+
+        Below 40°C → Buzzer OFF
+
+        <br>↓<br>
+
+        40°C or Above → 1000 Hz Buzzer ON
+
+        <br>↓<br>
+
+        Print Alarm Status
+
+        <br>↓<br>
+
+        Wait 1 Second
+
+        <br>↓<br>
+
+        Repeat Monitoring
+
     </div>
+
+    <h3>Analog Temperature Measurement</h3>
+
+    <p>
+        The sensor output
+        is read on Arduino
+        analog input A0.
+    </p>
+
+    <p>
+        The analogRead()
+        function converts
+        the input voltage
+        into a 10-bit
+        numerical value.
+    </p>
+
+    <h3>Voltage Calculation</h3>
 
     <div class="note">
-        <strong>Temperature Limit:</strong> 40°C<br>
-        <strong>Buzzer Frequency:</strong> 1000 Hz<br>
-        <strong>Serial Monitor:</strong> 9600 baud<br>
-        <strong>Update Interval:</strong> 1 second
+
+        <strong>Program Formula:</strong>
+
+        <p>
+            Voltage =
+            Sensor Reading ×
+            (5.0 / 1023.0)
+        </p>
+
+        <p>
+            The program assumes
+            a 5 V ADC
+            reference.
+        </p>
+
+        <p>
+            Actual reference
+            voltage variation
+            can affect
+            temperature accuracy.
+        </p>
+
     </div>
+
+    <h3>Temperature Calculation</h3>
+
+    <p>
+        The original sketch
+        uses the TMP36
+        sensor formula.
+    </p>
+
+    <div class="note">
+
+        <strong>TMP36 Formula:</strong>
+
+        <p>
+            Temperature (°C) =
+            (Voltage − 0.5) × 100
+        </p>
+
+        <p>
+            The formula removes
+            the TMP36 sensor's
+            nominal 500 mV offset.
+        </p>
+
+    </div>
+
+    <div class="warning-note">
+
+        <strong>LM35 Difference:</strong>
+
+        <p>
+            The component list
+            specifies LM35,
+            whose nominal positive
+            Celsius conversion
+            is Voltage × 100
+            when voltage is
+            expressed in volts.
+        </p>
+
+        <p>
+            The preserved sketch
+            does not use that
+            LM35 conversion.
+            Its calculated value
+            would be about
+            50°C lower than
+            the LM35 nominal
+            temperature reading
+            under the same
+            voltage-reference assumption.
+        </p>
+
+    </div>
+
+    <h3>LCD Display</h3>
+
+    <p>
+        The first LCD
+        row displays the
+        label Temperature:.
+    </p>
+
+    <p>
+        The second row
+        displays the
+        calculated Celsius
+        value with one
+        digit after the
+        decimal point.
+    </p>
+
+    <h3>Threshold Comparison</h3>
+
+    <p>
+        The variable
+        TEMPERATURE_LIMIT
+        is set to 40.0.
+    </p>
+
+    <p>
+        Arduino checks
+        whether temperature
+        is greater than
+        or equal to
+        that value.
+    </p>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Calculated Temperature</th>
+                    <th>Buzzer</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Below 40°C</td>
+                    <td>OFF</td>
+                    <td>NORMAL</td>
+                </tr>
+                <tr>
+                    <td>40°C or Above</td>
+                    <td>1000 Hz Tone</td>
+                    <td>HIGH TEMPERATURE</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Serial Diagnostics</h3>
+
+    <p>
+        The source
+        prints three
+        measurements and
+        the alarm status
+        to Serial Monitor.
+    </p>
+
+    <p>
+        These are the raw
+        sensor value,
+        calculated voltage
+        and calculated
+        Celsius temperature.
+    </p>
+
+    <div class="state-grid">
+
+        <div class="state-card">
+            <strong>40°C</strong>
+            Alarm threshold
+        </div>
+
+        <div class="state-card">
+            <strong>1000 Hz</strong>
+            Buzzer tone
+        </div>
+
+        <div class="state-card">
+            <strong>9600</strong>
+            Serial baud rate
+        </div>
+
+        <div class="state-card">
+            <strong>1 second</strong>
+            Measurement delay
+        </div>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
 
     <ol>
-        <li>Connect the left temperature sensor pin to Arduino 5V.</li>
-        <li>Connect the middle temperature sensor pin to Arduino A0.</li>
-        <li>Connect the right temperature sensor pin to Arduino GND.</li>
-        <li>Connect LCD VCC to 5V.</li>
-        <li>Connect LCD GND to GND.</li>
-        <li>Connect LCD SDA to A4.</li>
-        <li>Connect LCD SCL to A5.</li>
-        <li>Connect buzzer positive to D8.</li>
-        <li>Connect buzzer negative to GND.</li>
-        <li>Connect Arduino UNO to the computer.</li>
-        <li>Open Arduino IDE.</li>
-        <li>Install the LiquidCrystal_I2C library if required.</li>
-        <li>Enter the program given below.</li>
-        <li>Select Arduino UNO and the correct COM port.</li>
-        <li>Verify and upload the program.</li>
-        <li>Open Serial Monitor at 9600 baud.</li>
-        <li>Observe the temperature reading and buzzer status.</li>
+
+        <li>
+            Arrange Arduino UNO,
+            the temperature sensor,
+            16×2 I²C LCD,
+            buzzer, breadboard
+            and jumper wires.
+        </li>
+
+        <li>
+            Identify whether
+            the actual sensor
+            is LM35 or TMP36.
+        </li>
+
+        <li>
+            Verify its exact
+            package orientation
+            and terminal pinout
+            using the datasheet.
+        </li>
+
+        <li>
+            Connect the
+            sensor's supply
+            terminal to 5V,
+            if rated for it.
+        </li>
+
+        <li>
+            Connect the
+            sensor output
+            terminal to A0.
+        </li>
+
+        <li>
+            Connect the
+            sensor ground
+            to Arduino GND.
+        </li>
+
+        <li>
+            Connect LCD
+            VCC to 5V.
+        </li>
+
+        <li>
+            Connect LCD
+            GND to GND.
+        </li>
+
+        <li>
+            Connect LCD
+            SDA to A4.
+        </li>
+
+        <li>
+            Connect LCD
+            SCL to A5.
+        </li>
+
+        <li>
+            Connect the
+            buzzer positive
+            terminal to D8
+            if suitable
+            for direct drive.
+        </li>
+
+        <li>
+            Connect the
+            buzzer negative
+            terminal to GND.
+        </li>
+
+        <li>
+            Check all connections
+            before powering
+            the circuit.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install a compatible
+            LiquidCrystal_I2C
+            library if necessary.
+        </li>
+
+        <li>
+            Create a sketch named
+            Temperature_Threshold_Alarm.ino.
+        </li>
+
+        <li>
+            Copy the original
+            Arduino sketch from
+            Explore the Code.
+        </li>
+
+        <li>
+            Before physical testing,
+            ensure the conversion
+            formula matches the
+            actual sensor type.
+            The supplied program
+            currently assumes TMP36.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the sketch.
+        </li>
+
+        <li>
+            Observe the LCD
+            startup message
+            for two seconds.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 9600 baud.
+        </li>
+
+        <li>
+            Observe the sensor
+            reading, voltage,
+            calculated temperature
+            and buzzer status.
+        </li>
+
+        <li>
+            Verify normal
+            operation below
+            the threshold.
+        </li>
+
+        <li>
+            In a suitable
+            low-voltage classroom
+            test or simulator,
+            vary the sensor
+            temperature safely.
+        </li>
+
+        <li>
+            Confirm that the
+            buzzer turns ON
+            when the calculated
+            temperature reaches
+            40°C.
+        </li>
+
+        <li>
+            Reduce the
+            test temperature
+            below the threshold
+            and verify that
+            the buzzer stops.
+        </li>
+
+        <li>
+            Compare the LCD
+            reading with
+            Serial Monitor
+            for consistency.
+        </li>
+
+        <li>
+            Record readings
+            under different
+            temperature conditions.
+        </li>
+
     </ol>
+
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-    <h2>Arduino Code</h2>
 
-    <div class="code-header">
-        <span>Temperature_Threshold_Alarm.ino</span>
-        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Temperature Threshold Alarm ·
+        Select a step to highlight
+        the matching Arduino code
+        and view its explanation.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Temperature_Threshold_Alarm.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()">
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Choose a step
+                to highlight
+                related lines
+                and understand
+                how the alarm works.
+            </p>
+
+            <div class="steps">
+
+                <button type="button"
+                        class="step active"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Include LCD libraries
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Define pins and threshold
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Initialize LCD and buzzer
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Display startup messages
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Read analog temperature sensor
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Convert voltage to temperature
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Display temperature on LCD
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Print Serial Monitor readings
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Trigger high-temperature alarm
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Stop buzzer and repeat
+                </button>
+
+            </div>
+
+            <div id="explanation"
+                 class="explanation"
+                 aria-live="polite"></div>
+
+            <details>
+                <summary>
+                    Explore more: LM35 vs TMP36
+                </summary>
+
+                <p>
+                    Both devices
+                    are analog
+                    temperature sensors,
+                    but their
+                    voltage conversions
+                    are different.
+                </p>
+
+                <p>
+                    LM35 produces
+                    approximately
+                    10 mV for
+                    each degree
+                    Celsius.
+                </p>
+
+                <p>
+                    TMP36 includes
+                    a nominal
+                    500 mV offset
+                    at 0°C.
+                </p>
+
+                <p>
+                    The supplied
+                    code specifically
+                    uses the
+                    TMP36 formula.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: ADC Conversion
+                </summary>
+
+                <p>
+                    Arduino UNO
+                    normally uses
+                    a 10-bit
+                    analog-to-digital
+                    converter.
+                </p>
+
+                <p>
+                    analogRead(A0)
+                    returns a
+                    numerical value
+                    between 0
+                    and 1023.
+                </p>
+
+                <p>
+                    The sketch
+                    assumes a
+                    5 V ADC
+                    reference to
+                    convert that
+                    number to
+                    voltage.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: I²C LCD
+                </summary>
+
+                <p>
+                    The LCD
+                    communicates with
+                    Arduino over
+                    SDA and SCL.
+                </p>
+
+                <p>
+                    On Arduino UNO,
+                    SDA is A4
+                    and SCL is A5.
+                </p>
+
+                <p>
+                    The code
+                    initializes the
+                    LCD using
+                    address 0x27.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Alarm Threshold
+                </summary>
+
+                <p>
+                    The variable
+                    TEMPERATURE_LIMIT
+                    is assigned
+                    40.0.
+                </p>
+
+                <p>
+                    The condition
+                    uses greater
+                    than or equal
+                    to, so
+                    a calculated
+                    temperature of
+                    exactly 40°C
+                    activates
+                    the buzzer.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: tone() and noTone()
+                </summary>
+
+                <p>
+                    tone() generates
+                    a square-wave
+                    output at a
+                    specified frequency.
+                </p>
+
+                <p>
+                    Here, the
+                    buzzer signal
+                    frequency is
+                    1000 Hz.
+                </p>
+
+                <p>
+                    noTone()
+                    stops the
+                    generated waveform
+                    when the
+                    calculated temperature
+                    is below
+                    the limit.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>Which Arduino pin reads the sensor?</li>
+                    <li>Which pin controls the buzzer?</li>
+                    <li>What is the LCD I²C address?</li>
+                    <li>What is the alarm threshold?</li>
+                    <li>What buzzer frequency is used?</li>
+                    <li>What baud rate is configured?</li>
+                    <li>Which sensor formula is used by the sketch?</li>
+                    <li>How often does the program update?</li>
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    style="border:1px solid #bfdbfe"
+                    onclick="toggleAnswers()">
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>A0</li>
+                        <li>D8</li>
+                        <li>0x27</li>
+                        <li>40°C</li>
+                        <li>1000 Hz</li>
+                        <li>9600 baud</li>
+                        <li>TMP36, with a 500 mV offset</li>
+                        <li>Approximately every one second</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
     </div>
 
-<pre><code id="arduinoCode">#include &lt;Wire.h&gt;
-#include &lt;LiquidCrystal_I2C.h&gt;
+    <p class="tip">
+        <strong>Try it:</strong>
+        Compare a calculated
+        temperature of 39.9°C
+        with one of 40.0°C.
+        Observe how the buzzer
+        switches from OFF to ON
+        at the programmed threshold.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        After powering the system,
+        the LCD briefly displays
+        the startup text.
+    </p>
+
+    <h3>LCD Startup Message</h3>
+
+    <div class="output-box">
+<pre>Temperature
+Alarm System</pre>
+    </div>
+
+    <p>
+        After two seconds,
+        the LCD displays
+        the calculated
+        temperature in
+        degrees Celsius.
+    </p>
+
+    <h3>Normal Temperature</h3>
+
+    <div class="output-box">
+<pre>Temperature:
+30.0°C</pre>
+    </div>
+
+    <p>
+        When the calculated
+        temperature is below
+        40°C, the buzzer
+        remains OFF.
+    </p>
+
+    <h3>High Temperature</h3>
+
+    <div class="output-box">
+<pre>Temperature:
+40.0°C</pre>
+    </div>
+
+    <p>
+        When the calculated
+        temperature reaches
+        40°C or above,
+        the buzzer generates
+        a continuous
+        1000 Hz signal.
+    </p>
+
+    <h3>System State Table</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Calculated Temperature</th>
+                    <th>Status</th>
+                    <th>Buzzer</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>25°C</td>
+                    <td>NORMAL</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>35°C</td>
+                    <td>NORMAL</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>39.9°C</td>
+                    <td>NORMAL</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>40.0°C</td>
+                    <td>HIGH TEMPERATURE</td>
+                    <td>ON, 1000 Hz</td>
+                </tr>
+                <tr>
+                    <td>45.0°C</td>
+                    <td>HIGH TEMPERATURE</td>
+                    <td>ON, 1000 Hz</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Serial Monitor Startup</h3>
+
+    <div class="output-box">
+<pre>Temperature Threshold Alarm
+---------------------------
+Sensor: TMP36
+Temperature Limit: 40 C
+---------------------------</pre>
+    </div>
+
+    <h3>Example 1 — Normal Temperature</h3>
+
+    <div class="output-box">
+<pre>Sensor Value: 164 | Voltage: 0.802 V | Temperature: 30.2 C
+Status: NORMAL
+BUZZER: OFF
+---------------------------</pre>
+    </div>
+
+    <h3>Example 2 — High Temperature</h3>
+
+    <div class="output-box">
+<pre>Sensor Value: 184 | Voltage: 0.899 V | Temperature: 39.9 C
+Status: NORMAL
+BUZZER: OFF
+---------------------------</pre>
+    </div>
+
+    <p>
+        The program activates
+        the alarm only when
+        the unrounded calculated
+        temperature is at least
+        40.0°C. Depending on
+        its exact value,
+        an LCD reading
+        rounded to 40.0°C
+        may not necessarily
+        trigger the alarm.
+    </p>
+
+    <h3>Example 3 — Alarm Activated</h3>
+
+    <div class="output-box">
+<pre>Sensor Value: 185 | Voltage: 0.904 V | Temperature: 40.4 C
+WARNING: HIGH TEMPERATURE!
+BUZZER: ON
+---------------------------</pre>
+    </div>
+
+    <div class="note">
+
+        <strong>Expected Output Notes:</strong>
+
+        <p>
+            These values are
+            examples calculated
+            using the source's
+            5 V reference
+            and TMP36 formula.
+        </p>
+
+        <p>
+            Actual sensor
+            readings depend
+            on physical
+            temperature, device
+            accuracy and
+            reference voltage.
+        </p>
+
+        <p>
+            The program prints
+            temperature with
+            one decimal
+            place, but the
+            alarm condition
+            compares the full
+            calculated floating-point
+            value.
+        </p>
+
+        <p>
+            The LCD is
+            not used to
+            display the
+            buzzer status.
+            That status
+            is printed
+            in Serial Monitor.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Temperature Threshold
+        Alarm experiment demonstrates
+        how Arduino UNO can
+        read an analog
+        temperature signal,
+        convert the reading
+        to voltage and
+        calculate a Celsius
+        temperature value.
+    </p>
+
+    <p>
+        The calculated temperature
+        is displayed on a
+        16×2 I²C LCD,
+        while the sensor reading,
+        voltage and alarm
+        status are displayed
+        in Serial Monitor.
+    </p>
+
+    <p>
+        The buzzer is
+        activated at a
+        calculated temperature
+        of 40°C or above
+        and deactivated
+        below that threshold.
+    </p>
+
+    <p>
+        The source's LM35
+        component designation
+        and TMP36 conversion
+        must be reconciled
+        before claiming
+        accurate physical
+        temperature measurement.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing an analog temperature sensor with Arduino UNO.</li>
+        <li>Connecting sensor output to analog input A0.</li>
+        <li>Using analogRead() to sample temperature-related voltage.</li>
+        <li>Understanding the Arduino UNO 10-bit ADC range.</li>
+        <li>Converting ADC readings into voltage.</li>
+        <li>Understanding the importance of the ADC reference voltage.</li>
+        <li>Distinguishing LM35 and TMP36 sensor conversion formulas.</li>
+        <li>Working with floating-point temperature values.</li>
+        <li>Using constants to define an alarm threshold.</li>
+        <li>Interfacing a 16×2 LCD over I²C.</li>
+        <li>Connecting SDA and SCL to Arduino A4 and A5.</li>
+        <li>Displaying decimal temperature values on the LCD.</li>
+        <li>Displaying a degree symbol on an LCD.</li>
+        <li>Using if and else for threshold monitoring.</li>
+        <li>Using greater-than-or-equal-to comparison.</li>
+        <li>Generating buzzer tones using tone().</li>
+        <li>Stopping buzzer signals using noTone().</li>
+        <li>Using Serial Monitor for sensor diagnostics.</li>
+        <li>Monitoring readings at one-second intervals.</li>
+        <li>Understanding how display rounding differs from threshold logic.</li>
+        <li>Creating an educational high-temperature alarm.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>Temperature Threshold Alarm</strong>
+</footer>
+
+<!-- =====================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+===================================== -->
+<script type="text/plain" id="arduino-program">
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
 // PIN DEFINITIONS
 #define TEMP_PIN A0
@@ -813,75 +2465,358 @@ void loop() {
   Serial.println("---------------------------");
 
   delay(1000);
-}</code></pre>
-
-    <div class="warning-note">
-        <strong>Source note:</strong> The uploaded SOP identifies the circuit sensor as an LM35,
-        while its supplied Arduino program labels the sensor as TMP36 and uses the TMP36
-        500 mV offset conversion formula. The code above is preserved exactly from the SOP.
-    </div>
-
-</section>
-
-<section class="section">
-    <h2>Expected Output</h2>
-
-    <p>
-        The LCD continuously displays the calculated temperature.
-        The Serial Monitor shows the sensor reading, voltage, temperature and alarm status.
-    </p>
-
-    <div class="note">
-        <strong>Temperature &lt; 40°C:</strong> Status NORMAL, Buzzer OFF<br>
-        <strong>Temperature ≥ 40°C:</strong> HIGH TEMPERATURE warning, Buzzer ON<br>
-        <strong>LCD:</strong> Displays calculated temperature in °C
-    </div>
-</section>
-
-<section class="section" id="result">
-    <h2>Result</h2>
-
-    <p>
-        The Temperature Threshold Alarm experiment was implemented using Arduino UNO,
-        a temperature sensor, 16×2 I²C LCD and buzzer. The system continuously displays
-        the calculated temperature and activates the buzzer when the programmed 40°C
-        threshold is reached.
-    </p>
-</section>
-
-<section class="section">
-    <h2>What You Learn</h2>
-
-    <ul>
-        <li>How to read an analog temperature sensor using A0.</li>
-        <li>How to convert an ADC reading into voltage.</li>
-        <li>How to calculate temperature from sensor voltage.</li>
-        <li>How to display temperature on an I²C LCD.</li>
-        <li>How to compare temperature with a programmed threshold.</li>
-        <li>How to activate a buzzer during a high-temperature condition.</li>
-        <li>How to monitor diagnostic information through Serial Monitor.</li>
-    </ul>
-</section>
-
-</main>
-
-<footer>
-    <strong>Arduino Experiment</strong><br>
-    Temperature Threshold Alarm
-</footer>
-
-<script>
-function copyCode(){
-    const code=document.getElementById("arduinoCode").innerText;
-    navigator.clipboard.writeText(code);
-
-    const button=document.querySelector(".copy-button");
-    button.innerText="Copied!";
-
-    setTimeout(function(){
-        button.innerText="Copy Code";
-    },1500);
 }
+</script>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
+<script>
+
+/* =====================================
+   ORIGINAL ARDUINO CODE
+===================================== */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =====================================
+   TEN EXPLANATION STEPS
+===================================== */
+const steps = [
+
+    {
+        title: "Include LCD libraries",
+        start: "#include <Wire.h>",
+        end: "#include <LiquidCrystal_I2C.h>",
+        text:
+            "Wire.h provides I2C communication. " +
+            "LiquidCrystal_I2C.h controls the " +
+            "16x2 LCD used for displaying " +
+            "the measured temperature."
+    },
+
+    {
+        title: "Define pins and threshold",
+        start: "// PIN DEFINITIONS",
+        end: "const float TEMPERATURE_LIMIT = 40.0;",
+        text:
+            "The temperature sensor connects " +
+            "to A0, and the buzzer uses D8. " +
+            "The LCD address is 0x27. " +
+            "The alarm threshold is 40 degrees Celsius."
+    },
+
+    {
+        title: "Initialize LCD and buzzer",
+        start: "void setup() {",
+        end: "noTone(BUZZER_PIN);",
+        text:
+            "setup() starts Serial Monitor " +
+            "at 9600 baud, initializes the " +
+            "LCD, switches its backlight ON " +
+            "and configures the buzzer " +
+            "as an output."
+    },
+
+    {
+        title: "Display startup messages",
+        start: "// STARTING MESSAGE",
+        end: 'Serial.println("---------------------------");',
+        text:
+            "The LCD displays Temperature " +
+            "and Alarm System for two seconds. " +
+            "The sketch then clears the LCD " +
+            "and prints startup information " +
+            "to Serial Monitor, including " +
+            "the TMP36 sensor label."
+    },
+
+    {
+        title: "Read analog temperature sensor",
+        start: "void loop() {",
+        end: "int sensorValue = analogRead(TEMP_PIN);",
+        text:
+            "Each loop reads analog input A0. " +
+            "The sensor's analog-to-digital " +
+            "reading is stored in sensorValue."
+    },
+
+    {
+        title: "Convert voltage to temperature",
+        start: "// CONVERT ANALOG VALUE TO VOLTAGE",
+        end: "float temperature = (voltage - 0.5) * 100.0;",
+        text:
+            "The ADC value is converted " +
+            "to voltage using a 5 V reference. " +
+            "The code then subtracts the " +
+            "TMP36 0.5 V offset and multiplies " +
+            "by 100. This is not the LM35 formula."
+    },
+
+    {
+        title: "Display temperature on LCD",
+        start: "// DISPLAY TEMPERATURE ON LCD",
+        end: 'lcd.print("C ");',
+        text:
+            "The LCD displays the label " +
+            "Temperature on the first row. " +
+            "The second row shows the " +
+            "calculated Celsius value to " +
+            "one decimal place and a " +
+            "degree symbol."
+    },
+
+    {
+        title: "Print Serial Monitor readings",
+        start: "// SERIAL MONITOR DISPLAY",
+        end: 'Serial.println(" C");',
+        text:
+            "The source prints the raw " +
+            "ADC reading, calculated voltage " +
+            "to three decimal places and " +
+            "calculated temperature to one " +
+            "decimal place."
+    },
+
+    {
+        title: "Trigger high-temperature alarm",
+        start: "// TEMPERATURE THRESHOLD CHECK",
+        end: 'Serial.println("BUZZER: ON");',
+        text:
+            "If the calculated temperature " +
+            "is 40 degrees Celsius or higher, " +
+            "Arduino generates a 1000 Hz " +
+            "buzzer tone and prints a " +
+            "high-temperature warning."
+    },
+
+    {
+        title: "Stop buzzer and repeat",
+        start: "else {",
+        end: "delay(1000);",
+        text:
+            "Below the programmed limit, " +
+            "noTone() switches the buzzer OFF. " +
+            "Arduino prints NORMAL and " +
+            "BUZZER OFF, then waits " +
+            "1000 milliseconds before " +
+            "the next measurement."
+    }
+
+];
+
+/* =====================================
+   ESCAPE HTML CHARACTERS
+===================================== */
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =====================================
+   DISPLAY CODE WITH LINE NUMBERS
+===================================== */
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span></span>'
+            );
+
+        }).join("");
+}
+
+/* =====================================
+   FIND MATCHING CODE LINE
+===================================== */
+function findLine(searchText, startIndex = 0) {
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+/* =====================================
+   HIGHLIGHT AND EXPLAIN CODE
+===================================== */
+function showStep(index) {
+
+    const step = steps[index];
+
+    document.querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document.querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
+
+        return;
+    }
+
+    let endLine = findLine(step.end, startLine);
+
+    if (endLine < startLine) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =====================================
+   COPY ORIGINAL ARDUINO SKETCH
+===================================== */
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =====================================
+   SHOW OR HIDE QUIZ ANSWERS
+===================================== */
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =====================================
+   INITIALIZE EXPLORER
+===================================== */
+displayCode();
+showStep(0);
+
 </script>
 
 </body>
