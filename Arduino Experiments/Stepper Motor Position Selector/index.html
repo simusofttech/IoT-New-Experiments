@@ -1,3 +1,3193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stepper Motor Position Selector</title>
+
+<style>
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.header-content {
+    margin: auto 0;
+    padding: 35px 165px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    width: 100%;
+    padding: 12px 25px;
+    background: rgba(0,0,0,.12);
+}
+
+.header-left-buttons,
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: .25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* =====================================
+   STICKY NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+nav a {
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN SECTIONS
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    margin-top: 22px;
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 18px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+.output-box {
+    margin: 14px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px/1.8 Consolas, Monaco, monospace;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    padding: 16px;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    background: #f8fafc;
+    text-align: center;
+}
+
+.state-card strong {
+    display: block;
+    color: #1e3a8a;
+    font-size: 19px;
+    margin-bottom: 6px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid white;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    padding: 16px 0;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    color: #234e87;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media (max-width: 600px) {
+    .header {
+        min-height: 230px;
+        padding: 15px 0 0;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 21px 18px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================
+     HEADER
+===================================== -->
+<header class="header">
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Stepper Motor Position Selector</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a href="../index.html"
+               class="header-nav-btn">
+                &#8592; Back
+            </a>
+
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a href="../index.html"
+               class="header-nav-btn">Arduino</a>
+
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">ESP</a>
+
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">R-Pi</a>
+
+        </div>
+
+    </div>
+</header>
+
+<!-- =====================================
+     SECTION NAVIGATION
+===================================== -->
+<nav>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
+
+<main class="container">
+
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Stepper Motor Position Selector.png"
+        alt="Stepper Motor Position Selector Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To create a keypad-controlled
+        motor position selection
+        experiment using Arduino UNO,
+        a 4×4 matrix keypad,
+        a 16×2 I²C LCD,
+        an L293D motor driver
+        and a motor.
+    </p>
+
+    <p>
+        The user enters a
+        numerical target position
+        using the keypad.
+        Arduino compares the
+        target with a software
+        position counter
+        and commands forward
+        or reverse motor movement.
+    </p>
+
+</section>
+
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Stepper Motor
+        Position Selector
+        demonstrates keypad input,
+        LCD status display,
+        motor direction control
+        and simulated position
+        tracking using Arduino UNO.
+    </p>
+
+    <p>
+        A 4×4 matrix keypad
+        allows numerical target
+        values to be entered.
+        The program accepts
+        up to six digits
+        before confirmation.
+    </p>
+
+    <p>
+        Pressing the
+        hash key (#)
+        converts the entered
+        number into a
+        target position
+        and starts the
+        movement procedure.
+    </p>
+
+    <p>
+        The LCD displays
+        the current
+        and target position.
+    </p>
+
+    <p>
+        Arduino compares
+        the entered target
+        with currentPosition,
+        which begins at zero.
+    </p>
+
+    <p>
+        If the target
+        is greater than
+        the current position,
+        the motor is
+        driven forward.
+    </p>
+
+    <p>
+        If the target
+        is smaller,
+        the motor is
+        driven in reverse.
+    </p>
+
+    <p>
+        The program increments
+        or decrements the
+        currentPosition variable
+        once every
+        100 milliseconds
+        until the target
+        is reached.
+    </p>
+
+    <p>
+        The motor stops
+        at the end
+        of the software
+        counting sequence,
+        and the LCD
+        shows TARGET REACHED.
+    </p>
+
+    <p>
+        Additional keypad
+        keys provide commands
+        for clearing input,
+        displaying positions,
+        stopping the motor
+        and resetting
+        the position counter.
+    </p>
+
+    <div class="note">
+
+        <strong>Important Hardware Clarification:</strong>
+
+        <p>
+            Although the experiment
+            is named Stepper Motor
+            Position Selector,
+            the supplied sketch
+            uses one L293D
+            H-bridge channel
+            with EN1, IN1
+            and IN2.
+        </p>
+
+        <p>
+            This is direction
+            control suitable
+            for a compatible
+            two-terminal DC motor,
+            not complete
+            stepper-motor phase
+            control.
+        </p>
+
+        <p>
+            The sketch does
+            not read an encoder,
+            limit switch
+            or any other
+            position feedback.
+            Its currentPosition
+            is a simulated
+            software counter,
+            not a measurement
+            of physical position.
+        </p>
+
+        <p>
+            The original
+            sketch has been
+            preserved without
+            silently replacing
+            the motor-control logic.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img src="Arduino UNO.png"
+                 alt="Arduino UNO R3">
+
+            <h4>Arduino UNO R3 (×1)</h4>
+
+            <p>
+                Processes keypad
+                input, manages
+                position variables
+                and controls
+                the motor driver.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img src="4x4 Keypad.png"
+                 alt="4x4 Matrix Keypad">
+
+            <h4>4×4 Matrix Keypad (×1)</h4>
+
+            <p>
+                Used to enter
+                targets and
+                provide additional
+                control commands.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img src="LCD 16X2 I2C.png"
+                 alt="16x2 I2C LCD">
+
+            <h4>16×2 I²C LCD (×1)</h4>
+
+            <p>
+                Displays entered
+                targets, current
+                position and
+                movement messages.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img src="Driver Board Stepper Motor.png"
+                 alt="L293D Motor Driver">
+
+            <h4>L293D Motor Driver (×1)</h4>
+
+            <p>
+                Provides a
+                motor-control
+                output using
+                enable and
+                direction signals.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img src="Stepper Motor.png"
+                 alt="Motor">
+
+            <h4>Motor (×1)</h4>
+
+            <p>
+                Represents the
+                positioning motor
+                in the source
+                experiment.
+                Verify compatibility
+                with the
+                control method.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img src="Breadboard.png"
+                 alt="Breadboard">
+
+            <h4>Breadboard (×1)</h4>
+
+            <p>
+                Organizes the
+                low-voltage
+                wiring and
+                driver connections.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img src="Jumper Wires.png"
+                 alt="Jumper Wires">
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Connect Arduino,
+                the keypad,
+                display and
+                motor driver.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Required Arduino Libraries:</strong>
+
+        <ul>
+            <li>Keypad.h</li>
+            <li>Wire.h</li>
+            <li>LiquidCrystal_I2C.h</li>
+        </ul>
+
+        <p>
+            Keypad.h reads
+            the 4×4 matrix
+            keypad.
+        </p>
+
+        <p>
+            Wire.h handles
+            I²C communication.
+            LiquidCrystal_I2C.h
+            controls the
+            16×2 LCD at
+            address 0x27.
+        </p>
+
+        <p>
+            The uploaded
+            page references
+            the component image
+            Stepper Motor.png.
+            Before physical
+            implementation,
+            confirm the exact
+            motor type and
+            whether the source
+            control sequence
+            is suitable.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>4×4 Matrix Keypad Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Keypad Line</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>R1</td><td>D4</td></tr>
+                <tr><td>R2</td><td>D5</td></tr>
+                <tr><td>R3</td><td>D6</td></tr>
+                <tr><td>R4</td><td>D7</td></tr>
+                <tr><td>C1</td><td>D8</td></tr>
+                <tr><td>C2</td><td>D9</td></tr>
+                <tr><td>C3</td><td>D10</td></tr>
+                <tr><td>C4</td><td>D11</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>16×2 I²C LCD Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>LCD Terminal</th>
+                    <th>Arduino Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>VCC</td><td>5V</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>SDA</td><td>A4</td></tr>
+                <tr><td>SCL</td><td>A5</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>L293D Motor Driver Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>L293D Signal</th>
+                    <th>Connection</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>EN1</td>
+                    <td>Arduino D12</td>
+                    <td>Enable motor channel</td>
+                </tr>
+                <tr>
+                    <td>IN1</td>
+                    <td>Arduino D13</td>
+                    <td>Direction input 1</td>
+                </tr>
+                <tr>
+                    <td>IN2</td>
+                    <td>Arduino A0</td>
+                    <td>Direction input 2</td>
+                </tr>
+                <tr>
+                    <td>OUT1 / OUT2</td>
+                    <td>Compatible motor terminals</td>
+                    <td>H-bridge output</td>
+                </tr>
+                <tr>
+                    <td>Logic VCC</td>
+                    <td>5V</td>
+                    <td>Driver logic supply</td>
+                </tr>
+                <tr>
+                    <td>Logic GND</td>
+                    <td>Arduino GND</td>
+                    <td>Common ground</td>
+                </tr>
+                <tr>
+                    <td>Motor supply</td>
+                    <td>Suitable motor-rated supply</td>
+                    <td>Motor power</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>L293D Hardware Notes:</strong>
+
+        <p>
+            The table retains
+            the signal names
+            and Arduino pin
+            assignments from
+            the uploaded source.
+        </p>
+
+        <p>
+            For a bare
+            L293D integrated
+            circuit, EN1, IN1,
+            IN2, OUT1, OUT2,
+            logic supply,
+            motor supply
+            and ground must
+            be connected to
+            their correct
+            physical IC pins.
+        </p>
+
+        <p>
+            Driver boards may
+            have different
+            terminal labels
+            or integrated
+            enable jumpers.
+            Follow the actual
+            board's pinout.
+        </p>
+
+        <p>
+            The motor supply
+            must match both
+            the motor and
+            driver's voltage
+            and current ratings.
+            The motor-supply
+            ground must be
+            common with Arduino
+            ground.
+        </p>
+
+        <p>
+            A conventional
+            four-wire bipolar
+            stepper motor cannot
+            be properly positioned
+            by only one
+            H-bridge channel.
+            This sketch provides
+            no stepping sequence.
+        </p>
+
+    </div>
+
+    <h3>Complete Arduino Pin Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>Arduino Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Keypad R1–R4</td><td>D4–D7</td></tr>
+                <tr><td>Keypad C1–C4</td><td>D8–D11</td></tr>
+                <tr><td>L293D EN1</td><td>D12</td></tr>
+                <tr><td>L293D IN1</td><td>D13</td></tr>
+                <tr><td>L293D IN2</td><td>A0</td></tr>
+                <tr><td>LCD SDA</td><td>A4</td></tr>
+                <tr><td>LCD SCL</td><td>A5</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Stepper Motor Position Selector Circuit.png"
+        alt="Stepper Motor Position Selector Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div id="circuit-placeholder"
+         class="note"
+         hidden>
+        Verified circuit diagram image pending.
+        Add the approved circuit PNG using
+        Stepper Motor Position Selector Circuit.png.
+    </div>
+
+</section>
+
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Initialize Keypad, LCD and Motor Driver
+
+        <br>↓<br>
+
+        Stop Motor Output
+
+        <br>↓<br>
+
+        Display Position Selector Message
+
+        <br>↓<br>
+
+        Show Target and Current Counter
+
+        <br>↓<br>
+
+        Enter Numeric Target on Keypad
+
+        <br>↓<br>
+
+        Press # to Confirm
+
+        <br>↓<br>
+
+        Compare Target and Current Counters
+
+        <br>↓<br>
+
+        Target Greater → Forward Direction
+
+        <br>↓<br>
+
+        Target Smaller → Reverse Direction
+
+        <br>↓<br>
+
+        Update Counter by One Every 100 ms
+
+        <br>↓<br>
+
+        Counter Reaches Target
+
+        <br>↓<br>
+
+        Disable Motor Driver
+
+        <br>↓<br>
+
+        Display TARGET REACHED
+
+        <br>↓<br>
+
+        Show Target and Current Position
+
+    </div>
+
+    <h3>Keypad Input</h3>
+
+    <p>
+        Arduino scans
+        a 4×4 matrix
+        keypad using
+        the Keypad library.
+    </p>
+
+    <p>
+        Numeric keys
+        allow entry of
+        up to six digits.
+        These digits are
+        stored temporarily
+        as a String.
+    </p>
+
+    <p>
+        When # is
+        pressed, the
+        entered String
+        is converted
+        to a long
+        target-position value.
+    </p>
+
+    <h3>Keypad Control Functions</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Function</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0–9</td>
+                    <td>Enter numerical target</td>
+                </tr>
+                <tr>
+                    <td>#</td>
+                    <td>Confirm target and execute movement</td>
+                </tr>
+                <tr>
+                    <td>*</td>
+                    <td>Clear typed input and stop motor output</td>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>Set current software position to zero</td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>Stop motor output</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>Display current and target positions</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>Reset current position counter to zero</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Forward Motor Control</h3>
+
+    <p>
+        When targetPosition
+        is greater than
+        currentPosition,
+        motorForward() sets
+        EN1 HIGH,
+        IN1 HIGH
+        and IN2 LOW.
+    </p>
+
+    <p>
+        The software counter
+        increases by one
+        after every programmed
+        100 ms delay
+        until it reaches
+        the target.
+    </p>
+
+    <h3>Reverse Motor Control</h3>
+
+    <p>
+        When the target
+        is less than
+        the current counter,
+        motorReverse() sets
+        EN1 HIGH,
+        IN1 LOW
+        and IN2 HIGH.
+    </p>
+
+    <p>
+        The software counter
+        decreases by one
+        after each 100 ms
+        interval until
+        it reaches
+        the target.
+    </p>
+
+    <h3>Target Reached</h3>
+
+    <p>
+        When the counter
+        equals the target,
+        Arduino disables
+        the motor output
+        and displays
+        TARGET REACHED.
+    </p>
+
+    <p>
+        It then returns
+        to the regular
+        LCD status view.
+    </p>
+
+    <h3>Software Position Tracking</h3>
+
+    <div class="note">
+
+        <strong>Simulated Counter Formula:</strong>
+
+        <p>
+            Forward:
+            currentPosition =
+            currentPosition + 1
+        </p>
+
+        <p>
+            Reverse:
+            currentPosition =
+            currentPosition - 1
+        </p>
+
+        <p>
+            The counter changes
+            once per nominal
+            100 ms interval.
+            It is not linked
+            to an encoder,
+            physical step
+            or measured angle.
+        </p>
+
+    </div>
+
+    <div class="state-grid">
+
+        <div class="state-card">
+            <strong>100 ms</strong>
+            Counter update delay
+        </div>
+
+        <div class="state-card">
+            <strong>6 digits</strong>
+            Maximum target input length
+        </div>
+
+        <div class="state-card">
+            <strong>0x27</strong>
+            LCD I²C address
+        </div>
+
+        <div class="state-card">
+            <strong>2 directions</strong>
+            Forward and reverse control
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Control Limitation:</strong>
+
+        <p>
+            moveToTarget()
+            uses blocking
+            while loops.
+        </p>
+
+        <p>
+            During a movement
+            loop, the code
+            does not call
+            keypad.getKey().
+        </p>
+
+        <p>
+            Consequently,
+            pressing B or *
+            during movement
+            does not immediately
+            interrupt the motor.
+            Those commands are
+            only processed once
+            the loop returns
+            to keypad scanning.
+        </p>
+
+        <p>
+            A true position-controlled
+            implementation would
+            need appropriate motor
+            stepping or position
+            feedback and an
+            interruptible control
+            loop.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Arrange Arduino UNO,
+            the 4×4 keypad,
+            16×2 I²C LCD,
+            L293D driver,
+            compatible motor,
+            breadboard and
+            jumper wires.
+        </li>
+
+        <li>
+            Identify the
+            physical row
+            and column pins
+            of the keypad.
+        </li>
+
+        <li>
+            Connect keypad
+            rows R1–R4
+            to D4–D7.
+        </li>
+
+        <li>
+            Connect keypad
+            columns C1–C4
+            to D8–D11.
+        </li>
+
+        <li>
+            Connect LCD
+            VCC to 5V
+            and GND
+            to GND.
+        </li>
+
+        <li>
+            Connect LCD
+            SDA to A4
+            and SCL
+            to A5.
+        </li>
+
+        <li>
+            Connect Arduino
+            D12 to the
+            L293D EN1 input.
+        </li>
+
+        <li>
+            Connect Arduino
+            D13 to
+            L293D IN1.
+        </li>
+
+        <li>
+            Connect Arduino
+            A0 to
+            L293D IN2.
+        </li>
+
+        <li>
+            Connect the
+            compatible motor
+            to the driver's
+            OUT1 and
+            OUT2 terminals.
+        </li>
+
+        <li>
+            Connect the
+            L293D logic
+            power and
+            common ground.
+        </li>
+
+        <li>
+            Provide motor
+            power suitable
+            for the driver
+            and motor ratings.
+        </li>
+
+        <li>
+            Confirm the
+            specific motor's
+            compatibility with
+            this direction-control
+            circuit before
+            applying power.
+        </li>
+
+        <li>
+            Open Arduino IDE
+            or the intended
+            simulation environment.
+        </li>
+
+        <li>
+            Install the
+            Keypad and
+            compatible
+            LiquidCrystal_I2C
+            libraries if needed.
+        </li>
+
+        <li>
+            Create a sketch
+            named
+            Stepper_Motor_Position_Selector.ino.
+        </li>
+
+        <li>
+            Copy the complete
+            Arduino program
+            from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program,
+            or start the
+            selected simulation.
+        </li>
+
+        <li>
+            Observe the
+            startup message
+            POSITION SELECT
+            on the LCD.
+        </li>
+
+        <li>
+            Enter a numerical
+            target such as
+            10 using
+            the keypad.
+        </li>
+
+        <li>
+            Press #
+            to confirm the
+            target.
+        </li>
+
+        <li>
+            Observe the
+            forward command
+            and software
+            counter increasing
+            toward 10.
+        </li>
+
+        <li>
+            Wait until
+            TARGET REACHED
+            appears on
+            the display.
+        </li>
+
+        <li>
+            Enter a
+            smaller target
+            such as 4
+            and press #.
+        </li>
+
+        <li>
+            Observe the
+            reverse command
+            and counter
+            decreasing
+            toward 4.
+        </li>
+
+        <li>
+            Test the
+            * key
+            for clearing
+            entered input.
+        </li>
+
+        <li>
+            Test A
+            and D
+            to reset
+            the software
+            position to zero.
+        </li>
+
+        <li>
+            Use C
+            to view the
+            current and
+            target positions.
+        </li>
+
+        <li>
+            Observe that
+            B stops the
+            motor output
+            when the
+            program is
+            scanning the keypad.
+        </li>
+
+        <li>
+            Compare the
+            displayed counter
+            with the actual
+            motor behavior
+            and note that
+            the source sketch
+            does not measure
+            physical displacement.
+        </li>
+
+    </ol>
+
+</section>
+
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Stepper Motor Position Selector ·
+        Select a step to highlight
+        and understand the
+        original Arduino sketch.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Stepper_Motor_Position_Selector.ino
+                </span>
+
+                <button type="button"
+                        class="copy-button"
+                        onclick="copyCode()">
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Choose a topic
+                to highlight the
+                corresponding code
+                and read its
+                explanation.
+            </p>
+
+            <div class="steps">
+
+                <button type="button"
+                        class="step active"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Libraries and keypad mapping
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Driver pins and position variables
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Initialize LCD and driver
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Enter numerical target
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Confirm target with #
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Clear, zero and stop commands
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Compare current and target
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Forward position counting
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Reverse position counting
+                </button>
+
+                <button type="button"
+                        class="step"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Motor control functions
+                </button>
+
+            </div>
+
+            <div id="explanation"
+                 class="explanation"
+                 aria-live="polite"></div>
+
+            <details>
+                <summary>
+                    Explore more: 4×4 Matrix Keypad
+                </summary>
+
+                <p>
+                    The keypad
+                    has four
+                    row signals
+                    and four
+                    column signals.
+                </p>
+
+                <p>
+                    The Keypad
+                    library identifies
+                    which row-column
+                    combination is
+                    activated and
+                    converts it
+                    into a
+                    character.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: L293D Driver
+                </summary>
+
+                <p>
+                    The L293D
+                    is a motor
+                    driver containing
+                    H-bridge channels.
+                </p>
+
+                <p>
+                    One channel
+                    can drive
+                    a compatible
+                    two-terminal
+                    motor forward
+                    or reverse.
+                </p>
+
+                <p>
+                    A bipolar
+                    stepper needs
+                    coordinated control
+                    of two winding
+                    channels to
+                    produce steps.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Position Variables
+                </summary>
+
+                <p>
+                    targetPosition
+                    stores the
+                    position entered
+                    by the user.
+                </p>
+
+                <p>
+                    currentPosition
+                    represents the
+                    program's software
+                    position counter.
+                </p>
+
+                <p>
+                    Neither value
+                    comes from
+                    a position
+                    sensor.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Blocking Loops
+                </summary>
+
+                <p>
+                    During moveToTarget(),
+                    the sketch
+                    uses while
+                    loops to
+                    update the
+                    counter until
+                    the target
+                    is reached.
+                </p>
+
+                <p>
+                    The keypad
+                    is not
+                    read during
+                    these loops.
+                    The stop
+                    command therefore
+                    does not work
+                    as an immediate
+                    emergency stop
+                    during a
+                    long movement.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: LCD Communication
+                </summary>
+
+                <p>
+                    The LCD
+                    uses I²C
+                    communication through
+                    SDA and SCL.
+                </p>
+
+                <p>
+                    The Arduino
+                    UNO connects
+                    these signals
+                    through A4
+                    and A5.
+                </p>
+
+                <p>
+                    The source
+                    code uses
+                    address 0x27.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>Which Arduino pins connect to keypad rows?</li>
+                    <li>Which pins connect to keypad columns?</li>
+                    <li>What is the I²C LCD address?</li>
+                    <li>What does pressing # do?</li>
+                    <li>Which pins control EN1, IN1 and IN2?</li>
+                    <li>How often does the software position change?</li>
+                    <li>What does the A key do?</li>
+                    <li>Does the sketch measure physical motor position?</li>
+                </ol>
+
+                <button type="button"
+                        class="copy-button"
+                        style="border:1px solid #bfdbfe"
+                        onclick="toggleAnswers()">
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>D4, D5, D6 and D7</li>
+                        <li>D8, D9, D10 and D11</li>
+                        <li>0x27</li>
+                        <li>Confirms the entered target and begins movement.</li>
+                        <li>D12, D13 and A0</li>
+                        <li>Once every programmed 100 ms delay</li>
+                        <li>Resets the software current position to zero.</li>
+                        <li>No. It updates a simulated counter.</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try it:</strong>
+        Enter target 10,
+        press #,
+        then enter target 4.
+        Observe the forward
+        and reverse
+        counter updates
+        on the LCD.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        After initialization,
+        the LCD first
+        shows the
+        experiment startup
+        message.
+    </p>
+
+    <h3>Startup Display</h3>
+
+    <div class="output-box">
+<pre>POSITION SELECT
+Enter Target</pre>
+    </div>
+
+    <p>
+        After approximately
+        two seconds,
+        the LCD shows
+        the target and
+        current software
+        position.
+    </p>
+
+    <h3>Initial Status Display</h3>
+
+    <div class="output-box">
+<pre>Target:0
+Current:0</pre>
+    </div>
+
+    <h3>Entering a Target</h3>
+
+    <p>
+        Entering 10
+        produces an
+        input display
+        similar to:
+    </p>
+
+    <div class="output-box">
+<pre>Target:10
+#=GO *=CLEAR</pre>
+    </div>
+
+    <h3>Forward Movement</h3>
+
+    <p>
+        Pressing #
+        while the current
+        position is zero
+        and the target
+        is 10 causes
+        a forward command.
+    </p>
+
+    <div class="output-box">
+<pre>Moving Forward
+Pos:1</pre>
+    </div>
+
+    <p>
+        The displayed
+        counter progresses
+        through values
+        from 1 to 10.
+    </p>
+
+    <h3>Target Reached</h3>
+
+    <div class="output-box">
+<pre>TARGET REACHED
+Pos:10</pre>
+    </div>
+
+    <p>
+        The motor output
+        is disabled,
+        and the LCD
+        returns to
+        the status display.
+    </p>
+
+    <div class="output-box">
+<pre>Target:10
+Current:10</pre>
+    </div>
+
+    <h3>Reverse Movement</h3>
+
+    <p>
+        Entering 4
+        after the
+        counter has
+        reached 10
+        produces a
+        reverse command.
+    </p>
+
+    <div class="output-box">
+<pre>Moving Reverse
+Pos:9</pre>
+    </div>
+
+    <p>
+        The counter
+        continues decreasing
+        until it reaches 4.
+    </p>
+
+    <div class="output-box">
+<pre>TARGET REACHED
+Pos:4</pre>
+    </div>
+
+    <h3>Keypad Action Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Expected LCD / Program Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0–9</td>
+                    <td>Displays entered target digits</td>
+                </tr>
+                <tr>
+                    <td>#</td>
+                    <td>Starts movement toward entered target</td>
+                </tr>
+                <tr>
+                    <td>*</td>
+                    <td>Clears typed input and disables motor output when processed</td>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>Displays Position ZERO; current counter becomes 0</td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>Displays MOTOR STOPPED when processed</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>Displays current and target counters</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>Displays COUNTER RESET; current counter becomes 0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Motor Command Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Command</th>
+                    <th>EN1</th>
+                    <th>IN1</th>
+                    <th>IN2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Forward</td>
+                    <td>HIGH</td>
+                    <td>HIGH</td>
+                    <td>LOW</td>
+                </tr>
+                <tr>
+                    <td>Reverse</td>
+                    <td>HIGH</td>
+                    <td>LOW</td>
+                    <td>HIGH</td>
+                </tr>
+                <tr>
+                    <td>Stop</td>
+                    <td>LOW</td>
+                    <td>LOW</td>
+                    <td>LOW</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Expected Output Notes:</strong>
+
+        <p>
+            The example LCD
+            text follows the
+            original sketch.
+            Long messages
+            may fill the
+            available 16-character
+            rows.
+        </p>
+
+        <p>
+            The program
+            contains no
+            Serial.begin()
+            or Serial.println()
+            statements, so
+            no Serial Monitor
+            output is generated.
+        </p>
+
+        <p>
+            Movement duration
+            is based on
+            the software
+            counting loop,
+            not on actual
+            measured motor travel.
+        </p>
+
+        <p>
+            LCD messages
+            and delays can
+            introduce additional
+            execution time.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Stepper Motor
+        Position Selector
+        experiment demonstrates
+        how Arduino UNO
+        can accept a
+        numerical target
+        from a 4×4 keypad,
+        display position
+        information on
+        a 16×2 I²C LCD,
+        and command a
+        motor driver
+        in forward and
+        reverse directions.
+    </p>
+
+    <p>
+        The current
+        position is represented
+        using a software
+        counter that changes
+        once per programmed
+        100 ms interval.
+    </p>
+
+    <p>
+        The motor command
+        stops when the
+        simulated current
+        position matches
+        the entered target.
+    </p>
+
+    <p>
+        This demonstrates
+        keypad interfacing,
+        target comparison,
+        direction control
+        and simulated
+        position tracking.
+    </p>
+
+    <p>
+        Actual stepper positioning
+        or closed-loop physical
+        positioning is not
+        implemented by the
+        supplied sketch.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Connecting a 4×4 matrix keypad to Arduino UNO.</li>
+        <li>Understanding keypad rows and columns.</li>
+        <li>Reading keypad characters using Keypad.h.</li>
+        <li>Entering multi-digit numerical targets.</li>
+        <li>Converting a String into a numerical value.</li>
+        <li>Using keypad symbols for control commands.</li>
+        <li>Interfacing a 16×2 I²C LCD.</li>
+        <li>Displaying current and target position values.</li>
+        <li>Understanding the L293D motor driver.</li>
+        <li>Controlling motor direction with digitalWrite().</li>
+        <li>Using enable and direction input signals.</li>
+        <li>Comparing targetPosition and currentPosition.</li>
+        <li>Increasing and decreasing a software counter.</li>
+        <li>Using while loops for repeated operations.</li>
+        <li>Understanding the effect of delay(100).</li>
+        <li>Stopping motor output after a simulated movement.</li>
+        <li>Resetting a software position counter.</li>
+        <li>Understanding the difference between a counter and physical position feedback.</li>
+        <li>Identifying limitations of blocking movement loops.</li>
+        <li>Understanding why a true stepper motor needs an appropriate stepping sequence.</li>
+        <li>Building a keypad-controlled motor direction and position simulation.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>Stepper Motor Position Selector</strong>
+</footer>
+
+<!-- =====================================
+     ORIGINAL ARDUINO PROGRAM
+===================================== -->
+<script type="text/plain" id="arduino-program">
+#include <Keypad.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// KEYPAD
+const byte ROWS = 4;
+const byte COLS = 4;
+
+char keys[ROWS][COLS] =
+{
+  {'1','2','3','A'},
+  {'4','5','6','B'},
+  {'7','8','9','C'},
+  {'*','0','#','D'}
+};
+
+byte rowPins[ROWS] = {4, 5, 6, 7};
+byte colPins[COLS] = {8, 9, 10, 11};
+
+Keypad keypad = Keypad(
+  makeKeymap(keys),
+  rowPins,
+  colPins,
+  ROWS,
+  COLS
+);
+
+// MOTOR DRIVER
+const int EN1 = 12;
+const int IN1 = 13;
+const int IN2 = A0;
+
+// POSITION
+long currentPosition = 0;
+long targetPosition = 0;
+
+String inputNumber = "";
+
+void setup()
+{
+  pinMode(EN1, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+  motorStop();
+
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("POSITION SELECT");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Enter Target");
+
+  delay(2000);
+
+  showTarget();
+}
+
+void loop()
+{
+  char key = keypad.getKey();
+
+  if (key)
+  {
+    // Numerical target entry
+    if (key >= '0' && key <= '9')
+    {
+      if (inputNumber.length() < 6)
+      {
+        inputNumber += key;
+
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Target:");
+        lcd.print(inputNumber);
+
+        lcd.setCursor(0, 1);
+        lcd.print("#=GO *=CLEAR");
+      }
+    }
+
+    // Confirm target
+    else if (key == '#')
+    {
+      if (inputNumber.length() > 0)
+      {
+        targetPosition = inputNumber.toInt();
+        inputNumber = "";
+
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Target:");
+        lcd.print(targetPosition);
+
+        moveToTarget();
+      }
+    }
+
+    // Clear target input
+    else if (key == '*')
+    {
+      inputNumber = "";
+      motorStop();
+      showTarget();
+    }
+
+    // Zero current position
+    else if (key == 'A')
+    {
+      motorStop();
+      currentPosition = 0;
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Position ZERO");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Current: 0");
+
+      delay(1200);
+      showTarget();
+    }
+
+    // Stop motor
+    else if (key == 'B')
+    {
+      motorStop();
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("MOTOR STOPPED");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Current:");
+      lcd.print(currentPosition);
+
+      delay(1200);
+      showTarget();
+    }
+
+    // Show current position
+    else if (key == 'C')
+    {
+      motorStop();
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Current:");
+      lcd.print(currentPosition);
+
+      lcd.setCursor(0, 1);
+      lcd.print("Target:");
+      lcd.print(targetPosition);
+
+      delay(1200);
+      showTarget();
+    }
+
+    // Reset position counter
+    else if (key == 'D')
+    {
+      motorStop();
+      currentPosition = 0;
+
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("COUNTER RESET");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Current: 0");
+
+      delay(1200);
+      showTarget();
+    }
+  }
+}
+
+void moveToTarget()
+{
+  if (targetPosition == currentPosition)
+  {
+    motorStop();
+
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("TARGET REACHED");
+
+    lcd.setCursor(0, 1);
+    lcd.print("Pos:");
+    lcd.print(currentPosition);
+
+    delay(1200);
+    showTarget();
+    return;
+  }
+
+  // Move forward
+  if (targetPosition > currentPosition)
+  {
+    motorForward();
+
+    while (currentPosition < targetPosition)
+    {
+      // Simulation step:
+      // Increase one position unit per step.
+      currentPosition++;
+
+      lcd.setCursor(0, 0);
+      lcd.print("Moving Forward ");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Pos:");
+      lcd.print(currentPosition);
+      lcd.print(" ");
+
+      delay(100);
+    }
+  }
+
+  // Move reverse
+  else
+  {
+    motorReverse();
+
+    while (currentPosition > targetPosition)
+    {
+      // Simulation step:
+      // Decrease one position unit per step.
+      currentPosition--;
+
+      lcd.setCursor(0, 0);
+      lcd.print("Moving Reverse ");
+
+      lcd.setCursor(0, 1);
+      lcd.print("Pos:");
+      lcd.print(currentPosition);
+      lcd.print(" ");
+
+      delay(100);
+    }
+  }
+
+  motorStop();
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("TARGET REACHED");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Pos:");
+  lcd.print(currentPosition);
+
+  delay(1200);
+
+  showTarget();
+}
+
+void motorForward()
+{
+  digitalWrite(EN1, HIGH);
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+}
+
+void motorReverse()
+{
+  digitalWrite(EN1, HIGH);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+}
+
+void motorStop()
+{
+  digitalWrite(EN1, LOW);
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+}
+
+void showTarget()
+{
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Target:");
+  lcd.print(targetPosition);
+
+  lcd.setCursor(0, 1);
+  lcd.print("Current:");
+  lcd.print(currentPosition);
+}
+</script>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
+<script>
+
+/* =====================================
+   COMPLETE ORIGINAL PROGRAM
+===================================== */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =====================================
+   TEN EXPLANATION STEPS
+===================================== */
+const steps = [
+
+    {
+        title: "Libraries and keypad mapping",
+        start: "#include <Keypad.h>",
+        end: "COLS",
+        text:
+            "The sketch loads Keypad, Wire " +
+            "and LiquidCrystal_I2C libraries. " +
+            "It defines a 4x4 keypad using " +
+            "rows D4-D7 and columns D8-D11. " +
+            "The LCD operates at address 0x27."
+    },
+
+    {
+        title: "Driver pins and position variables",
+        start: "// MOTOR DRIVER",
+        end: 'String inputNumber = "";',
+        text:
+            "EN1 is assigned to D12, " +
+            "IN1 to D13 and IN2 to A0. " +
+            "currentPosition and targetPosition " +
+            "begin at zero. inputNumber stores " +
+            "typed digits before confirmation."
+    },
+
+    {
+        title: "Initialize LCD and driver",
+        start: "void setup()",
+        end: "showTarget();",
+        text:
+            "setup() configures the three " +
+            "motor driver control signals, " +
+            "stops the motor, initializes " +
+            "the LCD, displays POSITION SELECT " +
+            "and then shows the target " +
+            "and current software positions."
+    },
+
+    {
+        title: "Enter numerical target",
+        start: "void loop()",
+        end: 'lcd.print("#=GO *=CLEAR");',
+        text:
+            "The program scans the keypad. " +
+            "Digits 0-9 are appended to " +
+            "inputNumber until it contains " +
+            "six characters. The LCD " +
+            "shows the typed target."
+    },
+
+    {
+        title: "Confirm target with #",
+        start: "// Confirm target",
+        end: "moveToTarget();",
+        text:
+            "When # is pressed and the input " +
+            "is not empty, Arduino converts " +
+            "the typed number to an integer, " +
+            "stores it as targetPosition, " +
+            "clears the input and calls " +
+            "moveToTarget()."
+    },
+
+    {
+        title: "Clear, zero and stop commands",
+        start: "// Clear target input",
+        end: "// Reset position counter",
+        text:
+            "The source handles * to clear " +
+            "input, A to zero currentPosition, " +
+            "B to disable motor output, " +
+            "C to show the current and target " +
+            "values, and D to reset the counter. " +
+            "These keys are processed when " +
+            "loop() is scanning the keypad."
+    },
+
+    {
+        title: "Compare current and target",
+        start: "void moveToTarget()",
+        end: "return;",
+        text:
+            "moveToTarget() first checks " +
+            "whether targetPosition already " +
+            "equals currentPosition. If so, " +
+            "it stops the motor and displays " +
+            "TARGET REACHED."
+    },
+
+    {
+        title: "Forward position counting",
+        start: "// Move forward",
+        end: "delay(100);",
+        text:
+            "For a larger target, Arduino " +
+            "calls motorForward(), increments " +
+            "currentPosition one unit at a time, " +
+            "updates the LCD and waits 100 ms " +
+            "after each update. These units " +
+            "are software counts, not measured steps."
+    },
+
+    {
+        title: "Reverse position counting",
+        start: "// Move reverse",
+        end: "delay(100);",
+        text:
+            "For a smaller target, Arduino " +
+            "calls motorReverse(), decreases " +
+            "currentPosition, updates the LCD " +
+            "and waits 100 ms for each " +
+            "software counter change."
+    },
+
+    {
+        title: "Motor control functions",
+        start: "void motorForward()",
+        end: "void showTarget()",
+        text:
+            "motorForward() drives EN1 and IN1 " +
+            "HIGH with IN2 LOW. motorReverse() " +
+            "reverses the inputs. motorStop() " +
+            "disables EN1 and sets both direction " +
+            "pins LOW. showTarget() displays " +
+            "the target and current counters."
+    }
+
+];
+
+/* =====================================
+   ESCAPE HTML CHARACTERS
+===================================== */
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =====================================
+   DISPLAY SOURCE WITH LINE NUMBERS
+===================================== */
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span></span>'
+            );
+
+        }).join("");
+}
+
+/* =====================================
+   FIND MATCHING SOURCE LINE
+===================================== */
+function findLine(searchText, startIndex = 0) {
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+/* =====================================
+   HIGHLIGHT SELECTED STEP
+===================================== */
+function showStep(index) {
+
+    const step = steps[index];
+
+    document.querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document.querySelectorAll(".code-line")
+        .forEach(function(line) {
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching source lines were not found.";
+
+        return;
+    }
+
+    let endLine = findLine(step.end, startLine);
+
+    if (endLine < startLine) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const firstLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =====================================
+   COPY COMPLETE ORIGINAL ARDUINO CODE
+===================================== */
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =====================================
+   SHOW OR HIDE QUIZ ANSWERS
+===================================== */
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =====================================
+   INITIALIZE CODE VIEWER
+===================================== */
+displayCode();
+showStep(0);
+
+</script>
+
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
