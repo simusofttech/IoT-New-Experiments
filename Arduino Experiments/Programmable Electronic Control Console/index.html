@@ -1,26 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Programmable Electronic Control Console</title>
+<title>Programmable Electronic Control Console</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
 }
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+html {
+    scroll-behavior: smooth;
+}
 
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -31,8 +39,6 @@ body{
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -46,8 +52,6 @@ body{
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -65,8 +69,6 @@ body{
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -74,26 +76,15 @@ body{
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -109,15 +100,13 @@ body{
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -135,18 +124,474 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   STICKY NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    margin-top: 22px;
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    font-size: 18px;
+    margin: 0 0 8px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    font-weight: bold;
+    color: #1e3a8a;
+    font-size: 18px;
+    line-height: 2;
+}
+
+.command-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.command-card {
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    padding: 15px;
+    text-align: center;
+}
+
+.command-card strong {
+    display: block;
+    color: #1e3a8a;
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.command-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #475569;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    min-width: 0;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    background: white;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    color: #1e3a8a;
+    font-size: 17px;
+    margin: 0 0 7px;
+}
+
+.explanation p {
+    color: #526875;
+    font-size: 15px;
+    margin: 0;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    color: #234e87;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
 
 @media (max-width: 600px) {
-
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -183,8 +628,8 @@ body{
 
     .header-nav-btn {
         padding: 8px 7px;
-        font-size: 11px;
         min-height: 36px;
+        font-size: 11px;
     }
 
     .home-icon-btn {
@@ -192,232 +637,32 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
     }
-}
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
 
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
+    .steps {
+        grid-template-columns: 1fr;
+    }
 
-nav a:hover{
-    color:#2563eb;
-}
-
-.container{
-    width:90%;
-    max-width:950px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section p{
-    margin-bottom:10px;
-}
-
-ul,ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
-}
-
-.code-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 14px;
-    background:#1e293b;
-    color:white;
-    border-radius:8px 8px 0 0;
-}
-
-.copy-button{
-    border:0;
-    padding:7px 12px;
-    background:#2563eb;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-pre{
-    margin:0;
-    padding:20px;
-    overflow-x:auto;
-    background:#020617;
-    color:#e2e8f0;
-    border-radius:0 0 8px 8px;
-    font-family:Consolas,monospace;
-    font-size:14px;
-    line-height:1.7;
-}
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-top:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:#fff;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-    transition:box-shadow .2s,transform .2s;
-}
-
-.component-card:hover{
-    box-shadow:0 6px 15px rgba(0,0,0,.08);
-    transform:translateY(-2px);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-    line-height:1.5;
-}
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:#fff;
-    padding:10px;
-}
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-@media(max-width:600px){
-    .header{padding:35px 15px}
-    .header h1{font-size:28px}
-    .container{width:92%}
-    .section{padding:21px 18px}
-    nav{gap:11px}
+    nav {
+        gap: 11px;
+    }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -425,25 +670,18 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
-        <p>Adjustable LED Dimmer</p>
+        <p>Programmable Electronic Control Console</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-                title="Back to Arduino Experiments"
             >
                 &#8592; Back
             </a>
@@ -454,11 +692,9 @@ footer strong{
                 title="Home"
                 aria-label="Home"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -467,30 +703,22 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-            >
-                Arduino
-            </a>
+            >Arduino</a>
 
             <a
                 href="../../ESP32 CAM Experiments/index.html"
                 class="header-nav-btn"
-            >
-                ESP
-            </a>
+            >ESP</a>
 
             <a
                 href="../../R-Pi Experiments/index.html"
                 class="header-nav-btn"
-            >
-                R-Pi
-            </a>
+            >R-Pi</a>
 
         </div>
 
@@ -498,133 +726,432 @@ footer strong{
 
 </header>
 
+<!-- =====================================
+     NAVIGATION
+===================================== -->
 <nav>
-    <a href="../index.html">← Arduino Experiments</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
-<section class="section" id="aim">
-    <h2>Aim</h2>
-    <p>
-        To create a programmable electronic control console using Arduino UNO,
-        a 4×4 keypad, LCD, 4-digit display, relay and buzzer.
-    </p>
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Programmable Electronic Control Console.png"
+        alt="Programmable Electronic Control Console Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="thumbnail-placeholder"
+        class="note"
+        hidden
+    >
+        Approved experiment thumbnail pending.
+    </div>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     1. AIM
+===================================== -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To develop a programmable
+        electronic control console
+        using Arduino UNO,
+        a 4×4 matrix keypad,
+        a 16×2 I²C LCD,
+        a relay and a buzzer.
+    </p>
+
+    <p>
+        The user enters different
+        commands using the keypad
+        to control the relay,
+        operate the buzzer
+        and display information
+        on the LCD.
+    </p>
+
+    <p>
+        The original component list
+        also includes a 4-digit
+        7-segment display; however,
+        the supplied program does
+        not implement control
+        of that display.
+    </p>
+
+</section>
+
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
     <h2>About the Experiment</h2>
 
     <p>
-        The 4×4 keypad is used to enter different commands.
-        Arduino reads each key and performs the assigned action.
+        The Programmable Electronic
+        Control Console demonstrates
+        how different electronic
+        operations can be controlled
+        through a single keypad.
     </p>
 
     <p>
-        The LCD shows the selected operation and system status.
-        The relay and buzzer can be controlled using different keypad keys.
+        Arduino UNO reads user
+        input from a 4×4
+        matrix keypad and
+        performs the action
+        assigned to each key.
     </p>
+
+    <p>
+        The 4×4 keypad contains
+        sixteen keys: numbers
+        0–9, letters A–D,
+        and the special
+        keys * and #.
+    </p>
+
+    <p>
+        The 16×2 I²C LCD
+        displays the selected
+        operation and relevant
+        system information.
+    </p>
+
+    <p>
+        A relay control
+        signal on D10
+        can operate a suitable
+        relay driver or module.
+    </p>
+
+    <p>
+        The buzzer connected
+        to D11 provides
+        short keypress sounds
+        and responds to
+        dedicated buzzer commands.
+    </p>
+
+    <p>
+        Every recognized keypress
+        first produces an
+        80-millisecond buzzer beep,
+        after which the program
+        executes the corresponding
+        command.
+    </p>
+
+    <p>
+        Different keypad buttons
+        can switch the relay
+        ON or OFF, control
+        the buzzer, show
+        preset values, reset
+        the outputs and
+        display relay status.
+    </p>
+
+    <p>
+        The original page also
+        lists a 4-digit display
+        as part of the hardware.
+        However, the sketch only
+        controls the LCD, relay
+        and buzzer.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        This experiment demonstrates
+        keypad-based control
+        and output switching.
+
+        The supplied sketch
+        does not contain a
+        software interface for
+        the 4-digit display.
+
+        Consequently, pressing
+        A or B only writes
+        the preset values
+        to the 16×2 LCD.
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3"
+            >
+
             <h4>Arduino UNO R3 (×1)</h4>
-            <p>Main controller for the control console.</p>
+
+            <p>
+                Processes keypad
+                commands and controls
+                the console outputs.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="4x4 Keypad.png" alt="4x4 Keypad">
-            <h4>4×4 Keypad (×1)</h4>
-            <p>Used to enter commands and select operations.</p>
+
+            <img
+                src="4x4 Keypad.png"
+                alt="4x4 Matrix Keypad"
+            >
+
+            <h4>4×4 Matrix Keypad (×1)</h4>
+
+            <p>
+                Provides sixteen keys
+                for selecting different
+                control operations.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="LCD 16X2 I2C.png" alt="LCD 16X2 I2C">
-            <h4>LCD1602 I²C (×1)</h4>
-            <p>Displays commands, values and system status.</p>
+
+            <img
+                src="LCD 16X2 I2C.png"
+                alt="16x2 I2C LCD"
+            >
+
+            <h4>16×2 I²C LCD (×1)</h4>
+
+            <p>
+                Displays system
+                messages, preset
+                values and the
+                relay's software state.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="4 Digit 7 Segment Display.png" alt="4 Digit 7 Segment Display">
+
+            <img
+                src="4 Digit 7 Segment Display.png"
+                alt="4 Digit 7 Segment Display"
+            >
+
             <h4>4-Digit 7-Segment Display (×1)</h4>
-            <p>Included in the control console display system.</p>
+
+            <p>
+                Listed in the
+                uploaded hardware
+                description, but not
+                operated by the
+                supplied Arduino code.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Relay.png" alt="Relay">
+
+            <img
+                src="Relay.png"
+                alt="Relay"
+            >
+
             <h4>SPDT Relay (×1)</h4>
-            <p>Controls an external load.</p>
+
+            <p>
+                Intended for switching
+                an external load.
+                A suitable relay
+                driver or module
+                is required for
+                safe Arduino control.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Buzzer.png" alt="Buzzer">
+
+            <img
+                src="Buzzer.png"
+                alt="Buzzer"
+            >
+
             <h4>Buzzer (×1)</h4>
-            <p>Provides key and alert sounds.</p>
+
+            <p>
+                Produces keypress
+                feedback and
+                programmed alarm
+                sounds.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
             <h4>Breadboard (×1)</h4>
-            <p>Used to assemble the circuit.</p>
+
+            <p>
+                Organizes the
+                low-voltage circuit
+                connections.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
             <h4>Jumper Wires</h4>
-            <p>Used for electrical connections.</p>
+
+            <p>
+                Used to connect
+                the keypad, LCD
+                and low-voltage
+                control signals.
+            </p>
+
         </div>
 
     </div>
+
+    <div class="note">
+
+        <strong>Required Arduino Libraries:</strong>
+
+        <ul>
+            <li>Keypad.h</li>
+            <li>Wire.h</li>
+            <li>LiquidCrystal_I2C.h</li>
+        </ul>
+
+        <p>
+            Install compatible
+            Keypad and
+            LiquidCrystal_I2C
+            libraries if they
+            are unavailable
+            in Arduino IDE.
+        </p>
+
+        <p>
+            The code uses
+            <code>lcd.init()</code>,
+            so the selected LCD
+            library must support
+            this method.
+        </p>
+
+        <p>
+            <strong>Relay hardware:</strong>
+            The uploaded component
+            is described as
+            an SPDT relay.
+            A bare relay requires
+            an electrically compatible
+            driver circuit.
+            The source does not
+            identify a verified
+            relay-driver module
+            or complete safe
+            driving circuit.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
 <section class="section" id="connections">
+
     <h2>Circuit Connections</h2>
 
-    <h3>4×4 Keypad</h3>
+    <h3>4×4 Matrix Keypad Connections</h3>
 
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>Keypad Pin</th>
-                    <th>Arduino UNO</th>
+                    <th>Keypad Terminal</th>
+                    <th>Arduino UNO Pin</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr><td>R1</td><td>D2</td></tr>
-                <tr><td>R2</td><td>D3</td></tr>
-                <tr><td>R3</td><td>D4</td></tr>
-                <tr><td>R4</td><td>D5</td></tr>
-                <tr><td>C1</td><td>D6</td></tr>
-                <tr><td>C2</td><td>D7</td></tr>
-                <tr><td>C3</td><td>D8</td></tr>
-                <tr><td>C4</td><td>D9</td></tr>
+                <tr><td>Row 1 (R1)</td><td>D2</td></tr>
+                <tr><td>Row 2 (R2)</td><td>D3</td></tr>
+                <tr><td>Row 3 (R3)</td><td>D4</td></tr>
+                <tr><td>Row 4 (R4)</td><td>D5</td></tr>
+                <tr><td>Column 1 (C1)</td><td>D6</td></tr>
+                <tr><td>Column 2 (C2)</td><td>D7</td></tr>
+                <tr><td>Column 3 (C3)</td><td>D8</td></tr>
+                <tr><td>Column 4 (C4)</td><td>D9</td></tr>
             </tbody>
         </table>
     </div>
 
-    <h3>LCD1602 I²C</h3>
+    <h3>16×2 I²C LCD Connections</h3>
 
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>LCD Pin</th>
-                    <th>Arduino UNO</th>
+                    <th>LCD Terminal</th>
+                    <th>Arduino Connection</th>
                 </tr>
             </thead>
+
             <tbody>
                 <tr><td>VCC</td><td>5V</td></tr>
                 <tr><td>GND</td><td>GND</td></tr>
@@ -634,16 +1161,51 @@ footer strong{
         </table>
     </div>
 
-    <h3>4-Digit Display</h3>
+    <h3>Relay and Buzzer Signals</h3>
 
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>Display Pin</th>
-                    <th>Arduino UNO</th>
+                    <th>Component</th>
+                    <th>Arduino Connection</th>
+                    <th>Important Detail</th>
                 </tr>
             </thead>
+
+            <tbody>
+                <tr>
+                    <td>Relay control</td>
+                    <td>D10</td>
+                    <td>Requires a compatible driver or relay module</td>
+                </tr>
+
+                <tr>
+                    <td>Buzzer positive (+)</td>
+                    <td>D11</td>
+                    <td>Only if suitable for safe direct drive</td>
+                </tr>
+
+                <tr>
+                    <td>Buzzer negative (−)</td>
+                    <td>GND</td>
+                    <td>Common ground</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>4-Digit Display — Source Documentation</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Terminal Named in Source</th>
+                    <th>Documented Arduino Connection</th>
+                </tr>
+            </thead>
+
             <tbody>
                 <tr><td>SDA</td><td>A4</td></tr>
                 <tr><td>SCK</td><td>A5</td></tr>
@@ -653,100 +1215,1210 @@ footer strong{
         </table>
     </div>
 
-    <h3>Relay and Buzzer</h3>
+    <div class="note">
+
+        <strong>4-Digit Display Verification Required:</strong>
+
+        <p>
+            These connections are
+            transcribed from the
+            uploaded document,
+            not validated for a
+            specific display model.
+        </p>
+
+        <p>
+            A conventional bare
+            4-digit 7-segment
+            display does not have
+            the four-wire interface
+            described in the source.
+            A display module may
+            use a controller-specific
+            interface such as I²C
+            or CLK/DIO.
+        </p>
+
+        <p>
+            Confirm the exact
+            display hardware and
+            datasheet before
+            making these connections.
+            The supplied sketch
+            contains no display
+            driver code.
+        </p>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Relay Wiring Precaution:</strong>
+
+        <p>
+            The uploaded file lists
+            relay terminals
+            5, 8, 1, 12 and 6
+            with proposed
+            Arduino and load
+            connections.
+        </p>
+
+        <p>
+            The terminal numbering
+            is not sufficient
+            to establish the
+            coil and contact
+            pinout of the
+            specific relay.
+        </p>
+
+        <p>
+            Do not connect a
+            bare relay coil
+            directly to D10.
+            Verify the relay's
+            rated coil voltage,
+            required current,
+            contact assignments,
+            and appropriate
+            protective driver.
+        </p>
+
+        <p>
+            Use a low-voltage
+            demonstration load
+            for classroom testing.
+            Do not connect
+            mains-voltage loads
+            on a breadboard.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Programmable Electronic Control Console Circuit.png"
+        alt="Programmable Electronic Control Console Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden
+    >
+        Verified circuit diagram PNG pending.
+        Add the approved image using
+        Programmable Electronic Control Console Circuit.png.
+    </div>
+
+</section>
+
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        Arduino UNO Starts
+
+        <br>↓<br>
+
+        Configure Relay and Buzzer Control Pins
+
+        <br>↓<br>
+
+        Initialize 16×2 LCD
+
+        <br>↓<br>
+
+        Display "Control Console / System Ready"
+
+        <br>↓<br>
+
+        Wait 2 Seconds
+
+        <br>↓<br>
+
+        Display "Press Key"
+
+        <br>↓<br>
+
+        Read 4×4 Keypad
+
+        <br>↓<br>
+
+        Key Pressed?
+
+        <br>↓<br>
+
+        Produce 80 ms Keypress Beep
+
+        <br>↓<br>
+
+        Identify Key and Execute Command
+
+        <br>↓<br>
+
+        Update Relay or Buzzer Output
+
+        <br>↓<br>
+
+        Show Message on LCD
+
+        <br>↓<br>
+
+        Wait 200 ms
+
+        <br>↓<br>
+
+        Return to Keypad Monitoring
+
+    </div>
+
+    <h3>Keypad Operation</h3>
+
+    <p>
+        The Keypad library
+        scans the matrix
+        and returns the
+        character corresponding
+        to the pressed key.
+    </p>
+
+    <p>
+        Arduino compares
+        that character against
+        programmed conditions
+        using if and
+        else if statements.
+    </p>
+
+    <h3>Relay Control</h3>
+
+    <p>
+        Pressing key 1
+        sets D10 HIGH.
+        Pressing key 2
+        sets D10 LOW.
+    </p>
+
+    <p>
+        The program treats
+        HIGH as the relay
+        ON command and
+        LOW as the OFF command.
+    </p>
+
+    <p>
+        This behavior assumes
+        the relay driving
+        hardware is active-HIGH.
+        An active-LOW relay
+        module would respond
+        differently.
+    </p>
+
+    <h3>Buzzer Control</h3>
+
+    <p>
+        Pressing key 3
+        sets the buzzer
+        output HIGH.
+        Pressing key 4
+        sets it LOW.
+    </p>
+
+    <p>
+        Each new keypress
+        produces an 80 ms
+        beep before the
+        selected command runs.
+    </p>
+
+    <p>
+        Consequently, a
+        permanently enabled
+        buzzer can be
+        briefly switched
+        OFF by the keypress
+        feedback sequence
+        before the next
+        command executes.
+    </p>
+
+    <h3>Key Command Summary</h3>
 
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>Component</th>
-                    <th>Connection</th>
+                    <th>Key</th>
+                    <th>Function</th>
+                    <th>LCD / Output</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr><td>Relay Terminal 5</td><td>D10</td></tr>
-                <tr><td>Relay Terminal 8</td><td>GND</td></tr>
-                <tr><td>Relay Terminal 1</td><td>5V</td></tr>
-                <tr><td>Relay Terminal 12</td><td>5V supply for load</td></tr>
-                <tr><td>Relay Terminal 6</td><td>Load +</td></tr>
-                <tr><td>Buzzer +</td><td>D11</td></tr>
-                <tr><td>Buzzer −</td><td>GND</td></tr>
+                <tr>
+                    <td>1</td>
+                    <td>Relay ON</td>
+                    <td>RELAY: ON</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Relay OFF</td>
+                    <td>RELAY: OFF</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Buzzer ON</td>
+                    <td>BUZZER: ON</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Buzzer OFF</td>
+                    <td>BUZZER: OFF</td>
+                </tr>
+                <tr>
+                    <td>5–9</td>
+                    <td>Display selected key</td>
+                    <td>Selected Key: [digit]</td>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>Reset outputs</td>
+                    <td>SYSTEM RESET</td>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>Display preset value</td>
+                    <td>1234 on LCD</td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>Display preset value</td>
+                    <td>0000 on LCD</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>Relay ON + timed buzzer</td>
+                    <td>ACTIVE</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>Relay OFF + timed buzzer</td>
+                    <td>BUZZER ALERT</td>
+                </tr>
+                <tr>
+                    <td>*</td>
+                    <td>Clear and update LCD</td>
+                    <td>Display Cleared</td>
+                </tr>
+                <tr>
+                    <td>#</td>
+                    <td>Show relay output state</td>
+                    <td>Relay: ON / OFF</td>
+                </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="note">
-        <strong>Keypad:</strong> D2 to D9<br>
-        <strong>Relay:</strong> D10<br>
-        <strong>Buzzer:</strong> D11<br>
-        <strong>LCD SDA:</strong> A4<br>
-        <strong>LCD SCL:</strong> A5
+    <h3>Preset Value Commands</h3>
+
+    <div class="command-grid">
+
+        <div class="command-card">
+            <strong>Key A</strong>
+            <p>LCD displays 1234</p>
+        </div>
+
+        <div class="command-card">
+            <strong>Key B</strong>
+            <p>LCD displays 0000</p>
+        </div>
+
+        <div class="command-card">
+            <strong>Key C</strong>
+            <p>Relay HIGH + 500 ms buzzer</p>
+        </div>
+
+        <div class="command-card">
+            <strong>Key D</strong>
+            <p>Relay LOW + 500 ms buzzer</p>
+        </div>
+
     </div>
+
+    <h3>System Reset and Status</h3>
+
+    <p>
+        Pressing key 0
+        sets both D10 and
+        D11 LOW and displays
+        the reset message.
+    </p>
+
+    <p>
+        Pressing # reads
+        the relay output
+        state using digitalRead()
+        on D10 and displays
+        the corresponding
+        ON or OFF message.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        Pressing # reports
+        the electrical state
+        commanded at D10.
+        The program does not
+        measure the physical
+        relay contacts or
+        confirm that an
+        external load
+        actually switched.
+    </div>
+
 </section>
 
-<section class="section" id="working">
-    <h2>Working Principle</h2>
-
-    <div class="flow">
-        Arduino Starts<br>
-        ↓<br>
-        LCD shows System Ready<br>
-        ↓<br>
-        User presses a keypad key<br>
-        ↓<br>
-        Arduino reads the selected key<br>
-        ↓<br>
-        Assigned relay, buzzer or display action is performed<br>
-        ↓<br>
-        LCD shows the selected operation or system status
-    </div>
-
-    <div class="note">
-        <strong>Key 1:</strong> Relay ON<br>
-        <strong>Key 2:</strong> Relay OFF<br>
-        <strong>Key 3:</strong> Buzzer ON<br>
-        <strong>Key 4:</strong> Buzzer OFF<br>
-        <strong>Keys 5–9:</strong> Show selected key<br>
-        <strong>Key 0:</strong> Reset system<br>
-        <strong>Key A:</strong> Display 1234<br>
-        <strong>Key B:</strong> Display 0000<br>
-        <strong>Key C:</strong> Relay + buzzer<br>
-        <strong>Key D:</strong> Relay OFF + buzzer alert<br>
-        <strong>Key *:</strong> Clear display<br>
-        <strong>Key #:</strong> Show relay status
-    </div>
-</section>
-
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
 
     <ol>
-        <li>Connect keypad rows R1–R4 to D2–D5.</li>
-        <li>Connect keypad columns C1–C4 to D6–D9.</li>
-        <li>Connect LCD SDA to A4 and SCL to A5.</li>
-        <li>Connect the 4-digit display SDA to A4 and SCK to A5.</li>
-        <li>Connect relay control to D10.</li>
-        <li>Connect buzzer positive terminal to D11 and negative terminal to GND.</li>
-        <li>Connect all required 5V and GND connections.</li>
-        <li>Open Arduino IDE.</li>
-        <li>Install the Keypad and LiquidCrystal_I2C libraries if required.</li>
-        <li>Enter the Arduino program given below.</li>
-        <li>Upload the program to Arduino UNO.</li>
-        <li>Press different keypad keys and observe the LCD, relay and buzzer response.</li>
+
+        <li>
+            Place Arduino UNO,
+            a 4×4 keypad,
+            16×2 I²C LCD,
+            buzzer and breadboard
+            on the work surface.
+        </li>
+
+        <li>
+            Connect keypad
+            R1–R4 to Arduino
+            D2–D5.
+        </li>
+
+        <li>
+            Connect keypad
+            C1–C4 to Arduino
+            D6–D9.
+        </li>
+
+        <li>
+            Connect LCD
+            SDA to A4
+            and SCL to A5.
+        </li>
+
+        <li>
+            Connect the LCD
+            VCC to 5V
+            and GND to GND.
+        </li>
+
+        <li>
+            Connect an
+            electrically suitable
+            buzzer to D11
+            and GND, using
+            a driver if required.
+        </li>
+
+        <li>
+            For relay testing,
+            identify a correctly
+            rated driver or relay
+            module with documented
+            control and power pins.
+        </li>
+
+        <li>
+            Connect the relay
+            driver control input
+            to D10 only after
+            verifying the hardware's
+            logic and ratings.
+        </li>
+
+        <li>
+            Keep the external
+            relay load disconnected
+            until the control
+            circuit has been
+            checked and tested.
+        </li>
+
+        <li>
+            Do not connect
+            the listed 4-digit
+            display based solely
+            on the unverified
+            source pin labels.
+            Identify its model
+            and compatible interface.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install the Keypad
+            and LiquidCrystal_I2C
+            libraries if required.
+        </li>
+
+        <li>
+            Create a sketch named
+            Programmable_Electronic_Control_Console.ino.
+        </li>
+
+        <li>
+            Copy the complete
+            Arduino sketch from
+            Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Observe the LCD
+            showing Control Console
+            and System Ready
+            during startup.
+        </li>
+
+        <li>
+            Wait approximately
+            two seconds and
+            observe Press Key.
+        </li>
+
+        <li>
+            Press 1 and
+            verify that the
+            relay control
+            signal goes HIGH.
+        </li>
+
+        <li>
+            Press 2 and
+            verify that the
+            control signal
+            goes LOW.
+        </li>
+
+        <li>
+            Press 3 and
+            observe the
+            buzzer response.
+        </li>
+
+        <li>
+            Press 4 to
+            switch the buzzer OFF.
+        </li>
+
+        <li>
+            Test keys 5–9
+            and observe the
+            selected digit
+            on the LCD.
+        </li>
+
+        <li>
+            Press A and B
+            to view their
+            preset LCD values.
+        </li>
+
+        <li>
+            Press C to test
+            relay HIGH with
+            a 500 ms buzzer pulse.
+        </li>
+
+        <li>
+            Press D to test
+            relay LOW with
+            a 500 ms buzzer pulse.
+        </li>
+
+        <li>
+            Press * to display
+            the cleared-display
+            message.
+        </li>
+
+        <li>
+            Press # to check
+            the programmed
+            relay output state.
+        </li>
+
+        <li>
+            Press 0 to reset
+            both output pins LOW.
+        </li>
+
+        <li>
+            Verify that every
+            keypad command
+            produces the
+            expected LCD message.
+        </li>
+
     </ol>
+
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-    <h2>Arduino Code</h2>
 
-    <div class="code-header">
-        <span>Programmable_Electronic_Control_Console.ino</span>
-        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Programmable Electronic Control Console ·
+        Select a step to highlight
+        and understand the
+        complete Arduino program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Programmable_Electronic_Control_Console.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Choose a step to highlight
+                and scroll to the
+                matching Arduino code.
+            </p>
+
+            <div class="steps">
+
+                <button class="step active"
+                        type="button"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Load libraries and LCD
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Define keypad layout
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Assign pins and outputs
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Initialize the console
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Read keypad and beep
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Relay ON and OFF
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Buzzer ON and OFF
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Display values and reset
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Combined relay and buzzer
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Clear and check status
+                </button>
+
+            </div>
+
+            <div
+                id="explanation"
+                class="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>
+                    Explore more: Matrix Keypad
+                </summary>
+
+                <p>
+                    A 4×4 keypad
+                    uses four rows
+                    and four columns
+                    to identify
+                    sixteen buttons.
+                </p>
+
+                <p>
+                    The Keypad library
+                    scans the matrix
+                    and returns the
+                    character belonging
+                    to the pressed key.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: I²C LCD
+                </summary>
+
+                <p>
+                    The LCD uses
+                    the I²C interface
+                    to reduce the
+                    number of
+                    signal connections.
+                </p>
+
+                <p>
+                    Arduino UNO
+                    uses A4 for SDA
+                    and A5 for SCL.
+                </p>
+
+                <p>
+                    The sketch uses
+                    LCD address 0x27.
+                    Confirm that the
+                    actual LCD module
+                    has this address.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Relay Control
+                </summary>
+
+                <p>
+                    A relay is
+                    an electrically
+                    operated switch.
+                </p>
+
+                <p>
+                    The sketch
+                    commands a digital
+                    output on D10.
+                </p>
+
+                <p>
+                    A bare relay
+                    must not be
+                    driven directly
+                    from the Arduino
+                    output pin.
+                    Use suitable
+                    driving hardware.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Delay Timing
+                </summary>
+
+                <p>
+                    The sketch
+                    generates an
+                    80 ms keypress
+                    buzzer pulse.
+                </p>
+
+                <p>
+                    Keys C and D
+                    generate additional
+                    500 ms pulses.
+                </p>
+
+                <p>
+                    A final 200 ms
+                    delay follows
+                    each processed
+                    keypress.
+                </p>
+
+                <p>
+                    These delays
+                    temporarily block
+                    keypad processing.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>
+                        Which Arduino
+                        pins connect
+                        to keypad rows?
+                    </li>
+                    <li>
+                        Which pin
+                        controls the relay?
+                    </li>
+                    <li>
+                        Which pin
+                        controls the buzzer?
+                    </li>
+                    <li>
+                        Which key
+                        turns the
+                        relay ON?
+                    </li>
+                    <li>
+                        Which keys
+                        display preset
+                        values on LCD?
+                    </li>
+                    <li>
+                        Which key
+                        resets the outputs?
+                    </li>
+                    <li>
+                        Does the supplied
+                        sketch operate
+                        the 4-digit display?
+                    </li>
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    style="border:1px solid #bfdbfe"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>D2, D3, D4 and D5</li>
+                        <li>D10</li>
+                        <li>D11</li>
+                        <li>Key 1</li>
+                        <li>A and B</li>
+                        <li>Key 0</li>
+                        <li>No</li>
+                    </ol>
+                </div>
+            </details>
+
+        </article>
+
     </div>
 
-<pre><code id="arduinoCode">#include &lt;Keypad.h&gt;
-#include &lt;Wire.h&gt;
-#include &lt;LiquidCrystal_I2C.h&gt;
+    <p class="tip">
+        <strong>Try it:</strong>
+        First test only the
+        keypad, LCD and a
+        safely driven buzzer.
+        Press 1, 2 and #
+        to observe how the
+        program tracks the
+        relay output state
+        before attaching
+        relay hardware.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Startup Display</h3>
+
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">Control Console
+System Ready</pre>
+    </div>
+
+    <p>
+        After a two-second
+        startup delay,
+        the LCD displays:
+    </p>
+
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">Press Key</pre>
+    </div>
+
+    <h3>Keypad Command Output</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Expected LCD Message</th>
+                    <th>Output Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>RELAY: ON / Key 1</td>
+                    <td>D10 HIGH</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>RELAY: OFF / Key 2</td>
+                    <td>D10 LOW</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>BUZZER: ON / Key 3</td>
+                    <td>D11 HIGH</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>BUZZER: OFF / Key 4</td>
+                    <td>D11 LOW</td>
+                </tr>
+                <tr>
+                    <td>5–9</td>
+                    <td>Selected Key: / digit</td>
+                    <td>Display only after keypress beep</td>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>SYSTEM RESET / Relay: OFF</td>
+                    <td>D10 and D11 LOW</td>
+                </tr>
+                <tr>
+                    <td>A</td>
+                    <td>Value: / 1234</td>
+                    <td>LCD update</td>
+                </tr>
+                <tr>
+                    <td>B</td>
+                    <td>Value: / 0000</td>
+                    <td>LCD update</td>
+                </tr>
+                <tr>
+                    <td>C</td>
+                    <td>RELAY + BUZZER / ACTIVE</td>
+                    <td>D10 HIGH; D11 HIGH for 500 ms</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>RELAY OFF / BUZZER ALERT</td>
+                    <td>D10 LOW; D11 HIGH for 500 ms</td>
+                </tr>
+                <tr>
+                    <td>*</td>
+                    <td>Display Cleared / Press Key</td>
+                    <td>LCD update</td>
+                </tr>
+                <tr>
+                    <td>#</td>
+                    <td>SYSTEM STATUS / Relay: ON or OFF</td>
+                    <td>Read D10 output state</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Relay ON — Key 1</h3>
+
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">RELAY: ON
+Key 1</pre>
+    </div>
+
+    <h3>Relay OFF — Key 2</h3>
+
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">RELAY: OFF
+Key 2</pre>
+    </div>
+
+    <h3>Preset Value — Key A</h3>
+
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">Value:
+1234</pre>
+    </div>
+
+    <h3>Preset Value — Key B</h3>
+
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">Value:
+0000</pre>
+    </div>
+
+    <h3>System Reset — Key 0</h3>
+
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">SYSTEM RESET
+Relay: OFF</pre>
+    </div>
+
+    <h3>Relay Status — Key #</h3>
+
+    <div class="note">
+        <pre style="margin:0;white-space:pre-wrap">SYSTEM STATUS
+Relay: ON</pre>
+    </div>
+
+    <div class="note">
+
+        <strong>Important Output Notes:</strong>
+
+        <p>
+            The code does not
+            initialize Serial
+            communication.
+            No Serial Monitor
+            messages are expected.
+        </p>
+
+        <p>
+            The four-digit
+            7-segment display
+            is not updated by
+            the original sketch.
+        </p>
+
+        <p>
+            The buzzer produces
+            an 80 ms keypress
+            pulse before every
+            processed command.
+            Keys C and D
+            also provide
+            500 ms pulses.
+        </p>
+
+        <p>
+            Relay contact movement
+            depends on the chosen
+            hardware and correct
+            driver interface.
+            The sketch alone
+            does not verify
+            physical load switching.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Programmable Electronic
+        Control Console demonstrates
+        how an Arduino UNO
+        and 4×4 keypad can
+        be used to select
+        multiple electronic
+        control operations.
+    </p>
+
+    <p>
+        Different keypad keys
+        control the relay
+        command signal and
+        buzzer output,
+        while the LCD
+        displays command
+        messages and
+        preset values.
+    </p>
+
+    <p>
+        The experiment illustrates
+        keypad interfacing,
+        digital output control,
+        conditional logic
+        and LCD-based
+        user interaction.
+    </p>
+
+    <p>
+        Additional hardware
+        verification and
+        programming would be
+        required to operate
+        the listed 4-digit
+        display and to
+        validate physical
+        relay load switching.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing a 4×4 matrix keypad with Arduino UNO.</li>
+        <li>Understanding row and column keypad scanning.</li>
+        <li>Using Keypad.h to identify keypresses.</li>
+        <li>Interfacing a 16×2 I²C LCD.</li>
+        <li>Using SDA and SCL for I²C communication.</li>
+        <li>Displaying commands using lcd.print().</li>
+        <li>Clearing and positioning LCD text.</li>
+        <li>Configuring digital output pins.</li>
+        <li>Controlling outputs using digitalWrite().</li>
+        <li>Using digitalRead() to read an output pin state.</li>
+        <li>Assigning functions to different keypad keys.</li>
+        <li>Using if and else if conditions.</li>
+        <li>Producing buzzer feedback on keypresses.</li>
+        <li>Understanding relay control signals.</li>
+        <li>Recognizing the need for a proper relay driver.</li>
+        <li>Understanding delay-based command timing.</li>
+        <li>Creating combined relay and buzzer actions.</li>
+        <li>Resetting programmed control outputs.</li>
+        <li>Distinguishing software output states from hardware feedback.</li>
+        <li>Identifying incomplete hardware interfaces in a program.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>Programmable Electronic Control Console</strong>
+</footer>
+
+<!-- =========================================
+     ORIGINAL ARDUINO PROGRAM
+========================================= -->
+<script type="text/plain" id="arduino-program">
+#include <Keypad.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
 // LCD
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -973,76 +2645,372 @@ void loop()
 
     delay(200);
   }
-}</code></pre>
-
-</section>
-
-<section class="section">
-    <h2>Expected Output</h2>
-
-    <p>
-        Pressing different keypad keys performs different control operations.
-        The LCD displays the selected command and system status while the relay
-        and buzzer respond according to the programmed key.
-    </p>
-
-    <div class="note">
-        <strong>1:</strong> Relay ON<br>
-        <strong>2:</strong> Relay OFF<br>
-        <strong>3:</strong> Buzzer ON<br>
-        <strong>4:</strong> Buzzer OFF<br>
-        <strong>0:</strong> System Reset<br>
-        <strong>A:</strong> 1234<br>
-        <strong>B:</strong> 0000<br>
-        <strong>C:</strong> Relay + Buzzer<br>
-        <strong>D:</strong> Relay OFF + Alert
-    </div>
-</section>
-
-<section class="section" id="result">
-    <h2>Result</h2>
-
-    <p>
-        The Programmable Electronic Control Console experiment was implemented
-        using Arduino UNO and a 4×4 keypad. Different keypad commands control
-        the relay and buzzer while the LCD displays the selected operation and
-        system status.
-    </p>
-</section>
-
-<section class="section">
-    <h2>What You Learn</h2>
-
-    <ul>
-        <li>How to interface a 4×4 keypad with Arduino UNO.</li>
-        <li>How to read different keypad keys.</li>
-        <li>How to display messages on an I²C LCD.</li>
-        <li>How to control a relay using Arduino.</li>
-        <li>How to control a buzzer.</li>
-        <li>How to assign different functions to keypad buttons.</li>
-        <li>How to create a simple programmable control console.</li>
-    </ul>
-</section>
-
-</main>
-
-<footer>
-    <strong>Arduino Experiment</strong><br>
-    Programmable Electronic Control Console
-</footer>
-
-<script>
-function copyCode(){
-    const code=document.getElementById("arduinoCode").innerText;
-    navigator.clipboard.writeText(code);
-
-    const button=document.querySelector(".copy-button");
-    button.innerText="Copied!";
-
-    setTimeout(function(){
-        button.innerText="Copy Code";
-    },1500);
 }
+</script>
+
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
+<script>
+
+/* =========================
+   COMPLETE PROGRAM SOURCE
+========================= */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =========================
+   EXPLANATION STEPS
+========================= */
+const steps = [
+
+    {
+        title: "Load libraries and LCD",
+        start: "#include <Keypad.h>",
+        end: "LiquidCrystal_I2C lcd(0x27, 16, 2);",
+        text:
+            "Keypad.h supports the matrix " +
+            "keypad, Wire.h provides I2C " +
+            "communication, and " +
+            "LiquidCrystal_I2C.h controls " +
+            "the 16x2 LCD at address 0x27."
+    },
+
+    {
+        title: "Define keypad layout",
+        start: "const byte rows = 4;",
+        end: "byte colPins[cols] = {6, 7, 8, 9};",
+        text:
+            "The sketch defines the " +
+            "four-row, four-column " +
+            "key layout. Rows use D2-D5 " +
+            "and columns use D6-D9."
+    },
+
+    {
+        title: "Assign pins and outputs",
+        start: "Keypad keypad = Keypad(",
+        end: "int buzzer = 11;",
+        text:
+            "The Keypad object combines " +
+            "the key map and wiring. " +
+            "The relay command signal " +
+            "uses D10 and the buzzer " +
+            "uses D11."
+    },
+
+    {
+        title: "Initialize the console",
+        start: "void setup()",
+        end: 'lcd.print("Press Key");',
+        text:
+            "setup() configures the " +
+            "outputs LOW, initializes " +
+            "the LCD, displays the " +
+            "startup messages and " +
+            "then prompts for a key."
+    },
+
+    {
+        title: "Read keypad and beep",
+        start: "void loop()",
+        end: "digitalWrite(buzzer, LOW);",
+        text:
+            "The main loop calls " +
+            "keypad.getKey(). Each " +
+            "detected keypress produces " +
+            "an 80 ms buzzer pulse " +
+            "before its command runs."
+    },
+
+    {
+        title: "Relay ON and OFF",
+        start: "// Key 1 = Relay ON",
+        end: 'lcd.print("Key 2");',
+        text:
+            "Keys 1 and 2 command " +
+            "the relay output HIGH " +
+            "and LOW respectively, " +
+            "and display the selected " +
+            "action on the LCD."
+    },
+
+    {
+        title: "Buzzer ON and OFF",
+        start: "// Key 3 = Buzzer ON",
+        end: 'lcd.print("Key 4");',
+        text:
+            "Key 3 leaves the buzzer " +
+            "output HIGH; key 4 sets " +
+            "it LOW. Both commands " +
+            "update the LCD."
+    },
+
+    {
+        title: "Display values and reset",
+        start: "// Keys 5 to 9",
+        end: 'lcd.print("0000");',
+        text:
+            "Keys 5-9 show the selected " +
+            "digit. Key 0 resets outputs. " +
+            "A and B display 1234 and " +
+            "0000 on the LCD, not on " +
+            "the 4-digit display."
+    },
+
+    {
+        title: "Combined relay and buzzer",
+        start: "// Key C",
+        end: "digitalWrite(buzzer, LOW);",
+        endOccurrence: 2,
+        text:
+            "Key C commands the relay " +
+            "HIGH with a 500 ms buzzer " +
+            "pulse. Key D commands the " +
+            "relay LOW with a 500 ms " +
+            "buzzer alert."
+    },
+
+    {
+        title: "Clear and check status",
+        start: "// * = Clear LCD",
+        end: 'lcd.print("Relay: OFF");',
+        text:
+            "The * key clears and " +
+            "updates the LCD. The # key " +
+            "reads the D10 output state " +
+            "and shows Relay: ON or OFF. " +
+            "It does not sense physical " +
+            "relay contact position."
+    }
+
+];
+
+/* =========================
+   ESCAPE HTML
+========================= */
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =========================
+   DISPLAY NUMBERED CODE
+========================= */
+function displayCode() {
+
+    const output = lines.map(function(line, index) {
+
+        return (
+            '<span class="code-line" id="line-' +
+            (index + 1) +
+            '">' +
+            '<span class="line-number">' +
+            (index + 1) +
+            '</span>' +
+            '<span>' +
+            escapeHtml(line) +
+            '</span>' +
+            '</span>'
+        );
+
+    }).join("");
+
+    document.getElementById("code-lines").innerHTML = output;
+}
+
+/* =========================
+   FIND MATCHING CODE LINE
+========================= */
+function findLine(searchText, startIndex = 0, occurrence = 1) {
+
+    let count = 0;
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+
+            count++;
+
+            if (count === occurrence) {
+                return i;
+            }
+        }
+    }
+
+    return -1;
+}
+
+/* =========================
+   HIGHLIGHT AND EXPLAIN
+========================= */
+function showStep(index) {
+
+    const step = steps[index];
+
+    document.querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document.querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching code lines were not found.";
+
+        return;
+    }
+
+    let endLine = findLine(
+        step.end,
+        startLine,
+        step.endOccurrence || 1
+    );
+
+    if (endLine < 0) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const selectedLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (selectedLine && codeBody) {
+
+        const offset =
+            selectedLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =========================
+   COPY COMPLETE ARDUINO CODE
+========================= */
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =========================
+   SHOW / HIDE QUIZ ANSWERS
+========================= */
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =========================
+   INITIALIZE CODE VIEWER
+========================= */
+displayCode();
+showStep(0);
+
 </script>
 
 </body>
