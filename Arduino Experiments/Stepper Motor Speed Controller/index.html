@@ -1,16 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Stepper Motor Speed Controller</title>
-<style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+<title>Stepper Motor Speed Controller</title>
 
+<style>
+/* =====================================
+   GENERAL PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+a {
+    color: #2563eb;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -22,8 +44,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     text-align: center;
 }
 
-/* COMPANY LOGO - TOP LEFT */
-
 .header-logo {
     position: absolute;
     top: 15px;
@@ -32,12 +52,10 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     max-height: 75px;
     height: auto;
     object-fit: contain;
+    padding: 5px;
     background: white;
     border-radius: 5px;
-    padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -55,8 +73,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -64,50 +80,37 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-/* BUTTON STYLE */
-
 .header-nav-btn {
     display: inline-flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     min-height: 38px;
     padding: 9px 14px;
     background: white;
-    color: #1e3a8a;
     border: 1px solid #dbeafe;
     border-radius: 7px;
+    color: #1e3a8a;
     font-size: 13px;
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -125,18 +128,499 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   STICKY NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    margin-top: 22px;
+    color: #1e3a8a;
+}
+
+.section p {
+    margin: 0 0 12px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 18px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES, NOTES AND IMAGES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+.output-box {
+    margin: 14px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px/1.8 Consolas, Monaco, monospace;
+    color: #1e293b;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+    text-align: center;
+}
+
+.flow-step {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 7px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 21px;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.state-card {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    text-align: center;
+}
+
+.state-card strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #1e3a8a;
+    font-size: 19px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid white;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    padding: 16px 0;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    background: white;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #234e87;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
 
 @media (max-width: 600px) {
-
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -172,9 +656,9 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     }
 
     .header-nav-btn {
+        min-height: 36px;
         padding: 8px 7px;
         font-size: 11px;
-        min-height: 36px;
     }
 
     .home-icon-btn {
@@ -182,46 +666,32 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}nav a:hover{color:#2563eb}
-.container{width:90%;max-width:950px;margin:35px auto}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
-.section p{margin-bottom:10px}ul,ol{padding-left:24px}li{margin-bottom:8px}.table-wrap{overflow-x:auto}
-table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
-.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:white;border-radius:8px 8px 0 0}
-.copy-button{border:0;padding:7px 12px;background:#2563eb;color:white;border-radius:5px;cursor:pointer;font-weight:bold}
-pre{margin:0;padding:20px;overflow-x:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font-family:Consolas,monospace;font-size:14px;line-height:1.7}
-.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
-.component-card p{color:#475569;font-size:14px;margin:0;line-height:1.5}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}footer strong{color:white}
-@media(max-width:600px){.header{padding:35px 15px}.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}nav{gap:11px}}
 </style>
 </head>
+
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -229,26 +699,19 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
-        <p>Adjustable LED Dimmer</p>
+        <p>Stepper Motor Speed Controller</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+                title="Back to Arduino Experiments">
                 &#8592; Back
             </a>
 
@@ -256,43 +719,35 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
                 href="../../index.html"
                 class="header-nav-btn home-icon-btn"
                 title="Home"
-                aria-label="Home"
-            >
+                aria-label="Home">
+
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                    aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
+
             </a>
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 Arduino
             </a>
 
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">
                 ESP
             </a>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">
                 R-Pi
             </a>
 
@@ -302,139 +757,1836 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
 
 </header>
 
+<!-- =====================================
+     SECTION NAVIGATION
+===================================== -->
 <nav>
-<a href="../index.html">← Arduino Experiments</a>
-<a href="#aim">Aim</a>
-<a href="#components">Components</a>
-<a href="#connections">Connections</a>
-<a href="#working">Working</a>
-<a href="#procedure">Procedure</a>
-<a href="#code">Code</a>
-<a href="#result">Result</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Stepper Motor Speed Controller.png"
+        alt="Stepper Motor Speed Controller Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="thumbnail-placeholder"
+        class="note"
+        hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
-<h2>Aim</h2>
-<p>To control motor speed using a potentiometer and monitor encoder pulse activity with Arduino UNO and a ULN2003 motor driver.</p>
+
+    <h2>Aim</h2>
+
+    <p>
+        To control the speed of a
+        DC motor using a potentiometer,
+        Arduino UNO R3 and a ULN2003
+        motor driver, while monitoring
+        the motor's encoder pulse activity.
+    </p>
+
+    <p>
+        The experiment demonstrates
+        analog input reading,
+        PWM speed control,
+        encoder interrupt handling
+        and serial monitoring of
+        total pulses and pulses
+        per second.
+    </p>
+
 </section>
 
-<section class="section">
-<h2>About the Experiment</h2>
-<p>Arduino reads the potentiometer through analog pin A0 and maps the 0–1023 reading to a 0–255 PWM command. This PWM signal is sent on D5 to the ULN2003 driver, which controls the motor speed.</p>
-<p>The motor encoder provides pulse feedback through channels A and B. Arduino counts the encoder pulses and reports the total pulse count and pulses per second through the Serial Monitor.</p>
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Stepper Motor Speed Controller
+        experiment uses the supplied
+        DC motor speed-control sketch
+        to demonstrate motor speed
+        adjustment and encoder monitoring.
+    </p>
+
+    <p>
+        A potentiometer is connected
+        to Arduino analog input A0.
+        Turning its shaft changes the
+        voltage on the middle terminal.
+    </p>
+
+    <p>
+        Arduino reads this voltage
+        using analogRead() and
+        obtains a value between
+        0 and 1023.
+    </p>
+
+    <p>
+        The map() function converts
+        the potentiometer reading
+        into a PWM command
+        between 0 and 255.
+    </p>
+
+    <p>
+        Arduino generates PWM
+        on digital pin D5
+        using analogWrite().
+    </p>
+
+    <p>
+        This signal is sent to
+        the ULN2003 driver's IN1.
+        The driver switches the
+        motor current according to
+        the applied control signal.
+    </p>
+
+    <p>
+        The motor used by the
+        original program is a
+        DC motor with an encoder.
+        Encoder Channel A is
+        connected to Arduino D2,
+        while Channel B is
+        connected to D3.
+    </p>
+
+    <p>
+        An interrupt is attached
+        to the rising edge of
+        Encoder Channel A.
+        Every detected rising
+        edge increases the
+        encoderPulses counter.
+    </p>
+
+    <p>
+        Arduino calculates how many
+        pulses were counted during
+        approximately one second
+        and displays this information
+        on Serial Monitor.
+    </p>
+
+    <p>
+        The displayed values include
+        the potentiometer reading,
+        PWM command, total encoder
+        pulses and pulses per second.
+    </p>
+
+    <div class="note">
+
+        <strong>Important Clarification:</strong>
+
+        <p>
+            The experiment title is
+            Stepper Motor Speed Controller,
+            but the supplied sketch
+            specifically describes
+            DC Motor Speed Controller
+            with Encoder.
+        </p>
+
+        <p>
+            The source does not
+            produce a multi-phase
+            stepping sequence and
+            should not be used as
+            conventional stepper-motor
+            control software.
+        </p>
+
+        <p>
+            The encoder ISR
+            increments the counter
+            regardless of Channel B.
+            Therefore, rotation
+            direction is not
+            genuinely calculated
+            by this version
+            of the sketch.
+        </p>
+
+        <p>
+            The measured pulses per
+            second indicate encoder
+            activity. They are not
+            directly an RPM value
+            without knowing the
+            encoder resolution.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
-<h2>Components Required</h2>
-<div class="components-grid">
-<div class="component-card"><img src="Arduino UNO.png" alt="Arduino UNO"><h4>Arduino UNO (×1)</h4><p>Main controller for potentiometer input, PWM output and encoder monitoring.</p></div>
-<div class="component-card"><img src="Potentiometer.png" alt="Potentiometer"><h4>Potentiometer (×1)</h4><p>Provides the user-adjustable speed command.</p></div>
-<div class="component-card"><img src="DC Motor with Encoder.png" alt="DC Motor with Encoder"><h4>DC Motor with Encoder (×1)</h4><p>Motor being controlled and source of encoder pulse feedback.</p></div>
-<div class="component-card"><img src="ULN2003 Driver Board.png" alt="ULN2003 Driver"><h4>ULN2003 Driver (×1)</h4><p>Receives the PWM control signal and interfaces with the motor.</p></div>
-<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Used for electrical connections.</p></div>
-</div>
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3">
+
+            <h4>Arduino UNO R3 (×1)</h4>
+
+            <p>
+                Reads potentiometer
+                input, generates PWM
+                and counts encoder
+                pulses using interrupts.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Potentiometer.png"
+                alt="Potentiometer">
+
+            <h4>Potentiometer (×1)</h4>
+
+            <p>
+                Provides an adjustable
+                analog voltage for
+                selecting the motor
+                PWM command.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="DC Motor with Encoder.png"
+                alt="DC Motor with Encoder">
+
+            <h4>DC Motor with Encoder (×1)</h4>
+
+            <p>
+                Rotates according to
+                the applied motor
+                drive and generates
+                encoder pulses for
+                monitoring.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="ULN2003 Driver Board.png"
+                alt="ULN2003 Motor Driver">
+
+            <h4>ULN2003 Driver (×1)</h4>
+
+            <p>
+                Receives PWM at
+                its input and
+                switches the motor
+                current through
+                its output channel.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard">
+
+            <h4>Breadboard (×1)</h4>
+
+            <p>
+                Helps arrange
+                the potentiometer
+                and low-voltage
+                signal connections.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires">
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Connect the controller,
+                potentiometer, driver
+                and encoder terminals.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Arduino Libraries:</strong>
+
+        <p>
+            No additional Arduino
+            libraries are needed
+            by the original sketch.
+        </p>
+
+        <p>
+            It uses built-in functions
+            such as analogRead(),
+            map(), analogWrite(),
+            attachInterrupt(),
+            digitalRead(), millis()
+            and Serial.print().
+        </p>
+
+        <p>
+            The motor's supply
+            must be suitable
+            for its rated
+            voltage and current.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
 <section class="section" id="connections">
-<h2>Pin Connections</h2>
-<h3>Potentiometer to Arduino</h3>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Potentiometer Pin</th><th>Arduino UNO Connection</th></tr></thead>
-<tbody>
-<tr><td>Outer Pin 1</td><td>5V</td></tr>
-<tr><td>Middle Pin</td><td>A0</td></tr>
-<tr><td>Outer Pin 2</td><td>GND</td></tr>
-</tbody>
-</table>
-</div>
 
-<h3>Motor and ULN2003 Driver</h3>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Connection</th><th>Connect To</th></tr></thead>
-<tbody>
-<tr><td>Motor Pin 1 (Motor +)</td><td>5V Motor Supply</td></tr>
-<tr><td>Motor Pin 6 (Motor −)</td><td>ULN2003 OUT1</td></tr>
-<tr><td>ULN2003 IN1</td><td>Arduino D5 (PWM)</td></tr>
-<tr><td>ULN2003 GND</td><td>Arduino GND</td></tr>
-<tr><td>ULN2003 COM (if present)</td><td>Motor Supply +5V</td></tr>
-</tbody>
-</table>
-</div>
+    <h2>Circuit Connections</h2>
 
-<h3>Encoder to Arduino</h3>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Motor Pin</th><th>Function</th><th>Arduino UNO</th></tr></thead>
-<tbody>
-<tr><td>2</td><td>Encoder Channel B</td><td>D3</td></tr>
-<tr><td>3</td><td>Encoder Power</td><td>5V</td></tr>
-<tr><td>4</td><td>Encoder GND</td><td>GND</td></tr>
-<tr><td>5</td><td>Encoder Channel A</td><td>D2</td></tr>
-</tbody>
-</table>
-</div>
+    <h3>Potentiometer Connections</h3>
 
-<div class="note">
-<strong>Potentiometer:</strong> A0<br>
-<strong>PWM Output:</strong> D5<br>
-<strong>Encoder Channel A:</strong> D2<br>
-<strong>Encoder Channel B:</strong> D3
-</div>
-  
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Potentiometer Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Outer Pin 1</td>
+                    <td>5V</td>
+                </tr>
+                <tr>
+                    <td>Middle Pin / Wiper</td>
+                    <td>A0</td>
+                </tr>
+                <tr>
+                    <td>Outer Pin 2</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Motor and ULN2003 Driver Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component Terminal</th>
+                    <th>Connection</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Motor Pin 1 (Motor +)</td>
+                    <td>5V Motor Supply</td>
+                    <td>Motor positive power</td>
+                </tr>
+                <tr>
+                    <td>Motor Pin 6 (Motor −)</td>
+                    <td>ULN2003 OUT1</td>
+                    <td>Switched negative terminal</td>
+                </tr>
+                <tr>
+                    <td>ULN2003 IN1</td>
+                    <td>Arduino D5</td>
+                    <td>PWM control signal</td>
+                </tr>
+                <tr>
+                    <td>ULN2003 GND</td>
+                    <td>Arduino GND</td>
+                    <td>Common ground</td>
+                </tr>
+                <tr>
+                    <td>ULN2003 COM, if accessible</td>
+                    <td>Positive motor supply</td>
+                    <td>Internal flyback diode common</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Motor Encoder Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Motor Connector Pin</th>
+                    <th>Function</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>2</td>
+                    <td>Encoder Channel B</td>
+                    <td>D3</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Encoder Power</td>
+                    <td>5V, if encoder-rated</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Encoder Ground</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Encoder Channel A</td>
+                    <td>D2</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Motor Pinout:</strong>
+
+        <p>
+            The motor connector
+            numbering shown above
+            comes from the
+            supplied sketch.
+        </p>
+
+        <p>
+            Verify the actual
+            six-pin motor
+            connector before
+            applying power.
+            Motor and encoder
+            pin order is not
+            universal across
+            manufacturers.
+        </p>
+
+        <p>
+            A typical ULN2003
+            switching channel
+            provides low-side
+            current control
+            rather than
+            motor polarity
+            reversal.
+        </p>
+
+        <p>
+            Ensure the motor's
+            running and stall
+            currents remain
+            within the ULN2003
+            channel's ratings.
+        </p>
+
+        <p>
+            If the driver
+            is a 28BYJ-48
+            stepper breakout,
+            inspect whether
+            its terminals
+            actually support
+            connection of
+            this DC motor.
+        </p>
+
+        <p>
+            Motor supply ground,
+            driver ground and
+            Arduino ground
+            must be common.
+        </p>
+
+    </div>
+
+    <h3>Complete Arduino Pin Summary</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>Arduino Pin</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Potentiometer Wiper</td>
+                    <td>A0</td>
+                </tr>
+                <tr>
+                    <td>PWM Motor Control</td>
+                    <td>D5</td>
+                </tr>
+                <tr>
+                    <td>Encoder Channel A</td>
+                    <td>D2</td>
+                </tr>
+                <tr>
+                    <td>Encoder Channel B</td>
+                    <td>D3</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Stepper Motor Speed Controller Circuit.png"
+        alt="Stepper Motor Speed Controller Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden>
+        Circuit diagram image pending.
+        Add the verified circuit PNG named
+        Stepper Motor Speed Controller Circuit.png.
+    </div>
+
+</section>
+
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
-<h2>Working Principle</h2>
-<div class="flow">
-Arduino Starts<br>↓<br>
-Potentiometer value is read on A0<br>↓<br>
-0–1023 input is mapped to 0–255 PWM<br>↓<br>
-PWM is sent on D5 to ULN2003<br>↓<br>
-Motor speed changes according to PWM<br>↓<br>
-Encoder Channel A generates pulses<br>↓<br>
-Arduino counts encoder pulses<br>↓<br>
-Total pulses and pulses per second are shown on Serial Monitor
-</div>
-<div class="note">
-<strong>Analog Input Range:</strong> 0–1023<br>
-<strong>PWM Range:</strong> 0–255<br>
-<strong>Serial Monitor:</strong> 9600 baud<br>
-<strong>Pulse Report Interval:</strong> 1 second
-</div>
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            Arduino UNO Starts
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Initialize Serial Communication at 9600 Baud
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Configure D5 as PWM Motor Output
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Configure Encoder Inputs D2 and D3
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Attach Interrupt to Encoder A Rising Edge
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Read Potentiometer on A0
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Map Analog Value 0–1023 to PWM 0–255
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Send PWM Command to ULN2003 on D5
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Motor Receives PWM-Controlled Drive
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Encoder Generates Pulses During Rotation
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Interrupt Increments Encoder Pulse Counter
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Every 1 Second, Calculate Pulse Difference
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Print Potentiometer, PWM, Total Pulses and Pulses/Second
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Repeat Monitoring
+        </div>
+
+    </div>
+
+    <h3>Potentiometer Input</h3>
+
+    <p>
+        The potentiometer acts
+        as a voltage divider.
+        Turning its shaft
+        changes the voltage
+        supplied to analog
+        input A0.
+    </p>
+
+    <p>
+        Arduino converts
+        that voltage to
+        a digital value
+        between 0 and 1023.
+    </p>
+
+    <h3>PWM Conversion</h3>
+
+    <p>
+        The program uses
+        map() to convert
+        the potentiometer
+        reading to a
+        PWM output level.
+    </p>
+
+    <div class="note">
+
+        <strong>Mapping:</strong>
+
+        <p>
+            Potentiometer:
+            0–1023
+        </p>
+
+        <p>
+            PWM Command:
+            0–255
+        </p>
+
+        <p>
+            Arduino uses
+            analogWrite() to
+            generate the PWM
+            signal on D5.
+        </p>
+
+    </div>
+
+    <h3>Motor Speed Control</h3>
+
+    <p>
+        D5 carries the
+        PWM signal to
+        ULN2003 IN1.
+    </p>
+
+    <p>
+        The driver
+        switches the
+        motor current
+        according to
+        the PWM command.
+    </p>
+
+    <p>
+        A larger PWM
+        value generally
+        produces a greater
+        average motor drive,
+        although actual speed
+        depends on the
+        motor and load.
+    </p>
+
+    <h3>Encoder Pulse Detection</h3>
+
+    <p>
+        Encoder Channel A
+        is connected to
+        Arduino interrupt-capable
+        pin D2.
+    </p>
+
+    <p>
+        Every rising edge
+        on this channel
+        calls encoderISR().
+    </p>
+
+    <p>
+        The function increments
+        encoderPulses by one.
+    </p>
+
+    <p>
+        Channel B is read
+        inside the ISR,
+        but the original
+        code performs the
+        same increment in
+        both conditions.
+    </p>
+
+    <h3>Interrupt-Based Counting</h3>
+
+    <p>
+        Encoder pulses can
+        arrive between regular
+        loop executions.
+    </p>
+
+    <p>
+        attachInterrupt()
+        allows Arduino to
+        respond to the
+        rising edge without
+        waiting for the
+        main loop to
+        perform another read.
+    </p>
+
+    <h3>Pulses Per Second</h3>
+
+    <p>
+        The program stores
+        the previous pulse
+        total and subtracts
+        it from the newly
+        captured total.
+    </p>
+
+    <div class="note">
+
+        <strong>Formula:</strong>
+
+        <p>
+            Pulses/Second =
+            Current Total Pulses
+            − Previous Total Pulses
+        </p>
+
+        <p>
+            This difference is
+            calculated at
+            approximately one-second
+            reporting intervals.
+        </p>
+
+    </div>
+
+    <h3>Safe Counter Reading</h3>
+
+    <p>
+        The encoderPulses
+        variable is updated
+        by an interrupt.
+    </p>
+
+    <p>
+        The program temporarily
+        disables interrupts
+        using noInterrupts()
+        while copying the
+        counter to a
+        local variable.
+    </p>
+
+    <p>
+        interrupts() then
+        restores interrupt
+        processing.
+    </p>
+
+    <h3>Serial Monitor Output</h3>
+
+    <p>
+        The system reports
+        four values:
+    </p>
+
+    <ul>
+        <li>Potentiometer reading</li>
+        <li>PWM command</li>
+        <li>Total encoder pulses</li>
+        <li>Pulses counted during the previous reporting interval</li>
+    </ul>
+
+    <div class="state-grid">
+
+        <div class="state-card">
+            <strong>0–1023</strong>
+            Analog input range
+        </div>
+
+        <div class="state-card">
+            <strong>0–255</strong>
+            PWM command range
+        </div>
+
+        <div class="state-card">
+            <strong>9600</strong>
+            Serial baud rate
+        </div>
+
+        <div class="state-card">
+            <strong>1 second</strong>
+            Encoder reporting interval
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Measurement Limitation:</strong>
+
+        <p>
+            The sketch measures
+            pulse counts rather
+            than calculated
+            shaft RPM.
+        </p>
+
+        <p>
+            To calculate actual
+            RPM, the encoder
+            pulses per revolution,
+            gearing and counting
+            method must be known.
+        </p>
+
+        <p>
+            The sketch
+            also does not
+            automatically adjust
+            PWM to maintain
+            a target RPM.
+            It is an
+            open-loop speed
+            command with
+            pulse monitoring.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
-<h2>Procedure</h2>
-<ol>
-<li>Connect one outer pin of the potentiometer to 5V.</li>
-<li>Connect the middle pin of the potentiometer to A0.</li>
-<li>Connect the other outer pin of the potentiometer to GND.</li>
-<li>Connect Motor Pin 1 to the 5V motor supply.</li>
-<li>Connect Motor Pin 6 to ULN2003 OUT1.</li>
-<li>Connect ULN2003 IN1 to Arduino D5.</li>
-<li>Connect ULN2003 GND to Arduino GND.</li>
-<li>Connect encoder Channel A to D2.</li>
-<li>Connect encoder Channel B to D3.</li>
-<li>Connect encoder power to 5V and encoder ground to GND.</li>
-<li>Connect Arduino UNO to the computer.</li>
-<li>Open Arduino IDE.</li>
-<li>Enter the program given below.</li>
-<li>Select Arduino UNO and the correct COM port.</li>
-<li>Verify and upload the program.</li>
-<li>Open Serial Monitor at 9600 baud.</li>
-<li>Rotate the potentiometer and observe PWM and encoder pulse readings.</li>
-</ol>
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Arrange Arduino UNO,
+            potentiometer, DC motor
+            with encoder, ULN2003
+            driver, breadboard
+            and jumper wires.
+        </li>
+
+        <li>
+            Verify that the
+            motor and ULN2003
+            channel are electrically
+            compatible.
+        </li>
+
+        <li>
+            Connect one
+            outer potentiometer
+            terminal to 5V.
+        </li>
+
+        <li>
+            Connect the
+            middle potentiometer
+            terminal to
+            Arduino A0.
+        </li>
+
+        <li>
+            Connect the
+            remaining outer
+            potentiometer terminal
+            to GND.
+        </li>
+
+        <li>
+            Connect Arduino
+            D5 to the
+            ULN2003 IN1 signal.
+        </li>
+
+        <li>
+            Connect the
+            motor's positive
+            terminal to
+            its rated
+            positive supply.
+        </li>
+
+        <li>
+            Connect the
+            motor's negative
+            terminal to
+            ULN2003 OUT1.
+        </li>
+
+        <li>
+            Connect the
+            ULN2003 ground
+            to Arduino GND.
+        </li>
+
+        <li>
+            Connect the
+            motor supply
+            ground to
+            the common ground.
+        </li>
+
+        <li>
+            Connect COM
+            to the positive
+            motor supply where
+            the ULN2003
+            hardware requires it.
+        </li>
+
+        <li>
+            Verify the
+            actual motor
+            encoder connector
+            pin numbering.
+        </li>
+
+        <li>
+            Connect Encoder
+            Channel A to
+            Arduino D2.
+        </li>
+
+        <li>
+            Connect Encoder
+            Channel B to
+            Arduino D3.
+        </li>
+
+        <li>
+            Connect encoder
+            power and ground
+            according to its
+            voltage specification.
+        </li>
+
+        <li>
+            Check every
+            electrical connection
+            before applying power.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create a sketch
+            named
+            Stepper_Motor_Speed_Controller.ino.
+        </li>
+
+        <li>
+            Copy the original
+            Arduino program
+            from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 9600 baud.
+        </li>
+
+        <li>
+            Turn the
+            potentiometer near
+            its minimum position.
+        </li>
+
+        <li>
+            Observe the
+            printed analog
+            value and
+            PWM command.
+        </li>
+
+        <li>
+            Slowly rotate
+            the potentiometer
+            toward its
+            maximum position.
+        </li>
+
+        <li>
+            Observe the
+            changes in
+            motor behavior.
+        </li>
+
+        <li>
+            Watch the total
+            encoder pulses
+            increase if
+            the motor
+            is rotating
+            and encoder
+            signals are valid.
+        </li>
+
+        <li>
+            Observe the
+            pulses-per-second
+            value printed
+            approximately once
+            every second.
+        </li>
+
+        <li>
+            Compare pulse
+            activity at
+            low and high
+            PWM settings.
+        </li>
+
+        <li>
+            Return the
+            potentiometer to
+            minimum PWM
+            and observe
+            the motor response.
+        </li>
+
+        <li>
+            Record several
+            potentiometer,
+            PWM and pulse
+            readings for
+            comparison.
+        </li>
+
+    </ol>
+
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-<h2>Arduino Code</h2>
-<div class="code-header">
-<span>Stepper_Motor_Speed_Controller.ino</span>
-<button class="copy-button" onclick="copyCode()">Copy Code</button>
-</div>
-<pre><code id="arduinoCode">/*
+
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Stepper Motor Speed Controller ·
+        Select a step to highlight
+        and understand the
+        complete original
+        Arduino sketch.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Stepper_Motor_Speed_Controller.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()">
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Select a step
+                to highlight
+                the matching source
+                code and read
+                its explanation.
+            </p>
+
+            <div class="steps">
+
+                <button
+                    type="button"
+                    class="step active"
+                    onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Define input and output pins
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Set encoder and timing variables
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Handle encoder interrupt
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Initialize Arduino and encoder
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Read potentiometer
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Map analog value to PWM
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Apply PWM to motor driver
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Capture encoder pulse count
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Calculate pulses per second
+                </button>
+
+                <button
+                    type="button"
+                    class="step"
+                    onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Print monitoring results
+                </button>
+
+            </div>
+
+            <div
+                id="explanation"
+                class="explanation"
+                aria-live="polite">
+            </div>
+
+            <details>
+                <summary>
+                    Explore more: PWM
+                </summary>
+
+                <p>
+                    Pulse Width Modulation
+                    rapidly switches a
+                    digital output between
+                    HIGH and LOW.
+                </p>
+
+                <p>
+                    The fraction of
+                    time spent HIGH
+                    is the duty cycle.
+                </p>
+
+                <p>
+                    The Arduino sketch
+                    represents the PWM
+                    level using numbers
+                    from 0 to 255.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Motor Encoder
+                </summary>
+
+                <p>
+                    An encoder produces
+                    electrical pulses
+                    as its shaft rotates.
+                </p>
+
+                <p>
+                    The sketch counts
+                    rising edges on
+                    Encoder Channel A.
+                </p>
+
+                <p>
+                    Channel B is read,
+                    but it is not
+                    used correctly
+                    to calculate
+                    direction in
+                    this original
+                    source.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Interrupts
+                </summary>
+
+                <p>
+                    An interrupt
+                    allows Arduino
+                    to execute a
+                    short function
+                    in response
+                    to an event.
+                </p>
+
+                <p>
+                    attachInterrupt()
+                    registers encoderISR()
+                    as the handler
+                    for rising edges
+                    on D2.
+                </p>
+
+                <p>
+                    Using interrupts
+                    helps count
+                    pulses without
+                    repeatedly polling
+                    the encoder
+                    in loop().
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: volatile
+                </summary>
+
+                <p>
+                    The encoderPulses
+                    variable is
+                    declared volatile
+                    because an
+                    interrupt handler
+                    modifies it.
+                </p>
+
+                <p>
+                    The main loop
+                    temporarily disables
+                    interrupts while
+                    copying this
+                    multi-byte value.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Pulse Rate and RPM
+                </summary>
+
+                <p>
+                    The program
+                    calculates pulses
+                    per reporting
+                    interval.
+                </p>
+
+                <p>
+                    To convert
+                    pulse rate
+                    to RPM,
+                    the effective
+                    encoder counts
+                    per shaft
+                    revolution must
+                    be known.
+                </p>
+
+                <p>
+                    The original
+                    sketch does
+                    not perform
+                    this conversion.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>Which pin reads the potentiometer?</li>
+                    <li>Which pin outputs motor PWM?</li>
+                    <li>Which pins read Encoder A and B?</li>
+                    <li>What is the analog reading range?</li>
+                    <li>What is the PWM command range?</li>
+                    <li>Which interrupt edge is counted?</li>
+                    <li>What does pulsesPerSecond represent?</li>
+                    <li>Does the sketch correctly determine rotation direction?</li>
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    style="border:1px solid #bfdbfe"
+                    onclick="toggleAnswers()">
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>A0</li>
+                        <li>D5</li>
+                        <li>D2 and D3</li>
+                        <li>0–1023</li>
+                        <li>0–255</li>
+                        <li>Rising edge of Encoder A</li>
+                        <li>Difference between successive pulse totals</li>
+                        <li>No, both branches increment pulses and assign direction = 1.</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try it:</strong>
+        Rotate the potentiometer
+        to several different positions
+        and record the PWM value
+        and pulses per second.
+        Observe how the measured
+        pulse activity changes.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        When Arduino starts,
+        Serial Monitor displays
+        the motor controller
+        and encoder monitoring
+        startup messages.
+    </p>
+
+    <h3>Serial Monitor Startup</h3>
+
+    <div class="output-box">
+<pre>DC Motor Speed Controller
+Encoder Pulse Monitoring
+--------------------------------</pre>
+    </div>
+
+    <h3>Potentiometer and PWM</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Potentiometer Reading</th>
+                    <th>Approximate PWM Value</th>
+                    <th>Motor Command</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>Minimum PWM</td>
+                </tr>
+                <tr>
+                    <td>256</td>
+                    <td>63</td>
+                    <td>Low PWM</td>
+                </tr>
+                <tr>
+                    <td>512</td>
+                    <td>127</td>
+                    <td>Medium PWM</td>
+                </tr>
+                <tr>
+                    <td>768</td>
+                    <td>191</td>
+                    <td>Higher PWM</td>
+                </tr>
+                <tr>
+                    <td>1023</td>
+                    <td>255</td>
+                    <td>Maximum PWM</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Example 1 — Minimum PWM</h3>
+
+    <p>
+        At the minimum
+        potentiometer position,
+        the PWM value
+        is near zero.
+    </p>
+
+    <div class="output-box">
+<pre>Potentiometer: 0 | PWM: 0 | Total Pulses: 0 | Pulses/Second: 0
+--------------------------------</pre>
+    </div>
+
+    <h3>Example 2 — Medium PWM</h3>
+
+    <p>
+        At approximately
+        half of the
+        potentiometer range,
+        Arduino commands
+        medium PWM.
+    </p>
+
+    <div class="output-box">
+<pre>Potentiometer: 512 | PWM: 127 | Total Pulses: 120 | Pulses/Second: 120
+--------------------------------</pre>
+    </div>
+
+    <h3>Example 3 — Higher PWM</h3>
+
+    <p>
+        If the motor
+        rotates faster
+        and the encoder
+        generates pulses
+        more frequently,
+        the reported
+        pulse rate
+        may increase.
+    </p>
+
+    <div class="output-box">
+<pre>Potentiometer: 900 | PWM: 224 | Total Pulses: 380 | Pulses/Second: 260
+--------------------------------</pre>
+    </div>
+
+    <div class="note">
+
+        <strong>Example Data:</strong>
+
+        <p>
+            The pulse counts
+            in the examples
+            are illustrative,
+            not measured
+            results.
+        </p>
+
+        <p>
+            Actual readings
+            depend on motor
+            speed, load,
+            encoder resolution,
+            power supply
+            and wiring.
+        </p>
+
+        <p>
+            The sketch
+            does not display
+            RPM or a verified
+            clockwise/counterclockwise
+            direction.
+        </p>
+
+    </div>
+
+    <h3>System Response Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Turn potentiometer toward minimum</td>
+                    <td>PWM approaches 0</td>
+                </tr>
+                <tr>
+                    <td>Turn potentiometer toward maximum</td>
+                    <td>PWM approaches 255</td>
+                </tr>
+                <tr>
+                    <td>Motor rotates</td>
+                    <td>Encoder A generates rising edges</td>
+                </tr>
+                <tr>
+                    <td>Rising edge detected</td>
+                    <td>Total pulse counter increases</td>
+                </tr>
+                <tr>
+                    <td>One-second reporting interval passes</td>
+                    <td>Arduino prints PWM and encoder data</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Encoder Monitoring</h3>
+
+    <p>
+        If pulse totals
+        are captured
+        at two consecutive
+        reporting intervals,
+        the difference is
+        used to report
+        pulses per second.
+    </p>
+
+    <div class="output-box">
+<pre>Previous Total Pulses: 120
+Current Total Pulses: 380
+
+Pulses/Second = 380 - 120
+Pulses/Second = 260</pre>
+    </div>
+
+    <div class="note">
+
+        <strong>Output Limitations:</strong>
+
+        <p>
+            These outputs reflect
+            the original Arduino
+            logic and do not
+            guarantee a proportional
+            increase in speed
+            for every PWM setting.
+        </p>
+
+        <p>
+            The sketch counts
+            Encoder A rising
+            edges regardless
+            of motor direction.
+        </p>
+
+        <p>
+            Actual encoder signal
+            quality and valid
+            electrical interfacing
+            must be confirmed
+            before physical testing.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Stepper Motor
+        Speed Controller
+        experiment demonstrates
+        potentiometer-controlled
+        PWM driving of a
+        DC motor through
+        a ULN2003 driver.
+    </p>
+
+    <p>
+        Arduino reads the
+        potentiometer on A0,
+        converts the analog
+        value to a PWM
+        command and sends
+        the command through D5.
+    </p>
+
+    <p>
+        Encoder Channel A
+        provides rising-edge
+        pulse events that
+        Arduino counts using
+        an interrupt routine.
+    </p>
+
+    <p>
+        The Serial Monitor
+        displays potentiometer
+        readings, PWM commands,
+        total encoder pulses
+        and pulse counts
+        between reporting intervals.
+    </p>
+
+    <p>
+        The experiment
+        demonstrates analog
+        input processing,
+        PWM output control,
+        interrupt-based counting
+        and motor activity
+        monitoring.
+    </p>
+
+    <p>
+        The supplied code
+        is not a complete
+        stepper-motor controller
+        and does not implement
+        RPM regulation or
+        actual direction decoding.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing a potentiometer with Arduino UNO.</li>
+        <li>Reading analog input through A0.</li>
+        <li>Understanding the Arduino UNO analog input range.</li>
+        <li>Converting analog readings into PWM commands.</li>
+        <li>Using map() for numerical range conversion.</li>
+        <li>Using analogWrite() for PWM output.</li>
+        <li>Controlling a compatible DC motor through ULN2003.</li>
+        <li>Understanding low-side motor switching.</li>
+        <li>Connecting a motor with encoder feedback.</li>
+        <li>Reading encoder signals on D2 and D3.</li>
+        <li>Using digitalPinToInterrupt().</li>
+        <li>Understanding the attachInterrupt() function.</li>
+        <li>Counting encoder rising edges.</li>
+        <li>Using volatile variables in interrupt-driven programs.</li>
+        <li>Using noInterrupts() and interrupts() for safe counter access.</li>
+        <li>Using millis() to measure reporting intervals.</li>
+        <li>Calculating pulse differences between measurements.</li>
+        <li>Displaying numerical values with Serial.print().</li>
+        <li>Monitoring motor activity in Serial Monitor.</li>
+        <li>Distinguishing pulses per second from RPM.</li>
+        <li>Understanding open-loop speed control.</li>
+        <li>Identifying limitations in encoder direction logic.</li>
+        <li>Understanding the difference between DC and stepper motor control.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>Stepper Motor Speed Controller</strong>
+</footer>
+
+<!-- =====================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+===================================== -->
+<script type="text/plain" id="arduino-program">
+/*
   DC MOTOR SPEED CONTROLLER WITH ENCODER
 
   Arduino UNO
@@ -547,53 +2699,369 @@ void loop() {
   }
 
   delay(10);
-}</code></pre>
-</section>
-
-<section class="section">
-<h2>Expected Output</h2>
-<p>Turning the potentiometer changes the PWM command from 0 to 255 and therefore changes the motor speed. Encoder pulses are counted continuously and reported on the Serial Monitor.</p>
-<div class="note">
-<strong>Potentiometer Minimum:</strong> PWM near 0<br>
-<strong>Potentiometer Maximum:</strong> PWM near 255<br>
-<strong>Serial Monitor:</strong> Potentiometer, PWM, Total Pulses, Pulses/Second
-</div>
-</section>
-
-<section class="section" id="result">
-<h2>Result</h2>
-<p>The Stepper Motor Speed Controller experiment was implemented using Arduino UNO, a potentiometer, ULN2003 driver and a motor with encoder feedback. Motor speed changes according to the potentiometer position and encoder pulses are monitored through the Serial Monitor.</p>
-</section>
-
-<section class="section">
-<h2>What You Learn</h2>
-<ul>
-<li>How to read a potentiometer using Arduino A0.</li>
-<li>How to map analog input from 0–1023 to PWM 0–255.</li>
-<li>How to control motor speed using PWM.</li>
-<li>How to interface a ULN2003 driver with Arduino.</li>
-<li>How to read encoder channels using digital pins.</li>
-<li>How to use an interrupt for pulse counting.</li>
-<li>How to calculate pulses per second.</li>
-<li>How to monitor motor activity using Serial Monitor.</li>
-</ul>
-</section>
-
-</main>
-
-<footer>
-<strong>Arduino Experiment</strong><br>
-Stepper Motor Speed Controller
-</footer>
-
-<script>
-function copyCode(){
-  const code=document.getElementById("arduinoCode").innerText;
-  navigator.clipboard.writeText(code);
-  const button=document.querySelector(".copy-button");
-  button.innerText="Copied!";
-  setTimeout(function(){button.innerText="Copy Code";},1500);
 }
+</script>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
+<script>
+
+/* =====================================
+   READ ORIGINAL ARDUINO PROGRAM
+===================================== */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =====================================
+   TEN EXPLANATION STEPS
+===================================== */
+const steps = [
+
+    {
+        title: "Define input and output pins",
+        start: "#define POT_PIN A0",
+        end: "#define ENCODER_B_PIN 3",
+        text:
+            "The potentiometer is connected " +
+            "to A0. The ULN2003 driver " +
+            "receives motor PWM through D5. " +
+            "Encoder Channel A connects " +
+            "to D2 and Channel B to D3."
+    },
+
+    {
+        title: "Set encoder and timing variables",
+        start: "volatile long encoderPulses = 0;",
+        end: "long previousPulses = 0;",
+        text:
+            "encoderPulses stores rising-edge " +
+            "counts and is declared volatile " +
+            "because an interrupt modifies it. " +
+            "The program also stores the " +
+            "potentiometer reading, PWM command, " +
+            "reporting timestamp and previous " +
+            "pulse total."
+    },
+
+    {
+        title: "Handle encoder interrupt",
+        start: "void encoderISR() {",
+        end: "encoderDirection = 1;",
+        text:
+            "encoderISR() runs on rising " +
+            "edges of Encoder A. It reads " +
+            "Channel B and increments the " +
+            "pulse count. Both branches " +
+            "set encoderDirection to 1, " +
+            "so actual direction is not " +
+            "determined by this sketch."
+    },
+
+    {
+        title: "Initialize Arduino and encoder",
+        start: "void setup() {",
+        end: 'Serial.println("--------------------------------");',
+        text:
+            "setup() starts Serial at " +
+            "9600 baud, configures the PWM " +
+            "output and encoder inputs, " +
+            "attaches the rising-edge " +
+            "interrupt to D2, initializes " +
+            "PWM to zero and prints " +
+            "startup messages."
+    },
+
+    {
+        title: "Read potentiometer",
+        start: "void loop() {",
+        end: "potValue = analogRead(POT_PIN);",
+        text:
+            "Each loop iteration reads " +
+            "the potentiometer on A0. " +
+            "The value is stored in " +
+            "potValue, normally ranging " +
+            "from 0 to 1023."
+    },
+
+    {
+        title: "Map analog value to PWM",
+        start: "motorPWM = map(",
+        end: "255",
+        text:
+            "The map() function converts " +
+            "a potentiometer reading " +
+            "from the 0-1023 range " +
+            "to a PWM command in " +
+            "the 0-255 range."
+    },
+
+    {
+        title: "Apply PWM to motor driver",
+        start: "analogWrite(MOTOR_PWM_PIN, motorPWM);",
+        end: "analogWrite(MOTOR_PWM_PIN, motorPWM);",
+        text:
+            "analogWrite() generates the " +
+            "PWM signal on D5 and sends " +
+            "it to the ULN2003 driver " +
+            "to control average motor drive."
+    },
+
+    {
+        title: "Capture encoder pulse count",
+        start: "if (millis() - previousTime >= 1000) {",
+        end: "interrupts();",
+        text:
+            "Approximately once a second, " +
+            "the program records the time " +
+            "and safely copies encoderPulses. " +
+            "Interrupts are disabled briefly " +
+            "to prevent an incomplete " +
+            "multi-byte counter read."
+    },
+
+    {
+        title: "Calculate pulses per second",
+        start: "long pulsesPerSecond =",
+        end: "previousPulses = currentPulses;",
+        text:
+            "The current total is reduced " +
+            "by the previous total. " +
+            "The difference represents " +
+            "pulses counted during the " +
+            "latest reporting interval. " +
+            "The previous value is then " +
+            "updated for the next report."
+    },
+
+    {
+        title: "Print monitoring results",
+        start: 'Serial.print("Potentiometer: ");',
+        end: 'Serial.println("--------------------------------");',
+        text:
+            "The program reports the " +
+            "potentiometer value, PWM " +
+            "command, cumulative encoder " +
+            "pulses and pulses per second. " +
+            "These values appear in " +
+            "Serial Monitor at 9600 baud."
+    }
+
+];
+
+/* =====================================
+   ESCAPE HTML CHARACTERS
+===================================== */
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =====================================
+   DISPLAY SOURCE WITH LINE NUMBERS
+===================================== */
+function displayCode() {
+
+    const container = document.getElementById("code-lines");
+
+    container.innerHTML = lines.map(function(line, index) {
+
+        return (
+            '<span class="code-line" id="line-' +
+            (index + 1) + '">' +
+            '<span class="line-number">' +
+            (index + 1) +
+            '</span>' +
+            '<span>' +
+            escapeHtml(line) +
+            '</span></span>'
+        );
+
+    }).join("");
+}
+
+/* =====================================
+   FIND SOURCE LINE
+===================================== */
+function findLine(searchText, startIndex = 0) {
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+/* =====================================
+   HIGHLIGHT SOURCE AND EXPLAIN
+===================================== */
+function showStep(index) {
+
+    const step = steps[index];
+
+    document.querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+
+        });
+
+    document.querySelectorAll(".code-line")
+        .forEach(function(line) {
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching source lines were not found.";
+
+        return;
+    }
+
+    let endLine = findLine(step.end, startLine);
+
+    if (endLine < startLine) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const firstLine = document
+        .getElementById("line-" + (startLine + 1));
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+
+    }
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+    heading.textContent = (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =====================================
+   COPY COMPLETE ARDUINO CODE
+===================================== */
+async function copyCode() {
+
+    const button = document
+        .querySelector(".code-top .copy-button");
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =====================================
+   QUIZ ANSWERS
+===================================== */
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =====================================
+   INITIALIZE EXPLORER
+===================================== */
+displayCode();
+showStep(0);
+
 </script>
 
 </body>
