@@ -1,28 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
->
-
-<title>
-Vibration Activated Lamp
-</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibration Activated Lamp</title>
 
 <style>
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
+}
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+html {
+    scroll-behavior: smooth;
+}
 
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -33,8 +39,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -48,8 +52,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -67,35 +69,22 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -111,15 +100,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -137,18 +124,481 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   STICKY NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN SECTIONS
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+
+.section h3 {
+    color: #1e3a8a;
+    margin-top: 22px;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.component-card:hover {
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    padding: 14px 16px;
+    border-radius: 6px;
+    margin-top: 18px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+.output-box {
+    padding: 16px;
+    margin: 14px 0;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px/1.8 Consolas, Monaco, monospace;
+}
+
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    padding: 16px;
+    text-align: center;
+}
+
+.state-card strong {
+    display: block;
+    color: #1e3a8a;
+    font-size: 19px;
+    margin-bottom: 6px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    color: #1e3a8a !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    min-width: 0;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+}
+
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
 
 @media (max-width: 600px) {
-
     .header {
         padding: 15px 0 0;
         min-height: 230px;
@@ -194,79 +644,32 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}
-.container{width:90%;max-width:1050px;margin:35px auto}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
-ul,ol{padding-left:24px}
-li{margin-bottom:8px}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
-.component-card p{color:#475569;font-size:14px;margin:0}
-.table-wrap{overflow-x:auto}
-table{width:100%;min-width:620px;border-collapse:collapse}
-th,td{padding:12px;border:1px solid #ddd;text-align:left}
-th{background:#2563eb;color:white}
-tr:nth-child(even){background:#f8fafc}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px}
-.note{background:#eff6ff;border-left:5px solid #2563eb;padding:14px 16px;border-radius:6px;margin-top:18px}
-.code-lesson{color:#142e3a}
-.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px}
-.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important}
-.intro{color:#526875;margin:0 0 22px}
-.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
-.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10)}
-.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
-.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace}
-.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer}
-.code-body{height:600px;overflow:auto;background:white;padding:16px 0}
-.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
-.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
-.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b}
-.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px}
-.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px}
-.guide>p{color:#526875;font-size:15px}
-.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
-.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a}
-.step.active{background:#eff6ff;border-color:#60a5fa}
-.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
-.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px}
-.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a}
-.explanation p{margin:0;color:#526875;font-size:15px}
-.guide details{border-top:1px solid #dce6e9;margin-top:15px}
-.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0}
-.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}
-footer strong{color:white}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr}}
-@media(max-width:600px){.steps{grid-template-columns:1fr}}
-
 </style>
-
 </head>
 
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -274,1012 +677,1658 @@ footer strong{color:white}
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
-        <p>Adjustable LED Dimmer</p>
+        <p>Vibration Activated Lamp</p>
     </div>
-
-    <!-- BOTTOM BUTTON BAR -->
 
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
             </a>
-
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
-                Arduino
-            </a>
-
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
-                ESP
-            </a>
-
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
-                R-Pi
-            </a>
-
+            <a href="../index.html"
+               class="header-nav-btn">Arduino</a>
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">ESP</a>
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">R-Pi</a>
         </div>
 
     </div>
-
 </header>
 
+<!-- =====================================
+     NAVIGATION
+===================================== -->
 <nav>
-
-    <a href="../index.html">
-        ← Arduino Experiments
-    </a>
-
-    <a href="#aim">
-        Aim
-    </a>
-
-    <a href="#components">
-        Components
-    </a>
-
-    <a href="#connections">
-        Connections
-    </a>
-
-    <a href="#circuit">
-        Circuit
-    </a>
-
-    <a href="#working">
-        Working
-    </a>
-
-    <a href="#procedure">
-        Procedure
-    </a>
-
-    <a href="#code">
-        Code
-    </a>
-
-    <a href="#result">
-        Result
-    </a>
-
+    <a href="../index.html">&#8592; Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
-<section
-class="section"
-id="aim"
->
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
 
-    <h2>
-        Aim
-    </h2>
+    <img
+        src="../Vibration Activated Lamp.png"
+        alt="Vibration Activated Lamp Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
 
     <p>
-        To detect vibration using a digital vibration sensor module
-        and automatically switch an LED ON using an Arduino UNO R3.
+        To design a Vibration Activated Lamp
+        experiment using Arduino UNO R3,
+        a digital vibration sensor module,
+        a red LED and a 220Ω resistor.
+    </p>
+
+    <p>
+        The system automatically turns
+        the LED ON when the digital
+        sensor indicates vibration
+        and turns it OFF when
+        the signal returns to
+        its normal state.
     </p>
 
 </section>
 
-<section class="section">
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
 
-    <h2>
-        About the Experiment
-    </h2>
+    <h2>About the Experiment</h2>
 
     <p>
-        The vibration sensor module provides a digital output
-        to Arduino pin D2.
-        The Arduino continuously checks this signal.
+        Vibration Activated Lamp is
+        a simple sensor-based
+        automation experiment.
+        It demonstrates how
+        mechanical vibration
+        can control an electronic
+        output through Arduino UNO.
     </p>
 
     <p>
-        When vibration is detected,
-        the LED connected to D8 through a 220Ω resistor turns ON
-        and the Serial Monitor displays
-        <strong>VIBRATION DETECTED</strong>.
-        When the sensor is still,
-        the LED remains OFF.
+        The digital vibration sensor
+        module detects mechanical
+        movement or vibration and
+        produces a HIGH or LOW
+        signal at its digital
+        output terminal.
     </p>
+
+    <p>
+        The sensor's digital output
+        is connected to Arduino D2.
+        A red LED is connected
+        to Arduino D8 through
+        a 220Ω current-limiting
+        resistor.
+    </p>
+
+    <p>
+        Arduino continuously reads
+        the digital sensor value
+        using digitalRead().
+    </p>
+
+    <p>
+        The original program
+        interprets HIGH as
+        vibration detected.
+        In that condition,
+        Arduino switches ON
+        the red LED and prints
+        the detection status
+        to Serial Monitor.
+    </p>
+
+    <p>
+        The program waits
+        200 milliseconds
+        after detecting vibration.
+        If the sensor signal
+        becomes LOW on a
+        later check, Arduino
+        switches OFF the LED.
+    </p>
+
+    <p>
+        Serial Monitor operates
+        at 9600 baud and
+        helps students observe
+        vibration detection events.
+    </p>
+
+    <div class="note">
+
+        <strong>Sensor Polarity:</strong>
+
+        <p>
+            The source sketch
+            assumes that HIGH
+            means vibration detected.
+        </p>
+
+        <p>
+            Some vibration modules
+            have active-LOW outputs.
+            Their behavior depends
+            on the sensor and
+            comparator circuit.
+        </p>
+
+        <p>
+            Confirm the actual module's
+            output polarity before
+            relying on the LED
+            indication. The original
+            sketch is preserved
+            without changing
+            its detection condition.
+        </p>
+
+    </div>
 
 </section>
 
-<section
-class="section"
-id="components"
->
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
+<section class="section" id="components">
 
-    <h2>
-        Components Required
-    </h2>
+    <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img
-            src="Arduino UNO.png"
-            alt="Arduino UNO R3"
-            >
-            <h4>
-                Arduino UNO R3 (×1)
-            </h4>
+            <img src="Arduino UNO.png"
+                 alt="Arduino UNO R3">
+            <h4>Arduino UNO R3 (×1)</h4>
             <p>
-                Main controller for the experiment.
+                Reads the vibration
+                sensor and controls
+                the indicator LED.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="Vibration Sensor Module.png"
-            alt="Vibration Sensor Module"
-            >
-            <h4>
-                Vibration Sensor Module (×1)
-            </h4>
+            <img src="Vibration Sensor Module.png"
+                 alt="Vibration Sensor Module">
+            <h4>Vibration Sensor Module (×1)</h4>
             <p>
-                Detects vibration and provides a digital output.
+                Detects mechanical vibration
+                and provides a
+                digital output signal.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="Red LED.png"
-            alt="Red LED"
-            >
-            <h4>
-                Red LED (×1)
-            </h4>
+            <img src="Red LED.png"
+                 alt="Red LED">
+            <h4>Red LED (×1)</h4>
             <p>
-                Visual vibration indicator.
+                Illuminates when the
+                programmed vibration
+                condition is detected.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="220 Ohm Resistor.png"
-            alt="220 Ohm Resistor"
-            >
-            <h4>
-                220Ω Resistor (×1)
-            </h4>
+            <img src="220 Ohm Resistor.png"
+                 alt="220 Ohm Resistor">
+            <h4>220Ω Resistor (×1)</h4>
             <p>
-                Limits current through the LED.
+                Limits the current
+                through the red LED.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="Jumper Wires.png"
-            alt="Jumper Wires"
-            >
-            <h4>
-                Jumper Wires
-            </h4>
+            <img src="Breadboard.png"
+                 alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
             <p>
-                Used for circuit connections.
+                Used to organize
+                the LED and
+                sensor wiring.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="Breadboard.png"
-            alt="Breadboard"
-            >
-            <h4>
-                Breadboard (×1)
-            </h4>
+            <img src="Jumper Wires.png"
+                 alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
             <p>
-                Used to assemble the practical circuit.
+                Connect Arduino,
+                the vibration sensor,
+                LED and breadboard.
             </p>
         </div>
 
     </div>
 
+    <div class="note">
+
+        <strong>Arduino Libraries:</strong>
+
+        <p>
+            No additional Arduino
+            libraries are required.
+            The program uses built-in
+            functions such as
+            digitalRead(), digitalWrite(),
+            pinMode() and Serial.println().
+        </p>
+
+        <p>
+            The specified sensor
+            is a digital vibration
+            sensor module with
+            VCC, GND and DO terminals.
+            The sketch does not
+            read an analog vibration
+            value or use a separate
+            bare vibration switch.
+        </p>
+
+    </div>
+
 </section>
 
-<section
-class="section"
-id="connections"
->
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
 
-    <h2>
-        Circuit Connections
-    </h2>
+    <h2>Circuit Connections</h2>
+
+    <h3>Digital Vibration Sensor Connections</h3>
 
     <div class="table-wrap">
-
         <table>
-
             <thead>
-
                 <tr>
-                    <th>Component</th>
-                    <th>Pin / Connection</th>
-                    <th>Arduino UNO R3</th>
+                    <th>Sensor Terminal</th>
+                    <th>Arduino UNO Connection</th>
+                    <th>Purpose</th>
                 </tr>
-
             </thead>
-
             <tbody>
-
                 <tr>
-                    <td>Vibration Sensor</td>
                     <td>VCC</td>
                     <td>5V</td>
+                    <td>Sensor supply</td>
                 </tr>
-
                 <tr>
-                    <td>Vibration Sensor</td>
                     <td>GND</td>
                     <td>GND</td>
+                    <td>Common ground</td>
                 </tr>
-
                 <tr>
-                    <td>Vibration Sensor</td>
                     <td>DO / Digital Output</td>
                     <td>D2</td>
+                    <td>Vibration detection signal</td>
                 </tr>
+            </tbody>
+        </table>
+    </div>
 
+    <h3>Red LED Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
                 <tr>
-                    <td>LED</td>
-                    <td>Anode (+) through 220Ω resistor</td>
-                    <td>D8</td>
+                    <th>LED Terminal</th>
+                    <th>Arduino UNO Connection</th>
                 </tr>
-
+            </thead>
+            <tbody>
                 <tr>
-                    <td>LED</td>
+                    <td>Anode (+)</td>
+                    <td>D8 through 220Ω resistor</td>
+                </tr>
+                <tr>
                     <td>Cathode (−)</td>
                     <td>GND</td>
                 </tr>
-
             </tbody>
-
         </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Complete Pin Summary:</strong>
+
+        <ul>
+            <li>Vibration Sensor VCC → 5V</li>
+            <li>Vibration Sensor GND → GND</li>
+            <li>Vibration Sensor DO → D2</li>
+            <li>Red LED Anode → D8 through 220Ω resistor</li>
+            <li>Red LED Cathode → GND</li>
+        </ul>
+
+        <p>
+            Use the module's
+            digital output DO.
+            The sketch configures
+            D2 using INPUT,
+            not INPUT_PULLUP.
+        </p>
+
+        <p>
+            The sensor module
+            must provide a valid
+            logic HIGH or LOW
+            signal compatible with
+            Arduino UNO.
+        </p>
+
+        <p>
+            If the module
+            includes an adjustable
+            sensitivity control,
+            it may be calibrated
+            during testing.
+            This is a module
+            feature, not a
+            software adjustment
+            implemented by the sketch.
+        </p>
 
     </div>
 
 </section>
 
-<section
-class="section"
-id="circuit"
->
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
 
-    <h2>
-        Circuit Diagram
-    </h2>
+    <h2>Circuit Diagram</h2>
 
     <img
-    class="circuit-img"
-    src="Vibration Activated Lamp.png"
-    alt="Vibration Activated Lamp Circuit"
+        src="Vibration Activated Lamp.png"
+        alt="Vibration Activated Lamp Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
     >
+
+    <div id="circuit-placeholder"
+         class="note"
+         hidden>
+        Circuit diagram image pending.
+        Add the original circuit PNG named
+        Vibration Activated Lamp.png
+        inside this experiment folder.
+    </div>
 
 </section>
 
-<section
-class="section"
-id="working"
->
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
+<section class="section" id="working">
 
-    <h2>
-        Working Principle
-    </h2>
+    <h2>Working Principle</h2>
 
     <div class="flow">
+        Arduino UNO Starts
+        <br>↓<br>
+        Configure Sensor D2 as INPUT
+        <br>↓<br>
+        Configure LED D8 as OUTPUT
+        <br>↓<br>
+        Turn LED OFF
+        <br>↓<br>
+        Start Serial Monitor at 9600 Baud
+        <br>↓<br>
+        Read Vibration Sensor on D2
+        <br>↓<br>
+        Is Sensor Output HIGH?
+        <br>↓<br>
+        YES → Turn Red LED ON
+        <br>↓<br>
+        Print Vibration Detection and LED Status
+        <br>↓<br>
+        Wait 200 Milliseconds
+        <br>↓<br>
+        NO → Turn Red LED OFF
+        <br>↓<br>
+        Repeat Sensor Monitoring
+    </div>
 
-        Vibration Sensor Module
-        <br>
-        ↓
-        <br>
+    <h3>Digital Vibration Detection</h3>
 
-        Digital Output D2
-        <br>
-        ↓
-        <br>
+    <p>
+        The vibration sensor
+        module provides a
+        digital output to
+        Arduino pin D2.
+    </p>
 
-        Arduino UNO R3
-        <br>
-        ↓
-        <br>
+    <p>
+        Arduino calls
+        digitalRead(VIBRATION_PIN)
+        to determine whether
+        the signal is
+        HIGH or LOW.
+    </p>
 
-        Vibration Detected?
-        <br>
-        ↓
-        <br>
+    <h3>Vibration Detected</h3>
 
-        YES → LED ON + Serial Status
-        <br>
+    <p>
+        When vibrationState
+        is HIGH, the source
+        enters its vibration
+        detection branch.
+    </p>
 
-        NO → LED OFF
+    <div class="note">
+        <strong>Detection Condition:</strong>
+        <p>vibrationState == HIGH</p>
+        <p>Red LED: ON</p>
+        <p>Serial: Vibration detection message</p>
+        <p>Delay: 200 milliseconds</p>
+    </div>
+
+    <h3>No Vibration</h3>
+
+    <p>
+        When vibrationState
+        is LOW, Arduino
+        executes the else
+        branch and switches
+        the LED OFF.
+    </p>
+
+    <p>
+        The original sketch
+        does not print a
+        no-vibration message.
+        It simply continues
+        checking the sensor.
+    </p>
+
+    <h3>Serial Monitoring</h3>
+
+    <p>
+        The sketch prints
+        a title banner
+        once during setup.
+    </p>
+
+    <p>
+        Whenever the sensor
+        is read as HIGH,
+        Arduino prints
+        the vibration status,
+        LED status and
+        a separator line.
+    </p>
+
+    <p>
+        If the signal
+        remains HIGH across
+        multiple readings,
+        the program repeats
+        the messages after
+        each 200 ms delay.
+    </p>
+
+    <h3>Detection and Delay</h3>
+
+    <p>
+        The 200 ms delay
+        occurs only in
+        the vibration-detected
+        branch.
+    </p>
+
+    <p>
+        There is no programmed
+        delay in the
+        no-vibration branch.
+    </p>
+
+    <p>
+        Short vibration pulses
+        may be missed while
+        the sketch is
+        waiting inside delay().
+    </p>
+
+    <div class="state-grid">
+        <div class="state-card">
+            <strong>D2</strong>
+            Digital vibration input
+        </div>
+        <div class="state-card">
+            <strong>D8</strong>
+            Red LED output
+        </div>
+        <div class="state-card">
+            <strong>9600</strong>
+            Serial baud rate
+        </div>
+        <div class="state-card">
+            <strong>200 ms</strong>
+            Vibration branch delay
+        </div>
+    </div>
+
+    <div class="note">
+
+        <strong>Sensor Behavior Note:</strong>
+
+        <p>
+            The sensor's digital
+            output must be HIGH
+            during vibration for
+            the preserved sketch
+            to behave as intended.
+        </p>
+
+        <p>
+            If a particular
+            module uses active-LOW
+            signaling, its LED
+            behavior will appear
+            reversed until the
+            sensor logic is
+            adjusted to match
+            that module.
+        </p>
 
     </div>
 
 </section>
 
-<section
-class="section"
-id="procedure"
->
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
+<section class="section" id="procedure">
 
-    <h2>
-        Procedure
-    </h2>
+    <h2>Procedure</h2>
 
     <ol>
-
-        <li>
-            Place the Arduino UNO,
-            vibration sensor,
-            LED and resistor on the breadboard setup.
-        </li>
-
-        <li>
-            Connect vibration sensor VCC to 5V
-            and GND to Arduino GND.
-        </li>
-
-        <li>
-            Connect vibration sensor DO to digital pin D2.
-        </li>
-
-        <li>
-            Connect the LED anode to D8
-            through a 220Ω resistor.
-        </li>
-
-        <li>
-            Connect the LED cathode to GND.
-        </li>
-
-        <li>
-            Open Arduino IDE
-            and select Arduino Uno.
-        </li>
-
-        <li>
-            Save the sketch as
-            <code>Vibration_Activated_Lamp.ino</code>
-            and upload it to the Arduino.
-        </li>
-
-        <li>
-            Open Serial Monitor at
-            <strong>9600 baud</strong>.
-        </li>
-
-        <li>
-            Keep the sensor still
-            and verify that the LED remains OFF.
-        </li>
-
-        <li>
-            Tap or gently shake the vibration sensor
-            and verify that the LED turns ON.
-        </li>
-
+        <li>Arrange the Arduino UNO, vibration sensor module, red LED, 220Ω resistor, breadboard and jumper wires.</li>
+        <li>Identify the VCC, GND and DO terminals of the vibration sensor module.</li>
+        <li>Connect the sensor VCC to Arduino 5V, after confirming the module's voltage rating.</li>
+        <li>Connect the sensor GND to Arduino GND.</li>
+        <li>Connect the sensor digital output DO to Arduino D2.</li>
+        <li>Insert the red LED into the breadboard.</li>
+        <li>Connect the red LED anode to Arduino D8 through a 220Ω resistor.</li>
+        <li>Connect the red LED cathode to GND.</li>
+        <li>Verify all connections and LED polarity.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Create a sketch named <strong>Vibration_Activated_Lamp.ino</strong>.</li>
+        <li>Copy the complete Arduino program from Explore the Code.</li>
+        <li>Select Arduino Uno and the correct communication port.</li>
+        <li>Verify and upload the program.</li>
+        <li>Open Serial Monitor at <strong>9600 baud</strong>.</li>
+        <li>Observe the startup banner printed by Arduino.</li>
+        <li>Keep the vibration sensor still and observe whether its output is LOW.</li>
+        <li>When the output is LOW, verify that the LED remains OFF.</li>
+        <li>Gently tap or shake the vibration sensor module.</li>
+        <li>When its output is HIGH, verify that the red LED turns ON.</li>
+        <li>Observe the vibration detection messages in Serial Monitor.</li>
+        <li>Stop moving the sensor and observe whether the LED switches OFF.</li>
+        <li>If the module has a sensitivity adjustment, calibrate it according to its specifications.</li>
+        <li>Repeat the test with different gentle vibrations and record the response.</li>
     </ol>
 
     <div class="note">
 
-        <strong>
-            Sensor polarity note:
-        </strong>
+        <strong>Sensor Polarity Note:</strong>
 
-        The supplied program treats
-        <code>HIGH</code>
-        as vibration detected.
-        Some vibration modules may use the opposite digital-output polarity.
-        If required,
-        change
-        <code>HIGH</code>
-        to
-        <code>LOW</code>
-        in the detection condition.
+        <p>
+            The supplied program
+            treats HIGH as
+            vibration detected.
+            If the particular
+            module uses LOW
+            to indicate vibration,
+            the physical response
+            will differ from
+            this expected behavior.
+        </p>
 
     </div>
 
 </section>
 
-<section
-class="section"
-id="code"
->
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
+<section class="section" id="code">
 
-    <div class="code-lesson">
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
 
-        <p class="eyebrow">
-            Arduino Experiment · Code Review
-        </p>
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
 
-        <h2 class="lesson-title">
-            Explore the Code
-        </h2>
+    <p class="intro">
+        Vibration Activated Lamp ·
+        Select a step to highlight
+        the matching Arduino code
+        and read its explanation.
+    </p>
 
-        <p class="intro">
-            Select a step.
-            The matching Arduino code will highlight in blue.
-        </p>
+    <div class="code-layout">
 
-        <div class="code-layout">
+        <article class="code-panel">
 
-            <article class="code-panel">
+            <div class="code-top">
+                <span class="filename">
+                    Vibration_Activated_Lamp.ino
+                </span>
 
-                <div class="code-top">
-
-                    <span class="filename">
-                        Vibration_Activated_Lamp.ino
-                    </span>
-
-                    <button
+                <button
+                    type="button"
                     class="copy-button"
-                    onclick="copyCode()"
-                    >
-                        Copy Code
-                    </button>
+                    onclick="copyCode()">
+                    Copy Code
+                </button>
+            </div>
 
-                </div>
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
 
-                <div
-                class="code-body"
-                id="code-body"
-                >
+        </article>
 
-                    <code id="code-lines"></code>
+        <article class="guide">
 
-                </div>
+            <h2>Understand it step by step</h2>
 
-            </article>
+            <p>
+                Choose one of the ten
+                steps to highlight
+                the relevant code.
+            </p>
 
-            <article class="guide">
+            <div class="steps">
 
-                <h2>
-                    Understand it step by step
-                </h2>
+                <button class="step active"
+                        type="button"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Define sensor and LED pins
+                </button>
 
+                <button class="step"
+                        type="button"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Configure input and output
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Turn LED OFF initially
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Initialize Serial Monitor
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Read digital vibration input
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Check the HIGH condition
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Turn the LED ON
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Print detection messages
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Wait 200 milliseconds
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Switch LED OFF when LOW
+                </button>
+
+            </div>
+
+            <div id="explanation"
+                 class="explanation"
+                 aria-live="polite"></div>
+
+            <details>
+                <summary>
+                    Explore more: Digital Vibration Sensors
+                </summary>
                 <p>
-                    Choose a step.
-                    The matching code will light up on the left.
+                    A digital vibration
+                    module produces a
+                    binary logic output,
+                    HIGH or LOW.
                 </p>
+                <p>
+                    The exact active
+                    polarity depends
+                    on its internal
+                    circuitry and
+                    sensor module.
+                </p>
+            </details>
 
-                <div class="steps">
+            <details>
+                <summary>
+                    Explore more: digitalRead()
+                </summary>
+                <p>
+                    digitalRead()
+                    reads the logic
+                    level present
+                    at a configured
+                    digital input pin.
+                </p>
+                <p>
+                    Here, Arduino
+                    reads D2 and
+                    stores the result
+                    in vibrationState.
+                </p>
+            </details>
 
-                    <button
-                    class="step active"
-                    onclick="showStep(0)"
-                    >
-                        <span class="step-number">
-                            01
-                        </span>
-                        Define the pins
-                    </button>
+            <details>
+                <summary>
+                    Explore more: digitalWrite()
+                </summary>
+                <p>
+                    digitalWrite()
+                    controls an
+                    Arduino output
+                    as HIGH or LOW.
+                </p>
+                <p>
+                    In this circuit,
+                    HIGH turns the
+                    red LED ON,
+                    while LOW
+                    switches it OFF.
+                </p>
+            </details>
 
-                    <button
-                    class="step"
-                    onclick="showStep(1)"
-                    >
-                        <span class="step-number">
-                            02
-                        </span>
-                        Configure sensor and LED
-                    </button>
+            <details>
+                <summary>
+                    Explore more: Serial Monitor
+                </summary>
+                <p>
+                    Serial Monitor
+                    displays text
+                    messages sent
+                    by Arduino.
+                </p>
+                <p>
+                    The original
+                    sketch starts
+                    communication
+                    at 9600 baud.
+                </p>
+                <p>
+                    Detection status
+                    is printed only
+                    in the
+                    HIGH branch.
+                </p>
+            </details>
 
-                    <button
-                    class="step"
-                    onclick="showStep(2)"
-                    >
-                        <span class="step-number">
-                            03
-                        </span>
-                        Start Serial Monitor
-                    </button>
+            <details>
+                <summary>
+                    Explore more: The 200 ms Delay
+                </summary>
+                <p>
+                    delay(200) pauses
+                    normal program
+                    execution for
+                    approximately
+                    200 milliseconds.
+                </p>
+                <p>
+                    This delay
+                    runs only after
+                    vibration is detected.
+                    The no-vibration
+                    branch has
+                    no such delay.
+                </p>
+            </details>
 
-                    <button
-                    class="step"
-                    onclick="showStep(3)"
-                    >
-                        <span class="step-number">
-                            04
-                        </span>
-                        Read vibration sensor
-                    </button>
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
 
-                    <button
-                    class="step"
-                    onclick="showStep(4)"
-                    >
-                        <span class="step-number">
-                            05
-                        </span>
-                        Detect vibration
-                    </button>
+                <ol>
+                    <li>Which Arduino pin reads the sensor?</li>
+                    <li>Which pin controls the red LED?</li>
+                    <li>What resistor is used with the LED?</li>
+                    <li>What baud rate is configured?</li>
+                    <li>Which logic level means vibration in this sketch?</li>
+                    <li>What happens when vibration is detected?</li>
+                    <li>How long does Arduino wait after a detection?</li>
+                    <li>Does the LOW branch print a status message?</li>
+                </ol>
 
-                    <button
-                    class="step"
-                    onclick="showStep(5)"
-                    >
-                        <span class="step-number">
-                            06
-                        </span>
-                        Show vibration status
-                    </button>
+                <button
+                    type="button"
+                    class="copy-button"
+                    style="border:1px solid #bfdbfe"
+                    onclick="toggleAnswers()">
+                    Show / Hide Answers
+                </button>
 
-                    <button
-                    class="step"
-                    onclick="showStep(6)"
-                    >
-                        <span class="step-number">
-                            07
-                        </span>
-                        Return to normal
-                    </button>
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>D2</li>
+                        <li>D8</li>
+                        <li>220Ω</li>
+                        <li>9600 baud</li>
+                        <li>HIGH</li>
+                        <li>The LED turns ON and Serial messages are printed.</li>
+                        <li>200 milliseconds</li>
+                        <li>No, it only turns the LED OFF.</li>
+                    </ol>
                 </div>
 
-                <div
-                class="explanation"
-                id="explanation"
-                >
+            </details>
 
-                    <h3>
-                        1. Define the pins
-                    </h3>
+        </article>
 
-                    <p>
-                        The vibration sensor digital output is connected to D2 and the LED is controlled from D8.
-                    </p>
+    </div>
 
-                </div>
+    <p class="tip">
+        <strong>Try it:</strong>
+        Gently tap the
+        vibration sensor and
+        watch the LED
+        and Serial Monitor.
+        Check whether the
+        module output is
+        HIGH or LOW
+        during vibration.
+    </p>
 
-                <details>
+</section>
 
-                    <summary>
-                        Explore more: vibration sensor logic
-                    </summary>
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
 
-                    <p>
-                        The sensor module converts vibration into
-                        a digital HIGH or LOW signal.
-                        Its onboard sensitivity control can be adjusted
-                        so that small vibrations do not trigger the system unnecessarily.
-                    </p>
+    <h2>Expected Output</h2>
 
-                </details>
+    <h3>Startup Serial Message</h3>
 
-                <details>
+    <p>
+        When Arduino starts,
+        Serial Monitor displays
+        the title banner.
+    </p>
 
-                    <summary>
-                        Check your understanding
-                    </summary>
+    <div class="output-box">
+<pre>==============================
+ VIBRATION ACTIVATED LAMP
+==============================</pre>
+    </div>
 
-                    <ul>
-                        <li>
-                            Which pin reads the vibration sensor?
-                            <strong>D2</strong>
-                        </li>
-                        <li>
-                            Which pin controls the LED?
-                            <strong>D8</strong>
-                        </li>
-                        <li>
-                            What happens when vibration is detected?
-                            <strong>The LED turns ON.</strong>
-                        </li>
-                    </ul>
+    <h3>No Vibration</h3>
 
-                </details>
+    <p>
+        When the sensor
+        output is LOW,
+        the LED is OFF.
+        The sketch does
+        not print an
+        additional message.
+    </p>
 
-            </article>
+    <div class="note">
+        <p>Sensor output: LOW</p>
+        <p>Red LED: OFF</p>
+        <p>Additional Serial message: None</p>
+    </div>
 
-        </div>
+    <h3>Vibration Detected</h3>
 
-        <p class="tip">
+    <p>
+        When the sensor
+        output becomes HIGH,
+        Arduino switches
+        the red LED ON
+        and prints the
+        detection message.
+    </p>
 
-            <strong>
-                Try it:
-            </strong>
+    <div class="output-box">
+<pre>STATUS : VIBRATION DETECTED
+LED : ON
+------------------------------</pre>
+    </div>
 
-            Gently tap the sensor
-            and watch the LED and Serial Monitor respond.
+    <div class="note">
+        <p>Sensor output: HIGH</p>
+        <p>Red LED: ON</p>
+        <p>Programmed delay: 200 ms</p>
+    </div>
 
+    <h3>System State Table</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sensor Output</th>
+                    <th>Program Interpretation</th>
+                    <th>Red LED</th>
+                    <th>Serial Output</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>LOW</td>
+                    <td>No vibration</td>
+                    <td>OFF</td>
+                    <td>No new status message</td>
+                </tr>
+                <tr>
+                    <td>HIGH</td>
+                    <td>Vibration detected</td>
+                    <td>ON</td>
+                    <td>Detection and LED messages</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Repeated Vibration</h3>
+
+    <p>
+        If the sensor
+        remains HIGH over
+        multiple checks,
+        Arduino repeatedly
+        prints the detection
+        status after each
+        200 ms delay.
+    </p>
+
+    <div class="output-box">
+<pre>STATUS : VIBRATION DETECTED
+LED : ON
+------------------------------
+STATUS : VIBRATION DETECTED
+LED : ON
+------------------------------</pre>
+    </div>
+
+    <h3>Returning to Normal</h3>
+
+    <p>
+        After vibration
+        stops, the LED
+        turns OFF on
+        the next LOW
+        sensor reading.
+    </p>
+
+    <p>
+        No separate
+        "VIBRATION STOPPED"
+        message is present
+        in the original
+        program.
+    </p>
+
+    <div class="note">
+
+        <strong>Expected Output Notes:</strong>
+
+        <p>
+            Actual output depends
+            on the sensor
+            module's digital-output
+            polarity and response.
+        </p>
+
+        <p>
+            The LED turns ON
+            only while the
+            program detects
+            the specified
+            HIGH condition.
+        </p>
+
+        <p>
+            The sketch
+            does not maintain
+            the lamp ON
+            for a fixed
+            period after
+            vibration stops.
+        </p>
+
+        <p>
+            The program
+            does not measure
+            vibration strength,
+            frequency or
+            acceleration.
         </p>
 
     </div>
 
 </section>
 
-<section class="section">
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
 
-    <h2>
-        Expected Output
-    </h2>
+    <h2>Result</h2>
 
     <p>
-        With no vibration,
-        the LED remains OFF.
-        When vibration is detected,
-        the LED turns ON and the Serial Monitor displays
-        <strong>STATUS : VIBRATION DETECTED</strong>
-        and
-        <strong>LED : ON</strong>.
+        The Vibration Activated Lamp
+        experiment demonstrates
+        how Arduino UNO can
+        read the digital
+        output of a
+        vibration sensor
+        and control a
+        red LED according
+        to the input state.
+    </p>
+
+    <p>
+        When the sensor
+        output is HIGH,
+        Arduino turns
+        the LED ON
+        and prints the
+        vibration status
+        in Serial Monitor.
+    </p>
+
+    <p>
+        When the sensor
+        output is LOW,
+        Arduino switches
+        the LED OFF.
+    </p>
+
+    <p>
+        The experiment
+        demonstrates digital
+        sensor interfacing,
+        conditional programming,
+        LED control and
+        serial status
+        monitoring.
     </p>
 
 </section>
 
-<section
-class="section"
-id="result"
->
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
 
-    <h2>
-        Result
-    </h2>
-
-    <p>
-        The Vibration Activated Lamp successfully detects
-        vibration through the digital sensor module
-        and switches the LED ON whenever vibration is detected.
-    </p>
-
-</section>
-
-<section class="section">
-
-    <h2>
-        What You Learn
-    </h2>
+    <h2>What You Learn</h2>
 
     <ul>
-        <li>How a digital vibration sensor works.</li>
-        <li>How to read a digital sensor using Arduino.</li>
-        <li>How to control an LED from an Arduino output.</li>
-        <li>How to use a 220Ω current-limiting resistor.</li>
-        <li>How to observe sensor status using Serial Monitor.</li>
+        <li>Understanding the operation of a digital vibration sensor module.</li>
+        <li>Identifying the VCC, GND and DO terminals.</li>
+        <li>Connecting a vibration sensor to Arduino D2.</li>
+        <li>Configuring digital input and output pins.</li>
+        <li>Using pinMode() in Arduino programming.</li>
+        <li>Reading digital sensor signals with digitalRead().</li>
+        <li>Understanding HIGH and LOW logic levels.</li>
+        <li>Controlling an LED using digitalWrite().</li>
+        <li>Connecting an LED with a current-limiting resistor.</li>
+        <li>Using an if/else condition to react to sensor data.</li>
+        <li>Using constants to identify Arduino pins.</li>
+        <li>Initializing Serial Monitor with Serial.begin().</li>
+        <li>Displaying sensor status with Serial.println().</li>
+        <li>Understanding the effect of delay(200).</li>
+        <li>Recognizing active-HIGH and active-LOW sensor behavior.</li>
+        <li>Identifying why short pulses may be missed in a blocking program.</li>
+        <li>Building a basic vibration-responsive LED experiment.</li>
     </ul>
 
 </section>
 
 </main>
 
+<!-- =====================================
+     FOOTER
+===================================== -->
 <footer>
-
-    <strong>
-        Arduino Experiment
-    </strong>
-
-    <br>
-
-    VIBRATION ACTIVATED LAMP
-
+    <strong>Vibration Activated Lamp</strong>
 </footer>
 
-<script>
+<!-- =====================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+===================================== -->
+<script type="text/plain" id="arduino-program">
+// ==========================================
+// VIBRATION ACTIVATED LAMP
+// Arduino UNO R3
+// ==========================================
 
-const program =
-"// ==========================================\n// VIBRATION ACTIVATED LAMP\n// Arduino UNO R3\n// ==========================================\n\n#define VIBRATION_PIN 2\n#define LED_PIN 8\n\nvoid setup() {\n\n  pinMode(VIBRATION_PIN, INPUT);\n  pinMode(LED_PIN, OUTPUT);\n\n  digitalWrite(LED_PIN, LOW);\n\n  Serial.begin(9600);\n\n  Serial.println(\"==============================\");\n  Serial.println(\" VIBRATION ACTIVATED LAMP\");\n  Serial.println(\"==============================\");\n\n}\n\nvoid loop() {\n\n  int vibrationState =\n    digitalRead(VIBRATION_PIN);\n\n  if (vibrationState == HIGH) {\n\n    digitalWrite(LED_PIN, HIGH);\n\n    Serial.println(\n      \"STATUS : VIBRATION DETECTED\"\n    );\n\n    Serial.println(\n      \"LED : ON\"\n    );\n\n    Serial.println(\n      \"------------------------------\"\n    );\n\n    delay(200);\n\n  }\n\n  else {\n\n    digitalWrite(LED_PIN, LOW);\n\n  }\n\n}";
+#define VIBRATION_PIN 2
+#define LED_PIN 8
 
-const lines =
-program.split("\n");
+void setup() {
 
-const steps =
-[
-    {
-        "title": "Define the pins",
-        "start": "#define VIBRATION_PIN 2",
-        "end": "#define LED_PIN 8",
-        "text": "The vibration sensor digital output is connected to D2 and the LED is controlled from D8."
-    },
-    {
-        "title": "Configure sensor and LED",
-        "start": "void setup() {",
-        "end": "digitalWrite(LED_PIN, LOW);",
-        "text": "The sensor pin is configured as an input, the LED pin as an output, and the LED starts in the OFF state."
-    },
-    {
-        "title": "Start Serial Monitor",
-        "start": "Serial.begin(9600);",
-        "end": "Serial.println(\"==============================\");",
-        "text": "Serial communication starts at 9600 baud and the experiment title is printed."
-    },
-    {
-        "title": "Read vibration sensor",
-        "start": "void loop() {",
-        "end": "digitalRead(VIBRATION_PIN);",
-        "text": "The Arduino continuously reads the vibration sensor's digital output."
-    },
-    {
-        "title": "Detect vibration",
-        "start": "if (vibrationState == HIGH) {",
-        "end": "digitalWrite(LED_PIN, HIGH);",
-        "text": "For the supplied program, HIGH is treated as vibration detected and the LED is switched ON."
-    },
-    {
-        "title": "Show vibration status",
-        "start": "Serial.println(",
-        "end": "delay(200);",
-        "text": "When vibration is detected, the status and LED state are printed to the Serial Monitor and a short delay is used."
-    },
-    {
-        "title": "Return to normal",
-        "start": "else {",
-        "end": "digitalWrite(LED_PIN, LOW);",
-        "text": "When no vibration is detected, the LED returns to the OFF state."
-    }
-];
+  pinMode(VIBRATION_PIN, INPUT);
+  pinMode(LED_PIN, OUTPUT);
 
+  digitalWrite(LED_PIN, LOW);
 
-function escapeHtml(text){
+  Serial.begin(9600);
 
-    return text
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
+  Serial.println("==============================");
+  Serial.println(" VIBRATION ACTIVATED LAMP");
+  Serial.println("==============================");
 
 }
 
+void loop() {
 
-function displayCode(){
+  int vibrationState =
+    digitalRead(VIBRATION_PIN);
 
-    let output = "";
+  if (vibrationState == HIGH) {
 
-    lines.forEach(
-        function(line,index){
+    digitalWrite(LED_PIN, HIGH);
 
-            output +=
+    Serial.println(
+      "STATUS : VIBRATION DETECTED"
+    );
+
+    Serial.println(
+      "LED : ON"
+    );
+
+    Serial.println(
+      "------------------------------"
+    );
+
+    delay(200);
+
+  }
+
+  else {
+
+    digitalWrite(LED_PIN, LOW);
+
+  }
+
+}
+</script>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
+<script>
+
+/* =====================================
+   READ THE ORIGINAL SKETCH
+===================================== */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =====================================
+   TEN EXPLANATION STEPS
+===================================== */
+const steps = [
+
+    {
+        title: "Define sensor and LED pins",
+        start: "#define VIBRATION_PIN 2",
+        end: "#define LED_PIN 8",
+        text:
+            "The vibration sensor's digital " +
+            "output connects to Arduino D2. " +
+            "The red LED is controlled " +
+            "from D8 through a resistor."
+    },
+
+    {
+        title: "Configure input and output",
+        start: "void setup() {",
+        end: "pinMode(LED_PIN, OUTPUT);",
+        text:
+            "setup() configures the " +
+            "vibration sensor pin as an input " +
+            "and the LED pin as an output " +
+            "using pinMode()."
+    },
+
+    {
+        title: "Turn LED OFF initially",
+        start: "digitalWrite(LED_PIN, LOW);",
+        end: "digitalWrite(LED_PIN, LOW);",
+        text:
+            "At startup the LED is " +
+            "switched OFF. This initializes " +
+            "the output before vibration " +
+            "monitoring begins."
+    },
+
+    {
+        title: "Initialize Serial Monitor",
+        start: "Serial.begin(9600);",
+        end: 'Serial.println("==============================");',
+        endOccurrence: 2,
+        text:
+            "Serial communication starts " +
+            "at 9600 baud. The sketch " +
+            "then prints a decorative " +
+            "title banner identifying " +
+            "Vibration Activated Lamp."
+    },
+
+    {
+        title: "Read digital vibration input",
+        start: "void loop() {",
+        end: "digitalRead(VIBRATION_PIN);",
+        text:
+            "loop() continuously reads " +
+            "the sensor on D2. " +
+            "digitalRead() returns HIGH " +
+            "or LOW, and the result " +
+            "is stored in vibrationState."
+    },
+
+    {
+        title: "Check the HIGH condition",
+        start: "if (vibrationState == HIGH) {",
+        end: "if (vibrationState == HIGH) {",
+        text:
+            "The original sketch treats " +
+            "HIGH as vibration detected. " +
+            "The if block executes " +
+            "when that condition is true."
+    },
+
+    {
+        title: "Turn the LED ON",
+        start: "digitalWrite(LED_PIN, HIGH);",
+        end: "digitalWrite(LED_PIN, HIGH);",
+        text:
+            "When vibration is detected, " +
+            "Arduino drives D8 HIGH, " +
+            "turning ON the red LED."
+    },
+
+    {
+        title: "Print detection messages",
+        start: "Serial.println(",
+        end: '"------------------------------"',
+        startAfter: "if (vibrationState == HIGH) {",
+        text:
+            "The program prints " +
+            "STATUS : VIBRATION DETECTED, " +
+            "LED : ON and a separator " +
+            "line. These messages appear " +
+            "in Serial Monitor."
+    },
+
+    {
+        title: "Wait 200 milliseconds",
+        start: "delay(200);",
+        end: "delay(200);",
+        text:
+            "Arduino waits 200 ms " +
+            "after a HIGH detection. " +
+            "During this blocking delay, " +
+            "the sketch does not check " +
+            "the sensor again."
+    },
+
+    {
+        title: "Switch LED OFF when LOW",
+        start: "else {",
+        end: "digitalWrite(LED_PIN, LOW);",
+        text:
+            "When the HIGH condition " +
+            "is false, the else branch " +
+            "runs and the LED is turned OFF. " +
+            "No no-vibration status " +
+            "is printed."
+    }
+
+];
+
+/* =====================================
+   ESCAPE HTML CHARACTERS
+===================================== */
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =====================================
+   DISPLAY SOURCE WITH LINE NUMBERS
+===================================== */
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
                 '<span class="code-line" id="line-' +
-                (index + 1) +
-                '">' +
+                (index + 1) + '">' +
                 '<span class="line-number">' +
                 (index + 1) +
                 '</span>' +
                 '<span>' +
                 escapeHtml(line) +
-                '</span>' +
-                '</span>';
+                '</span></span>'
+            );
 
-        }
-    );
-
-    document
-    .getElementById("code-lines")
-    .innerHTML =
-    output;
-
+        }).join("");
 }
 
+/* =====================================
+   FIND MATCHING SOURCE LINE
+===================================== */
+function findLine(searchText, startIndex = 0, occurrence = 1) {
 
-function findLine(
-    searchText,
-    startIndex = 0
-){
+    let matches = 0;
 
-    for(
-        let i = startIndex;
-        i < lines.length;
-        i++
-    ){
+    for (let i = startIndex; i < lines.length; i++) {
 
-        if(
-            lines[i].includes(searchText)
-        ){
+        if (lines[i].trim().startsWith(searchText)) {
 
-            return i;
+            matches++;
 
+            if (matches === occurrence) {
+                return i;
+            }
         }
-
     }
 
     return -1;
-
 }
 
+/* =====================================
+   HIGHLIGHT SELECTED STEP
+===================================== */
+function showStep(index) {
 
-function showStep(index){
+    const step = steps[index];
 
-    const step =
-    steps[index];
+    document.querySelectorAll(".step")
+        .forEach(function(button, i) {
 
-    const buttons =
-    document.querySelectorAll(".step");
-
-    buttons.forEach(
-        function(button){
-
-            button
-            .classList
-            .remove("active");
-
-        }
-    );
-
-    if(buttons[index]){
-
-        buttons[index]
-        .classList
-        .add("active");
-
-    }
-
-    document
-    .querySelectorAll(".code-line")
-    .forEach(
-        function(line){
-
-            line
-            .classList
-            .remove("selected");
-
-        }
-    );
-
-    const startLine =
-    findLine(step.start);
-
-    if(startLine === -1){
-
-        return;
-
-    }
-
-    let endLine =
-    findLine(
-        step.end,
-        startLine
-    );
-
-    if(endLine === -1){
-
-        endLine =
-        startLine;
-
-    }
-
-    for(
-        let i = startLine;
-        i <= endLine;
-        i++
-    ){
-
-        const line =
-        document.getElementById(
-            "line-" +
-            (i + 1)
-        );
-
-        if(line){
-
-            line
-            .classList
-            .add("selected");
-
-        }
-
-    }
-
-    const selectedLine =
-    document.getElementById(
-        "line-" +
-        (startLine + 1)
-    );
-
-    const codeBody =
-    document.getElementById(
-        "code-body"
-    );
-
-    if(
-        selectedLine &&
-        codeBody
-    ){
-
-        codeBody.scrollTo({
-            top:
-                selectedLine.offsetTop
-                -
-                codeBody.offsetTop
-                -
-                20,
-            behavior:"smooth"
+            button.classList.toggle("active", i === index);
         });
 
+    document.querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+        });
+
+    let searchFrom = 0;
+
+    if (step.startAfter) {
+
+        const anchor = findLine(step.startAfter);
+
+        if (anchor >= 0) {
+            searchFrom = anchor + 1;
+        }
     }
 
-    document
-    .getElementById("explanation")
-    .innerHTML =
-        "<h3>" +
-        (index + 1) +
-        ". " +
-        step.title +
-        "</h3>" +
-        "<p>" +
-        step.text +
-        "</p>";
-
-}
-
-
-function copyCode(){
-
-    navigator
-    .clipboard
-    .writeText(program)
-    .then(
-        function(){
-
-            const button =
-            document.querySelector(
-                ".copy-button"
-            );
-
-            button.innerText =
-            "Copied!";
-
-            setTimeout(
-                function(){
-
-                    button.innerText =
-                    "Copy Code";
-
-                },
-                1500
-            );
-
-        }
+    const startLine = findLine(
+        step.start,
+        searchFrom,
+        step.startOccurrence || 1
     );
 
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching source lines were not found.";
+
+        return;
+    }
+
+    let endLine = findLine(
+        step.end,
+        startLine,
+        step.endOccurrence || 1
+    );
+
+    if (endLine < startLine) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const selected = document.getElementById(
+            "line-" + (i + 1)
+        );
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    const firstLine = document.getElementById(
+        "line-" + (startLine + 1)
+    );
+
+    const codeBody = document.getElementById("code-body");
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document.getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
 }
 
+/* =====================================
+   COPY COMPLETE ORIGINAL ARDUINO CODE
+===================================== */
+async function copyCode() {
 
+    const button = document.querySelector(
+        ".code-top .copy-button"
+    );
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =====================================
+   SHOW OR HIDE QUIZ ANSWERS
+===================================== */
+function toggleAnswers() {
+
+    const answers = document.getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =====================================
+   INITIALIZE CODE VIEWER
+===================================== */
 displayCode();
-
 showStep(0);
 
 </script>
 
 </body>
-
 </html>
