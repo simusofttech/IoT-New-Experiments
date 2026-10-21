@@ -1,15 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Ultrasonic Water Tank Level Indicator</title>
-<style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+<title>Ultrasonic Water Tank Level Indicator</title>
 
+<style>
+/* =====================================
+   BASIC PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -20,8 +39,6 @@
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -35,8 +52,6 @@
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -54,35 +69,22 @@
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
-    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    width: 100%;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -90,23 +92,21 @@
     justify-content: center;
     min-height: 38px;
     padding: 9px 14px;
-    background: white;
-    color: #1e3a8a;
     border: 1px solid #dbeafe;
     border-radius: 7px;
+    background: white;
+    color: #1e3a8a;
     font-size: 13px;
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -124,21 +124,495 @@
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   STICKY NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN SECTIONS
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 85px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    margin-top: 22px;
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: transform .2s, box-shadow .2s;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 18px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+.output-box {
+    margin: 14px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px/1.8 Consolas, Monaco, monospace;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+    text-align: center;
+}
+
+.flow-item {
+    padding: 5px 10px;
+}
+
+.flow-arrow {
+    font-size: 22px;
+    color: #2563eb;
+}
+
+.level-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px,1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.level-card {
+    padding: 16px;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    background: #f8fafc;
+    text-align: center;
+}
+
+.level-card strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #1e3a8a;
+    font-size: 19px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid white;
+    border-radius: 8px;
+    background: white;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    padding: 16px 0;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    color: #234e87;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    text-align: center;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
 
 @media (max-width: 600px) {
-
     .header {
-        padding: 15px 0 0;
         min-height: 230px;
+        padding: 15px 0 0;
     }
 
     .header-logo {
@@ -171,9 +645,9 @@
     }
 
     .header-nav-btn {
+        min-height: 36px;
         padding: 8px 7px;
         font-size: 11px;
-        min-height: 36px;
     }
 
     .home-icon-btn {
@@ -181,52 +655,32 @@
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:10}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}nav a:hover{color:#2563eb}
-.container{width:90%;max-width:950px;margin:35px auto}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}
-.section h3{color:#1e3a8a;margin-top:22px}.section p{margin-bottom:10px}
-ul,ol{padding-left:24px}li{margin-bottom:8px}.table-wrap{overflow-x:auto}
-table{width:100%;min-width:560px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}
-.code-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e293b;color:white;border-radius:8px 8px 0 0}
-.copy-button{border:0;padding:7px 12px;background:#2563eb;color:white;border-radius:5px;cursor:pointer;font-weight:bold}.copy-button:hover{background:#1d4ed8}
-pre{margin:0;padding:20px;overflow-x:auto;background:#020617;color:#e2e8f0;border-radius:0 0 8px 8px;font-family:Consolas,monospace;font-size:14px;line-height:1.7}
-.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
-.diagram{width:100%;max-width:760px;display:block;margin:20px auto;border:1px solid #dbeafe;border-radius:10px;background:#fff;padding:10px}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}footer strong{color:white}
-
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:box-shadow .2s,transform .2s}
-.component-card:hover{box-shadow:0 6px 15px rgba(0,0,0,.08);transform:translateY(-2px)}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px}
-.component-card p{color:#475569;font-size:14px;margin:0;line-height:1.5}
-.level-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:18px}
-.level-card{padding:16px;border:1px solid #dbeafe;border-radius:10px;background:#f8fbff;text-align:center}
-.level-card strong{display:block;color:#1e3a8a;font-size:18px;margin-bottom:4px}
-
-@media(max-width:600px){.header{padding:35px 15px}.header h1{font-size:28px}.container{width:92%}.section{padding:21px 18px}nav{gap:11px}.diagram{padding:4px}}
 </style>
 </head>
-<body>
-<header class="header">
 
-    <!-- COMPANY LOGO - TOP LEFT -->
+<body>
+
+<!-- =====================================
+     HEADER
+===================================== -->
+<header class="header">
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -234,216 +688,1831 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
-        <p>Adjustable LED Dimmer</p>
+        <p>Ultrasonic Water Tank Level Indicator</p>
     </div>
-
-    <!-- BOTTOM BUTTON BAR -->
 
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+            <a href="../index.html"
+               class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               title="Home"
+               aria-label="Home">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
             </a>
-
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
-                Arduino
-            </a>
-
-            <a
-                href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
-                ESP
-            </a>
-
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
-                R-Pi
-            </a>
-
+            <a href="../index.html"
+               class="header-nav-btn">Arduino</a>
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">ESP</a>
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">R-Pi</a>
         </div>
 
     </div>
-
 </header>
 
+<!-- =====================================
+     SECTION NAVIGATION
+===================================== -->
 <nav>
-<a href="#aim">Aim</a>
-<a href="#components">Components</a>
-<a href="#connections">Connections</a>
-<a href="#working">Working</a>
-<a href="#procedure">Procedure</a>
-<a href="#code">Code</a>
-<a href="#result">Result</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Ultrasonic Water Tank Level Indicator.png"
+        alt="Ultrasonic Water Tank Level Indicator Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div id="thumbnail-placeholder"
+         class="note"
+         hidden>
+        Approved experiment thumbnail pending.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
-<h2>Aim</h2>
-<p>To measure the water level of a tank using an HC-SR04 ultrasonic sensor and indicate the tank level using four LEDs connected to an Arduino UNO.</p>
+
+    <h2>Aim</h2>
+
+    <p>
+        To design and develop an
+        Ultrasonic Water Tank Level
+        Indicator using Arduino UNO,
+        an HC-SR04 ultrasonic sensor
+        and four LEDs.
+    </p>
+
+    <p>
+        The experiment measures
+        the distance between
+        the ultrasonic sensor
+        and the water surface,
+        calculates the estimated
+        water level and percentage,
+        and displays different
+        tank-level conditions
+        using LED indicators.
+    </p>
+
 </section>
 
-<section class="section">
-<h2>About the Experiment</h2>
-<p>This experiment uses an ultrasonic sensor to measure the distance between the sensor and the water surface. The Arduino uses this distance to calculate the water level inside the tank.</p>
-<p>Four LEDs indicate the approximate tank level. As the tank fills, more LEDs turn ON. The calculated distance, water level and percentage are also displayed in the Serial Monitor.</p>
-<div class="note">The program uses a tank height of <strong>100 cm</strong>. You can change the value of <strong>tankHeight</strong> in the code to match your actual tank.</div>
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Ultrasonic Water Tank
+        Level Indicator demonstrates
+        how Arduino UNO can estimate
+        the water level in a tank
+        without directly placing
+        the measurement sensor
+        inside the water.
+    </p>
+
+    <p>
+        An HC-SR04 ultrasonic
+        sensor is installed
+        above the water
+        surface, facing downward.
+    </p>
+
+    <p>
+        It emits ultrasonic
+        pulses and receives
+        echoes reflected by
+        the water surface.
+    </p>
+
+    <p>
+        Arduino measures
+        the echo duration
+        and calculates
+        the distance
+        between the sensor
+        and the water surface.
+    </p>
+
+    <p>
+        The original program
+        uses a tank height
+        of 100 cm.
+    </p>
+
+    <p>
+        The estimated water
+        level is calculated
+        by subtracting the
+        measured distance
+        from the tank height.
+    </p>
+
+    <p>
+        The water level
+        is then converted
+        into a percentage.
+    </p>
+
+    <p>
+        Four LEDs indicate
+        increasing water
+        level categories.
+    </p>
+
+    <p>
+        When the tank
+        percentage is below
+        25%, all LEDs
+        remain OFF.
+    </p>
+
+    <p>
+        At 25%, LED 1
+        turns ON.
+    </p>
+
+    <p>
+        At 50%, LED 1
+        and LED 2
+        remain ON.
+    </p>
+
+    <p>
+        At 75%, the
+        first three
+        LEDs turn ON.
+    </p>
+
+    <p>
+        At 95% or above,
+        all four LEDs
+        turn ON.
+    </p>
+
+    <p>
+        Arduino also prints
+        the measured distance,
+        estimated water level
+        and tank percentage
+        to Serial Monitor
+        at 9600 baud.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        <p>
+            The tankHeight
+            variable is
+            set to 100.0 cm
+            in the original
+            Arduino program.
+        </p>
+
+        <p>
+            This value assumes
+            that the sensor's
+            measurement origin
+            is approximately
+            100 cm above
+            the reference
+            tank bottom.
+        </p>
+
+        <p>
+            The result represents
+            a height-based
+            percentage, not
+            a direct measurement
+            of water volume.
+        </p>
+
+        <p>
+            For tanks with
+            irregular shapes,
+            the height percentage
+            may not equal
+            the volume percentage.
+        </p>
+
+        <p>
+            The HC-SR04
+            should be protected
+            from splashing,
+            condensation and
+            direct water exposure.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
-<h2>Components Required</h2>
-<div class="components-grid">
-    <div class="component-card">
-        <img src="Arduino UNO.png" alt="Arduino UNO">
-        <h4>Arduino UNO (x1)</h4>
-        <p>Main controller that reads the sensor and controls the LEDs.</p>
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="Arduino UNO.png"
+                 alt="Arduino UNO R3">
+            <h4>Arduino UNO R3 (×1)</h4>
+            <p>
+                Measures echo duration,
+                calculates tank level
+                and controls four LEDs.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img src="HC-SR04 Sensor.png"
+                 alt="HC-SR04 Ultrasonic Sensor">
+            <h4>HC-SR04 Ultrasonic Sensor (×1)</h4>
+            <p>
+                Measures the distance
+                from the sensor
+                to the water surface.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img src="LED.png"
+                 alt="LED Indicators">
+            <h4>LEDs (×4)</h4>
+            <p>
+                Indicate different
+                water-level ranges
+                from low to
+                nearly full.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img src="220 ohm resistor.png"
+                 alt="220 Ohm Resistor">
+            <h4>220Ω Resistors (×4)</h4>
+            <p>
+                One resistor limits
+                current through
+                each LED.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png"
+                 alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>
+                Used for organizing
+                the LED and
+                sensor connections.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png"
+                 alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>
+                Connect the sensor,
+                LEDs and breadboard
+                to Arduino UNO.
+            </p>
+        </div>
+
     </div>
-    <div class="component-card">
-        <img src="HC-SR04 Sensor.png" alt="HC-SR04 Ultrasonic Sensor">
-        <h4>HC-SR04 Ultrasonic Sensor (x1)</h4>
-        <p>Measures the distance from the sensor to the water surface.</p>
+
+    <div class="note">
+
+        <strong>Arduino Libraries:</strong>
+
+        <p>
+            The original sketch
+            requires no additional
+            Arduino libraries.
+        </p>
+
+        <p>
+            It uses standard
+            functions such as
+            pulseIn(),
+            digitalWrite(),
+            pinMode(),
+            Serial.print()
+            and delay().
+        </p>
+
+        <p>
+            The source's LED
+            image filename is
+            <strong>LED.png</strong>,
+            and it is reused
+            for the four
+            identical LED indicators.
+        </p>
+
     </div>
-    <div class="component-card">
-        <img src="LED.png" alt="LED">
-        <h4>LEDs (x4)</h4>
-        <p>Indicate the water level at different stages.</p>
-    </div>
-    <div class="component-card">
-        <img src="220 ohm resistor.png" alt="220Ω Resistor">
-        <h4>220Ω Resistors (x4)</h4>
-        <p>Limit current and protect each LED.</p>
-    </div>
-    <div class="component-card">
-        <img src="Breadboard.png" alt="Breadboard">
-        <h4>Breadboard (x1)</h4>
-        <p>Used to assemble the circuit without soldering.</p>
-    </div>
-    <div class="component-card">
-        <img src="Jumper Wires.png" alt="Jumper Wires">
-        <h4>Jumper Wires</h4>
-        <p>Used for electrical connections between components.</p>
-    </div>
-    <div class="component-card">
-        <img src="Arduino cable.png" alt="USB Cable">
-        <h4>USB Cable (x1)</h4>
-        <p>Used to program and power the Arduino UNO.</p>
-    </div>
-</div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
 <section class="section" id="connections">
-<h2>Hardware Connections</h2>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Component</th><th>Pin</th><th>Arduino Connection</th></tr></thead>
-<tbody>
-<tr><td>HC-SR04</td><td>VCC</td><td>5V</td></tr>
-<tr><td>HC-SR04</td><td>GND</td><td>GND</td></tr>
-<tr><td>HC-SR04</td><td>TRIG</td><td>Digital Pin 9</td></tr>
-<tr><td>HC-SR04</td><td>ECHO</td><td>Digital Pin 10</td></tr>
-<tr><td>LED 1</td><td>Anode (+)</td><td>Digital Pin 2 through 220Ω resistor</td></tr>
-<tr><td>LED 2</td><td>Anode (+)</td><td>Digital Pin 3 through 220Ω resistor</td></tr>
-<tr><td>LED 3</td><td>Anode (+)</td><td>Digital Pin 4 through 220Ω resistor</td></tr>
-<tr><td>LED 4</td><td>Anode (+)</td><td>Digital Pin 5 through 220Ω resistor</td></tr>
-<tr><td>All LEDs</td><td>Cathode (-)</td><td>GND</td></tr>
-</tbody>
-</table>
-</div>
+
+    <h2>Circuit Connections</h2>
+
+    <h3>HC-SR04 Ultrasonic Sensor Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sensor Terminal</th>
+                    <th>Arduino Connection</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>VCC</td>
+                    <td>5V</td>
+                    <td>Sensor supply</td>
+                </tr>
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                    <td>Common ground</td>
+                </tr>
+                <tr>
+                    <td>TRIG</td>
+                    <td>D9</td>
+                    <td>Ultrasonic trigger pulse</td>
+                </tr>
+                <tr>
+                    <td>ECHO</td>
+                    <td>D10</td>
+                    <td>Echo duration input</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Four LED Indicator Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>LED</th>
+                    <th>Positive Connection</th>
+                    <th>Negative Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>LED 1</td>
+                    <td>D2 through 220Ω resistor</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>LED 2</td>
+                    <td>D3 through 220Ω resistor</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>LED 3</td>
+                    <td>D4 through 220Ω resistor</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>LED 4</td>
+                    <td>D5 through 220Ω resistor</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Important Connection Notes:</strong>
+
+        <p>
+            Each LED requires
+            its own separate
+            220Ω current-limiting
+            resistor.
+        </p>
+
+        <p>
+            Connect the
+            LED anode
+            through the
+            resistor to the
+            corresponding digital pin.
+        </p>
+
+        <p>
+            Connect all
+            LED cathodes
+            to ground.
+        </p>
+
+        <p>
+            Connect the
+            HC-SR04 as specified
+            for a 5 V
+            Arduino UNO circuit.
+        </p>
+
+        <p>
+            Position the ultrasonic
+            sensor so its
+            sensing face points
+            toward the water
+            surface.
+        </p>
+
+    </div>
+
+    <h3>Complete Arduino Pin Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>LED 1</td><td>D2</td></tr>
+                <tr><td>LED 2</td><td>D3</td></tr>
+                <tr><td>LED 3</td><td>D4</td></tr>
+                <tr><td>LED 4</td><td>D5</td></tr>
+                <tr><td>Ultrasonic TRIG</td><td>D9</td></tr>
+                <tr><td>Ultrasonic ECHO</td><td>D10</td></tr>
+            </tbody>
+        </table>
+    </div>
+
 </section>
 
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Ultrasonic Water Tank Level Indicator Circuit.png"
+        alt="Ultrasonic Water Tank Level Indicator Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div id="circuit-placeholder"
+         class="note"
+         hidden>
+        Verified circuit diagram PNG pending.
+        Add the approved circuit image named
+        Ultrasonic Water Tank Level Indicator Circuit.png.
+    </div>
+
+</section>
+
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
-<h2>Working Principle</h2>
-<div class="flow">
-Arduino Starts<br>↓<br>
-TRIG pin sends an ultrasonic pulse<br>↓<br>
-HC-SR04 receives the reflected echo<br>↓<br>
-Arduino measures echo time<br>↓<br>
-Distance to water surface is calculated<br>↓<br>
-Water Level = Tank Height - Distance<br>↓<br>
-Water level percentage is calculated<br>↓<br>
-LEDs turn ON according to the tank level<br>↓<br>
-Values are displayed in Serial Monitor<br>↓<br>
-Process repeats continuously
-</div>
 
-<h3>LED Level Indication</h3>
-<div class="level-grid">
-<div class="level-card"><strong>Below 25%</strong>All LEDs OFF</div>
-<div class="level-card"><strong>25% to below 50%</strong>LED 1 ON</div>
-<div class="level-card"><strong>50% to below 75%</strong>LED 1 and LED 2 ON</div>
-<div class="level-card"><strong>75% to below 95%</strong>LED 1, 2 and 3 ON</div>
-<div class="level-card"><strong>95% to 100%</strong>All 4 LEDs ON</div>
-</div>
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-item">Arduino UNO Starts</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Initialize HC-SR04 and Four LED Pins
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Send 10 µs Ultrasonic Trigger Pulse
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Measure Echo Duration Using pulseIn()
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Calculate Distance to Water Surface
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Water Level = Tank Height − Distance
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Constrain Level Between 0 and Tank Height
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Calculate Water Level Percentage
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Print Distance, Level and Percentage
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Compare Percentage with LED Thresholds
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Illuminate 0, 1, 2, 3 or 4 LEDs
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-item">
+            Wait 500 ms and Repeat
+        </div>
+
+    </div>
+
+    <h3>Ultrasonic Sensor Operation</h3>
+
+    <p>
+        The HC-SR04 sends
+        a short ultrasonic
+        sound pulse toward
+        the water surface.
+    </p>
+
+    <p>
+        The reflected
+        ultrasonic pulse
+        returns to the
+        sensor receiver.
+    </p>
+
+    <p>
+        Arduino measures
+        the ECHO signal
+        duration using
+        pulseIn().
+    </p>
+
+    <h3>Distance Calculation</h3>
+
+    <p>
+        The original
+        sketch calculates
+        distance using
+        the following formula:
+    </p>
+
+    <div class="note">
+
+        <strong>Distance Formula:</strong>
+
+        <p>
+            Distance (cm) =
+            Echo Duration × 0.034 / 2
+        </p>
+
+        <p>
+            0.034 represents
+            the approximate
+            sound speed in
+            centimeters per
+            microsecond.
+        </p>
+
+        <p>
+            Dividing by 2
+            accounts for the
+            outward and return
+            paths of the
+            ultrasonic pulse.
+        </p>
+
+    </div>
+
+    <h3>Water Level Calculation</h3>
+
+    <p>
+        The water level
+        is determined
+        by subtracting
+        the distance
+        from the
+        configured tank height.
+    </p>
+
+    <div class="note">
+
+        <strong>Water Level Formula:</strong>
+
+        <p>
+            Water Level =
+            Tank Height − Distance
+        </p>
+
+        <p>
+            The original
+            sketch sets
+            Tank Height = 100 cm.
+        </p>
+
+        <p>
+            For example,
+            if the measured
+            distance is
+            30 cm:
+        </p>
+
+        <p>
+            Water Level =
+            100 − 30 =
+            70 cm.
+        </p>
+
+    </div>
+
+    <h3>Preventing Values Outside the Tank Height</h3>
+
+    <p>
+        The sketch limits
+        the calculated
+        waterLevel variable
+        to values between
+        zero and tankHeight.
+    </p>
+
+    <p>
+        If a calculated
+        water level is
+        negative, it is
+        replaced with zero.
+    </p>
+
+    <p>
+        If it exceeds
+        tankHeight, it is
+        replaced with
+        tankHeight.
+    </p>
+
+    <h3>Water Level Percentage</h3>
+
+    <p>
+        Arduino converts
+        the water level
+        into a percentage
+        by dividing it
+        by the tank height.
+    </p>
+
+    <div class="note">
+
+        <strong>Percentage Formula:</strong>
+
+        <p>
+            Tank Level (%) =
+            (Water Level / Tank Height) × 100
+        </p>
+
+        <p>
+            If the water
+            level is 70 cm
+            and the tank
+            height is 100 cm:
+        </p>
+
+        <p>
+            Tank Level =
+            70%.
+        </p>
+
+    </div>
+
+    <h3>Four LED Level Indicators</h3>
+
+    <p>
+        The original
+        sketch uses
+        five different
+        percentage ranges.
+    </p>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tank Level</th>
+                    <th>LED 1</th>
+                    <th>LED 2</th>
+                    <th>LED 3</th>
+                    <th>LED 4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Below 25%</td>
+                    <td>OFF</td><td>OFF</td><td>OFF</td><td>OFF</td>
+                </tr>
+                <tr>
+                    <td>25% to below 50%</td>
+                    <td>ON</td><td>OFF</td><td>OFF</td><td>OFF</td>
+                </tr>
+                <tr>
+                    <td>50% to below 75%</td>
+                    <td>ON</td><td>ON</td><td>OFF</td><td>OFF</td>
+                </tr>
+                <tr>
+                    <td>75% to below 95%</td>
+                    <td>ON</td><td>ON</td><td>ON</td><td>OFF</td>
+                </tr>
+                <tr>
+                    <td>95% to 100%</td>
+                    <td>ON</td><td>ON</td><td>ON</td><td>ON</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Water Level Status Overview</h3>
+
+    <div class="level-grid">
+
+        <div class="level-card">
+            <strong>Below 25%</strong>
+            All LEDs OFF
+        </div>
+
+        <div class="level-card">
+            <strong>25–49.9%</strong>
+            LED 1 ON
+        </div>
+
+        <div class="level-card">
+            <strong>50–74.9%</strong>
+            Two LEDs ON
+        </div>
+
+        <div class="level-card">
+            <strong>75–94.9%</strong>
+            Three LEDs ON
+        </div>
+
+        <div class="level-card">
+            <strong>95–100%</strong>
+            All four LEDs ON
+        </div>
+
+    </div>
+
+    <h3>Serial Monitoring</h3>
+
+    <p>
+        Arduino prints
+        the sensor distance,
+        estimated water level
+        and percentage
+        during each measurement
+        cycle.
+    </p>
+
+    <p>
+        The serial communication
+        baud rate is 9600.
+    </p>
+
+    <h3>Measurement Interval</h3>
+
+    <p>
+        The original
+        program uses
+        delay(500) after
+        each measurement
+        and LED update.
+    </p>
+
+    <p>
+        The actual
+        interval also includes
+        the ultrasonic echo
+        measurement time.
+    </p>
+
+    <div class="note">
+
+        <strong>Source-Code Limitation:</strong>
+
+        <p>
+            The program calls
+            pulseIn(echoPin, HIGH)
+            without an explicit
+            timeout argument
+            or a check
+            for missing echoes.
+        </p>
+
+        <p>
+            pulseIn() returns
+            zero when no
+            pulse is detected.
+            The source then
+            calculates distance
+            as zero, resulting
+            in a reported
+            water level of
+            100 cm and
+            100% full.
+        </p>
+
+        <p>
+            This is a limitation
+            of the original
+            sketch, which is
+            preserved unchanged.
+            The readings should
+            not be used for
+            safety-critical tank
+            overflow protection.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
-<h2>Procedure</h2>
-<ol>
-<li>Place the Arduino UNO, HC-SR04 sensor, LEDs and resistors on the breadboard setup.</li>
-<li>Connect the HC-SR04 VCC pin to 5V and GND pin to Arduino GND.</li>
-<li>Connect the HC-SR04 TRIG pin to Arduino digital pin 9.</li>
-<li>Connect the HC-SR04 ECHO pin to Arduino digital pin 10.</li>
-<li>Connect four LEDs to digital pins 2, 3, 4 and 5 through 220Ω resistors.</li>
-<li>Connect all LED cathodes to GND.</li>
-<li>Connect the Arduino UNO to the computer using the USB cable.</li>
-<li>Open Arduino IDE.</li>
-<li>Select <strong>Tools → Board → Arduino UNO</strong>.</li>
-<li>Select the correct COM port from <strong>Tools → Port</strong>.</li>
-<li>Enter the program given below.</li>
-<li>Click <strong>Verify</strong> and then <strong>Upload</strong>.</li>
-<li>Open the Serial Monitor and set the baud rate to <strong>9600</strong>.</li>
-<li>Change the distance between the ultrasonic sensor and the water surface or an object to observe the LEDs and percentage value.</li>
-</ol>
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Arrange Arduino UNO,
+            HC-SR04 ultrasonic sensor,
+            four LEDs, four 220Ω
+            resistors, breadboard
+            and jumper wires.
+        </li>
+
+        <li>
+            Connect the HC-SR04
+            VCC terminal to
+            Arduino 5V.
+        </li>
+
+        <li>
+            Connect the HC-SR04
+            GND terminal to
+            Arduino GND.
+        </li>
+
+        <li>
+            Connect the
+            TRIG terminal
+            to digital pin D9.
+        </li>
+
+        <li>
+            Connect the
+            ECHO terminal
+            to digital pin D10.
+        </li>
+
+        <li>
+            Connect LED 1
+            anode to D2
+            through a 220Ω
+            resistor.
+        </li>
+
+        <li>
+            Connect LED 2
+            anode to D3
+            through a separate
+            220Ω resistor.
+        </li>
+
+        <li>
+            Connect LED 3
+            anode to D4
+            through a 220Ω
+            resistor.
+        </li>
+
+        <li>
+            Connect LED 4
+            anode to D5
+            through a separate
+            220Ω resistor.
+        </li>
+
+        <li>
+            Connect all four
+            LED cathodes
+            to ground.
+        </li>
+
+        <li>
+            Verify the sensor
+            wiring and LED
+            polarity before
+            powering the circuit.
+        </li>
+
+        <li>
+            Position the sensor
+            above the tank,
+            facing downward
+            toward the water
+            surface.
+        </li>
+
+        <li>
+            Measure the usable
+            vertical distance
+            between the sensor
+            reference point
+            and tank bottom.
+        </li>
+
+        <li>
+            The original program
+            assumes this distance
+            is 100 cm.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create a sketch named
+            Ultrasonic_Water_Tank_Level_Indicator.ino.
+        </li>
+
+        <li>
+            Copy the complete
+            Arduino program
+            from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the sketch.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            and select 9600 baud.
+        </li>
+
+        <li>
+            Observe the measured
+            distance, calculated
+            water level and
+            percentage values.
+        </li>
+
+        <li>
+            Use a safe
+            dry simulation with
+            a flat object,
+            or vary the water
+            level under controlled
+            conditions.
+        </li>
+
+        <li>
+            Observe how the
+            LEDs activate
+            progressively as the
+            calculated level increases.
+        </li>
+
+        <li>
+            Check that all
+            LEDs are OFF
+            below 25%.
+        </li>
+
+        <li>
+            Verify that LED 1
+            turns ON at 25%.
+        </li>
+
+        <li>
+            Verify that LED 2
+            also turns ON at 50%.
+        </li>
+
+        <li>
+            Verify that LED 3
+            turns ON at 75%.
+        </li>
+
+        <li>
+            Verify that LED 4
+            turns ON at 95%.
+        </li>
+
+        <li>
+            Compare the
+            Serial Monitor
+            values with the
+            LED status table.
+        </li>
+
+        <li>
+            Check how the
+            system behaves
+            if the ultrasonic
+            echo is lost.
+        </li>
+
+        <li>
+            Record the limitations
+            of the unchanged
+            source code.
+        </li>
+
+    </ol>
+
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-<h2>Arduino Code</h2>
-<div class="code-header">
-<span>Ultrasonic_Water_Tank_Level_Indicator.ino</span>
-<button class="copy-button" onclick="copyCode()">Copy Code</button>
-</div>
-<pre><code id="arduinoCode">// Ultrasonic Water Tank Level Indicator
+
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Ultrasonic Water Tank Level Indicator ·
+        Select a step to highlight
+        the relevant Arduino code
+        and read its explanation.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Ultrasonic_Water_Tank_Level_Indicator.ino
+                </span>
+
+                <button type="button"
+                        class="copy-button"
+                        onclick="copyCode()">
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Click any step
+                to highlight its
+                matching Arduino
+                statements and
+                understand the logic.
+            </p>
+
+            <div class="steps">
+
+                <button class="step active"
+                        type="button"
+                        onclick="showStep(0)">
+                    <span class="step-number">01</span>
+                    Define sensor and LED pins
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(1)">
+                    <span class="step-number">02</span>
+                    Set tank height and variables
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(2)">
+                    <span class="step-number">03</span>
+                    Initialize Arduino hardware
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(3)">
+                    <span class="step-number">04</span>
+                    Send ultrasonic trigger
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(4)">
+                    <span class="step-number">05</span>
+                    Measure echo and distance
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(5)">
+                    <span class="step-number">06</span>
+                    Calculate and constrain water level
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(6)">
+                    <span class="step-number">07</span>
+                    Calculate tank percentage
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(7)">
+                    <span class="step-number">08</span>
+                    Print values to Serial Monitor
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(8)">
+                    <span class="step-number">09</span>
+                    Select LED indication range
+                </button>
+
+                <button class="step"
+                        type="button"
+                        onclick="showStep(9)">
+                    <span class="step-number">10</span>
+                    Activate LEDs and repeat
+                </button>
+
+            </div>
+
+            <div id="explanation"
+                 class="explanation"
+                 aria-live="polite"></div>
+
+            <details>
+                <summary>
+                    Explore more: HC-SR04 Sensor
+                </summary>
+
+                <p>
+                    The HC-SR04
+                    measures distance
+                    by transmitting
+                    ultrasonic pulses
+                    and timing the
+                    reflected echo.
+                </p>
+
+                <p>
+                    Arduino uses
+                    the pulse duration
+                    to calculate
+                    distance.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Water Level Formula
+                </summary>
+
+                <p>
+                    The sensor
+                    measures the
+                    empty space
+                    between the
+                    top-mounted sensor
+                    and the water
+                    surface.
+                </p>
+
+                <p>
+                    Water Level =
+                    Tank Height −
+                    Measured Distance.
+                </p>
+
+                <p>
+                    The formula
+                    assumes the sensor
+                    is mounted at
+                    the intended
+                    tank reference height.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Percentage Calculation
+                </summary>
+
+                <p>
+                    The height-based
+                    percentage is
+                    calculated from
+                    the ratio of
+                    water level
+                    to tank height.
+                </p>
+
+                <p>
+                    Percentage =
+                    Water Level /
+                    Tank Height × 100.
+                </p>
+
+                <p>
+                    The source
+                    uses 100 cm
+                    for its tank
+                    height.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: LED Thresholds
+                </summary>
+
+                <p>
+                    The sketch
+                    activates LEDs
+                    in stages.
+                </p>
+
+                <p>
+                    One LED turns ON
+                    at 25%, two
+                    at 50%, three
+                    at 75%, and
+                    all four at 95%.
+                </p>
+
+                <p>
+                    All LEDs
+                    remain OFF
+                    below 25%.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore more: Missing Echo
+                </summary>
+
+                <p>
+                    The original
+                    program does
+                    not explicitly
+                    check whether
+                    pulseIn() receives
+                    a valid echo.
+                </p>
+
+                <p>
+                    A zero return
+                    can be calculated
+                    as zero distance,
+                    which the formula
+                    interprets as
+                    100% full.
+                </p>
+
+                <p>
+                    This should
+                    be addressed
+                    before using
+                    the system
+                    for real
+                    overflow detection.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>Which Arduino pin connects to TRIG?</li>
+                    <li>Which Arduino pin connects to ECHO?</li>
+                    <li>What is the source's tank height?</li>
+                    <li>Which four pins control the LEDs?</li>
+                    <li>What is the water level formula?</li>
+                    <li>At what percentage do two LEDs turn ON?</li>
+                    <li>At what percentage do all four LEDs turn ON?</li>
+                    <li>What happens if pulseIn() returns zero?</li>
+                </ol>
+
+                <button type="button"
+                        class="copy-button"
+                        style="border:1px solid #bfdbfe"
+                        onclick="toggleAnswers()">
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>D9</li>
+                        <li>D10</li>
+                        <li>100 cm</li>
+                        <li>D2, D3, D4 and D5</li>
+                        <li>Tank Height − Distance</li>
+                        <li>50%</li>
+                        <li>95%</li>
+                        <li>The source interprets zero distance as 100% full.</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try it:</strong>
+        Simulate distances of
+        90 cm, 70 cm,
+        50 cm, 20 cm
+        and 3 cm.
+        Compare the displayed
+        percentages and LED
+        states with the
+        expected output table.
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <p>
+        After uploading
+        the program,
+        Arduino repeatedly
+        reads the ultrasonic
+        sensor and calculates
+        the tank water level.
+    </p>
+
+    <p>
+        The Serial Monitor
+        displays the distance,
+        water level in cm
+        and percentage.
+    </p>
+
+    <h3>Water Level and LED States</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Example Distance</th>
+                    <th>Level</th>
+                    <th>Percentage</th>
+                    <th>LEDs ON</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>100 cm</td>
+                    <td>0 cm</td>
+                    <td>0%</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>90 cm</td>
+                    <td>10 cm</td>
+                    <td>10%</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>75 cm</td>
+                    <td>25 cm</td>
+                    <td>25%</td>
+                    <td>LED 1</td>
+                </tr>
+                <tr>
+                    <td>50 cm</td>
+                    <td>50 cm</td>
+                    <td>50%</td>
+                    <td>LED 1, 2</td>
+                </tr>
+                <tr>
+                    <td>25 cm</td>
+                    <td>75 cm</td>
+                    <td>75%</td>
+                    <td>LED 1, 2, 3</td>
+                </tr>
+                <tr>
+                    <td>5 cm</td>
+                    <td>95 cm</td>
+                    <td>95%</td>
+                    <td>LED 1, 2, 3, 4</td>
+                </tr>
+                <tr>
+                    <td>0 cm (theoretical)</td>
+                    <td>100 cm</td>
+                    <td>100%</td>
+                    <td>All four</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Example 1 — Low Water Level</h3>
+
+    <p>
+        With the water
+        surface 90 cm
+        below the sensor,
+        the calculated water
+        level is 10 cm.
+    </p>
+
+    <div class="output-box">
+<pre>Distance: 90.00 cm | Water Level: 10.00 cm | Tank Level: 10.00%</pre>
+    </div>
+
+    <div class="note">
+        <p>LED 1: OFF</p>
+        <p>LED 2: OFF</p>
+        <p>LED 3: OFF</p>
+        <p>LED 4: OFF</p>
+    </div>
+
+    <h3>Example 2 — 30% Water Level</h3>
+
+    <div class="output-box">
+<pre>Distance: 70.00 cm | Water Level: 30.00 cm | Tank Level: 30.00%</pre>
+    </div>
+
+    <div class="note">
+        <p>LED 1: ON</p>
+        <p>LED 2: OFF</p>
+        <p>LED 3: OFF</p>
+        <p>LED 4: OFF</p>
+    </div>
+
+    <h3>Example 3 — 50% Water Level</h3>
+
+    <div class="output-box">
+<pre>Distance: 50.00 cm | Water Level: 50.00 cm | Tank Level: 50.00%</pre>
+    </div>
+
+    <div class="note">
+        <p>LED 1: ON</p>
+        <p>LED 2: ON</p>
+        <p>LED 3: OFF</p>
+        <p>LED 4: OFF</p>
+    </div>
+
+    <h3>Example 4 — 80% Water Level</h3>
+
+    <div class="output-box">
+<pre>Distance: 20.00 cm | Water Level: 80.00 cm | Tank Level: 80.00%</pre>
+    </div>
+
+    <div class="note">
+        <p>LED 1: ON</p>
+        <p>LED 2: ON</p>
+        <p>LED 3: ON</p>
+        <p>LED 4: OFF</p>
+    </div>
+
+    <h3>Example 5 — Near-Full Water Level</h3>
+
+    <div class="output-box">
+<pre>Distance: 3.00 cm | Water Level: 97.00 cm | Tank Level: 97.00%</pre>
+    </div>
+
+    <div class="note">
+        <p>LED 1: ON</p>
+        <p>LED 2: ON</p>
+        <p>LED 3: ON</p>
+        <p>LED 4: ON</p>
+    </div>
+
+    <h3>Exact Threshold Conditions</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Percentage</th>
+                    <th>Expected LEDs ON</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>24.9%</td><td>None</td></tr>
+                <tr><td>25.0%</td><td>LED 1</td></tr>
+                <tr><td>49.9%</td><td>LED 1</td></tr>
+                <tr><td>50.0%</td><td>LED 1 and LED 2</td></tr>
+                <tr><td>74.9%</td><td>LED 1 and LED 2</td></tr>
+                <tr><td>75.0%</td><td>LED 1, 2 and 3</td></tr>
+                <tr><td>94.9%</td><td>LED 1, 2 and 3</td></tr>
+                <tr><td>95.0%</td><td>All four</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>No-Echo Behavior in the Original Sketch</h3>
+
+    <p>
+        When pulseIn()
+        returns zero, the
+        source calculates
+        the following values:
+    </p>
+
+    <div class="output-box">
+<pre>Distance: 0.00 cm | Water Level: 100.00 cm | Tank Level: 100.00%</pre>
+    </div>
+
+    <p>
+        All four LEDs
+        would turn ON
+        despite the lack
+        of a valid
+        distance measurement.
+    </p>
+
+    <div class="note">
+
+        <strong>Important Output Notes:</strong>
+
+        <p>
+            The example readings
+            assume a 100 cm
+            tank height.
+        </p>
+
+        <p>
+            Real HC-SR04 readings
+            may vary due
+            to surface reflections,
+            sensor position and
+            environmental conditions.
+        </p>
+
+        <p>
+            At very short
+            distances, the HC-SR04
+            may not provide
+            reliable measurements.
+        </p>
+
+        <p>
+            The program has
+            no dedicated
+            no-echo error
+            indicator.
+        </p>
+
+        <p>
+            The four LEDs
+            represent discrete
+            percentage categories,
+            not a continuously
+            varying light bar.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Ultrasonic Water
+        Tank Level Indicator
+        experiment demonstrates
+        measurement of the
+        distance between
+        an HC-SR04 sensor
+        and a water
+        surface using
+        Arduino UNO.
+    </p>
+
+    <p>
+        The program calculates
+        the estimated water
+        level by subtracting
+        the measured distance
+        from a predefined
+        tank height of
+        100 cm.
+    </p>
+
+    <p>
+        The estimated height
+        is converted into
+        a percentage and
+        compared with
+        programmed thresholds.
+    </p>
+
+    <p>
+        Four LEDs indicate
+        the corresponding
+        percentage ranges,
+        while the Serial
+        Monitor displays
+        the measured distance,
+        water level and
+        tank percentage.
+    </p>
+
+    <p>
+        The experiment
+        demonstrates ultrasonic
+        distance measurement,
+        mathematical conversion,
+        percentage calculation,
+        conditional logic
+        and multiple LED
+        output control.
+    </p>
+
+    <p>
+        Before real tank
+        monitoring, the
+        original sketch's
+        missing-echo handling
+        should be improved.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing an HC-SR04 ultrasonic sensor with Arduino UNO.</li>
+        <li>Connecting TRIG and ECHO terminals to digital pins.</li>
+        <li>Sending ultrasonic trigger pulses using delayMicroseconds().</li>
+        <li>Measuring echo duration using pulseIn().</li>
+        <li>Calculating distance using ultrasonic time of flight.</li>
+        <li>Understanding why echo duration is divided by two.</li>
+        <li>Using tankHeight as a configurable constant.</li>
+        <li>Calculating water height from measured distance.</li>
+        <li>Limiting calculated values to a valid tank range.</li>
+        <li>Calculating water level as a percentage.</li>
+        <li>Using if, else if and else statements.</li>
+        <li>Defining multiple water-level threshold ranges.</li>
+        <li>Controlling four LED outputs using digitalWrite().</li>
+        <li>Using current-limiting resistors with LEDs.</li>
+        <li>Monitoring readings using Serial Monitor.</li>
+        <li>Using Serial.print() and Serial.println().</li>
+        <li>Working with float variables for measurements.</li>
+        <li>Using delay() for repeated measurements.</li>
+        <li>Understanding the difference between water height and volume.</li>
+        <li>Recognizing invalid ultrasonic measurements.</li>
+        <li>Building a basic water tank level indicator.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>Ultrasonic Water Tank Level Indicator</strong>
+</footer>
+
+<!-- =====================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+===================================== -->
+<script type="text/plain" id="arduino-program">
+// Ultrasonic Water Tank Level Indicator
 // Arduino UNO + HC-SR04 + 4 LEDs
 
 const int trigPin = 9;
@@ -495,12 +2564,12 @@ void loop()
   waterLevel = tankHeight - distance;
 
   // Prevent invalid values
-  if (waterLevel &lt; 0)
+  if (waterLevel < 0)
   {
     waterLevel = 0;
   }
 
-  if (waterLevel &gt; tankHeight)
+  if (waterLevel > tankHeight)
   {
     waterLevel = tankHeight;
   }
@@ -525,7 +2594,7 @@ void loop()
   // LED Level Indication
   // -------------------------
 
-  if (percentage &lt; 25)
+  if (percentage < 25)
   {
     // Tank almost empty
     digitalWrite(led1, LOW);
@@ -533,7 +2602,7 @@ void loop()
     digitalWrite(led3, LOW);
     digitalWrite(led4, LOW);
   }
-  else if (percentage &lt; 50)
+  else if (percentage < 50)
   {
     // 25% level
     digitalWrite(led1, HIGH);
@@ -541,7 +2610,7 @@ void loop()
     digitalWrite(led3, LOW);
     digitalWrite(led4, LOW);
   }
-  else if (percentage &lt; 75)
+  else if (percentage < 75)
   {
     // 50% level
     digitalWrite(led1, HIGH);
@@ -549,7 +2618,7 @@ void loop()
     digitalWrite(led3, LOW);
     digitalWrite(led4, LOW);
   }
-  else if (percentage &lt; 95)
+  else if (percentage < 95)
   {
     // 75% level
     digitalWrite(led1, HIGH);
@@ -567,44 +2636,375 @@ void loop()
   }
 
   delay(500);
-}</code></pre>
-</section>
-
-<section class="section" id="result">
-<h2>Result</h2>
-<p>The ultrasonic water tank level indicator was successfully implemented using an Arduino UNO, HC-SR04 ultrasonic sensor and four LEDs. The Arduino calculates the water level percentage from the measured distance and indicates the tank level through the LEDs.</p>
-</section>
-
-<section class="section">
-<h2>What You Learn</h2>
-<ul>
-<li>How an ultrasonic sensor measures distance.</li>
-<li>How to interface the HC-SR04 sensor with Arduino UNO.</li>
-<li>How to calculate distance from ultrasonic echo time.</li>
-<li>How to calculate water level and percentage.</li>
-<li>How to control multiple LEDs using digital output pins.</li>
-<li>How to display sensor values in the Serial Monitor.</li>
-<li>How to use conditions such as if, else if and else in Arduino programming.</li>
-</ul>
-</section>
-
-</main>
-
-<footer>
-<strong>Arduino Experiment</strong><br>
-Ultrasonic Water Tank Level Indicator
-</footer>
-
-<script>
-function copyCode() {
-    const code = document.getElementById("arduinoCode").innerText;
-    navigator.clipboard.writeText(code).then(function(){
-        const btn = document.querySelector('.copy-button');
-        const oldText = btn.innerText;
-        btn.innerText = 'Copied!';
-        setTimeout(function(){btn.innerText = oldText;}, 1200);
-    });
 }
+</script>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
+<script>
+
+/* =====================================
+   READ ORIGINAL ARDUINO PROGRAM
+===================================== */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =====================================
+   TEN LEARNING STEPS
+===================================== */
+const steps = [
+
+    {
+        title: "Define sensor and LED pins",
+        start: "const int trigPin = 9;",
+        end: "const int led4 = 5;",
+        text:
+            "The HC-SR04 trigger is on D9 " +
+            "and echo is on D10. " +
+            "Four LEDs are assigned " +
+            "to D2, D3, D4 and D5. " +
+            "Each LED uses its own resistor."
+    },
+
+    {
+        title: "Set tank height and variables",
+        start: "// Tank height in cm",
+        end: "float percentage;",
+        text:
+            "tankHeight is set to 100.0 cm. " +
+            "The program also declares " +
+            "duration, distance, waterLevel " +
+            "and percentage variables " +
+            "to store measurements " +
+            "and calculated values."
+    },
+
+    {
+        title: "Initialize Arduino hardware",
+        start: "void setup()",
+        end: "pinMode(led4, OUTPUT);",
+        text:
+            "setup() starts Serial communication " +
+            "at 9600 baud, configures the " +
+            "TRIG pin as an output " +
+            "and ECHO as an input, " +
+            "and sets all four LEDs " +
+            "as digital outputs."
+    },
+
+    {
+        title: "Send ultrasonic trigger",
+        start: "// Send ultrasonic pulse",
+        end: "digitalWrite(trigPin, LOW);",
+        endOccurrence: 2,
+        text:
+            "Arduino sends a 10 microsecond " +
+            "HIGH trigger pulse after first " +
+            "holding TRIG LOW for 2 microseconds. " +
+            "It then returns TRIG LOW " +
+            "to complete the pulse."
+    },
+
+    {
+        title: "Measure echo and distance",
+        start: "// Measure echo time",
+        end: "distance = duration * 0.034 / 2.0;",
+        text:
+            "pulseIn() measures how long " +
+            "the ECHO signal remains HIGH. " +
+            "The duration is converted " +
+            "into centimeters using " +
+            "the speed of sound divided by two. " +
+            "The sketch does not check for a missing echo."
+    },
+
+    {
+        title: "Calculate and constrain water level",
+        start: "// Calculate water level",
+        end: "waterLevel = tankHeight;",
+        text:
+            "The program subtracts distance " +
+            "from tankHeight to estimate " +
+            "waterLevel. Values below zero " +
+            "are reset to zero, and values " +
+            "above tankHeight are limited " +
+            "to tankHeight."
+    },
+
+    {
+        title: "Calculate tank percentage",
+        start: "// Calculate percentage",
+        end: "percentage = (waterLevel / tankHeight) * 100.0;",
+        text:
+            "The water level is divided " +
+            "by the tank height and multiplied " +
+            "by 100. For a 100 cm tank, " +
+            "a calculated level of 70 cm " +
+            "corresponds to 70 percent."
+    },
+
+    {
+        title: "Print values to Serial Monitor",
+        start: "// Display values in Serial Monitor",
+        end: 'Serial.println("%");',
+        text:
+            "Arduino prints the measured " +
+            "distance in cm, calculated " +
+            "water level in cm and the " +
+            "tank level percentage. " +
+            "Serial Monitor is set to 9600 baud."
+    },
+
+    {
+        title: "Select LED indication range",
+        start: "// LED Level Indication",
+        end: "else if (percentage < 95)",
+        text:
+            "The program checks the level " +
+            "against 25, 50, 75 and 95 percent. " +
+            "Each range selects a different " +
+            "number of LEDs to illuminate, " +
+            "from none to all four."
+    },
+
+    {
+        title: "Activate LEDs and repeat",
+        start: "else if (percentage < 95)",
+        end: "delay(500);",
+        text:
+            "The 75–95 percent range " +
+            "lights the first three LEDs. " +
+            "At 95 percent or higher, " +
+            "all four LEDs turn ON. " +
+            "The program then waits " +
+            "500 ms before repeating."
+    }
+
+];
+
+/* =====================================
+   ESCAPE HTML FOR CODE DISPLAY
+===================================== */
+function escapeHtml(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =====================================
+   DISPLAY CODE WITH LINE NUMBERS
+===================================== */
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span></span>'
+            );
+
+        }).join("");
+}
+
+/* =====================================
+   FIND MATCHING SOURCE LINE
+===================================== */
+function findLine(searchText, startIndex = 0, occurrence = 1) {
+
+    let matches = 0;
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim().startsWith(searchText)) {
+
+            matches++;
+
+            if (matches === occurrence) {
+                return i;
+            }
+        }
+    }
+
+    return -1;
+}
+
+/* =====================================
+   HIGHLIGHT MATCHED CODE STEP
+===================================== */
+function showStep(index) {
+
+    const step = steps[index];
+
+    document.querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document.querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+        });
+
+    const startLine = findLine(step.start);
+
+    if (startLine < 0) {
+
+        document.getElementById("explanation").textContent =
+            "Matching source lines were not found.";
+
+        return;
+    }
+
+    let endLine = findLine(
+        step.end,
+        startLine,
+        step.endOccurrence || 1
+    );
+
+    if (endLine < startLine) {
+        endLine = startLine;
+    }
+
+    for (let i = startLine; i <= endLine; i++) {
+
+        const element = document.getElementById(
+            "line-" + (i + 1)
+        );
+
+        if (element) {
+            element.classList.add("selected");
+        }
+    }
+
+    const firstLine = document.getElementById(
+        "line-" + (startLine + 1)
+    );
+
+    const codeBody = document.getElementById("code-body");
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+
+    const explanation = document.getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+}
+
+/* =====================================
+   COPY COMPLETE ARDUINO SKETCH
+===================================== */
+async function copyCode() {
+
+    const button = document.querySelector(
+        ".code-top .copy-button"
+    );
+
+    function showSuccess() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+
+        try {
+            copied = document.execCommand("copy");
+        } catch (error) {
+            copied = false;
+        }
+
+        textarea.remove();
+
+        if (copied) {
+            showSuccess();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            showSuccess();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =====================================
+   QUIZ ANSWERS
+===================================== */
+function toggleAnswers() {
+
+    const answers = document.getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =====================================
+   INITIALIZE CODE EXPLORER
+===================================== */
+displayCode();
+showStep(0);
+
 </script>
 
 </body>
