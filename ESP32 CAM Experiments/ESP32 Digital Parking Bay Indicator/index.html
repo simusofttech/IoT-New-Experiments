@@ -1869,567 +1869,159 @@ ESP32 Experiments
 <script
 type="text/plain"
 id="esp32-program">
+#include <Arduino.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <U8g2lib.h>
 
-// ===============================
-// OLED SETTINGS
-// ===============================
-
-#define SCREEN_WIDTH 128
+// OLED: SSD1306 128x64 I2C
+#define SCREEN_WIDTH 120
 #define SCREEN_HEIGHT 64
 #define OLED_ADDR 0x3C
 
-Adafruit_SSD1306 display(
-  SCREEN_WIDTH,
-  SCREEN_HEIGHT,
-  &Wire,
-  -1
+// ESP32 I2C: SDA = GPIO 23, SCL = GPIO 22
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C display(
+  U8G2_R0,
+  U8X8_PIN_NONE
 );
 
-// ===============================
-// ULTRASONIC SENSOR PINS
-// ===============================
-
+// Ultrasonic sensor pins
 #define TRIG1 5
 #define ECHO1 18
 
 #define TRIG2 19
 #define ECHO2 21
 
-// ===============================
-// LED PINS
-// ===============================
-
+// LED pins
 #define GREEN1 25
-#define RED1 26
+#define RED1   26
 
 #define GREEN2 27
-#define RED2 14
+#define RED2   17
 
-// ===============================
-// PARKING DETECTION DISTANCE
-// ===============================
+// Car detected below 8 cm
+#define PARKING_DISTANCE 8.0
 
-#define PARKING_DISTANCE 10.0
-
-
-// ===============================
-// GET DISTANCE
-// ===============================
-
-float getDistance(
-  int trigPin,
-  int echoPin
-)
-{
-
-  digitalWrite(
-    trigPin,
-    LOW
-  );
-
+// Get distance in centimeters
+float getDistance(int trigPin, int echoPin) {
+  digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
 
-  digitalWrite(
-    trigPin,
-    HIGH
-  );
-
+  digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
 
-  digitalWrite(
-    trigPin,
-    LOW
-  );
+  digitalWrite(trigPin, LOW);
 
-  long duration =
-    pulseIn(
-      echoPin,
-      HIGH,
-      30000
-    );
+  long duration = pulseIn(echoPin, HIGH, 30000);
 
-  if(duration == 0)
-  {
-    return 999.0;
+  if (duration == 0) {
+    return 999.0; // No echo received
   }
 
-  float distance =
-    duration *
-    0.0343 /
-    2.0;
-
-  return distance;
+  return duration * 0.0343 / 2.0;
 }
 
-
-// ===============================
-// SETUP
-// ===============================
-
-void setup()
-{
-
+void setup() {
   Serial.begin(115200);
 
-  // Ultrasonic pins
+  pinMode(TRIG1, OUTPUT);
+  pinMode(ECHO1, INPUT);
+  pinMode(TRIG2, OUTPUT);
+  pinMode(ECHO2, INPUT);
 
-  pinMode(
-    TRIG1,
-    OUTPUT
-  );
+  pinMode(GREEN1, OUTPUT);
+  pinMode(RED1, OUTPUT);
+  pinMode(GREEN2, OUTPUT);
+  pinMode(RED2, OUTPUT);
 
-  pinMode(
-    ECHO1,
-    INPUT
-  );
+  // Wire.begin(SDA, SCL)
+  Wire.begin(23, 22);
 
-  pinMode(
-    TRIG2,
-    OUTPUT
-  );
+  display.setI2CAddress(OLED_ADDR * 2);
+  display.begin();
 
-  pinMode(
-    ECHO2,
-    INPUT
-  );
-
-
-  // LED pins
-
-  pinMode(
-    GREEN1,
-    OUTPUT
-  );
-
-  pinMode(
-    RED1,
-    OUTPUT
-  );
-
-  pinMode(
-    GREEN2,
-    OUTPUT
-  );
-
-  pinMode(
-    RED2,
-    OUTPUT
-  );
-
-
-  // OLED I2C
-
-  Wire.begin(
-    23,
-    22
-  );
-
-
-  if(
-    !display.begin(
-      SSD1306_SWITCHCAPVCC,
-      OLED_ADDR
-    )
-  )
-  {
-
-    Serial.println(
-      "OLED ERROR!"
-    );
-
-    while(true);
-
-  }
-
-
-  // Startup screen
-
-  display.clearDisplay();
-
-  display.setTextColor(
-    SSD1306_WHITE
-  );
-
-  display.setTextSize(2);
-
-  display.setCursor(
-    13,
-    5
-  );
-
-  display.println(
-    "PARKING"
-  );
-
-  display.setTextSize(1);
-
-  display.setCursor(
-    22,
-    30
-  );
-
-  display.println(
-    "SMART SYSTEM"
-  );
-
-  display.setCursor(
-    27,
-    46
-  );
-
-  display.println(
-    "INITIALIZING"
-  );
-
-  display.display();
+  display.clearBuffer();
+  display.setFont(u8g2_font_6x12_tf);
+  display.drawStr(22, 15, "SMART PARKING");
+  display.drawHLine(0, 20, 128);
+  display.drawStr(25, 36, "INITIALIZING");
+  display.drawStr(34, 52, "PLEASE WAIT");
+  display.sendBuffer();
 
   delay(2000);
 }
 
-
-// ===============================
-// LOOP
-// ===============================
-
-void loop()
-{
-
-  // Read Bay 1
-
-  float distance1 =
-    getDistance(
-      TRIG1,
-      ECHO1
-    );
-
+void loop() {
+  float distance1 = getDistance(TRIG1, ECHO1);
   delay(60);
+  float distance2 = getDistance(TRIG2, ECHO2);
 
+  // Occupied when measured distance is below 8 cm
+  bool occupied1 = (distance1 < PARKING_DISTANCE);
+  bool occupied2 = (distance2 < PARKING_DISTANCE);
 
-  // Read Bay 2
+  // Bay 1 LEDs
+  digitalWrite(GREEN1, !occupied1);
+  digitalWrite(RED1, occupied1);
 
-  float distance2 =
-    getDistance(
-      TRIG2,
-      ECHO2
-    );
+  // Bay 2 LEDs
+  digitalWrite(GREEN2, !occupied2);
+  digitalWrite(RED2, occupied2);
 
+  int occupiedCount = (occupied1 ? 1 : 0) +
+                      (occupied2 ? 1 : 0);
+  int freeSpaces = 2 - occupiedCount;
 
-  // ===============================
-  // DETERMINE OCCUPANCY
-  // ===============================
+  // Serial Monitor
+  Serial.println("========================");
 
-  bool occupied1 =
-    distance1 <
-    PARKING_DISTANCE;
+  Serial.print("BAY 1: ");
+  Serial.print(distance1, 1);
+  Serial.print(" cm | ");
+  Serial.println(occupied1 ? "OCCUPIED" : "AVAILABLE");
 
-  bool occupied2 =
-    distance2 <
-    PARKING_DISTANCE;
+  Serial.print("BAY 2: ");
+  Serial.print(distance2, 1);
+  Serial.print(" cm | ");
+  Serial.println(occupied2 ? "OCCUPIED" : "AVAILABLE");
 
+  Serial.print("FREE SLOTS: ");
+  Serial.print(freeSpaces);
+  Serial.println("/2");
 
-  // ===============================
-  // BAY 1 LED
-  // ===============================
+  // OLED display
+  display.clearBuffer();
 
-  if(occupied1)
-  {
+  display.setFont(u8g2_font_6x12_tf);
+  display.drawStr(15, 10, "DIGITAL PARKING");
+  display.drawHLine(0, 14, 128);
 
-    digitalWrite(
-      GREEN1,
-      LOW
-    );
+  // Bay 1
+  display.setCursor(0, 27);
+  display.print("BAY 1: ");
+  display.print(occupied1 ? "OCCUPIED" : "AVAILABLE");
 
-    digitalWrite(
-      RED1,
-      HIGH
-    );
-
+  display.setCursor(0, 38);
+  display.print("DIST: ");
+  if (distance1 == 999.0) {
+    display.print("NO ECHO");
+  } else {
+    display.print(distance1, 1);
+    display.print(" cm");
   }
 
-  else
-  {
-
-    digitalWrite(
-      GREEN1,
-      HIGH
-    );
-
-    digitalWrite(
-      RED1,
-      LOW
-    );
-
-  }
-
-
-  // ===============================
-  // BAY 2 LED
-  // ===============================
-
-  if(occupied2)
-  {
-
-    digitalWrite(
-      GREEN2,
-      LOW
-    );
-
-    digitalWrite(
-      RED2,
-      HIGH
-    );
-
-  }
-
-  else
-  {
-
-    digitalWrite(
-      GREEN2,
-      HIGH
-    );
-
-    digitalWrite(
-      RED2,
-      LOW
-    );
-
-  }
-
-
-  // ===============================
-  // FREE SPACE CALCULATION
-  // ===============================
-
-  int occupied = 0;
-
-  if(occupied1)
-    occupied++;
-
-  if(occupied2)
-    occupied++;
-
-  int freeSpaces =
-    2 - occupied;
-
-
-  // ===============================
-  // SERIAL MONITOR
-  // ===============================
-
-  Serial.println();
-
-  Serial.println(
-    "=========================="
-  );
-
-  Serial.print(
-    "BAY 1 : "
-  );
-
-  Serial.print(
-    distance1,
-    1
-  );
-
-  Serial.print(
-    " cm "
-  );
-
-  if(occupied1)
-    Serial.println(
-      "OCCUPIED"
-    );
-  else
-    Serial.println(
-      "AVAILABLE"
-    );
-
-
-  Serial.print(
-    "BAY 2 : "
-  );
-
-  Serial.print(
-    distance2,
-    1
-  );
-
-  Serial.print(
-    " cm "
-  );
-
-  if(occupied2)
-    Serial.println(
-      "OCCUPIED"
-    );
-  else
-    Serial.println(
-      "AVAILABLE"
-    );
-
-
-  Serial.print(
-    "FREE SLOTS : "
-  );
-
-  Serial.print(
-    freeSpaces
-  );
-
-  Serial.println(
-    "/2"
-  );
-
-  Serial.println(
-    "=========================="
-  );
-
-
-  // ===============================
-  // OLED DISPLAY
-  // ===============================
-
-  display.clearDisplay();
-
-  display.setTextSize(1);
-
-  display.setCursor(
-    17,
-    0
-  );
-
-  display.println(
-    "DIGITAL PARKING"
-  );
-
-  display.drawLine(
-    0,
-    10,
-    127,
-    10,
-    SSD1306_WHITE
-  );
-
-
-  // BAY 1
-
-  display.setCursor(
-    0,
-    16
-  );
-
-  display.print(
-    "BAY 1:"
-  );
-
-  if(occupied1)
-  {
-    display.print(
-      " OCCUPIED"
-    );
-  }
-  else
-  {
-    display.print(
-      " AVAILABLE"
-    );
-  }
-
-
-  display.setCursor(
-    0,
-    27
-  );
-
-  display.print(
-    "Distance: "
-  );
-
-  display.print(
-    distance1,
-    1
-  );
-
-  display.print(
-    "cm"
-  );
-
-
-  // BAY 2
-
-  display.setCursor(
-    0,
-    36
-  );
-
-  display.print(
-    "BAY 2:"
-  );
-
-  if(occupied2)
-  {
-    display.print(
-      " OCCUPIED"
-    );
-  }
-  else
-  {
-    display.print(
-      " AVAILABLE"
-    );
-  }
-
-
-  display.setCursor(
-    0,
-    47
-  );
-
-  display.print(
-    "Distance: "
-  );
-
-  display.print(
-    distance2,
-    1
-  );
-
-  display.print(
-    "cm"
-  );
-
-
-  // FREE SLOTS
-
-  display.drawLine(
-    0,
-    57,
-    127,
-    57,
-    SSD1306_WHITE
-  );
-
-  display.setCursor(
-    70,
-    58
-  );
-
-  display.print(
-    "FREE:"
-  );
-
-  display.print(
-    freeSpaces
-  );
-
-  display.display();
-
-
-  // Update every 500 ms
+  // Bay 2
+  display.setCursor(0, 49);
+  display.print("BAY 2: ");
+  display.print(occupied2 ? "OCCUPIED" : "AVAILABLE");
+
+  // Bottom status
+  display.drawHLine(0, 53, 128);
+  display.setCursor(0, 64);
+  display.print("FREE SPACES: ");
+  display.print(freeSpaces);
+  display.print("/2");
+
+  display.sendBuffer();
 
   delay(500);
 }
