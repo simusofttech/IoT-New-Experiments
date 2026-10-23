@@ -1,0 +1,1146 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Driver Fatigue Warning System</title><style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+
+/* PROJECT THUMBNAIL */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .project-thumbnail {
+        padding: 12px;
+    }
+
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:16px;
+}
+
+
+.sensor-box{
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.sensor-box h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+
+.sensor-value{
+
+    font-size:26px;
+
+    color:#2563eb;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+.section .circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.project-thumbnail img{display:block;max-width:760px;width:100%;max-height:400px;object-fit:contain;margin:auto}.code-line{display:flex;white-space:pre;min-width:max-content;min-height:24px;font:13px/24px Consolas,monospace}.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}.line-number{min-width:48px;text-align:right;padding-right:12px;color:#64748b}.code-body{overflow:auto;max-height:620px}.code-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:20px}.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.step{background:white;color:#1e3a8a;border:1px solid #bfdbfe;border-radius:8px;padding:10px;cursor:pointer}.step.active{background:#dbeafe;border-color:#2563eb}.code-top{background:#2563eb;color:white;display:flex;justify-content:space-between;padding:15px}.copy-button{padding:8px 15px;border-radius:6px;background:white;color:#2563eb;border:0;cursor:pointer}.guide{border:1px solid #dbeafe;padding:18px;border-radius:8px}.code-panel{border:1px solid #bfdbfe;min-width:0;overflow:hidden}.explanation{padding:15px;background:#eff6ff;border-radius:8px;margin-top:15px}@media(max-width:850px){.code-layout{grid-template-columns:1fr}}</style></head><body><header class="header"><h1>SIMUDIY Exploration Kit</h1><p>Driver Fatigue Warning System</p></header><nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#output">Output</a><a href="#result">Result</a><a href="#learn">Learn</a></nav><main class="container"><section class="section project-thumbnail"><img src="../Driver Fatigue Warning System.png" alt="Driver Fatigue Warning System thumbnail" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Experiment thumbnail PNG pending.</p></section><section class="section" id="aim"><h2>Aim</h2><p>Demonstrate webcam-based face and eye detection with LCD status and LED/buzzer alert after approximately two seconds without detected eyes.</p></section><section class="section" id="about"><h2>About the Experiment</h2><p>OpenCV Haar cascades search for faces and eyes. gpiozero controls an LED and a buzzer while an I²C LCD reports status. Missed detection from lighting, glasses or head movement can create false alerts.</p><div class="note"><strong>Code source status:</strong> SOP-based reconstruction of fatigue_monitor.py (the SOP formats the code across multiple columns). Review this against the installed file before replacing a working version. Educational demonstration only; not a certified fatigue or driver-safety detector.</div></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B ×1"><h4>Raspberry Pi 4 Model B ×1</h4><p>Main controller</p></div><div class="component-card"><img src="../AI Object Detection System/USB Camera.png" alt="USB Webcam ×1"><h4>USB Webcam ×1</h4><p>USB camera input</p></div><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply ×1"><h4>Raspberry Pi Power Supply ×1</h4><p>Rated USB-C supply</p></div><div class="component-card"><img src="LCD Display.png" alt="16×2 I²C LCD ×1"><h4>16×2 I²C LCD ×1</h4><p>I²C address 0x27</p></div><div class="component-card"><img src="Red LED.png" alt="Red LED ×1"><h4>Red LED ×1</h4><p>Warning light</p></div><div class="component-card"><img src="220 Ohm Resistor.png" alt="220Ω Resistor ×1"><h4>220Ω Resistor ×1</h4><p>Approved replacement for original SOP 330Ω</p></div><div class="component-card"><img src="Buzzer.png" alt="2-Pin Buzzer ×1"><h4>2-Pin Buzzer ×1</h4><p>Audible alert; verify current rating</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard ×1"><h4>Breadboard ×1</h4><p>Wiring assembly</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>GPIO connections</p></div></div></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><tr><th>Device</th><th>Raspberry Pi connection</th></tr><tr><td>USB webcam</td><td>USB port</td></tr><tr><td>LCD SDA</td><td>GPIO2 / physical pin 3</td></tr><tr><td>LCD SCL</td><td>GPIO3 / physical pin 5</td></tr><tr><td>LCD VCC / GND</td><td>5V physical pin 2 or 4 / GND pin 6</td></tr><tr><td>Red LED</td><td>GPIO23 physical pin 16 → 220Ω → LED anode; cathode → GND</td></tr><tr><td>Buzzer</td><td>GPIO24 physical pin 18 → suitable buzzer (+); buzzer (−) → GND</td></tr><tr><td>Power</td><td>USB-C supply to Pi</td></tr></table></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Driver Fatigue Warning System Circuit.png" alt="Circuit diagram" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Verified circuit PNG pending: Driver Fatigue Warning System Circuit.png</p></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">USB camera frames<br>↓<br>OpenCV grayscale image<br>↓<br>Face and eye cascade detection<br>↓<br>Eyes seen → alert OFF<br>↓<br>No eyes for 2 seconds → LED and buzzer ON<br>↓<br>Display status on LCD</div></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the 16×2 I²C LCD to GPIO2/GPIO3, power and GND.</li><li>Wire LED GPIO23 through the approved 220Ω resistor to GND; buzzer GPIO24 to GND using a suitable low-current buzzer.</li><li>Connect USB webcam and start Raspberry Pi.</li><li>Activate source ~/lcd-venv/bin/activate.</li><li>Open ~/driver-fatigue and check both Haar cascade XML files in cascades/.</li><li>Confirm I²C LCD address 0x27.</li><li>Run python fatigue_monitor.py.</li><li>Watch camera preview and LCD during an indoor bench test only.</li><li>Press Q to stop and confirm the LED and buzzer are OFF.</li></ol></section><section class="section" id="code"><h2>Explore the Code</h2><p>Select an explanation to highlight its matching source block. Copy Code copies the complete displayed Python source.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><strong>Python source — SOP-based</strong><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><aside class="guide"><h3>Understand it step by step</h3><div class="steps"><button class="step" onclick="showStep(0)">1. Imports and GPIO objects</button><button class="step" onclick="showStep(1)">2. LCD initialization</button><button class="step" onclick="showStep(2)">3. Cascade models</button><button class="step" onclick="showStep(3)">4. Camera startup</button><button class="step" onclick="showStep(4)">5. Reset warning state</button><button class="step" onclick="showStep(5)">6. Capture and grayscale</button><button class="step" onclick="showStep(6)">7. Detect faces and eyes</button><button class="step" onclick="showStep(7)">8. Eyes detected: outputs OFF</button><button class="step" onclick="showStep(8)">9. Two-second warning rule</button><button class="step" onclick="showStep(9)">10. Show status and release</button></div><div class="explanation" id="explanation"></div><details><summary>Check Your Understanding</summary><p>USB camera capture and OpenCV; Face/eye Haar cascades; GPIO23 LED, GPIO24 buzzer; I²C LCD at 0x27; Monotonic timing and safe cleanup</p></details></aside></div></section><section class="section" id="output"><h2>Expected Output</h2><p>Camera preview shows boxes around detected face/eyes. LCD shows Eyes Detected, Checking Eyes or ALERT! DROWSY. The LED and buzzer activate after the configured two-second no-eyes interval. Do not use while driving.</p></section><section class="section" id="result"><h2>Result</h2><p>Camera preview shows boxes around detected face/eyes. LCD shows Eyes Detected, Checking Eyes or ALERT! DROWSY. The LED and buzzer activate after the configured two-second no-eyes interval. Do not use while driving.</p><p>Results require correctly configured hardware and software. SOP-based reconstruction of fatigue_monitor.py (the SOP formats the code across multiple columns). Review this against the installed file before replacing a working version. Educational demonstration only; not a certified fatigue or driver-safety detector.</p></section><section class="section" id="learn"><h2>What You Learn</h2><ul><li>USB camera capture and OpenCV</li><li>Face/eye Haar cascades</li><li>GPIO23 LED, GPIO24 buzzer</li><li>I²C LCD at 0x27</li><li>Monotonic timing and safe cleanup</li></ul></section></main><footer><strong>SIMUDIY Exploration Kit</strong> · Driver Fatigue Warning System</footer><script type="text/plain" id="python-source">import cv2
+import time
+from gpiozero import LED, Buzzer
+from RPLCD.i2c import CharLCD
+
+led = LED(23)
+buzzer = Buzzer(24)
+lcd = CharLCD("PCF8574", address=0x27, port=1, cols=16, rows=2)
+face_detector = cv2.CascadeClassifier("cascades/haarcascade_frontalface_default.xml")
+eye_detector = cv2.CascadeClassifier("cascades/haarcascade_eye.xml")
+camera = cv2.VideoCapture(0)
+if not camera.isOpened():
+    lcd.clear()
+    lcd.write_string("Camera Error")
+    raise SystemExit("USB camera unavailable")
+
+CLOSURE_SECONDS = 2.0
+no_eyes_since = None
+try:
+    led.off()
+    buzzer.off()
+    lcd.clear()
+    lcd.write_string("Driver Monitor")
+    lcd.cursor_pos = (1, 0)
+    lcd.write_string("Eyes Monitoring")
+    while True:
+        ok, frame = camera.read()
+        if not ok:
+            break
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_detector.detectMultiScale(gray, 1.3, 5, minSize=(80, 80))
+        eyes_found = False
+        for (x, y, w, h) in faces:
+            face_gray = gray[y:y+h, x:x+w]
+            eyes = eye_detector.detectMultiScale(face_gray, 1.1, 5, minSize=(20, 20))
+            if len(eyes) > 0:
+                eyes_found = True
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            for (ex, ey, ew, eh) in eyes:
+                cv2.rectangle(frame, (x+ex, y+ey), (x+ex+ew, y+ey+eh), (255, 0, 0), 2)
+        if eyes_found:
+            no_eyes_since = None
+            led.off()
+            buzzer.off()
+            status = "Eyes Detected"
+        else:
+            if no_eyes_since is None:
+                no_eyes_since = time.monotonic()
+            elapsed = time.monotonic() - no_eyes_since
+            if elapsed >= CLOSURE_SECONDS:
+                led.on()
+                buzzer.on()
+                status = "ALERT! DROWSY"
+            else:
+                led.off()
+                buzzer.off()
+                status = "Checking Eyes"
+        cv2.putText(frame, status, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255) if not eyes_found else (0, 255, 0), 2)
+        cv2.imshow("Driver Fatigue Monitor", frame)
+        lcd.cursor_pos = (0, 0)
+        lcd.write_string("Driver Monitor ")
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string(status[:16].ljust(16))
+        if cv2.waitKey(1) &amp; 0xFF == ord("q"):
+            break
+finally:
+    camera.release()
+    cv2.destroyAllWindows()
+    led.off()
+    buzzer.off()
+    lcd.clear()
+    lcd.write_string("System Stopped")
+    lcd.close()
+print("Monitoring stopped safely.")</script><script>const program=document.getElementById("python-source").textContent.trim();const lines=program.split("\n");const steps=[{"label":"Imports and GPIO objects","start":"import cv2","end":"buzzer = Buzzer(24)"},{"label":"LCD initialization","start":"lcd = CharLCD(","end":"face_detector ="},{"label":"Cascade models","start":"face_detector =","end":"eye_detector ="},{"label":"Camera startup","start":"camera =","end":"CLOSURE_SECONDS ="},{"label":"Reset warning state","start":"try:","end":"lcd.write_string(\"Eyes Monitoring\")"},{"label":"Capture and grayscale","start":"while True:","end":"faces ="},{"label":"Detect faces and eyes","start":"for (x, y, w, h) in faces:","end":"cv2.rectangle(frame, (x+ex"},{"label":"Eyes detected: outputs OFF","start":"if eyes_found:","end":"status = \"Eyes Detected\""},{"label":"Two-second warning rule","start":"if no_eyes_since is None:","end":"status = \"Checking Eyes\""},{"label":"Show status and release","start":"cv2.putText(","end":"print(\"Monitoring stopped safely.\")"}];
+function escapeCode(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+document.getElementById("code-lines").innerHTML=lines.map((line,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeCode(line)+'</span></span>').join("");
+function findMarker(m,from=0){return lines.findIndex((line,i)=>i>=from&&line.trim().startsWith(m))}
+const ranges=steps.map(s=>{const a=findMarker(s.start),b=a<0?-1:findMarker(s.end,a);return {a,b,valid:a>=0&&b>=a}});
+function showStep(i){document.querySelectorAll(".step").forEach((x,j)=>x.classList.toggle("active",i===j));document.querySelectorAll(".code-line").forEach(x=>x.classList.remove("selected"));const r=ranges[i],target=document.getElementById("explanation");target.textContent=r.valid?steps[i].label+" — lines "+(r.a+1)+" to "+(r.b+1):"Source marker validation failed; review the source.";if(!r.valid)return;for(let j=r.a;j<=r.b;j++)document.getElementById("line-"+(j+1)).classList.add("selected");const panel=document.getElementById("code-body"),first=document.getElementById("line-"+(r.a+1));panel.scrollTo({top:panel.scrollTop+first.getBoundingClientRect().top-panel.getBoundingClientRect().top-15,behavior:"smooth"})}
+async function copyCode(){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const a=document.createElement("textarea");a.value=program;document.body.appendChild(a);a.select();if(!document.execCommand("copy"))throw Error("Clipboard unavailable");a.remove()}document.querySelector(".copy-button").textContent="Copied!"}catch(e){document.querySelector(".copy-button").textContent="Copy failed"}}
+showStep(0);</script></body></html>
