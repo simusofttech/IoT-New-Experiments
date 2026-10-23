@@ -947,79 +947,427 @@ STATUS: RUNNING</pre>
 ================================================== -->
 <textarea id="esp32-source" hidden>
 #include "esp_camera.h"
-#include &lt;WiFi.h>
-#include &lt;WebServer.h>
-#include &lt;Wire.h>
-#include &lt;U8g2lib.h>
+#include <WiFi.h>
+#include <WebServer.h>
+#include <Wire.h>
+#include <U8g2lib.h>
 
-// ==========================================
-// WIFI CREDENTIALS
-// ==========================================
-const char* ssid = "YOUR_WIFI_NAME";
-const char* password = "YOUR_WIFI_PASSWORD";
+// ================= WI-FI SETTINGS =================
+const char* ssid = "SimusoftMCD2";
+const char* password = "9860897222";
 
-// ==========================================
-// OLED AND BUTTON
-// ==========================================
+// ================= OLED SETTINGS ===================
 #define OLED_SDA 13
 #define OLED_SCL 14
-#define BUTTON_PIN 2
 
 U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
-  U8G2_R0,
-  U8X8_PIN_NONE,
-  OLED_SCL,
-  OLED_SDA
+  U8G2_R0, U8X8_PIN_NONE
 );
 
-// ==========================================
-// TIMELAPSE
-// ==========================================
-const unsigned long CAPTURE_INTERVAL = 10000UL;
+// ================= PHYSICAL BUTTON =================
+#define BUTTON_PIN 2
 
-bool timelapseRunning = false;
-unsigned long nextCaptureTime = 0;
-unsigned long photoCount = 0;
+// ================= CAMERA PINS ======================
+#define PWDN_GPIO_NUM     32
+#define RESET_GPIO_NUM    -1
+#define XCLK_GPIO_NUM      0
+#define SIOD_GPIO_NUM     26
+#define SIOC_GPIO_NUM     27
 
-// ==========================================
-// LATEST JPEG BUFFER
-// ==========================================
-uint8_t* latestPhoto = nullptr;
-size_t latestPhotoSize = 0;
+#define Y9_GPIO_NUM       35
+#define Y8_GPIO_NUM       34
+#define Y7_GPIO_NUM       39
+#define Y6_GPIO_NUM       36
+#define Y5_GPIO_NUM       21
+#define Y4_GPIO_NUM       19
+#define Y3_GPIO_NUM       18
+#define Y2_GPIO_NUM        5
+#define VSYNC_GPIO_NUM    25
+#define HREF_GPIO_NUM     23
+#define PCLK_GPIO_NUM     22
 
-// ==========================================
-// HTTP SERVER
-// ==========================================
+// ================= TIMELAPSE ========================
 WebServer server(80);
 
-// ==========================================
-// AI-THINKER CAMERA PINS
-// ==========================================
-#define PWDN_GPIO_NUM 32
-#define RESET_GPIO_NUM -1
-#define XCLK_GPIO_NUM 0
-#define SIOD_GPIO_NUM 26
-#define SIOC_GPIO_NUM 27
+bool timelapseRunning = false;
+bool cameraReady = false;
 
-#define Y9_GPIO_NUM 35
-#define Y8_GPIO_NUM 34
-#define Y7_GPIO_NUM 39
-#define Y6_GPIO_NUM 36
-#define Y5_GPIO_NUM 21
-#define Y4_GPIO_NUM 19
-#define Y3_GPIO_NUM 18
-#define Y2_GPIO_NUM 5
+const unsigned long captureInterval = 10000;
+unsigned long lastCaptureTime = 0;
 
-#define VSYNC_GPIO_NUM 25
-#define HREF_GPIO_NUM 23
-#define PCLK_GPIO_NUM 22
+// Debouncing
+int lastButtonReading = HIGH;
+int stableButtonState = HIGH;
+unsigned long lastDebounceTime = 0;
+const unsigned long debounceDelay = 50;
 
-// ==========================================
-// INITIALIZE CAMERA
-// ==========================================
-bool initCamera() {
-  camera_config_t config = {};
+// Latest photo stored in RAM
+uint8_t* latestPhoto = nullptr;
+size_t latestPhotoLength = 0;
+unsigned long photoCount = 0;
 
+// ================= OLED STATUS =======================
+void showOLED(const char* line1, const char* line2) {
+  oled.clearBuffer();
+  oled.setFont(u8g2_font_6x12_tf);
+  oled.drawStr(0, 14, "ESP32-CAM PHOTO BOOTH");
+  oled.drawHLine(0, 19, 128);
+  oled.drawStr(0, 34, line1);
+  oled.drawStr(0, 49, line2);
+  oled.sendBuffer();
+}
+
+// ================= CAPTURE PHOTO ====================
+bool capturePhoto() {
+  if (!cameraReady) {
+    Serial.println("Camera is not ready.");
+    return false;
+  }
+
+  camera_fb_t* fb = esp_camera_fb_get();
+
+  if (!fb) {
+    Serial.println("Camera capture failed.");
+    return false;
+  }
+
+  if (fb->format != PIXFORMAT_JPEG) {
+    Serial.println("Camera frame is not JPEG.");
+    esp_camera_fb_return(fb);
+    return false;
+  }
+
+  // Allocate memory for the latest image before replacing it.
+  uint8_t* newPhoto = (uint8_t*)malloc(fb->len);
+
+  if (!newPhoto) {
+    Serial.println("Not enough RAM to store photo.");
+    esp_camera_fb_return(fb);
+    return false;
+  }
+
+  memcpy(newPhoto, fb->buf, fb->len);
+  size_t newLength = fb->len;
+
+  esp_camera_fb_return(fb);
+
+  if (latestPhoto != nullptr) {
+    free(latestPhoto);
+  }
+
+  latestPhoto = newPhoto;
+  latestPhotoLength = newLength;
+  photoCount++;
+
+  Serial.printf("Photo %lu captured (%u bytes)\n",
+                photoCount,
+                (unsigned int)latestPhotoLength);
+
+  showOLED("Timelapse: RUNNING", "Photo captured");
+
+  return true;
+}
+
+// ================= DASHBOARD HTML ====================
+const char dashboardHTML[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ESP32-CAM Wi-Fi Photo Booth</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 16px;
+  background: #111827;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+h1 { font-size: 28px; }
+
+.card {
+  max-width: 920px;
+  margin: 22px auto;
+  padding: 22px;
+  background: #1f2937;
+  border-radius: 16px;
+}
+
+#camera {
+  width: 100%;
+  max-width: 670px;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+  background: #111827;
+  border-radius: 4px;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 15px 24px;
+  margin: 7px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.start { background: #16a34a; }
+.stop { background: #dc2626; }
+
+#status {
+  font-size: 18px;
+  margin: 16px;
+}
+
+#photoCount {
+  color: #d1d5db;
+  font-size: 15px;
+}
+
+.note {
+  font-size: 16px;
+  line-height: 1.5;
+}
+</style>
+</head>
+
+<body>
+<h1>ESP32-CAM Wi-Fi Photo Booth</h1>
+
+<div class="card">
+  <h2>Live Camera</h2>
+
+  <img id="camera" src="/snapshot" alt="Camera feed">
+
+  <div>
+    <button class="start" onclick="controlTimelapse('start')">
+      Start Timelapse
+    </button>
+
+    <button class="stop" onclick="controlTimelapse('stop')">
+      Stop Timelapse
+    </button>
+  </div>
+
+  <p id="status">Status: Loading...</p>
+  <p id="photoCount">Photos captured: 0</p>
+
+  <p class="note">
+    Captures one photo every 10 seconds while running.
+  </p>
+
+  <p>
+    <a href="/latest" target="_blank" style="color:#93c5fd">
+      View latest captured photo
+    </a>
+  </p>
+</div>
+
+<script>
+async function controlTimelapse(action) {
+  const status = document.getElementById('status');
+
+  try {
+    status.textContent = 'Sending command...';
+
+    const response = await fetch('/' + action, {
+      method: 'POST',
+      cache: 'no-store'
+    });
+
+    const message = await response.text();
+
+    if (!response.ok) {
+      throw new Error(message || 'Command failed');
+    }
+
+    status.textContent = 'Status: ' + message;
+    await updateStatus();
+  } catch (error) {
+    status.textContent = 'Control error: ' + error.message;
+  }
+}
+
+async function updateStatus() {
+  try {
+    const response = await fetch('/status', {
+      cache: 'no-store'
+    });
+
+    if (!response.ok) return;
+
+    const data = await response.json();
+
+    document.getElementById('status').textContent =
+      'Status: ' + (data.running ? 'RUNNING' : 'STOPPED');
+
+    document.getElementById('photoCount').textContent =
+      'Photos captured: ' + data.photos;
+  } catch (error) {
+    console.log('Status update failed');
+  }
+}
+
+// Refresh camera image periodically.
+function refreshCamera() {
+  const camera = document.getElementById('camera');
+  camera.src = '/snapshot?t=' + Date.now();
+}
+
+document.getElementById('camera').onerror = function() {
+  setTimeout(refreshCamera, 1500);
+};
+
+setInterval(refreshCamera, 1500);
+setInterval(updateStatus, 2000);
+
+updateStatus();
+</script>
+</body>
+</html>
+)rawliteral";
+
+// ================= SEND STORED PHOTO =================
+void sendStoredPhoto() {
+  if (latestPhoto == nullptr || latestPhotoLength == 0) {
+    server.send(404, "text/plain", "No photo captured yet.");
+    return;
+  }
+
+  server.sendHeader("Cache-Control", "no-store");
+  server.setContentLength(latestPhotoLength);
+  server.send(200, "image/jpeg", "");
+
+  server.client().write(latestPhoto, latestPhotoLength);
+}
+
+// ================= LIVE SNAPSHOT =====================
+void handleSnapshot() {
+  if (!cameraReady) {
+    server.send(503, "text/plain", "Camera not ready.");
+    return;
+  }
+
+  camera_fb_t* fb = esp_camera_fb_get();
+
+  if (!fb) {
+    server.send(500, "text/plain", "Snapshot failed.");
+    return;
+  }
+
+  if (fb->format != PIXFORMAT_JPEG) {
+    esp_camera_fb_return(fb);
+    server.send(500, "text/plain", "Invalid camera image format.");
+    return;
+  }
+
+  size_t imageLength = fb->len;
+
+  server.sendHeader("Cache-Control", "no-store");
+  server.setContentLength(imageLength);
+  server.send(200, "image/jpeg", "");
+
+  server.client().write(fb->buf, imageLength);
+
+  esp_camera_fb_return(fb);
+}
+
+// ================= WEB SERVER =========================
+void setupWebServer() {
+  server.on("/", HTTP_GET, []() {
+    server.send_P(200, "text/html", dashboardHTML);
+  });
+
+  server.on("/start", HTTP_POST, []() {
+    timelapseRunning = true;
+    lastCaptureTime = millis();
+
+    showOLED("Timelapse: RUNNING", "Waiting to capture");
+
+    server.send(200, "text/plain", "RUNNING");
+    Serial.println("Dashboard: Timelapse START");
+  });
+
+  server.on("/stop", HTTP_POST, []() {
+    timelapseRunning = false;
+
+    showOLED("Timelapse: STOPPED", "Ready");
+
+    server.send(200, "text/plain", "STOPPED");
+    Serial.println("Dashboard: Timelapse STOP");
+  });
+
+  server.on("/status", HTTP_GET, []() {
+    String json = "{";
+    json += "\"running\":";
+    json += (timelapseRunning ? "true" : "false");
+    json += ",\"photos\":";
+    json += String(photoCount);
+    json += "}";
+
+    server.send(200, "application/json", json);
+  });
+
+  server.on("/snapshot", HTTP_GET, handleSnapshot);
+  server.on("/latest", HTTP_GET, sendStoredPhoto);
+
+  server.begin();
+  Serial.println("Web server started.");
+}
+
+// ================= PHYSICAL BUTTON ===================
+void checkButton() {
+  int reading = digitalRead(BUTTON_PIN);
+
+  if (reading != lastButtonReading) {
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading != stableButtonState) {
+      stableButtonState = reading;
+
+      // Button is connected between GPIO2 and GND.
+      if (stableButtonState == LOW) {
+        timelapseRunning = !timelapseRunning;
+
+        if (timelapseRunning) {
+          lastCaptureTime = millis();
+          Serial.println("Physical button: Timelapse START");
+          showOLED("Timelapse: RUNNING", "Physical button");
+        } else {
+          Serial.println("Physical button: Timelapse STOP");
+          showOLED("Timelapse: STOPPED", "Physical button");
+        }
+      }
+    }
+  }
+
+  lastButtonReading = reading;
+}
+
+// ================= SETUP ==============================
+void setup() {
+  Serial.begin(115200);
+  delay(500);
+
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  // OLED initialization
+  Wire.begin(OLED_SDA, OLED_SCL);
+  oled.begin();
+  showOLED("Starting...", "Please wait");
+
+  // Camera configuration
+  camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
 
@@ -1045,571 +1393,92 @@ bool initCamera() {
 
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_VGA;
-  config.jpeg_quality = 12;
-  config.fb_count = 1;
 
-  esp_err_t result = esp_camera_init(&config);
-
-  if (result != ESP_OK) {
-    Serial.printf(
-      "Camera initialization failed: 0x%x\n",
-      result
-    );
-    return false;
-  }
-
-  return true;
-}
-
-// ==========================================
-// UPDATE OLED DISPLAY
-// ==========================================
-void showOLED() {
-  oled.clearBuffer();
-
-  oled.setFont(u8g2_font_helvB12_tr);
-  oled.drawStr(18, 16, "PHOTO BOOTH");
-
-  oled.drawHLine(5, 20, 118);
-  oled.setFont(u8g2_font_6x10_tr);
-
-  if (WiFi.status() == WL_CONNECTED) {
-    oled.drawStr(8, 34, "WiFi: CONNECTED");
+  if (psramFound()) {
+    config.frame_size = FRAMESIZE_VGA;
+    config.jpeg_quality = 12;
+    config.fb_count = 2;
+    config.grab_mode = CAMERA_GRAB_LATEST;
+    config.fb_location = CAMERA_FB_IN_PSRAM;
   } else {
-    oled.drawStr(8, 34, "WiFi: OFFLINE");
+    config.frame_size = FRAMESIZE_QVGA;
+    config.jpeg_quality = 14;
+    config.fb_count = 1;
+    config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
+    config.fb_location = CAMERA_FB_IN_DRAM;
   }
 
-  char photoText[25];
-  snprintf(
-    photoText,
-    sizeof(photoText),
-    "PHOTOS: %03lu",
-    photoCount
-  );
+  esp_err_t err = esp_camera_init(&config);
 
-  oled.drawStr(8, 46, photoText);
-
-  if (timelapseRunning) {
-    oled.drawStr(8, 58, "STATUS: RUNNING");
-  } else {
-    oled.drawStr(8, 58, "STATUS: STOPPED");
-  }
-
-  oled.sendBuffer();
-}
-
-// ==========================================
-// SAVE LATEST JPEG IN RAM
-// ==========================================
-bool saveLatestPhoto(
-  const uint8_t* data,
-  size_t size
-) {
-  uint8_t* newBuffer =
-    (uint8_t*)malloc(size);
-
-  if (newBuffer == nullptr) {
-    Serial.println("Not enough RAM for photo");
-    return false;
-  }
-
-  memcpy(newBuffer, data, size);
-
-  if (latestPhoto != nullptr) {
-    free(latestPhoto);
-  }
-
-  latestPhoto = newBuffer;
-  latestPhotoSize = size;
-
-  return true;
-}
-
-// ==========================================
-// CAPTURE A SINGLE JPEG
-// ==========================================
-bool capturePhoto() {
-  camera_fb_t* fb = esp_camera_fb_get();
-
-  if (fb == nullptr) {
-    Serial.println("Camera capture failed");
-    return false;
-  }
-
-  bool saved = saveLatestPhoto(
-    fb->buf,
-    fb->len
-  );
-
-  esp_camera_fb_return(fb);
-
-  if (!saved) {
-    return false;
-  }
-
-  photoCount++;
-
-  Serial.print("Photo captured: ");
-  Serial.println(photoCount);
-
-  showOLED();
-
-  return true;
-}
-
-// ==========================================
-// BROWSER DASHBOARD
-// ==========================================
-void handleRoot() {
-  String html = R"rawliteral(
-&lt;!DOCTYPE html>
-&lt;html lang="en">
-&lt;head>
-&lt;meta charset="UTF-8">
-&lt;meta name="viewport"
-      content="width=device-width,initial-scale=1">
-&lt;title>Wi-Fi Photo Booth&lt;/title>
-&lt;style>
-* { box-sizing:border-box; }
-
-body {
-  margin:0;
-  background:#0f141d;
-  color:white;
-  font-family:Arial,sans-serif;
-}
-
-header {
-  text-align:center;
-  background:#151c28;
-  padding:25px 15px;
-  border-bottom:1px solid #303847;
-}
-
-header h1 { margin:0; }
-
-.container {
-  width:92%;
-  max-width:900px;
-  margin:20px auto;
-}
-
-.card {
-  background:#171e2a;
-  padding:20px;
-  border-radius:14px;
-  margin-bottom:20px;
-}
-
-.preview {
-  width:100%;
-  max-height:450px;
-  object-fit:contain;
-  background:#05070a;
-  border-radius:10px;
-}
-
-button {
-  padding:12px 20px;
-  margin:5px;
-  border:0;
-  border-radius:8px;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.start { background:#20bf6b; }
-.stop { background:#eb4d3d; }
-
-.status {
-  display:grid;
-  grid-template-columns:repeat(
-    auto-fit,minmax(140px,1fr)
-  );
-  gap:12px;
-}
-
-.stat {
-  background:#222b3b;
-  padding:16px;
-  text-align:center;
-  border-radius:9px;
-}
-
-.stat strong {
-  display:block;
-  margin-top:8px;
-  font-size:23px;
-}
-
-small { color:#9ba8bb; }
-
-.note {
-  color:#9ba8bb;
-  font-size:13px;
-}
-&lt;/style>
-&lt;/head>
-&lt;body>
-
-&lt;header>
-  &lt;h1>Wi-Fi Photo Booth&lt;/h1>
-  &lt;p>Wireless time-lapse camera&lt;/p>
-&lt;/header>
-
-&lt;main class="container">
-  &lt;div class="card">
-    &lt;h2>Live Camera&lt;/h2>
-    &lt;img
-      id="preview"
-      class="preview"
-      src="/snapshot"
-      alt="Camera snapshot"
-    >
-
-    &lt;div>
-      &lt;button class="start" onclick="startCapture()">
-        Start Timelapse
-      &lt;/button>
-
-      &lt;button class="stop" onclick="stopCapture()">
-        Stop
-      &lt;/button>
-    &lt;/div>
-
-    &lt;p class="note">
-      First timed photo: 10 seconds after Start.
-    &lt;/p>
-  &lt;/div>
-
-  &lt;div class="card">
-    &lt;h2>Camera Status&lt;/h2>
-
-    &lt;div class="status">
-      &lt;div class="stat">
-        &lt;small>Photos&lt;/small>
-        &lt;strong id="photos">0&lt;/strong>
-      &lt;/div>
-
-      &lt;div class="stat">
-        &lt;small>Interval&lt;/small>
-        &lt;strong>10s&lt;/strong>
-      &lt;/div>
-
-      &lt;div class="stat">
-        &lt;small>Status&lt;/small>
-        &lt;strong id="running">STOPPED&lt;/strong>
-      &lt;/div>
-    &lt;/div>
-  &lt;/div>
-
-  &lt;div class="card">
-    &lt;h2>Latest Timelapse Photo&lt;/h2>
-    &lt;img
-      id="latest"
-      class="preview"
-      alt="Latest captured photograph"
-    >
-    &lt;p class="note">
-      Only the latest JPEG is held in memory.
-    &lt;/p>
-  &lt;/div>
-&lt;/main>
-
-&lt;script>
-async function startCapture() {
-  await fetch("/start");
-  updateStatus();
-}
-
-async function stopCapture() {
-  await fetch("/stop");
-  updateStatus();
-}
-
-let lastCount = -1;
-
-async function updateStatus() {
-  try {
-    const response = await fetch("/status");
-    const data = await response.json();
-
-    document.getElementById("photos")
-      .textContent = data.photos;
-
-    document.getElementById("running")
-      .textContent =
-        data.running ? "RUNNING" : "STOPPED";
-
-    if (data.photos > 0 &&
-        data.photos !== lastCount) {
-
-      document.getElementById("latest")
-        .src = "/latest?t=" + Date.now();
-    }
-
-    lastCount = data.photos;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-setInterval(updateStatus, 1000);
-
-setInterval(function() {
-  document.getElementById("preview").src =
-    "/snapshot?t=" + Date.now();
-}, 1500);
-
-updateStatus();
-&lt;/script>
-&lt;/body>
-&lt;/html>
-)rawliteral";
-
-  server.send(200, "text/html", html);
-}
-
-// ==========================================
-// SEND A CAMERA SNAPSHOT
-// ==========================================
-void handleSnapshot() {
-  camera_fb_t* fb = esp_camera_fb_get();
-
-  if (fb == nullptr) {
-    server.send(
-      500,
-      "text/plain",
-      "Camera error"
-    );
+  if (err != ESP_OK) {
+    Serial.printf("Camera init failed: 0x%x\n", err);
+    showOLED("Camera error", "Check wiring");
+    cameraReady = false;
     return;
   }
 
-  server.setContentLength(fb->len);
-  server.send(200, "image/jpeg", "");
+  cameraReady = true;
 
-  WiFiClient client = server.client();
-  client.write(fb->buf, fb->len);
+  // ===== CAMERA ORIENTATION FIX =====
+  // Correct an upside-down camera image.
+  sensor_t* sensor = esp_camera_sensor_get();
 
-  esp_camera_fb_return(fb);
-}
-
-// ==========================================
-// SEND LATEST TIMELAPSE PHOTO
-// ==========================================
-void handleLatest() {
-  if (latestPhoto == nullptr ||
-      latestPhotoSize == 0) {
-
-    server.send(
-      404,
-      "text/plain",
-      "No photo yet"
-    );
-    return;
+  if (sensor != nullptr) {
+    sensor->set_vflip(sensor, 1);
+    sensor->set_hmirror(sensor, 1);
   }
 
-  server.setContentLength(latestPhotoSize);
-  server.send(200, "image/jpeg", "");
+  Serial.println("Camera initialized with orientation correction.");
 
-  WiFiClient client = server.client();
-  client.write(
-    latestPhoto,
-    latestPhotoSize
-  );
-}
-
-// ==========================================
-// STATUS API
-// ==========================================
-void handleStatus() {
-  String json = "{";
-
-  json += "\"running\":";
-  json += timelapseRunning ? "true" : "false";
-
-  json += ",\"photos\":";
-  json += photoCount;
-
-  json += "}";
-
-  server.send(
-    200,
-    "application/json",
-    json
-  );
-}
-
-// ==========================================
-// START AND STOP TIMELAPSE
-// ==========================================
-void startTimelapse() {
-  if (timelapseRunning) {
-    return;
-  }
-
-  timelapseRunning = true;
-
-  nextCaptureTime =
-    millis() + CAPTURE_INTERVAL;
-
-  Serial.println("TIMELAPSE STARTED");
-  Serial.println("First photo in 10 seconds");
-
-  showOLED();
-}
-
-void stopTimelapse() {
-  timelapseRunning = false;
-
-  Serial.println("TIMELAPSE STOPPED");
-  showOLED();
-}
-
-// ==========================================
-// HTTP START AND STOP HANDLERS
-// ==========================================
-void handleStart() {
-  startTimelapse();
-
-  server.send(
-    200,
-    "text/plain",
-    "STARTED"
-  );
-}
-
-void handleStop() {
-  stopTimelapse();
-
-  server.send(
-    200,
-    "text/plain",
-    "STOPPED"
-  );
-}
-
-// ==========================================
-// PUSH BUTTON WITH DEBOUNCE
-// ==========================================
-void checkButton() {
-  static bool lastReading = HIGH;
-  static bool stableState = HIGH;
-  static unsigned long lastChange = 0;
-
-  bool reading = digitalRead(BUTTON_PIN);
-
-  if (reading != lastReading) {
-    lastChange = millis();
-  }
-
-  if (millis() - lastChange > 50) {
-    if (reading != stableState) {
-      stableState = reading;
-
-      if (stableState == LOW) {
-        if (timelapseRunning) {
-          stopTimelapse();
-        } else {
-          startTimelapse();
-        }
-      }
-    }
-  }
-
-  lastReading = reading;
-}
-
-// ==========================================
-// TIMELAPSE SCHEDULER
-// ==========================================
-void processTimelapse() {
-  if (!timelapseRunning) {
-    return;
-  }
-
-  unsigned long now = millis();
-
-  if ((long)(now - nextCaptureTime) >= 0) {
-    capturePhoto();
-
-    nextCaptureTime =
-      millis() + CAPTURE_INTERVAL;
-  }
-}
-
-// ==========================================
-// SETUP
-// ==========================================
-void setup() {
-  Serial.begin(115200);
-  delay(1000);
-
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-
-  Wire.begin(
-    OLED_SDA,
-    OLED_SCL
-  );
-
-  Wire.setClock(100000);
-
-  oled.begin();
-  oled.clearBuffer();
-
-  oled.setFont(u8g2_font_helvB12_tr);
-  oled.drawStr(15, 25, "PHOTO BOOTH");
-
-  oled.setFont(u8g2_font_6x10_tr);
-  oled.drawStr(22, 48, "STARTING...");
-  oled.sendBuffer();
-
-  if (!initCamera()) {
-    oled.clearBuffer();
-    oled.drawStr(20, 30, "CAMERA ERROR");
-    oled.sendBuffer();
-
-    while (true) {
-      delay(1000);
-    }
-  }
-
+  // Connect Wi-Fi
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
 
-  Serial.print("Connecting to WiFi");
+  showOLED("Connecting WiFi", "Please wait");
 
-  while (WiFi.status() != WL_CONNECTED) {
+  Serial.print("Connecting to Wi-Fi");
+
+  unsigned long wifiStart = millis();
+
+  while (WiFi.status() != WL_CONNECTED &&
+         millis() - wifiStart < 20000) {
     delay(500);
     Serial.print(".");
   }
 
   Serial.println();
-  Serial.println("WiFi connected!");
 
-  server.on("/", HTTP_GET, handleRoot);
-  server.on("/snapshot", HTTP_GET, handleSnapshot);
-  server.on("/latest", HTTP_GET, handleLatest);
-  server.on("/status", HTTP_GET, handleStatus);
-  server.on("/start", HTTP_GET, handleStart);
-  server.on("/stop", HTTP_GET, handleStop);
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Wi-Fi connection failed. Check credentials.");
+    showOLED("WiFi failed", "Check credentials");
+    return;
+  }
 
-  server.begin();
-
-  showOLED();
-
-  Serial.print("Open: http://");
+  Serial.println("Wi-Fi connected.");
+  Serial.print("Dashboard URL: http://");
   Serial.println(WiFi.localIP());
+
+  showOLED("WiFi connected", "Dashboard ready");
+
+  setupWebServer();
 }
 
-// ==========================================
-// MAIN LOOP
-// ==========================================
+// ================= MAIN LOOP =========================
 void loop() {
-  server.handleClient();
+  if (WiFi.status() == WL_CONNECTED) {
+    server.handleClient();
+  }
+
   checkButton();
-  processTimelapse();
+
+  if (timelapseRunning &&
+      cameraReady &&
+      millis() - lastCaptureTime >= captureInterval) {
+    lastCaptureTime = millis();
+    capturePhoto();
+  }
+
+  delay(2);
 }
 </textarea>
 
