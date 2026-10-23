@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Room Occupancy and Activity Logger</title>
-<style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Smart Room Occupancy and Activity Logger Using Raspberry Pi 4</title><style>
 
 /* =========================
    BASIC PAGE STYLE
@@ -1068,30 +1062,8 @@ footer strong{
 
 }
 
-</style>
-</head>
-<body>
-<header class="header"><img class="header-logo" src="../../Simusoft logo white background.jpeg" alt="SimuSoft logo">
-<div class="header-content"><h1>SIMUDIY Exploration Kit</h1><p>Smart Room Occupancy and Activity Logger</p></div>
-<div class="header-buttons"><div class="header-left-buttons"><a href="../index.html" class="header-nav-btn">← Back</a><a href="../../index.html" class="header-nav-btn home-icon-btn" title="Home" aria-label="Home">⌂</a></div>
-<div class="header-right-buttons"><a href="../../Arduino Experiments/index.html" class="header-nav-btn">Arduino</a><a href="../../ESP32 CAM Experiments/index.html" class="header-nav-btn">ESP</a><a href="../index.html" class="header-nav-btn">R-Pi</a></div></div></header>
-<nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#result">Result</a></nav>
-<main class="container">
-<section class="section project-thumbnail"><img src="../Smart Room Occupancy and Activity Logger Using Raspberry Pi 4.png" alt="Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 thumbnail" onerror="this.hidden=true;document.getElementById('thumbnail-pending').hidden=false"><div id="thumbnail-pending" class="note" hidden>Experiment thumbnail is pending an approved PNG.</div></section>
-<section class="section" id="aim"><h2>Aim</h2><p>To develop a Raspberry Pi room-activity logger that detects motion through a USB webcam, logs activity start and end times, estimates session duration, and presents recent results on a local Flask dashboard without saving continuous video.</p></section>
-<section class="section"><h2>About the Experiment</h2><p>The Raspberry Pi 4 uses OpenCV to compare webcam frames. When movement passes the configured threshold, it starts a logged activity session. After 60 seconds without movement, the session ends and the duration is saved in a CSV file. A Flask web dashboard shows motion status, active sessions, recent events and the last motion time.</p><p>The camera processes frames locally in memory. It does not store photos or continuous video. This is movement/activity detection, not proof that a room is occupied by a person.</p></section>
-<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B (×1)" onerror="this.hidden=true"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs motion detection, logging and the Flask dashboard.</p></div><div class="component-card"><img src="USB Webcam.png" alt="USB Webcam (×1)" onerror="this.hidden=true"><h4>USB Webcam (×1)</h4><p>Captures room frames for local activity detection.</p></div></div><div class="note">The SOP also requires a compatible Raspberry Pi power supply, microSD card containing Raspberry Pi OS, and a working Wi-Fi or Ethernet connection for dashboard access. These are setup requirements rather than component cards.</div></section>
-<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Connection</th></tr></thead><tbody><tr><td>USB Webcam</td><td>Any compatible USB port on Raspberry Pi 4</td></tr><tr><td>Raspberry Pi power</td><td>Compatible USB-C power input</td></tr><tr><td>Local dashboard</td><td>Browser connected through the same trusted network</td></tr><tr><td>GPIO</td><td>Not used in this experiment</td></tr></tbody></table></div><div class="note">No GPIO wiring, breadboard or jumper wires are needed. Connect or disconnect the webcam carefully, and use a compatible Pi power supply.</div></section>
-<section class="section" id="circuit"><h2>Circuit Diagram</h2><!-- Once provided, insert only the approved PNG: <img class="circuit-img" src="Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 Circuit.png" alt="Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 Circuit Diagram"> --><div class="note">The SOP's hardware illustration shows a USB webcam connected directly to the Raspberry Pi. The approved separate circuit/setup PNG is not yet available.</div></section>
-<section class="section" id="working"><h2>Working Principle</h2><div class="flow">USB webcam captures frames<br>↓<br>Resize, grayscale and blur<br>↓<br>Compare consecutive frames<br>↓<br>Detect motion above 1500 changed pixels<br>↓<br>Log ACTIVITY_START<br>↓<br>Refresh timer while motion continues<br>↓<br>60 seconds without motion<br>↓<br>Log ACTIVITY_END and duration<br>↓<br>Dashboard reads status and CSV history</div><p>The dashboard refreshes every 3 seconds. Motion logs are recorded in <code>activity_log.csv</code>.</p></section>
-<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the USB webcam to the Raspberry Pi 4 and start Raspberry Pi OS.</li><li>Verify the camera is available at <code>/dev/video0</code> or identify the correct video device.</li><li>Install OpenCV if needed and create the project folder using <code>mkdir -p ~/smart-room-logger</code>.</li><li>Run <code>cd ~/smart-room-logger</code> and <code>python3 -m venv --system-site-packages venv</code>.</li><li>Activate it with <code>source venv/bin/activate</code> and install Flask using <code>python -m pip install Flask</code>.</li><li>Verify OpenCV with <code>python -c "import cv2; print(cv2.__version__)"</code>.</li><li>Save the complete Explore the Code program as <code>app.py</code> in the project folder.</li><li>Run <code>python -m py_compile app.py</code>, then <code>python app.py</code>.</li><li>Find the Raspberry Pi IP using <code>hostname -I</code>; open <code>http://&lt;PI-IP&gt;:5000</code> on the Pi or another device on the same network.</li><li>Move your hand in view of the webcam and check for “Motion detected” and an ACTIVITY_START event.</li><li>Stop moving and wait at least 65–70 seconds to observe ACTIVITY_END and the recorded duration.</li><li>Press Ctrl+C to stop the application.</li></ol></section>
-<section class="section" id="code"><div class="code-lesson"><p class="eyebrow">Raspberry Pi Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Full single-file Python application reconstructed from the SOP's multi-column source layout. Select each step to see its corresponding lines.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">app.py</span><button class="copy-button" type="button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step to highlight the relevant program.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Imports</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configuration</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Record events</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Initialize camera</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Detect motion</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Start activity</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>End activity</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Dashboard HTML</button><button class="step" onclick="showStep(8)"><span class="step-number">09</span>API endpoints</button><button class="step" onclick="showStep(9)"><span class="step-number">10</span>Start services</button></div><div class="explanation" id="explanation" aria-live="polite"></div><details><summary>Check Your Understanding</summary><p>What library detects motion? How long without motion ends a session? How frequently does the dashboard update?</p><button type="button" class="copy-button" style="border:1px solid #bfdbfe" onclick="document.getElementById('quizanswers').hidden=!document.getElementById('quizanswers').hidden">Show / Hide Answers</button><p id="quizanswers" hidden>OpenCV; 60 seconds; every 3 seconds.</p></details></article></div><p class="tip"><strong>Remember:</strong> This program estimates motion and activity durations from differences between camera frames. It cannot identify people or guarantee actual occupancy.</p></div></section>
-<section class="section"><h2>Expected Output</h2><p>Starting the app displays “Camera started. Monitoring room activity.” and “Video recording is disabled.” The Flask dashboard is available locally on port 5000 and shows camera status, detected motion, active session, last motion time and recent recorded events.</p><p>After moving in front of the camera, ACTIVITY_START is saved; following 60 seconds of inactivity, ACTIVITY_END and duration are appended to the CSV.</p></section>
-<section class="section" id="result"><h2>Result</h2><p>The activity logger detects changes in room imagery using a USB webcam, saves timestamped motion-activity events and estimated session durations to CSV, and displays live information through a local Flask dashboard without recording video.</p></section>
-<section class="section"><h2>What You Learn</h2><ul><li>Using a USB webcam with Raspberry Pi and OpenCV.</li><li>Converting frames to grayscale and comparing changes.</li><li>Threshold-based motion detection and debouncing of inactivity.</li><li>Logging start/end timestamps and durations in CSV.</li><li>Creating an interactive Flask dashboard and JSON API.</li><li>Running a camera worker thread alongside a web server.</li><li>Monitoring without saving continuous video footage.</li></ul></section>
-</main>
-<footer><strong>Raspberry Pi Experiment</strong><p>Smart Room Occupancy and Activity Logger Using Raspberry Pi 4</p></footer>
-<script type="text/plain" id="program">#!/usr/bin/env python3
+
+.section .circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.project-thumbnail img{display:block;max-width:760px;width:100%;max-height:400px;object-fit:contain;margin:auto}.code-line{display:flex;white-space:pre;min-width:max-content;min-height:24px;font:13px/24px Consolas,monospace}.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}.line-number{min-width:48px;text-align:right;padding-right:12px;color:#64748b}.code-body{overflow:auto;max-height:620px}.code-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:20px}.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.step{background:white;color:#1e3a8a;border:1px solid #bfdbfe;border-radius:8px;padding:10px;cursor:pointer}.step.active{background:#dbeafe;border-color:#2563eb}.code-top{background:#2563eb;color:white;display:flex;justify-content:space-between;padding:15px}.copy-button{padding:8px 15px;border-radius:6px;background:white;color:#2563eb;border:0;cursor:pointer}.guide{border:1px solid #dbeafe;padding:18px;border-radius:8px}.code-panel{border:1px solid #bfdbfe;min-width:0;overflow:hidden}.explanation{padding:15px;background:#eff6ff;border-radius:8px;margin-top:15px}@media(max-width:850px){.code-layout{grid-template-columns:1fr}}</style></head><body><header class="header"><h1>SIMUDIY Exploration Kit</h1><p>Smart Room Occupancy and Activity Logger Using Raspberry Pi 4</p></header><nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#output">Output</a><a href="#result">Result</a><a href="#learn">Learn</a></nav><main class="container"><section class="section project-thumbnail"><img src="../Smart Room Occupancy and Activity Logger Using Raspberry Pi 4.png" alt="Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 thumbnail" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Experiment thumbnail PNG pending.</p></section><section class="section" id="aim"><h2>Aim</h2><p>Detect room motion using a USB webcam, log session start/end and duration in CSV, and show status in a local dashboard without saving video.</p></section><section class="section" id="about"><h2>About the Experiment</h2><p>OpenCV detects changed pixels between camera frames. New motion logs ACTIVITY_START; after 60 seconds of inactivity it logs ACTIVITY_END. A Flask browser dashboard refreshes data every 3 seconds.</p><div class="note"><strong>Code source status:</strong> SOP-based reconstructed reference app.py. The source SOP uses multi-column formatting; verify reconstructed Python against the deployed tested script before replacing it.</div></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B ×1"><h4>Raspberry Pi 4 Model B ×1</h4><p>Main controller</p></div><div class="component-card"><img src="../AI Object Detection System/USB Camera.png" alt="USB Webcam ×1"><h4>USB Webcam ×1</h4><p>USB camera input</p></div><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply ×1"><h4>Raspberry Pi Power Supply ×1</h4><p>Rated USB-C supply</p></div></div></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><tr><th>Device</th><th>Raspberry Pi connection</th></tr><tr><td>USB webcam</td><td>Connect to one USB port</td></tr><tr><td>Power</td><td>Connect USB-C power supply</td></tr><tr><td>GPIO</td><td>None; no breadboard or additional sensors required</td></tr></table></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 Circuit.png" alt="Circuit diagram" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Verified circuit PNG pending: Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 Circuit.png</p></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">USB webcam captures frames<br>↓<br>Resize, grayscale and blur<br>↓<br>Pixel-difference motion threshold<br>↓<br>Log activity start<br>↓<br>After 60s stillness log activity end<br>↓<br>Flask status + recent CSV events</div></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the USB webcam and Raspberry Pi USB-C supply.</li><li>In terminal open ~/smart-room-logger.</li><li>Activate venv using source venv/bin/activate.</li><li>Verify imports of cv2 and Flask.</li><li>Run python app.py.</li><li>Open http://PI-IP:5000 from the trusted local network.</li><li>Move within camera view to trigger activity start.</li><li>Stop movement and wait approximately 65–70 seconds for activity end.</li><li>Stop using Ctrl+C.</li></ol></section><section class="section" id="code"><h2>Explore the Code</h2><p>Select an explanation to highlight its matching source block. Copy Code copies the complete displayed Python source.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><strong>Python source — SOP-based</strong><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><aside class="guide"><h3>Understand it step by step</h3><div class="steps"><button class="step" onclick="showStep(0)">1. Imports and configuration</button><button class="step" onclick="showStep(1)">2. Timestamp and CSV setup</button><button class="step" onclick="showStep(2)">3. Open USB camera</button><button class="step" onclick="showStep(3)">4. Prepare frame comparisons</button><button class="step" onclick="showStep(4)">5. Detect image changes</button><button class="step" onclick="showStep(5)">6. Log activity start</button><button class="step" onclick="showStep(6)">7. End inactive session</button><button class="step" onclick="showStep(7)">8. Dashboard HTML</button><button class="step" onclick="showStep(8)">9. Flask status and events</button><button class="step" onclick="showStep(9)">10. Start worker and web service</button></div><div class="explanation" id="explanation"></div><details><summary>Check Your Understanding</summary><p>Computer vision and frame differencing; Motion threshold; CSV start/end logging; 60-second inactivity threshold; Flask dashboard and 3-second refresh</p></details></aside></div></section><section class="section" id="output"><h2>Expected Output</h2><p>Terminal reports Camera started. Monitoring room activity. Dashboard shows motion status, session activity and recent events from activity_log.csv. Camera video is not saved.</p></section><section class="section" id="result"><h2>Result</h2><p>Terminal reports Camera started. Monitoring room activity. Dashboard shows motion status, session activity and recent events from activity_log.csv. Camera video is not saved.</p><p>Results require correctly configured hardware and software. SOP-based reconstructed reference app.py. The source SOP uses multi-column formatting; verify reconstructed Python against the deployed tested script before replacing it.</p></section><section class="section" id="learn"><h2>What You Learn</h2><ul><li>Computer vision and frame differencing</li><li>Motion threshold</li><li>CSV start/end logging</li><li>60-second inactivity threshold</li><li>Flask dashboard and 3-second refresh</li></ul></section></main><footer><strong>SIMUDIY Exploration Kit</strong> · Smart Room Occupancy and Activity Logger Using Raspberry Pi 4</footer><script type="text/plain" id="python-source">#!/usr/bin/env python3
 import csv
 import cv2
 import time
@@ -1100,102 +1072,66 @@ from datetime import datetime
 from pathlib import Path
 from flask import Flask, jsonify, render_template_string
 
-# ---------------- CONFIGURATION ----------------
 CAMERA_INDEX = 0
 FRAME_WIDTH = 320
 FRAME_HEIGHT = 240
 INACTIVITY_SECONDS = 60
 MOTION_PIXEL_THRESHOLD = 1500
-
-PROJECT_DIR = Path(__file__).resolve().parent
-LOG_FILE = PROJECT_DIR / "activity_log.csv"
-
+LOG_FILE = Path(__file__).resolve().parent / "activity_log.csv"
 app = Flask(__name__)
 lock = threading.Lock()
-state = {
-    "motion": False,
-    "session_active": False,
-    "session_start": None,
-    "last_motion": None,
-    "status": "Starting camera...",
-    "motion_pixels": 0,
-}
+state = {"motion": False, "session_active": False, "session_start": None, "last_motion": None, "status": "Starting camera...", "motion_pixels": 0}
+last_motion_time = [0.0]
 
-# ---------------- TIMESTAMP AND CSV ----------------
 def timestamp():
     return datetime.now().astimezone().isoformat(timespec="seconds")
 
 def prepare_log():
     if not LOG_FILE.exists() or LOG_FILE.stat().st_size == 0:
         with LOG_FILE.open("w", newline="") as file:
-            writer = csv.writer(file)
-            writer.writerow([
-                "event", "start_time", "end_time", "duration_seconds"
-            ])
+            csv.writer(file).writerow(["event", "start_time", "end_time", "duration_seconds"])
 
 def write_event(event, start, end="", duration=""):
     with LOG_FILE.open("a", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow([event, start, end, duration])
+        csv.writer(file).writerow([event, start, end, duration])
 
-# ---------------- MOTION DETECTION ----------------
 def camera_worker():
     camera = cv2.VideoCapture(CAMERA_INDEX, cv2.CAP_V4L2)
     camera.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
     camera.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
     camera.set(cv2.CAP_PROP_FPS, 10)
-
     if not camera.isOpened():
         with lock:
             state["status"] = "Camera error: cannot open webcam"
-        print("ERROR: Could not open webcam.")
         return
-
     ok, frame = camera.read()
     if not ok:
-        with lock:
-            state["status"] = "Camera error: cannot read frames"
         camera.release()
         return
-
     frame = cv2.resize(frame, (FRAME_WIDTH, FRAME_HEIGHT))
-    previous = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    previous = cv2.GaussianBlur(previous, (21, 21), 0)
-
-    last_motion_time = [0.0]
+    previous = cv2.GaussianBlur(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), (21,21), 0)
     with lock:
         state["status"] = "Monitoring room"
-
     print("Camera started. Monitoring room activity.")
     print("Video recording is disabled.")
-
     try:
         while True:
             ok, frame = camera.read()
             if not ok:
-                with lock:
-                    state["status"] = "Camera read error"
                 time.sleep(1)
                 continue
-
             frame = cv2.resize(frame, (FRAME_WIDTH, FRAME_HEIGHT))
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            gray = cv2.GaussianBlur(gray, (21, 21), 0)
+            gray = cv2.GaussianBlur(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), (21,21), 0)
             difference = cv2.absdiff(previous, gray)
-            threshold = cv2.threshold(
-                difference, 25, 255, cv2.THRESH_BINARY
-            )[1]
+            threshold = cv2.threshold(difference, 25, 255, cv2.THRESH_BINARY)[1]
             threshold = cv2.dilate(threshold, None, iterations=2)
             motion_pixels = cv2.countNonZero(threshold)
-            detected = motion_pixels &gt;= MOTION_PIXEL_THRESHOLD
-
+            detected = motion_pixels >= MOTION_PIXEL_THRESHOLD
             now = time.monotonic()
             now_text = timestamp()
-
             with lock:
                 state["motion"] = detected
                 state["motion_pixels"] = motion_pixels
-
                 if detected:
                     state["last_motion"] = now_text
                     if not state["session_active"]:
@@ -1204,96 +1140,39 @@ def camera_worker():
                         write_event("ACTIVITY_START", now_text)
                         print("Activity started:", now_text)
                     last_motion_time[0] = now
-
-                elif (
-                    state["session_active"]
-                    and now - last_motion_time[0] &gt;= INACTIVITY_SECONDS
-                ):
+                elif state["session_active"] and now - last_motion_time[0] >= INACTIVITY_SECONDS:
                     start_text = state["session_start"]
                     start_dt = datetime.fromisoformat(start_text)
                     end_dt = datetime.now().astimezone()
                     duration = max(0, int((end_dt - start_dt).total_seconds()))
                     end_text = end_dt.isoformat(timespec="seconds")
-                    write_event(
-                        "ACTIVITY_END", start_text, end_text, duration
-                    )
-                    print("Activity ended:", end_text, "Duration:", duration, "seconds")
+                    write_event("ACTIVITY_END", start_text, end_text, duration)
+                    print("Activity ended:", end_text, "Duration:", duration)
                     state["session_active"] = False
                     state["session_start"] = None
-
             previous = gray
             time.sleep(0.05)
     finally:
         camera.release()
 
-# ---------------- WEB DASHBOARD ----------------
 PAGE = """
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-&lt;meta charset="UTF-8"&gt;
-&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
-&lt;title&gt;Smart Room Activity Logger&lt;/title&gt;
-&lt;style&gt;
-body { font-family: Arial, sans-serif; max-width:900px; margin:30px auto;
-       padding:0 16px; background:#f3f5f8; color:#202938; }
-h1 { font-size:26px; }
-.card { background:white; padding:18px; margin:14px 0; border-radius:12px;
-        box-shadow:0 2px 8px #0001; }
-.value { font-size:22px; font-weight:bold; }
-small { color:#596579; }
-table { width:100%; border-collapse:collapse; }
-th, td { padding:10px 6px; border-bottom:1px solid #ddd; text-align:left;
-         font-size:14px; overflow-wrap:anywhere; }
-&lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;Smart Room Occupancy &amp;amp; Activity Logger&lt;/h1&gt;
-&lt;p&gt;Local motion monitoring. Video is not recorded or saved.&lt;/p&gt;
-&lt;div class="card"&gt;&lt;small&gt;Camera / System Status&lt;/small&gt;&lt;div class="value" id="system"&gt;Loading...&lt;/div&gt;&lt;/div&gt;
-&lt;div class="card"&gt;&lt;small&gt;Current Motion&lt;/small&gt;&lt;div class="value" id="motion"&gt;Loading...&lt;/div&gt;&lt;/div&gt;
-&lt;div class="card"&gt;&lt;small&gt;Activity Session&lt;/small&gt;&lt;div class="value" id="session"&gt;Loading...&lt;/div&gt;&lt;p id="start"&gt;&lt;/p&gt;&lt;/div&gt;
-&lt;div class="card"&gt;&lt;small&gt;Last Detected Motion&lt;/small&gt;&lt;div id="last"&gt;None yet&lt;/div&gt;&lt;/div&gt;
-&lt;div class="card"&gt;&lt;h3&gt;Recent Activity Events&lt;/h3&gt;&lt;div style="overflow-x:auto"&gt;
-&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Event&lt;/th&gt;&lt;th&gt;Start&lt;/th&gt;&lt;th&gt;End&lt;/th&gt;&lt;th&gt;Duration (s)&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
-&lt;tbody id="events"&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;small&gt;Refreshes every 3 seconds.&lt;/small&gt;&lt;/p&gt;
-&lt;script&gt;
-async function updateDashboard() {
-  try {
-    const response = await fetch('/api/status');
-    const data = await response.json();
-    document.getElementById('system').textContent = data.status;
-    document.getElementById('motion').textContent = data.motion
-      ? 'Motion detected' : 'No motion detected';
-    document.getElementById('session').textContent = data.session_active
-      ? 'Activity ongoing' : 'Inactive';
-    document.getElementById('start').textContent = data.session_start
-      ? 'Started: ' + data.session_start : '';
-    document.getElementById('last').textContent = data.last_motion || 'None yet';
-    const eventResponse = await fetch('/api/events');
-    const events = await eventResponse.json();
-    const body = document.getElementById('events');
-    body.replaceChildren();
-    events.forEach(event =&gt; {
-      const row = document.createElement('tr');
-      [event.event, event.start_time, event.end_time,
-       event.duration_seconds].forEach(value =&gt; {
-        const cell = document.createElement('td');
-        cell.textContent = value || '-';
-        row.appendChild(cell);
-      });
-      body.appendChild(row);
-    });
-  } catch (error) {
-    document.getElementById('system').textContent = 'Dashboard connection error';
-  }
+&lt;!DOCTYPE html>
+&lt;html>&lt;head>&lt;title>Smart Room Activity Logger&lt;/title>&lt;/head>&lt;body>
+&lt;h1>Smart Room Occupancy &amp; Activity Logger&lt;/h1>
+&lt;p>Local motion monitoring. Video is not recorded or saved.&lt;/p>
+&lt;div id="status">Loading...&lt;/div>
+&lt;pre id="events">&lt;/pre>
+&lt;script>
+async function updateDashboard(){
+  const s=await (await fetch('/api/status')).json();
+  const e=await (await fetch('/api/events')).json();
+  document.getElementById('status').textContent=JSON.stringify(s,null,2);
+  document.getElementById('events').textContent=JSON.stringify(e,null,2);
 }
 updateDashboard();
-setInterval(updateDashboard, 3000);
-&lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;
+setInterval(updateDashboard,3000);
+&lt;/script>
+&lt;/body>&lt;/html>
 """
 
 @app.route("/")
@@ -1307,25 +1186,19 @@ def api_status():
 
 @app.route("/api/events")
 def api_events():
-    prepare_log()
     with LOG_FILE.open("r", newline="") as file:
         rows = list(csv.DictReader(file))
     return jsonify(rows[-20:][::-1])
 
-# ---------------- MAIN PROGRAM ----------------
 if __name__ == "__main__":
     prepare_log()
     worker = threading.Thread(target=camera_worker, daemon=True)
     worker.start()
-    app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)</script>
-<script>
-const program=document.getElementById("program").textContent.trim();
-const lines=program.split("\n");
-const steps=[{"title":"Imports","search":"import csv","text":"CSV stores timestamped activity events, while OpenCV analyzes webcam frames and Flask serves the dashboard."},{"title":"Configuration","search":"CAMERA_INDEX = 0","text":"Set the USB video device, resolution, 60-second inactivity window, and motion-pixel threshold."},{"title":"Record events","search":"def write_event","text":"Append ACTIVITY_START and ACTIVITY_END records to activity_log.csv."},{"title":"Initialize camera","search":"def camera_worker","text":"Read 320×240 frames from the USB webcam without saving a video."},{"title":"Detect motion","search":"difference = cv2.absdiff","text":"Compare consecutive blurred grayscale frames and count changed pixels."},{"title":"Start activity","search":"if detected:","text":"Create an activity session when thresholded movement first occurs."},{"title":"End activity","search":"elif (","text":"After 60 seconds without motion, calculate elapsed time and log the end of the session."},{"title":"Dashboard HTML","search":"PAGE =","text":"Build a Flask dashboard with status, motion, last event, and activity history."},{"title":"API endpoints","search":"@app.route(\"/api/status\")","text":"Return the current activity state for the dashboard's automatic refresh."},{"title":"Start services","search":"if __name__ == \"__main__\":","text":"Create the CSV, start motion detection on a thread, and run Flask on port 5000."}];
-function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function displayCode(){document.getElementById("code-lines").innerHTML=lines.map((s,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeHtml(s)+'</span></span>').join("");}
-function showStep(i){const s=steps[i];document.querySelectorAll(".step").forEach((b,k)=>b.classList.toggle("active",k===i));document.querySelectorAll(".code-line").forEach(e=>e.classList.remove("selected"));const n=lines.findIndex(l=>l.trim().startsWith(s.search));if(n>=0){let end=n;const indent=lines[n].search(/\S/);if(lines[n].trim().endsWith(":")){for(let k=n+1;k<lines.length;k++){if(lines[k].trim()&&lines[k].search(/\S/)<=indent){end=k-1;break;}end=k;}}else end=Math.min(n+2,lines.length-1);for(let k=n;k<=end;k++)document.getElementById("line-"+(k+1))?.classList.add("selected");const line=document.getElementById("line-"+(n+1)),panel=document.getElementById("code-body");if(line&&panel)panel.scrollTo({top:line.offsetTop-panel.offsetTop-20,behavior:"smooth"});}document.getElementById("explanation").innerHTML="<h3>"+(i+1)+". "+s.title+"</h3><p>"+s.text+"</p>";}
-async function copyCode(){const b=document.querySelector(".code-top .copy-button");try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const a=document.createElement("textarea");a.value=program;document.body.appendChild(a);a.select();if(!document.execCommand("copy"))throw Error("Copy failed");a.remove();}b.textContent="Copied!";}catch(e){b.textContent="Copy failed";}setTimeout(()=>b.textContent="Copy Code",1500);}
-displayCode();showStep(0);
-</script>
-</body></html>
+    app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)</script><script>const program=document.getElementById("python-source").textContent.trim();const lines=program.split("\n");const steps=[{"label":"Imports and configuration","start":"#!/usr/bin/env python3","end":"last_motion_time ="},{"label":"Timestamp and CSV setup","start":"def timestamp():","end":"def camera_worker():"},{"label":"Open USB camera","start":"def camera_worker():","end":"if not camera.isOpened():"},{"label":"Prepare frame comparisons","start":"ok, frame = camera.read()","end":"previous = cv2.GaussianBlur"},{"label":"Detect image changes","start":"difference = cv2.absdiff","end":"detected = motion_pixels"},{"label":"Log activity start","start":"if detected:","end":"last_motion_time[0] = now"},{"label":"End inactive session","start":"elif state[\"session_active\"]","end":"state[\"session_start\"] = None"},{"label":"Dashboard HTML","start":"PAGE =","end":"@app.route(\"/\")"},{"label":"Flask status and events","start":"@app.route(\"/\")","end":"return jsonify(rows[-20:][::-1])"},{"label":"Start worker and web service","start":"if __name__ == \"__main__\":","end":"app.run("}];
+function escapeCode(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+document.getElementById("code-lines").innerHTML=lines.map((line,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeCode(line)+'</span></span>').join("");
+function findMarker(m,from=0){return lines.findIndex((line,i)=>i>=from&&line.trim().startsWith(m))}
+const ranges=steps.map(s=>{const a=findMarker(s.start),b=a<0?-1:findMarker(s.end,a);return {a,b,valid:a>=0&&b>=a}});
+function showStep(i){document.querySelectorAll(".step").forEach((x,j)=>x.classList.toggle("active",i===j));document.querySelectorAll(".code-line").forEach(x=>x.classList.remove("selected"));const r=ranges[i],target=document.getElementById("explanation");target.textContent=r.valid?steps[i].label+" — lines "+(r.a+1)+" to "+(r.b+1):"Source marker validation failed; review the source.";if(!r.valid)return;for(let j=r.a;j<=r.b;j++)document.getElementById("line-"+(j+1)).classList.add("selected");const panel=document.getElementById("code-body"),first=document.getElementById("line-"+(r.a+1));panel.scrollTo({top:panel.scrollTop+first.getBoundingClientRect().top-panel.getBoundingClientRect().top-15,behavior:"smooth"})}
+async function copyCode(){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const a=document.createElement("textarea");a.value=program;document.body.appendChild(a);a.select();if(!document.execCommand("copy"))throw Error("Clipboard unavailable");a.remove()}document.querySelector(".copy-button").textContent="Copied!"}catch(e){document.querySelector(".copy-button").textContent="Copy failed"}}
+showStep(0);</script></body></html>
