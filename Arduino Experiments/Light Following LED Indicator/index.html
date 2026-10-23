@@ -1,27 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino Experiment - Light Following LED Indicator</title>
-
+<title>Light Following LED Indicator</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+/* =====================================
+   GENERAL PAGE DESIGN
+===================================== */
+* {
+    box-sizing: border-box;
 }
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+html {
+    scroll-behavior: smooth;
+}
 
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -32,8 +39,6 @@ body{
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -47,8 +52,6 @@ body{
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -66,8 +69,6 @@ body{
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -75,26 +76,15 @@ body{
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -110,15 +100,13 @@ body{
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -136,21 +124,498 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   STICKY NAVIGATION
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
-@media (max-width: 900px) {
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 90px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    margin-top: 22px;
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    background: white;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    transition: .2s ease;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,.08);
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 18px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =====================================
+   TABLES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* =====================================
+   NOTES AND IMAGES
+===================================== */
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 10px;
+}
+
+.output-box {
+    margin: 14px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-step {
+    padding: 6px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px,1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.state-card {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+    text-align: center;
+}
+
+.state-card strong {
+    display: block;
+    color: #1e3a8a;
+    font-size: 19px;
+    margin-bottom: 6px;
+}
+
+/* =====================================
+   INTERACTIVE CODE EXPLORER
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid white;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    padding: 16px 0;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line:hover {
+    background: #f8fbff;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+}
+
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    background: #f8fbff;
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.guide details p,
+.guide details li {
+    color: #526875;
+    font-size: 15px;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    color: #234e87;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
-@media (max-width: 600px) {
+    .code-body {
+        height: 450px;
+    }
+}
 
+@media(max-width:600px) {
     .header {
         padding: 15px 0 0;
-        min-height: 230px;
     }
 
     .header-logo {
@@ -184,8 +649,8 @@ body{
 
     .header-nav-btn {
         padding: 8px 7px;
-        font-size: 11px;
         min-height: 36px;
+        font-size: 11px;
     }
 
     .home-icon-btn {
@@ -193,234 +658,32 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 21px 18px;
     }
-}
 
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
+    .steps {
+        grid-template-columns: 1fr;
+    }
 
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
-
-nav a:hover{
-    color:#2563eb;
-}
-
-.container{
-    width:90%;
-    max-width:950px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section p{
-    margin-bottom:10px;
-}
-
-ul,ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
-}
-
-.code-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 14px;
-    background:#1e293b;
-    color:white;
-    border-radius:8px 8px 0 0;
-}
-
-.copy-button{
-    border:0;
-    padding:7px 12px;
-    background:#2563eb;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-pre{
-    margin:0;
-    padding:20px;
-    overflow-x:auto;
-    background:#020617;
-    color:#e2e8f0;
-    border-radius:0 0 8px 8px;
-    font-family:Consolas,monospace;
-    font-size:14px;
-    line-height:1.7;
-}
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-top:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:#fff;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-    transition:box-shadow .2s,transform .2s;
-}
-
-.component-card:hover{
-    box-shadow:0 6px 15px rgba(0,0,0,.08);
-    transform:translateY(-2px);
-}
-
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-    line-height:1.5;
-}
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:#fff;
-    padding:10px;
-}
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
-}
-
-footer strong{
-    color:white;
-}
-
-@media(max-width:600px){
-    .header{padding:35px 15px}
-    .header h1{font-size:28px}
-    .container{width:92%}
-    .section{padding:21px 18px}
-    nav{gap:11px}
+    nav {
+        gap: 11px;
+    }
 }
 </style>
-
 </head>
 
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -428,26 +691,19 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
-        <p>Adjustable LED Dimmer</p>
+        <p>Light Following LED Indicator</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-                title="Back to Arduino Experiments"
-            >
+                title="Back">
                 &#8592; Back
             </a>
 
@@ -455,43 +711,38 @@ footer strong{
                 href="../../index.html"
                 class="header-nav-btn home-icon-btn"
                 title="Home"
-                aria-label="Home"
-            >
+                aria-label="Home">
+
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                    aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
+
             </a>
 
         </div>
-
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
 
         <div class="header-right-buttons">
 
             <a
                 href="../index.html"
-                class="header-nav-btn"
-            >
+                class="header-nav-btn">
                 Arduino
             </a>
 
             <a
                 href="../../ESP32 CAM Experiments/index.html"
-                class="header-nav-btn"
-            >
+                class="header-nav-btn">
                 ESP
             </a>
 
             <a
                 href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+                class="header-nav-btn">
                 R-Pi
             </a>
 
@@ -500,137 +751,1402 @@ footer strong{
     </div>
 
 </header>
+
+<!-- =====================================
+     SECTION NAVIGATION
+===================================== -->
 <nav>
-    <a href="../index.html">← Arduino Experiments</a>
+    <a href="../index.html">&#8592; Arduino Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
     <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Light Following LED Indicator.png"
+        alt="Light Following LED Indicator Thumbnail"
+        onerror="
+            this.style.display='none';
+            document.getElementById('thumbnail-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="thumbnail-placeholder"
+        class="note"
+        hidden>
+        Experiment thumbnail pending.
+        Add Light Following LED Indicator.png
+        to the Arduino Experiments folder.
+    </div>
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
+
     <h2>Aim</h2>
-    <p>To compare light intensity from the left and right sides using two LDR sensors and indicate the brighter side using LEDs.</p>
+
+    <p>
+        To build a Light Following LED Indicator
+        using Arduino UNO, two LDR sensors
+        and two LEDs.
+    </p>
+
+    <p>
+        The experiment compares light intensity
+        from the left and right sides
+        and switches ON the LED corresponding
+        to the side receiving more light.
+    </p>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
     <h2>About the Experiment</h2>
-    <p>Two LDR sensors detect light from the left and right sides.</p>
-    <p>Arduino compares both readings. The LED on the side receiving more light turns ON. If both sides have the same light level, both LEDs remain OFF.</p>
+
+    <p>
+        An LDR, or Light Dependent Resistor,
+        changes its resistance according
+        to the amount of light falling
+        on its surface.
+    </p>
+
+    <p>
+        When light intensity increases,
+        the resistance of a typical LDR
+        decreases.
+    </p>
+
+    <p>
+        This experiment uses two LDRs,
+        one for the left side and
+        one for the right side.
+    </p>
+
+    <p>
+        Each LDR forms a voltage divider
+        with a 10kΩ resistor.
+    </p>
+
+    <p>
+        Arduino measures the voltage
+        of the left divider through A1
+        and the right divider through A0.
+    </p>
+
+    <p>
+        The readings are compared
+        using conditional statements.
+    </p>
+
+    <p>
+        If the left reading is higher,
+        the left LED turns ON.
+    </p>
+
+    <p>
+        If the right reading is higher,
+        the right LED turns ON.
+    </p>
+
+    <p>
+        When the two digital readings
+        are exactly equal, both LEDs
+        remain OFF.
+    </p>
+
+    <p>
+        The readings are also printed
+        to the Serial Monitor
+        at 9600 baud.
+    </p>
+
+    <p>
+        The experiment introduces
+        analog sensing, voltage dividers,
+        comparison operators and
+        digital output control.
+    </p>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        <p>
+            With the specified wiring,
+            each LDR connects from 5V
+            to its analog input, while
+            the 10kΩ resistor connects
+            from that input to GND.
+        </p>
+
+        <p>
+            This configuration produces
+            a higher analog voltage
+            when the corresponding LDR
+            receives more light.
+        </p>
+
+        <p>
+            The code uses exact
+            equality for the balanced
+            condition. Small sensor
+            variations can cause
+            either LED to activate
+            even when both sides
+            appear similarly bright.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Arduino UNO.png" alt="Arduino UNO R3 (×1)">
+
+            <img
+                src="Arduino UNO.png"
+                alt="Arduino UNO R3">
+
             <h4>Arduino UNO R3 (×1)</h4>
-            <p>Main controller for comparing light readings.</p>
+
+            <p>
+                Main controller used
+                to compare the two
+                analog light readings
+                and control the LEDs.
+            </p>
+
         </div>
-    
 
         <div class="component-card">
-            <img src="LDR.png" alt="LDR (×2)">
+
+            <img
+                src="LDR.png"
+                alt="Light Dependent Resistor">
+
             <h4>LDR (×2)</h4>
-            <p>Detects light intensity.</p>
+
+            <p>
+                Detect light intensity
+                from the left
+                and right sides.
+            </p>
+
         </div>
-    
 
         <div class="component-card">
-            <img src="LED.png" alt="LED (×2)">
+
+            <img
+                src="LED.png"
+                alt="LED Indicators">
+
             <h4>LED (×2)</h4>
-            <p>Indicates the brighter side.</p>
+
+            <p>
+                Indicate whether
+                the left or right
+                sensor receives
+                more light.
+            </p>
+
         </div>
-    
 
         <div class="component-card">
-            <img src="10K ohm resistor.png" alt="10KΩ Resistor (×2)">
-            <h4>10KΩ Resistor (×2)</h4>
-            <p>Used with the LDR voltage divider.</p>
+
+            <img
+                src="10K ohm resistor.png"
+                alt="10K Ohm Resistor">
+
+            <h4>10kΩ Resistor (×2)</h4>
+
+            <p>
+                Forms a voltage divider
+                with each LDR.
+            </p>
+
         </div>
-    
 
         <div class="component-card">
-            <img src="220 ohm resistor.png" alt="220Ω Resistor (×2)">
+
+            <img
+                src="220 ohm resistor.png"
+                alt="220 Ohm Resistor">
+
             <h4>220Ω Resistor (×2)</h4>
-            <p>Limits current through the LEDs.</p>
+
+            <p>
+                Limits current
+                through each LED.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Breadboard.png" alt="Breadboard (×1)">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard">
+
             <h4>Breadboard (×1)</h4>
-            <p>Used to assemble the LDR and LED circuits.</p>
+
+            <p>
+                Used to assemble
+                the LDR voltage
+                dividers and LEDs.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Jumper Wires.png" alt="Jumper Wires">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires">
+
             <h4>Jumper Wires</h4>
-            <p>Used for electrical connections.</p>
+
+            <p>
+                Connect Arduino,
+                sensors, resistors
+                and LEDs.
+            </p>
+
         </div>
-    
+
     </div>
+
+    <div class="note">
+
+        <strong>Libraries Required:</strong>
+
+        <p>
+            No additional Arduino
+            library is required.
+        </p>
+
+        <p>
+            The original sketch
+            uses built-in Arduino
+            functions such as
+            analogRead(), pinMode(),
+            digitalWrite() and
+            Serial.print().
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
 <section class="section" id="connections">
+
     <h2>Circuit Connections</h2>
 
+    <h3>Left LDR Voltage Divider</h3>
+
     <div class="table-wrap">
+
         <table>
-            <thead><tr><th>Component</th><th>Connection</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+
             <tbody>
-                <tr><td>Left LDR</td><td>5V and A1</td></tr>
-                <tr><td>Left 10KΩ Resistor</td><td>A1 to GND</td></tr>
-                <tr><td>Right LDR</td><td>5V and A0</td></tr>
-                <tr><td>Right 10KΩ Resistor</td><td>A0 to GND</td></tr>
-                <tr><td>Left LED</td><td>D7 through 220Ω</td></tr>
-                <tr><td>Right LED</td><td>D8 through 220Ω</td></tr>
+                <tr>
+                    <td>Left LDR, first terminal</td>
+                    <td>Arduino 5V</td>
+                </tr>
+
+                <tr>
+                    <td>Left LDR, second terminal</td>
+                    <td>Arduino A1</td>
+                </tr>
+
+                <tr>
+                    <td>Left 10kΩ resistor</td>
+                    <td>Between A1 and GND</td>
+                </tr>
             </tbody>
         </table>
+
     </div>
+
+    <h3>Right LDR Voltage Divider</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Right LDR, first terminal</td>
+                    <td>Arduino 5V</td>
+                </tr>
+
+                <tr>
+                    <td>Right LDR, second terminal</td>
+                    <td>Arduino A0</td>
+                </tr>
+
+                <tr>
+                    <td>Right 10kΩ resistor</td>
+                    <td>Between A0 and GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>LED Connections</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>LED</th>
+                    <th>Arduino Connection</th>
+                    <th>Ground Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Left LED</td>
+                    <td>D7 through 220Ω resistor</td>
+                    <td>LED cathode to GND</td>
+                </tr>
+
+                <tr>
+                    <td>Right LED</td>
+                    <td>D8 through 220Ω resistor</td>
+                    <td>LED cathode to GND</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Complete Arduino Pin Summary</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>Arduino UNO Pin</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Left LDR analog output</td>
+                    <td>A1</td>
+                </tr>
+                <tr>
+                    <td>Right LDR analog output</td>
+                    <td>A0</td>
+                </tr>
+                <tr>
+                    <td>Left LED</td>
+                    <td>D7</td>
+                </tr>
+                <tr>
+                    <td>Right LED</td>
+                    <td>D8</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Voltage Divider Wiring:</strong>
+
+        <p>
+            Each LDR must form
+            a complete voltage divider
+            with its 10kΩ resistor.
+        </p>
+
+        <p>
+            The analog input connects
+            to the junction between
+            the LDR and resistor.
+        </p>
+
+        <p>
+            Do not connect the
+            analog input to a floating
+            LDR terminal without
+            the pull-down resistor.
+        </p>
+
+        <p>
+            Both LED cathodes
+            must connect to GND,
+            and each LED requires
+            its own 220Ω
+            current-limiting resistor.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Light Following LED Indicator Circuit.png"
+        alt="Light Following LED Indicator Circuit Diagram"
+        class="circuit-img"
+        onerror="
+            this.style.display='none';
+            document.getElementById('circuit-placeholder').hidden=false;
+        "
+    >
+
+    <div
+        id="circuit-placeholder"
+        class="note"
+        hidden>
+        Circuit diagram image pending.
+        Add the verified PNG named
+        Light Following LED Indicator Circuit.png
+        inside this experiment folder.
+    </div>
+
+</section>
+
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
 
     <div class="flow">
-        Arduino reads both LDRs<br>↓<br>
-        Compare Left and Right readings<br>↓<br>
-        Left is brighter → Left LED ON<br>
-        Right is brighter → Right LED ON<br>
-        Equal light → Both LEDs OFF
+
+        <div class="flow-step">
+            Arduino UNO Starts
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Configure Left and Right LEDs
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Initialize Serial Monitor at 9600 Baud
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Read Left LDR on A1
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Read Right LDR on A0
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Display Both Readings in Serial Monitor
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Compare Left and Right Values
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Left Higher → Left LED ON
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Right Higher → Right LED ON
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Exactly Equal → Both LEDs OFF
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Wait 200 Milliseconds
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Repeat Monitoring
+        </div>
+
     </div>
+
+    <h3>LDR Operation</h3>
+
+    <p>
+        Each LDR responds
+        to light by changing
+        its resistance.
+    </p>
+
+    <p>
+        When more light
+        falls on an LDR,
+        its resistance
+        typically decreases.
+    </p>
+
+    <p>
+        The LDR and 10kΩ
+        resistor produce
+        a voltage that
+        changes with
+        light intensity.
+    </p>
+
+    <h3>Analog Readings</h3>
+
+    <p>
+        Arduino uses analogRead()
+        to measure each
+        voltage divider.
+    </p>
+
+    <p>
+        The Arduino UNO
+        analog-to-digital
+        converter produces
+        readings from 0 to 1023.
+    </p>
+
+    <p>
+        The leftLight variable
+        stores the reading
+        from A1.
+    </p>
+
+    <p>
+        The rightLight variable
+        stores the reading
+        from A0.
+    </p>
+
+    <h3>Comparing Light Levels</h3>
+
+    <p>
+        Arduino compares
+        the two readings
+        using greater-than
+        conditions.
+    </p>
+
+    <p>
+        When leftLight is
+        greater than rightLight,
+        D7 becomes HIGH
+        and D8 becomes LOW.
+    </p>
+
+    <p>
+        When rightLight is
+        greater than leftLight,
+        D8 becomes HIGH
+        and D7 becomes LOW.
+    </p>
+
+    <p>
+        When both values
+        are exactly equal,
+        both outputs
+        become LOW.
+    </p>
+
+    <h3>Voltage Divider Formula</h3>
+
+    <div class="note">
+
+        <strong>Approximate Divider Relationship:</strong>
+
+        <p>
+            Vout = 5V ×
+            (10kΩ / (LDR Resistance + 10kΩ))
+        </p>
+
+        <p>
+            With the LDR
+            connected to 5V
+            and the 10kΩ
+            resistor to GND,
+            a lower LDR
+            resistance produces
+            a higher output voltage.
+        </p>
+
+    </div>
+
+    <h3>Serial Monitor</h3>
+
+    <p>
+        The program prints
+        both analog values
+        at 9600 baud.
+    </p>
+
+    <p>
+        Students can observe
+        how the sensor readings
+        change when a torch
+        or other light source
+        is moved between
+        the two LDRs.
+    </p>
+
+    <h3>Important Program Behavior</h3>
+
+    <p>
+        The original program
+        compares raw sensor
+        values directly.
+    </p>
+
+    <p>
+        It does not use
+        a difference threshold
+        or sensor calibration.
+    </p>
+
+    <p>
+        As a result, small
+        differences caused by
+        component tolerances
+        or electrical noise
+        may switch the
+        indicated side.
+    </p>
+
+    <div class="state-grid">
+
+        <div class="state-card">
+            <strong>A1</strong>
+            Left LDR input
+        </div>
+
+        <div class="state-card">
+            <strong>A0</strong>
+            Right LDR input
+        </div>
+
+        <div class="state-card">
+            <strong>D7</strong>
+            Left LED output
+        </div>
+
+        <div class="state-card">
+            <strong>D8</strong>
+            Right LED output
+        </div>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
 
     <ol>
-        <li>Connect the left LDR circuit to A1.</li>
-        <li>Connect the right LDR circuit to A0.</li>
-        <li>Connect the left LED to D7 through a 220Ω resistor.</li>
-        <li>Connect the right LED to D8 through a 220Ω resistor.</li>
-        <li>Upload the Arduino code.</li>
-        <li>Open Serial Monitor at 9600 baud.</li>
-        <li>Change the light falling on each LDR and observe the LEDs.</li>
+
+        <li>
+            Arrange Arduino UNO R3,
+            two LDRs, two LEDs,
+            two 10kΩ resistors,
+            two 220Ω resistors,
+            a breadboard
+            and jumper wires.
+        </li>
+
+        <li>
+            Place the two LDR
+            sensors on the
+            breadboard.
+        </li>
+
+        <li>
+            Position one LDR
+            to represent the
+            left direction.
+        </li>
+
+        <li>
+            Position the other
+            LDR to represent
+            the right direction.
+        </li>
+
+        <li>
+            Connect one terminal
+            of the left LDR
+            to Arduino 5V.
+        </li>
+
+        <li>
+            Connect its other
+            terminal to A1.
+        </li>
+
+        <li>
+            Connect a 10kΩ
+            resistor between
+            A1 and GND.
+        </li>
+
+        <li>
+            Connect one terminal
+            of the right LDR
+            to Arduino 5V.
+        </li>
+
+        <li>
+            Connect its other
+            terminal to A0.
+        </li>
+
+        <li>
+            Connect another
+            10kΩ resistor
+            between A0
+            and GND.
+        </li>
+
+        <li>
+            Connect the left
+            LED anode to D7
+            through a 220Ω
+            resistor.
+        </li>
+
+        <li>
+            Connect the left
+            LED cathode to GND.
+        </li>
+
+        <li>
+            Connect the right
+            LED anode to D8
+            through a separate
+            220Ω resistor.
+        </li>
+
+        <li>
+            Connect the right
+            LED cathode to GND.
+        </li>
+
+        <li>
+            Verify the complete
+            circuit wiring.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Create a sketch
+            named
+            Light_Following_LED_Indicator.ino.
+        </li>
+
+        <li>
+            Copy the original
+            Arduino program
+            from Explore the Code.
+        </li>
+
+        <li>
+            Select Arduino Uno
+            and the correct
+            communication port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 9600 baud.
+        </li>
+
+        <li>
+            Shine more light
+            on the left LDR.
+        </li>
+
+        <li>
+            Observe the left LED
+            turning ON.
+        </li>
+
+        <li>
+            Shine more light
+            on the right LDR.
+        </li>
+
+        <li>
+            Observe the right LED
+            turning ON.
+        </li>
+
+        <li>
+            Try to provide
+            similar illumination
+            to both LDRs.
+        </li>
+
+        <li>
+            Observe the changes
+            in sensor readings
+            and LED selection.
+        </li>
+
+        <li>
+            Record the results
+            and compare
+            the analog values.
+        </li>
+
     </ol>
+
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-    <h2>Arduino Code</h2>
 
-    <div class="code-header">
-        <span>Light_Following_LED_Indicator.ino</span>
-        <button class="copy-button" onclick="copyCode()">Copy Code</button>
+    <p class="eyebrow">
+        Arduino Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Light Following LED Indicator ·
+        Select a step to highlight
+        the correct section of
+        the original Arduino program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    Light_Following_LED_Indicator.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()">
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Each step highlights
+                matching Arduino
+                source lines.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                id="explanation"
+                class="explanation"
+                aria-live="polite"></div>
+
+            <details>
+                <summary>
+                    Explore More: LDR Sensor
+                </summary>
+
+                <p>
+                    An LDR changes
+                    resistance according
+                    to light intensity.
+                </p>
+
+                <p>
+                    The Arduino reads
+                    the resulting
+                    divider voltage
+                    through its
+                    analog input.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Voltage Divider
+                </summary>
+
+                <p>
+                    Each LDR connects
+                    to 5V, and
+                    a 10kΩ resistor
+                    connects to GND.
+                </p>
+
+                <p>
+                    The junction
+                    between them
+                    supplies an
+                    analog voltage
+                    to Arduino.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: analogRead()
+                </summary>
+
+                <p>
+                    analogRead()
+                    converts an
+                    analog voltage
+                    into a numerical
+                    value from
+                    0 to 1023
+                    on Arduino UNO.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Comparison
+                </summary>
+
+                <p>
+                    The program uses
+                    greater-than
+                    conditions to
+                    compare the
+                    two sensor readings.
+                </p>
+
+                <p>
+                    Only the LED
+                    corresponding
+                    to the larger
+                    reading turns ON.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Sensor Differences
+                </summary>
+
+                <p>
+                    Two LDRs may
+                    not produce
+                    identical readings
+                    under the same
+                    illumination.
+                </p>
+
+                <p>
+                    The original
+                    code does not
+                    use a tolerance
+                    threshold.
+                </p>
+
+                <p>
+                    Small reading
+                    differences may
+                    produce frequent
+                    LED changes.
+                </p>
+
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>Which Arduino pin reads the left LDR?</li>
+                    <li>Which Arduino pin reads the right LDR?</li>
+                    <li>What resistor value is used in each voltage divider?</li>
+                    <li>Which pins control the LEDs?</li>
+                    <li>What happens when leftLight is greater than rightLight?</li>
+                    <li>What happens when both readings are exactly equal?</li>
+                    <li>What baud rate is used?</li>
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    style="border:1px solid #bfdbfe"
+                    onclick="toggleAnswers()">
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>A1</li>
+                        <li>A0</li>
+                        <li>10kΩ</li>
+                        <li>D7 and D8</li>
+                        <li>Left LED ON, right LED OFF.</li>
+                        <li>Both LEDs OFF.</li>
+                        <li>9600 baud</li>
+                    </ol>
+                </div>
+
+            </details>
+
+        </article>
+
     </div>
 
-<pre><code id="arduinoCode">// LDR pins
+    <p class="tip">
+
+        <strong>Try It:</strong>
+
+        Illuminate the left
+        LDR, then the right
+        LDR, and compare
+        the sensor readings
+        shown in Serial Monitor.
+
+    </p>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Left Side Receives More Light</h3>
+
+    <p>
+        If leftLight
+        is greater than
+        rightLight,
+        the left LED
+        turns ON.
+    </p>
+
+    <div class="output-box">
+<pre>Left: 820  Right: 350</pre>
+    </div>
+
+    <p>
+        Left LED: ON
+    </p>
+
+    <p>
+        Right LED: OFF
+    </p>
+
+    <h3>Right Side Receives More Light</h3>
+
+    <p>
+        If rightLight
+        is greater than
+        leftLight,
+        the right LED
+        turns ON.
+    </p>
+
+    <div class="output-box">
+<pre>Left: 270  Right: 790</pre>
+    </div>
+
+    <p>
+        Left LED: OFF
+    </p>
+
+    <p>
+        Right LED: ON
+    </p>
+
+    <h3>Equal Analog Readings</h3>
+
+    <p>
+        If the two ADC
+        readings are
+        exactly equal,
+        both LEDs
+        remain OFF.
+    </p>
+
+    <div class="output-box">
+<pre>Left: 510  Right: 510</pre>
+    </div>
+
+    <p>
+        Left LED: OFF
+    </p>
+
+    <p>
+        Right LED: OFF
+    </p>
+
+    <h3>Condition Table</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Left LED</th>
+                    <th>Right LED</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Left reading greater than right</td>
+                    <td>ON</td>
+                    <td>OFF</td>
+                </tr>
+
+                <tr>
+                    <td>Right reading greater than left</td>
+                    <td>OFF</td>
+                    <td>ON</td>
+                </tr>
+
+                <tr>
+                    <td>Exactly equal readings</td>
+                    <td>OFF</td>
+                    <td>OFF</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Example Serial Monitor Output</h3>
+
+    <div class="output-box">
+<pre>Left: 450  Right: 620
+Left: 520  Right: 590
+Left: 680  Right: 440
+Left: 790  Right: 330</pre>
+    </div>
+
+    <div class="note">
+
+        <strong>Expected Output Notes:</strong>
+
+        <p>
+            The example ADC
+            values are illustrative.
+            Actual readings depend
+            on ambient light,
+            LDR characteristics
+            and circuit wiring.
+        </p>
+
+        <p>
+            The code reports
+            sensor values
+            approximately every
+            200 milliseconds.
+        </p>
+
+        <p>
+            The original sketch
+            does not print LED
+            status labels in
+            Serial Monitor;
+            it prints only
+            the two analog values.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Light Following LED
+        Indicator experiment
+        demonstrates comparison
+        of light intensity
+        from two directions.
+    </p>
+
+    <p>
+        Arduino UNO reads
+        two LDR-based voltage
+        dividers and switches
+        ON the LED corresponding
+        to the sensor producing
+        the higher analog value.
+    </p>
+
+    <p>
+        When both readings
+        are exactly equal,
+        both LEDs remain OFF.
+    </p>
+
+    <p>
+        The experiment
+        illustrates light
+        sensing, analog input,
+        conditional decisions
+        and LED indication.
+    </p>
+
+</section>
+
+<!-- =====================================
+     11. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>How an LDR responds to changes in light.</li>
+        <li>How to create an LDR voltage divider.</li>
+        <li>Using 10kΩ resistors in sensor circuits.</li>
+        <li>Reading analog signals with Arduino UNO.</li>
+        <li>Understanding the ADC range from 0 to 1023.</li>
+        <li>Connecting LDRs to analog pins A0 and A1.</li>
+        <li>Using analogRead() for sensor values.</li>
+        <li>Storing analog readings in integer variables.</li>
+        <li>Comparing sensor readings using greater-than conditions.</li>
+        <li>Using if, else if and else.</li>
+        <li>Controlling two LEDs with digitalWrite().</li>
+        <li>Using 220Ω resistors for LED current limiting.</li>
+        <li>Using Serial Monitor to observe light sensor readings.</li>
+        <li>Understanding Serial.begin(9600).</li>
+        <li>Recognizing small differences between sensor readings.</li>
+        <li>Understanding delay(200).</li>
+        <li>Creating a light-direction indicator.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>Light Following LED Indicator</div>
+
+</footer>
+
+<!-- =====================================
+     COMPLETE ORIGINAL ARDUINO PROGRAM
+===================================== -->
+<script type="text/plain" id="arduino-program">
+// LDR pins
 int leftLDR = A1;
 int rightLDR = A0;
 
@@ -660,14 +2176,14 @@ void loop()
   Serial.println(rightLight);
 
   // More light on left side
-  if (leftLight &gt; rightLight)
+  if (leftLight > rightLight)
   {
     digitalWrite(leftLED, HIGH);
     digitalWrite(rightLED, LOW);
   }
 
   // More light on right side
-  else if (rightLight &gt; leftLight)
+  else if (rightLight > leftLight)
   {
     digitalWrite(leftLED, LOW);
     digitalWrite(rightLED, HIGH);
@@ -681,53 +2197,425 @@ void loop()
   }
 
   delay(200);
-}</code></pre>
-
-</section>
-
-<section class="section">
-    <h2>Expected Output</h2>
-
-    <p>If the left LDR senses more light, the left LED turns ON. If the right LDR senses more light, the right LED turns ON. If both readings are equal, both LEDs remain OFF.</p>
-</section>
-
-<section class="section" id="result">
-    <h2>Result</h2>
-
-    <p>The Light Following LED Indicator experiment compares light from two directions and indicates the brighter side using LEDs.</p>
-</section>
-
-<section class="section">
-    <h2>What You Learn</h2>
-
-    <ul>
-        <li>How an LDR senses light.</li>
-        <li>How to read analog values.</li>
-        <li>How to compare two sensor readings.</li>
-        <li>How to control LEDs based on sensor input.</li>
-        <li>How to observe values in Serial Monitor.</li>
-    </ul>
-</section>
-
-</main>
-
-<footer>
-    <strong>Arduino Experiment</strong><br>
-    Light Following LED Indicator
-</footer>
-
-<script>
-function copyCode(){
-    const code=document.getElementById("arduinoCode").innerText;
-    navigator.clipboard.writeText(code);
-
-    const button=document.querySelector(".copy-button");
-    button.innerText="Copied!";
-
-    setTimeout(function(){
-        button.innerText="Copy Code";
-    },1500);
 }
+</script>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
+<script>
+
+/* =====================================
+   READ ORIGINAL ARDUINO SOURCE
+===================================== */
+const program = document
+    .getElementById("arduino-program")
+    .textContent
+    .trim();
+
+const lines = program.split("\n");
+
+/* =====================================
+   TEN CODE EXPLANATION STEPS
+===================================== */
+const steps = [
+
+    {
+        title: "Define left and right LDR pins",
+        start: "// LDR pins",
+        end: "int rightLDR = A0;",
+        text:
+            "The program assigns A1 to the " +
+            "left LDR and A0 to the right LDR. " +
+            "These are Arduino analog inputs."
+    },
+
+    {
+        title: "Define left and right LED pins",
+        start: "// LED pins",
+        end: "int rightLED = 8;",
+        text:
+            "The left LED is connected to D7 " +
+            "and the right LED to D8."
+    },
+
+    {
+        title: "Configure LED outputs",
+        start: "void setup()",
+        end: "pinMode(rightLED, OUTPUT);",
+        text:
+            "setup() configures both LED pins " +
+            "as digital outputs using pinMode()."
+    },
+
+    {
+        title: "Initialize Serial Monitor",
+        start: "Serial.begin(9600);",
+        end: "Serial.begin(9600);",
+        text:
+            "Serial communication starts at " +
+            "9600 baud so the sensor readings " +
+            "can be viewed in Serial Monitor."
+    },
+
+    {
+        title: "Read both LDR sensors",
+        start: "// Read both LDR sensors",
+        end: "int rightLight = analogRead(rightLDR);",
+        text:
+            "analogRead() obtains values from " +
+            "both LDR voltage dividers. " +
+            "The values are stored in " +
+            "leftLight and rightLight."
+    },
+
+    {
+        title: "Print sensor readings",
+        start: "// Show readings",
+        end: "Serial.println(rightLight);",
+        text:
+            "The sketch prints the left and " +
+            "right analog values on one line " +
+            "in Serial Monitor."
+    },
+
+    {
+        title: "Switch left LED ON",
+        start: "// More light on left side",
+        end: "digitalWrite(rightLED, LOW);",
+        text:
+            "If leftLight is greater than " +
+            "rightLight, the left LED turns ON " +
+            "and the right LED turns OFF."
+    },
+
+    {
+        title: "Switch right LED ON",
+        start: "// More light on right side",
+        end: "digitalWrite(rightLED, HIGH);",
+        text:
+            "If rightLight is greater than " +
+            "leftLight, the right LED turns ON " +
+            "and the left LED turns OFF."
+    },
+
+    {
+        title: "Handle equal light readings",
+        start: "// Same light on both sides",
+        end: "digitalWrite(rightLED, LOW);",
+        text:
+            "When the two readings are exactly " +
+            "equal, the else branch turns " +
+            "both LEDs OFF.",
+        after: "// Same light on both sides"
+    },
+
+    {
+        title: "Wait before next reading",
+        start: "delay(200);",
+        end: "delay(200);",
+        text:
+            "The program waits 200 milliseconds " +
+            "before continuing with the next " +
+            "set of LDR readings."
+    }
+
+];
+
+/* =====================================
+   ESCAPE HTML CHARACTERS
+===================================== */
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* =====================================
+   DISPLAY CODE WITH LINE NUMBERS
+===================================== */
+function displayCode() {
+
+    document.getElementById("code-lines").innerHTML =
+        lines.map(function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+
+        }).join("");
+}
+
+/* =====================================
+   FIND EXACT SOURCE LINE
+===================================== */
+function findLine(marker, startIndex = 0) {
+
+    for (let i = startIndex; i < lines.length; i++) {
+
+        if (lines[i].trim() === marker) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+/* =====================================
+   VALIDATE HIGHLIGHT RANGES
+===================================== */
+function validateSteps() {
+
+    return steps.map(function(step, index) {
+
+        let from = 0;
+
+        if (step.after) {
+
+            const anchor = findLine(step.after);
+
+            if (anchor < 0) {
+                return {
+                    index: index,
+                    valid: false
+                };
+            }
+
+            from = anchor;
+        }
+
+        const start = findLine(step.start, from);
+
+        const end = start >= 0
+            ? findLine(step.end, start)
+            : -1;
+
+        return {
+            index: index,
+            start: start,
+            end: end,
+            valid: start >= 0 && end >= start
+        };
+
+    });
+}
+
+const highlightRanges = validateSteps();
+
+/* =====================================
+   CREATE STEP BUTTONS
+===================================== */
+function createStepButtons() {
+
+    const container = document
+        .getElementById("steps-list");
+
+    steps.forEach(function(step, index) {
+
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "step";
+
+        const number = document.createElement("span");
+
+        number.className = "step-number";
+        number.textContent =
+            String(index + 1).padStart(2, "0");
+
+        const label = document.createElement("span");
+
+        label.textContent = step.title;
+
+        button.append(number, label);
+
+        button.addEventListener(
+            "click",
+            function() {
+                showStep(index);
+            }
+        );
+
+        container.appendChild(button);
+    });
+}
+
+/* =====================================
+   HIGHLIGHT CORRECT CODE SECTION
+===================================== */
+function showStep(index) {
+
+    const step = steps[index];
+
+    document.querySelectorAll(".step")
+        .forEach(function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        });
+
+    document.querySelectorAll(".code-line")
+        .forEach(function(line) {
+
+            line.classList.remove("selected");
+        });
+
+    const range = highlightRanges[index];
+
+    const explanation = document
+        .getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    if (!range || !range.valid) {
+
+        paragraph.textContent =
+            "Highlight verification failed: " +
+            "matching source lines were not found.";
+
+        explanation.append(heading, paragraph);
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const selected = document
+            .getElementById("line-" + (i + 1));
+
+        if (selected) {
+            selected.classList.add("selected");
+        }
+    }
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+
+    /* Scroll only the code panel */
+    const firstLine = document.getElementById(
+        "line-" + (range.start + 1)
+    );
+
+    const codeBody = document
+        .getElementById("code-body");
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+}
+
+/* =====================================
+   COPY COMPLETE ORIGINAL CODE
+===================================== */
+async function copyCode() {
+
+    const button = document.querySelector(
+        ".code-top .copy-button"
+    );
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallbackCopy() {
+
+        const textarea = document.createElement("textarea");
+
+        textarea.value = program;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+
+        document.body.appendChild(textarea);
+
+        textarea.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch (error) {
+            success = false;
+        }
+
+        textarea.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+        try {
+            await navigator.clipboard.writeText(program);
+            copied();
+        } catch (error) {
+            fallbackCopy();
+        }
+
+    } else {
+        fallbackCopy();
+    }
+}
+
+/* =====================================
+   SHOW OR HIDE QUIZ ANSWERS
+===================================== */
+function toggleAnswers() {
+
+    const answers = document
+        .getElementById("quiz-answers");
+
+    answers.hidden = !answers.hidden;
+}
+
+/* =====================================
+   INITIALIZE EXPLORER
+===================================== */
+displayCode();
+createStepButtons();
+showStep(0);
+
 </script>
 
 </body>
