@@ -1,0 +1,1146 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Electronic Component Identification and Sorting Assistant</title><style>
+
+/* =========================
+   BASIC PAGE STYLE
+========================= */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:#f4f7fb;
+
+    color:#222;
+
+    line-height:1.7;
+}
+
+
+
+/* ===============================
+   UPDATED HEADER DESIGN
+================================ */
+
+.header {
+    background: #2563eb;
+    color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    text-align: center;
+}
+
+/* COMPANY LOGO - TOP LEFT */
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    object-fit: contain;
+    background: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* CENTER HEADING */
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+/* BOTTOM BUTTON BAR */
+
+.header-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
+/* BACK AND HOME - BOTTOM LEFT */
+
+.header-left-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
+
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* BUTTON STYLE */
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.25s ease;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* HOME ICON ONLY */
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 15px 0 0;
+        min-height: 230px;
+    }
+
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+}
+
+@media (max-width: 360px) {
+    .header-buttons {
+        padding: 9px 5px;
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        padding: 7px 5px;
+        font-size: 10px;
+    }
+}
+
+
+/* PROJECT THUMBNAIL */
+
+.project-thumbnail {
+    text-align: center;
+    padding: 20px;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    max-height: 420px;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    .project-thumbnail {
+        padding: 12px;
+    }
+
+    .project-thumbnail img {
+        max-height: 280px;
+    }
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:18px;
+
+    padding:13px 15px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+}
+
+
+nav a{
+
+    text-decoration:none;
+
+    color:#1e3a8a;
+
+    font-size:14px;
+
+    font-weight:bold;
+}
+
+
+nav a:hover{
+
+    color:#2563eb;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1050px;
+
+    margin:35px auto;
+}
+
+
+.section{
+
+    background:white;
+
+    margin-bottom:24px;
+
+    padding:28px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    box-shadow:
+    0 4px 12px
+    rgba(0,0,0,.06);
+}
+
+
+.section h2{
+
+    margin-top:0;
+
+    margin-bottom:18px;
+
+    color:#1e3a8a;
+
+    font-size:25px;
+
+    border-bottom:
+    2px solid #dbeafe;
+
+    padding-bottom:8px;
+}
+
+
+.section h3{
+
+    color:#1e3a8a;
+}
+
+
+ul,
+ol{
+
+    padding-left:24px;
+}
+
+
+li{
+
+    margin-bottom:8px;
+}
+
+
+/* =========================
+   COMPONENTS
+========================= */
+
+.components-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+        auto-fit,
+        minmax(220px,1fr)
+    );
+
+    gap:20px;
+}
+
+
+.component-card{
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    background:white;
+
+    box-shadow:
+    0 2px 8px
+    rgba(0,0,0,.04);
+}
+
+
+.component-card img{
+
+    width:100%;
+
+    height:120px;
+
+    object-fit:contain;
+
+    margin-bottom:15px;
+}
+
+
+.component-card h4{
+
+    color:#1e3a8a;
+
+    margin:0 0 8px;
+
+    font-size:18px;
+}
+
+
+.component-card p{
+
+    color:#475569;
+
+    font-size:14px;
+
+    margin:0;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrap{
+
+    overflow-x:auto;
+}
+
+
+table{
+
+    width:100%;
+
+    min-width:620px;
+
+    border-collapse:collapse;
+}
+
+
+th,
+td{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    text-align:left;
+}
+
+
+th{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+tr:nth-child(even){
+
+    background:#f8fafc;
+}
+
+
+/* =========================
+   NOTE
+========================= */
+
+.note{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    background:#eff6ff;
+
+    border-left:
+    5px solid #2563eb;
+
+    border-radius:6px;
+}
+
+
+/* =========================
+   CIRCUIT IMAGE
+========================= */
+
+.circuit-img{
+    display:block;
+
+    width:100%;
+    max-width:760px;
+
+    margin:20px auto 0;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    background:white;
+
+    padding:10px;
+}
+
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    line-height:2;
+}
+
+
+/* =========================
+   SENSOR CARDS
+========================= */
+
+.sensor-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:16px;
+}
+
+
+.sensor-box{
+
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    border:1px solid #bfdbfe;
+
+    background:#f8fbff;
+}
+
+
+.sensor-box h3{
+
+    margin-top:0;
+
+    color:#1e3a8a;
+}
+
+
+.sensor-value{
+
+    font-size:26px;
+
+    color:#2563eb;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+
+.code-lesson{
+
+    color:#142e3a;
+}
+
+
+.eyebrow{
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    margin:0 0 4px;
+}
+
+
+.lesson-title{
+
+    font-size:32px !important;
+
+    margin:0 0 8px !important;
+
+    color:#1e3a8a !important;
+
+    border:0 !important;
+
+    padding:0 !important;
+}
+
+
+.intro{
+
+    color:#526875;
+
+    margin:0 0 22px;
+}
+
+
+/* CODE + EXPLANATION */
+
+.code-layout{
+
+    display:grid;
+
+    grid-template-columns:
+    minmax(0,1.45fr)
+    minmax(300px,1fr);
+
+    gap:20px;
+
+    align-items:start;
+}
+
+
+/* =========================
+   CODE PANEL
+========================= */
+
+.code-panel{
+
+    background:white;
+
+    border:1px solid #bfdbfe;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 4px 14px
+    rgba(37,99,235,.10);
+}
+
+
+.code-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+    padding:15px 20px;
+
+    background:#2563eb;
+
+    color:white;
+}
+
+
+.filename{
+
+    color:white;
+
+    font:
+    bold 14px/1.4
+    Consolas,
+    Monaco,
+    monospace;
+}
+
+
+.copy-button{
+
+    border:1px solid white;
+
+    background:white;
+
+    color:#2563eb;
+
+    border-radius:8px;
+
+    padding:8px 14px;
+
+    min-height:40px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+
+.copy-button:hover{
+
+    background:#eff6ff;
+}
+
+
+.code-body{
+
+    height:600px;
+
+    overflow:auto;
+
+    background:white;
+
+    padding:16px 0;
+}
+
+
+.code-line{
+
+    display:flex;
+
+    min-width:max-content;
+
+    min-height:24px;
+
+    padding-right:22px;
+
+    white-space:pre;
+
+    font:
+    13px/24px
+    Consolas,
+    Monaco,
+    monospace;
+
+    color:#1e293b;
+
+    border-bottom:
+    1px solid #f1f5f9;
+}
+
+
+.code-line:hover{
+
+    background:#f8fbff;
+}
+
+
+.code-line.selected{
+
+    background:#dbeafe;
+
+    box-shadow:
+    inset 4px 0 #2563eb;
+}
+
+
+.line-number{
+
+    user-select:none;
+
+    min-width:52px;
+
+    text-align:right;
+
+    padding-right:15px;
+
+    color:#64748b;
+}
+
+
+/* =========================
+   GUIDE
+========================= */
+
+.guide{
+
+    background:white;
+
+    border:1px solid #dce6e9;
+
+    border-radius:14px;
+
+    padding:22px;
+}
+
+
+.guide h2{
+
+    border:0;
+
+    padding:0;
+
+    margin:0 0 8px;
+
+    font-size:21px;
+}
+
+
+.guide > p{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+    gap:8px;
+
+    margin:16px 0;
+}
+
+
+.step{
+
+    border:1px solid #dce6e9;
+
+    border-radius:9px;
+
+    padding:10px;
+
+    min-height:65px;
+
+    background:white;
+
+    text-align:left;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#1e3a8a;
+}
+
+
+.step:hover{
+
+    border-color:#60a5fa;
+
+    background:#f8fbff;
+}
+
+
+.step.active{
+
+    background:#eff6ff;
+
+    border-color:#60a5fa;
+
+    color:#1e3a8a;
+}
+
+
+.step-number{
+
+    color:#2563eb;
+
+    font-size:12px;
+
+    flex-shrink:0;
+}
+
+
+.explanation{
+
+    background:#eff6ff;
+
+    border-radius:9px;
+
+    padding:16px;
+
+    min-height:130px;
+}
+
+
+.explanation h3{
+
+    font-size:17px;
+
+    margin:0 0 7px;
+
+    color:#1e3a8a;
+}
+
+
+.explanation p{
+
+    margin:0;
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide details{
+
+    border-top:
+    1px solid #dce6e9;
+
+    margin-top:15px;
+}
+
+
+.guide summary{
+
+    cursor:pointer;
+
+    color:#2563eb;
+
+    font-weight:bold;
+
+    padding:13px 0;
+}
+
+
+.guide details p,
+.guide details li{
+
+    color:#526875;
+
+    font-size:15px;
+}
+
+
+.guide code{
+
+    background:#e5ecf4;
+
+    padding:2px 4px;
+
+    border-radius:4px;
+}
+
+
+.tip{
+
+    background:#eff6ff;
+
+    color:#234e87;
+
+    padding:14px 17px;
+
+    border-radius:9px;
+
+    margin-top:20px;
+
+    font-size:14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    text-align:center;
+
+    padding:25px 20px;
+
+    background:#0f172a;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+}
+
+
+footer strong{
+
+    color:white;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .code-layout{
+
+        grid-template-columns:1fr;
+    }
+
+    .code-body{
+
+        height:450px;
+    }
+
+    .sensor-grid{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .header{
+
+        padding:35px 15px;
+    }
+
+    .header h1{
+
+        font-size:28px;
+    }
+
+    .container{
+
+        width:92%;
+    }
+
+    .section{
+
+        padding:21px 18px;
+    }
+
+    .steps{
+
+        grid-template-columns:1fr;
+    }
+
+}
+
+
+.section .circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.project-thumbnail img{display:block;max-width:760px;width:100%;max-height:400px;object-fit:contain;margin:auto}.code-line{display:flex;white-space:pre;min-width:max-content;min-height:24px;font:13px/24px Consolas,monospace}.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}.line-number{min-width:48px;text-align:right;padding-right:12px;color:#64748b}.code-body{overflow:auto;max-height:620px}.code-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:20px}.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.step{background:white;color:#1e3a8a;border:1px solid #bfdbfe;border-radius:8px;padding:10px;cursor:pointer}.step.active{background:#dbeafe;border-color:#2563eb}.code-top{background:#2563eb;color:white;display:flex;justify-content:space-between;padding:15px}.copy-button{padding:8px 15px;border-radius:6px;background:white;color:#2563eb;border:0;cursor:pointer}.guide{border:1px solid #dbeafe;padding:18px;border-radius:8px}.code-panel{border:1px solid #bfdbfe;min-width:0;overflow:hidden}.explanation{padding:15px;background:#eff6ff;border-radius:8px;margin-top:15px}@media(max-width:850px){.code-layout{grid-template-columns:1fr}}</style></head><body><header class="header"><h1>SIMUDIY Exploration Kit</h1><p>Electronic Component Identification and Sorting Assistant</p></header><nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#output">Output</a><a href="#result">Result</a><a href="#learn">Learn</a></nav><main class="container"><section class="section project-thumbnail"><img src="../Electronic Component Identification and Sorting Assistant.png" alt="Electronic Component Identification and Sorting Assistant thumbnail" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Experiment thumbnail PNG pending.</p></section><section class="section" id="aim"><h2>Aim</h2><p>Classify resistor, capacitor, inductor and transistor samples using a USB camera, a local ViT AI model and a Flask dashboard.</p></section><section class="section" id="about"><h2>About the Experiment</h2><p>The USB camera supplies frames to local AI inference. Scores estimate four component types, but are not calibrated accuracy guarantees. No mechanical sorter is part of the implementation.</p><div class="note">The script shown is the SOP's reference implementation, not necessarily identical to the installed and tested app.py. Check the trained local model files.</div></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B ×1"><h4>Raspberry Pi 4 Model B ×1</h4><p>Identification sample or main hardware as specified.</p></div><div class="component-card"><img src="../AI Object Detection System/USB Camera.png" alt="USB Webcam ×1"><h4>USB Webcam ×1</h4><p>Identification sample or main hardware as specified.</p></div><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply ×1"><h4>Raspberry Pi Power Supply ×1</h4><p>Identification sample or main hardware as specified.</p></div><div class="component-card"><img src="Resistor.png" alt="Resistor sample"><h4>Resistor sample</h4><p>Identification sample or main hardware as specified.</p></div><div class="component-card"><img src="Capacitor.png" alt="Capacitor sample"><h4>Capacitor sample</h4><p>Identification sample or main hardware as specified.</p></div><div class="component-card"><img src="Inductor.png" alt="Inductor sample"><h4>Inductor sample</h4><p>Identification sample or main hardware as specified.</p></div><div class="component-card"><img src="Transistor.png" alt="Transistor sample"><h4>Transistor sample</h4><p>Identification sample or main hardware as specified.</p></div></div></section><section class="section" id="connections"><h2>Circuit Connections</h2><p>USB Webcam → Raspberry Pi USB port. USB-C supply → Raspberry Pi power input. Place sample components in view; no GPIO connections required.</p></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Electronic Component Identification and Sorting Assistant Circuit.png" alt="Circuit diagram" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Verified circuit PNG pending: Electronic Component Identification and Sorting Assistant Circuit.png</p></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">USB camera → OpenCV frame → image processor → local ViT model → score prediction → browser dashboard</div></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect webcam and suitable Pi power.</li><li>Verify models/config.json, models/preprocessor_config.json and models/model.safetensors are available.</li><li>Activate project virtual environment and verify Python packages.</li><li>Run the existing tested python app.py on the Pi.</li><li>Open http://PI-IP:5000 from a device on the same local network.</li><li>Place one component in camera view and click Capture &amp; Identify.</li><li>Observe the class scores and compare with known samples.</li></ol></section><section class="section" id="code"><h2>Explore the Code</h2><p>Select an explanation to highlight its matching source block. Copy Code copies the complete displayed Python source.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><strong>Python source — SOP-based</strong><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><aside class="guide"><h3>Understand it step by step</h3><div class="steps"><button class="step" onclick="showStep(0)">1. Imports and configuration</button><button class="step" onclick="showStep(1)">2. Timestamp and CSV setup</button><button class="step" onclick="showStep(2)">3. Open USB camera</button><button class="step" onclick="showStep(3)">4. Prepare frame comparisons</button><button class="step" onclick="showStep(4)">5. Detect image changes</button><button class="step" onclick="showStep(5)">6. Log activity start</button><button class="step" onclick="showStep(6)">7. End inactive session</button><button class="step" onclick="showStep(7)">8. Dashboard HTML</button><button class="step" onclick="showStep(8)">9. Flask status and events</button><button class="step" onclick="showStep(9)">10. Start worker and web service</button></div><div class="explanation" id="explanation"></div><details><summary>Check Your Understanding</summary><p>Computer vision and frame differencing; Motion threshold; CSV start/end logging; 60-second inactivity threshold; Flask dashboard and 3-second refresh</p></details></aside></div></section><section class="section" id="output"><h2>Expected Output</h2><p>Flask dashboard with live webcam and a prediction plus scores for resistor, capacitor, inductor and transistor. No sorting motor operates.</p></section><section class="section" id="result"><h2>Result</h2><p>Reference app demonstrates local category prediction and browser results. Model reliability must be validated against many labeled samples.</p></section><section class="section" id="learn"><h2>What You Learn</h2><ul><li>Using a USB camera and OpenCV</li><li>Using local machine learning models</li><li>Flask endpoints and streaming frames</li><li>Interpreting softmax scores</li></ul></section></main><footer><strong>SIMUDIY Exploration Kit</strong> · Electronic Component Identification and Sorting Assistant</footer><script type="text/plain" id="python-source">from pathlib import Path
+import threading
+import cv2
+import torch
+from PIL import Image
+from flask import Flask, Response, jsonify, render_template_string
+from transformers import AutoImageProcessor, AutoModelForImageClassification
+
+BASE = Path(__file__).resolve().parent
+LABELS = ["Resistor", "Capacitor", "Inductor", "Transistor"]
+app = Flask(__name__)
+camera = cv2.VideoCapture(0, cv2.CAP_V4L2)
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+camera_lock = threading.Lock()
+processor = AutoImageProcessor.from_pretrained(BASE / "models", local_files_only=True)
+model = AutoModelForImageClassification.from_pretrained(BASE / "models", local_files_only=True)
+model.eval()
+print("AI model loaded.")
+
+HTML = """
+&lt;!doctype html&gt;
+&lt;html&gt;&lt;head&gt;&lt;title&gt;Component Identifier&lt;/title&gt;&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Electronic Component Identifier&lt;/h1&gt;
+&lt;p&gt;Place one component in view.&lt;/p&gt;
+&lt;img src="/video_feed" width="640"&gt;
+&lt;button onclick="identify()"&gt;Capture &amp; Identify&lt;/button&gt;
+&lt;pre id="result"&gt;Waiting for capture&lt;/pre&gt;
+&lt;script&gt;
+async function identify() {
+  const result = await fetch('/identify', {method:'POST'});
+  const data = await result.json();
+  document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+}
+&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;
+"""
+
+@app.route("/")
+def index():
+    return render_template_string(HTML)
+
+def generate_frames():
+    while True:
+        with camera_lock:
+            ok, frame = camera.read()
+        if not ok:
+            continue
+        ok, jpg = cv2.imencode(".jpg", frame)
+        if ok:
+            yield b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + jpg.tobytes() + b"\r\n"
+
+@app.route("/video_feed")
+def video_feed():
+    return Response(generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
+
+@app.route("/identify", methods=["POST"])
+def identify():
+    with camera_lock:
+        ok, frame = camera.read()
+    if not ok:
+        return jsonify(error="Camera capture failed"), 500
+    image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    inputs = processor(images=image, return_tensors="pt")
+    with torch.no_grad():
+        probabilities = torch.softmax(model(**inputs).logits, dim=-1)[0]
+    scores = {label: float(probabilities[i].item() * 100) for i, label in enumerate(LABELS)}
+    return jsonify(prediction=max(scores, key=scores.get), scores=scores)
+
+if __name__ == "__main__":
+    try:
+        app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)
+    finally:
+        camera.release()</script><script>const program=document.getElementById("python-source").textContent.trim();const lines=program.split("\n");const steps=[{"label":"Imports and class labels","start":"from pathlib import Path","end":"LABELS ="},{"label":"Camera and Flask server","start":"app = Flask","end":"camera_lock ="},{"label":"Local model initialization","start":"processor =","end":"print(\"AI model loaded.\")"},{"label":"Browser dashboard","start":"HTML =","end":"@app.route(\"/\")"},{"label":"Serve homepage","start":"@app.route(\"/\")","end":"return render_template_string(HTML)"},{"label":"Generate JPEG frames","start":"def generate_frames():","end":"yield b\"--frame"},{"label":"Live video route","start":"@app.route(\"/video_feed\")","end":"return Response(generate_frames()"},{"label":"Capture and preprocess","start":"@app.route(\"/identify\"","end":"inputs = processor"},{"label":"Classify and return scores","start":"with torch.no_grad():","end":"return jsonify(prediction="},{"label":"Start Flask and close camera","start":"if __name__ == \"__main__\":","end":"camera.release()"}];
+function escapeCode(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+document.getElementById("code-lines").innerHTML=lines.map((line,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeCode(line)+'</span></span>').join("");
+function findMarker(m,from=0){return lines.findIndex((line,i)=>i>=from&&line.trim().startsWith(m))}
+const ranges=steps.map(s=>{const a=findMarker(s.start),b=a<0?-1:findMarker(s.end,a);return {a,b,valid:a>=0&&b>=a}});
+function showStep(i){document.querySelectorAll(".step").forEach((x,j)=>x.classList.toggle("active",i===j));document.querySelectorAll(".code-line").forEach(x=>x.classList.remove("selected"));const r=ranges[i],target=document.getElementById("explanation");target.textContent=r.valid?steps[i].label+" — lines "+(r.a+1)+" to "+(r.b+1):"Source marker validation failed; review the source.";if(!r.valid)return;for(let j=r.a;j<=r.b;j++)document.getElementById("line-"+(j+1)).classList.add("selected");const panel=document.getElementById("code-body"),first=document.getElementById("line-"+(r.a+1));panel.scrollTo({top:panel.scrollTop+first.getBoundingClientRect().top-panel.getBoundingClientRect().top-15,behavior:"smooth"})}
+async function copyCode(){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const a=document.createElement("textarea");a.value=program;document.body.appendChild(a);a.select();if(!document.execCommand("copy"))throw Error("Clipboard unavailable");a.remove()}document.querySelector(".copy-button").textContent="Copied!"}catch(e){document.querySelector(".copy-button").textContent="Copy failed"}}
+showStep(0);</script></body></html>
