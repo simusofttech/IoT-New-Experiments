@@ -1,11 +1,29 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Wireless Environmental Dashboard</title><style>
-*{box-sizing:border-box} html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 Wireless Environmental Dashboard</title>
 
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
+}
+
+/* HEADER */
 .header {
     background: #2563eb;
     color: white;
@@ -16,8 +34,6 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -32,12 +48,10 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     padding: 5px;
 }
 
-/* CENTER HEADING */
-
 .header-content {
-    text-align: center;
     margin: auto 0;
     padding: 35px 165px;
+    text-align: center;
 }
 
 .header h1 {
@@ -50,35 +64,22 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -94,15 +95,11 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
-    transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -120,26 +117,386 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* SECTION NAVIGATION */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
 
-@media (max-width: 900px) {
+nav a {
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* MAIN CONTENT */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    background: white;
+    padding: 28px;
+    margin-bottom: 24px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 90px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    margin-top: 22px;
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* EXPERIMENT THUMBNAIL */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+/* COMPONENT CARDS */
+.components-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 150px;
+    object-fit: contain;
+    margin: 0 auto 15px;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* TABLES */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+/* CIRCUIT DIAGRAM */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 20px auto 0;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+/* WORKING FLOW */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* CODE EXPLORER */
+.eyebrow {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+.intro {
+    color: #526875;
+    margin-bottom: 22px;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns: minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px Consolas,monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    padding: 16px 0;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas,Monaco,monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
+    user-select: none;
+}
+
+.guide {
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.guide h2 {
+    font-size: 21px;
+    border: 0;
+    padding: 0;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    color: #1e3a8a;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px;
+    background: #eff6ff;
+    border-radius: 9px;
+    color: #234e87;
+}
+
+.output-box {
+    padding: 16px;
+    margin: 15px 0;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    font: 14px/1.8 Consolas,monospace;
+}
+
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
     }
+}
 
+@media(max-width:600px) {
     .header-logo {
         width: 95px;
-        max-height: 60px;
         top: 12px;
         left: 12px;
     }
@@ -152,181 +509,34 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         font-size: 25px;
     }
 
-    .header p {
-        font-size: 15px;
-    }
-
     .header-buttons {
         padding: 10px 8px;
-        gap: 8px;
-    }
-
-    .header-left-buttons,
-    .header-right-buttons {
-        gap: 5px;
     }
 
     .header-nav-btn {
         padding: 8px 7px;
         font-size: 11px;
-        min-height: 36px;
     }
 
-    .home-icon-btn {
-        width: 36px;
-        height: 36px;
-        padding: 7px;
-    }
-}
-
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
+    .section {
+        padding: 20px;
     }
 
-    .project-thumbnail img {
-        max-height: 280px;
+    .steps {
+        grid-template-columns: 1fr;
     }
 }
-   
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
-nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}nav a:hover{color:#2563eb}
-.container{width:90%;max-width:1050px;margin:35px auto}.section{background:#fff;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}
-ul,ol{padding-left:24px}li{margin-bottom:8px}
+</style>
+</head>
 
-  /* ======================
-   COMPONENTS
-====================== */
+<body>
 
-.components-grid{
-    display:grid;
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px, 1fr)
-    );
-
-    gap:20px;
-}
-
-
-.component-card{
-    background:white;
-
-    border:1px solid #e2e8f0;
-    border-radius:12px;
-
-    padding:20px;
-
-    text-align:center;
-
-    overflow:hidden;
-}
-
-
-.component-card img{
-    display:block;
-
-    width:100%;
-    max-width:180px;
-
-    height:150px;
-
-    object-fit:contain;
-
-    margin:0 auto 15px;
-
-    background:white;
-}
-
-
-.component-card h4{
-    margin:8px 0;
-
-    color:#1e3a8a;
-
-    font-size:17px;
-}
-
-
-.component-card p{
-    margin:0;
-
-    color:#475569;
-
-    font-size:14px;
-
-    line-height:1.5;
-}
-  
-.component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:28px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
-.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
-.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
-
-  /* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
-}
-  
-.flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
-.code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
-pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
-.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}
-@media(max-width:700px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.circuit{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
-</style></head><body>
-
+<!-- HEADER -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -334,275 +544,560 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
-        <p>ESP32 Wireless Enviornmental Dashboard</p>
+        <p>ESP32 Wireless Environmental Dashboard</p>
     </div>
-
-    <!-- BOTTOM BUTTON BAR -->
 
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <!-- BACK BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to ESP32 Experiments"
-            >
+            <a href="../index.html" class="header-nav-btn">
                 &#8592; Back
             </a>
 
-            <!-- HOME ICON ONLY -->
-
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../../index.html"
+               class="header-nav-btn home-icon-btn"
+               aria-label="Home">
+                <svg viewBox="0 0 24 24">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
             </a>
-
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <!-- ARDUINO BUTTON -->
-
-            <a
-                href="../../Arduino Experiments/index.html"
-                class="header-nav-btn"
-            >
-                Arduino
-            </a>
-
-            <!-- ESP BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
-                ESP
-            </a>
-
-            <!-- RASPBERRY PI BUTTON -->
-
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
-                R-Pi
-            </a>
-
+            <a href="../../Arduino Experiments/index.html"
+               class="header-nav-btn">Arduino</a>
+            <a href="../index.html"
+               class="header-nav-btn">ESP</a>
+            <a href="../../R-Pi Experiments/index.html"
+               class="header-nav-btn">R-Pi</a>
         </div>
 
     </div>
-
 </header>
 
-<nav><a href="../index.html">← ESP32 Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#expected-output">Expected Output</a><a href="#result">Result</a><a href="#learn">What You Learn</a></nav>
+<!-- NAVIGATION -->
+<nav>
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
+
 <main class="container">
 
-<!-- PROJECT THUMBNAIL -->
-
+<!-- EXPERIMENT THUMBNAIL -->
 <section class="section project-thumbnail">
-
     <img
         src="../Wireless Environmental Dashboar"
-        alt="Adjustable LED Dimmer Experiment Thumbnail"
+        alt="ESP32 Wireless Environmental Dashboard"
     >
-
 </section>
 
-<!-- AIM -->
+<!-- 1. AIM -->
+<section class="section" id="aim">
+    <h2>Aim</h2>
 
-<section class="section" id="aim"><h2>Aim</h2><p>To create a Wi-Fi environmental monitoring system that measures temperature, humidity, atmospheric pressure and light level, displays the readings on an OLED, and publishes them to a live ESP32 web dashboard.</p></section>
-<section class="section"><h2>About the Experiment</h2><p>The ESP32 reads temperature and humidity from a DHT22, pressure from a BMP180 and light intensity from an analog LDR module. The readings are shown locally on an SSD1306 OLED and are also returned by a /data JSON endpoint for a browser dashboard that refreshes every two seconds.</p></section>
+    <p>
+        To develop a Wi-Fi-based environmental
+        monitoring system using ESP32 DevKitC,
+        DHT22, BMP180, an LDR module
+        and an SSD1306 OLED display.
+    </p>
 
-  <!-- =========================
-     COMPONENTS
-========================= -->
+    <p>
+        The system measures temperature,
+        relative humidity, atmospheric
+        pressure and relative light level,
+        then displays the readings
+        locally and on a web dashboard.
+    </p>
+</section>
 
+<!-- 2. ABOUT THE EXPERIMENT -->
+<section class="section" id="about">
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Wireless Environmental Dashboard
+        combines multiple environmental sensors
+        with ESP32 wireless communication.
+    </p>
+
+    <p>
+        DHT22 measures temperature and humidity.
+        BMP180 measures atmospheric pressure.
+        An LDR sensor module provides an analog
+        voltage that changes with ambient light.
+    </p>
+
+    <p>
+        The ESP32 processes these readings
+        and displays them on an SSD1306 OLED.
+    </p>
+
+    <p>
+        The BMP180 and OLED use the same
+        I²C bus on GPIO21 and GPIO22.
+        The LDR connects to GPIO35,
+        while DHT22 DATA connects to GPIO4.
+    </p>
+
+    <p>
+        The ESP32 runs a local web server
+        that provides sensor measurements
+        through the /data JSON endpoint.
+    </p>
+
+    <p>
+        The browser dashboard retrieves
+        updated sensor values every two
+        seconds and displays them
+        in measurement cards with
+        progress bars and status messages.
+    </p>
+
+    <div class="note">
+        <strong>Light Measurement:</strong>
+        The LDR percentage is a relative
+        measurement derived from the
+        analog input, not a calibrated
+        illuminance reading in lux.
+    </div>
+</section>
+
+<!-- 3. COMPONENTS REQUIRED -->
 <section class="section" id="components">
-
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
-
         <div class="component-card">
-
-            <img
-            src="ESP32 Development Board.png"
-            alt="ESP32 Development Board">
-
-            <h4>
-                ESP32 DevKitC (×1)
-            </h4>
-
-            <p>
-                Main controller with built-in Wi-Fi.
-            </p>
-
+            <img src="ESP32 Development Board.png"
+                 alt="ESP32 Development Board">
+            <h4>ESP32 DevKitC (×1)</h4>
+            <p>Main controller with built-in Wi-Fi.</p>
         </div>
 
-
         <div class="component-card">
-
-            <img
-            src="DHT22 Temperature Humidity Sensor.png"
-            alt="DHT22 Temperature Humidity Sensor">
-
-            <h4>
-                DHT22 Temperature and Humidity Sensor (×1)
-            </h4>
-
-            <p>
-                Measures temperature
-                and humidity.
-            </p>
-
+            <img src="DHT22 Temperature Humidity Sensor.png"
+                 alt="DHT22 Sensor">
+            <h4>DHT22 Temperature and Humidity Sensor (×1)</h4>
+            <p>Measures air temperature and humidity.</p>
         </div>
 
-
         <div class="component-card">
-
-            <img
-            src="BMP180 Pressure Sensor.png"
-            alt="BMP180 Barometric Pressure Sensor">
-
-            <h4>
-                BMP180 Pressure Sensor (×1)
-            </h4>
-
-            <p>
-                Measures atmospheric pressure.
-            </p>
-
+            <img src="BMP180 Pressure Sensor.png"
+                 alt="BMP180 Sensor">
+            <h4>BMP180 Pressure Sensor (×1)</h4>
+            <p>Measures atmospheric pressure.</p>
         </div>
 
-
         <div class="component-card">
-
-            <img
-            src="LDR Light Sensor Module.png"
-            alt="LDR Light Sensor Module">
-
-            <h4>
-                LDR Light Sensor Module (×1)
-            </h4>
-
-            <p>
-                Measures ambient
-                light intensity.
-            </p>
-
+            <img src="LDR Light Sensor Module.png"
+                 alt="LDR Sensor Module">
+            <h4>LDR Light Sensor Module (×1)</h4>
+            <p>Measures changes in ambient light.</p>
         </div>
 
-
         <div class="component-card">
-
-            <img
-            src="OLED.png"
-            alt="OLED SSD1306">
-
-            <h4>
-                0.96" OLED SSD1306 I²C (×1)
-            </h4>
-
-            <p>
-                Displays environmental
-                sensor readings.
-            </p>
-
+            <img src="OLED.png"
+                 alt="SSD1306 OLED">
+            <h4>0.96-inch SSD1306 I²C OLED (×1)</h4>
+            <p>Displays environmental sensor values.</p>
         </div>
 
-
         <div class="component-card">
-
-            <img
-            src="Breadboard.png"
-            alt="Breadboard">
-
-            <h4>
-                Breadboard (×1)
-            </h4>
-
-            <p>
-                Used to assemble the circuit.
-            </p>
-
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Used to assemble the circuit.</p>
         </div>
 
-
         <div class="component-card">
-
-            <img
-            src="Jumper Wires.png"
-            alt="Jumper Wires">
-
-            <h4>
-                Jumper Wires
-            </h4>
-
-            <p>
-                Used for electrical connections.
-            </p>
-
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used for electrical connections.</p>
         </div>
-
 
     </div>
 
+    <div class="note">
+        <strong>Required Libraries:</strong>
+        <ul>
+            <li>WiFi.h</li>
+            <li>WebServer.h</li>
+            <li>Wire.h</li>
+            <li>Adafruit_GFX.h</li>
+            <li>Adafruit_SSD1306.h</li>
+            <li>DHT.h</li>
+            <li>Adafruit_BMP085.h</li>
+        </ul>
+    </div>
 </section>
-  
-<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component</th><th>Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>DHT22</td><td>DATA</td><td>GPIO 4</td></tr><tr><td>DHT22</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>LDR Module</td><td>AO</td><td>GPIO 35</td></tr><tr><td>LDR Module</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>BMP180</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>BMP180</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>BMP180</td><td>VCC / GND</td><td>3.3V / GND</td></tr><tr><td>OLED</td><td>SDA</td><td>GPIO 21</td></tr><tr><td>OLED</td><td>SCL</td><td>GPIO 22</td></tr><tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr></tbody></table></div><div class="note"><strong>DHT22:</strong> GPIO 4 &nbsp; <strong>LDR analog input:</strong> GPIO 35 &nbsp; <strong>I²C SDA/SCL:</strong> GPIO 21 / 22 &nbsp; <strong>Web server:</strong> Port 80</div></section>
 
-  <!-- =========================
-     CIRCUIT
-========================= -->
+<!-- 4. CIRCUIT CONNECTIONS -->
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
 
-<section
-class="section"
-id="circuit">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Pin</th>
+                    <th>ESP32 Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>DHT22</td><td>DATA</td><td>GPIO4</td></tr>
+                <tr><td>DHT22</td><td>VCC / GND</td><td>3.3V / GND</td></tr>
+                <tr><td>LDR Module</td><td>AO</td><td>GPIO35</td></tr>
+                <tr><td>LDR Module</td><td>VCC / GND</td><td>3.3V / GND</td></tr>
+                <tr><td>BMP180</td><td>SDA</td><td>GPIO21</td></tr>
+                <tr><td>BMP180</td><td>SCL</td><td>GPIO22</td></tr>
+                <tr><td>BMP180</td><td>VCC / GND</td><td>3.3V / GND</td></tr>
+                <tr><td>OLED</td><td>SDA</td><td>GPIO21</td></tr>
+                <tr><td>OLED</td><td>SCL</td><td>GPIO22</td></tr>
+                <tr><td>OLED</td><td>VCC / GND</td><td>3.3V / GND</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-    <h2>
-        Circuit Diagram
-    </h2>
+    <div class="note">
+        <strong>Pin Summary:</strong>
+        DHT22: GPIO4 · LDR: GPIO35 ·
+        I²C SDA: GPIO21 · I²C SCL: GPIO22.
+
+        <p>
+            The BMP180 and OLED share
+            the same I²C bus. The ESP32
+            analog input must not exceed
+            its safe voltage range.
+        </p>
+    </div>
+</section>
+
+<!-- 5. CIRCUIT DIAGRAM -->
+<section class="section" id="circuit">
+    <h2>Circuit Diagram</h2>
 
     <img
-    class="circuit-img"
-    src="ESP32 Wireless Environmental Dashboard Circuit.png"
-    alt="ESP32 Wireless Environmental Dashboard Circuit">
+        src="ESP32 Wireless Environmental Dashboard Circuit.png"
+        alt="ESP32 Wireless Environmental Dashboard Circuit"
+        class="circuit-img"
+    >
+</section>
+
+<!-- 6. WORKING PRINCIPLE -->
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        ESP32 Starts
+        <br>↓<br>
+        Initialize DHT22, BMP180 and OLED
+        <br>↓<br>
+        Connect ESP32 to Wi-Fi
+        <br>↓<br>
+        Read Temperature and Humidity
+        <br>↓<br>
+        Read Atmospheric Pressure
+        <br>↓<br>
+        Read Analog Light Level
+        <br>↓<br>
+        Convert Light Reading into Percentage
+        <br>↓<br>
+        Display Values on OLED
+        <br>↓<br>
+        Serve JSON Data at /data
+        <br>↓<br>
+        Dashboard Updates Every Two Seconds
+    </div>
+
+    <h3>Temperature and Humidity</h3>
+    <p>
+        DHT22 provides temperature in °C
+        and humidity as relative percentage.
+    </p>
+
+    <h3>Atmospheric Pressure</h3>
+    <p>
+        BMP180 provides atmospheric pressure
+        in pascals. The value is divided
+        by 100 to obtain hPa.
+    </p>
+
+    <h3>Light-Level Measurement</h3>
+    <p>
+        ESP32 analogRead() reads the LDR
+        analog output and maps the value
+        between 0 and 100.
+    </p>
+
+    <h3>OLED and Web Dashboard</h3>
+    <p>
+        The current measurements are displayed
+        on the OLED and returned as JSON.
+        The browser refreshes every two seconds.
+    </p>
+</section>
+
+<!-- 7. PROCEDURE -->
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Connect DHT22 DATA to GPIO4.</li>
+        <li>Connect DHT22 VCC to 3.3V and GND to GND.</li>
+        <li>Connect the LDR analog output to GPIO35.</li>
+        <li>Power the LDR module using 3.3V and GND.</li>
+        <li>Connect BMP180 SDA to GPIO21 and SCL to GPIO22.</li>
+        <li>Connect the SSD1306 OLED to the same I²C pins.</li>
+        <li>Connect BMP180 and OLED power and ground.</li>
+        <li>Verify all connections before powering the circuit.</li>
+        <li>Open Arduino IDE and install the ESP32 board package.</li>
+        <li>Install DHT, Adafruit BMP085, Adafruit GFX and SSD1306 libraries.</li>
+        <li>Copy the sketch from Explore the Code.</li>
+        <li>Update the Wi-Fi SSID and password.</li>
+        <li>Select the ESP32 DevKitC board and correct port.</li>
+        <li>Verify and upload the sketch.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Note the IP address displayed by ESP32.</li>
+        <li>Open the IP address in your browser.</li>
+        <li>Observe the four environmental readings.</li>
+        <li>Compare dashboard values with the OLED.</li>
+        <li>Change sensor conditions and observe updated readings.</li>
+    </ol>
+</section>
+
+<!-- 8. EXPLORE THE CODE -->
+<section class="section" id="code">
+
+    <p class="eyebrow">ESP32 Experiment · Code Review</p>
+
+    <h2 class="lesson-title">Explore the Code</h2>
+
+    <p class="intro">
+        Select a step to highlight the matching
+        source section. Copy Code copies
+        the complete reconstructed program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+                <span class="filename">
+                    Wireless_Environmental_Dashboard.ino
+                </span>
+
+                <button class="copy-button"
+                        type="button"
+                        onclick="copyCode()">
+                    Copy Code
+                </button>
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Choose an explanation to
+                highlight the corresponding
+                source-code lines.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div class="explanation"
+                 id="explanation"
+                 aria-live="polite">
+            </div>
+
+            <details>
+                <summary>Explore More: DHT22</summary>
+                <p>
+                    The DHT22 measures temperature
+                    and humidity. isnan() detects
+                    failed sensor readings.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: BMP180</summary>
+                <p>
+                    Atmospheric pressure is
+                    measured in Pa and divided
+                    by 100 to display hPa.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: ESP32 ADC</summary>
+                <p>
+                    The LDR analog output is read
+                    by the ESP32 ADC and converted
+                    into a relative percentage.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: I²C</summary>
+                <p>
+                    The BMP180 and OLED use
+                    GPIO21 for SDA and GPIO22
+                    for SCL.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: JSON</summary>
+                <p>
+                    The /data endpoint returns
+                    temperature, humidity,
+                    pressure and light readings
+                    in JSON format.
+                </p>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Change temperature, humidity
+        or LDR light conditions and
+        observe the corresponding
+        values on the OLED and dashboard.
+    </p>
 
 </section>
-  
-<section class="section" id="working"><h2>Working Principle</h2><div class="flow">ESP32 Starts<br>↓<br>I²C, DHT22, BMP180 and OLED Initialize<br>↓<br>ESP32 Connects to Wi-Fi<br>↓<br>Read Temperature + Humidity + Pressure + Light<br>↓<br>Update OLED<br>↓<br>Serve JSON Data at /data<br>↓<br>Browser Dashboard Refreshes Every 2 Seconds</div></section>
-<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the DHT22 data pin to GPIO 4 and power it from 3.3V.</li><li>Connect the LDR module analog output to GPIO 35.</li><li>Connect BMP180 SDA/SCL to GPIO 21/22.</li><li>Connect the SSD1306 OLED to the same I²C GPIO 21/22 bus.</li><li>Upload the sketch and open Serial Monitor at 115200 baud.</li><li>Wait for Wi-Fi connection and note the ESP32 IP address.</li><li>Open the IP address in a browser.</li><li>Observe temperature, humidity, pressure and light readings on the dashboard.</li><li>Compare the web readings with the OLED readings.</li><li>Change environmental conditions and observe the dashboard status messages and progress bars.</li></ol></section>
-<section class="section" id="code"><h2>Explore the Code</h2><p>Key sketch sections used in this experiment:</p><div class="code-panel"><div class="code-top"><span>Wireless_Environmental_Dashboard.ino</span><button onclick="navigator.clipboard.writeText(document.getElementById('codeblock').innerText)">Copy Code</button></div><pre id="codeblock">#include &lt;WiFi.h&gt;
-#include &lt;WebServer.h&gt;
-#include &lt;Wire.h&gt;
-#include &lt;Adafruit_GFX.h&gt;
-#include &lt;Adafruit_SSD1306.h&gt;
-#include &lt;DHT.h&gt;
-#include &lt;Adafruit_BMP085.h&gt;
+
+<!-- 9. EXPECTED OUTPUT -->
+<section class="section" id="output">
+    <h2>Expected Output</h2>
+
+    <h3>OLED</h3>
+
+    <div class="output-box">
+<pre>ENVIRONMENT DATA
+Temp: 28.5 C
+Humidity: 62 %
+Pressure: 1013 hPa
+Light: 65 %</pre>
+    </div>
+
+    <h3>Example JSON Response</h3>
+
+    <div class="output-box">
+<pre>{
+  "temperature": 28.50,
+  "humidity": 62.00,
+  "pressure": 1013.00,
+  "light": 65
+}</pre>
+    </div>
+
+    <p>
+        The browser dashboard shows the
+        same four measurements in sensor
+        cards with progress bars and
+        status messages.
+    </p>
+
+    <div class="note">
+        The readings above are examples.
+        Actual values depend on the
+        connected sensors and environment.
+    </div>
+</section>
+
+<!-- 10. RESULT -->
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The ESP32 Wireless Environmental
+        Dashboard demonstrates temperature,
+        humidity, pressure and light monitoring
+        using multiple sensors.
+    </p>
+
+    <p>
+        Readings are displayed on
+        the SSD1306 OLED and made
+        available through a Wi-Fi
+        web dashboard.
+    </p>
+</section>
+
+<!-- 11. WHAT YOU LEARN -->
+<section class="section" id="learn">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Reading temperature and humidity using DHT22.</li>
+        <li>Measuring atmospheric pressure with BMP180.</li>
+        <li>Reading an LDR using ESP32 analog input.</li>
+        <li>Understanding 12-bit ADC values.</li>
+        <li>Mapping analog readings to percentages.</li>
+        <li>Sharing an I²C bus between sensors.</li>
+        <li>Interfacing an SSD1306 OLED.</li>
+        <li>Creating an ESP32 web server.</li>
+        <li>Serving measurements as JSON.</li>
+        <li>Refreshing a browser dashboard every two seconds.</li>
+        <li>Displaying sensor values with progress bars.</li>
+    </ul>
+</section>
+
+</main>
+
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>ESP32 Wireless Environmental Dashboard</div>
+</footer>
+
+<!-- =====================================
+     COMPLETE RECONSTRUCTED ESP32 SKETCH
+===================================== -->
+
+<textarea id="esp32-program" hidden>
+// [01] LIBRARIES
+
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;Adafruit_GFX.h>
+#include &lt;Adafruit_SSD1306.h>
+#include &lt;DHT.h>
+#include &lt;Adafruit_BMP085.h>
+
+// [END 01]
+
+// [02] WIFI AND PINS
+
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
 
 #define DHT_PIN 4
 #define DHT_TYPE DHT22
@@ -610,46 +1105,521 @@ id="circuit">
 #define I2C_SDA 21
 #define I2C_SCL 22
 
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_ADDRESS 0x3C
+
+// [END 02]
+
+// [03] HARDWARE OBJECTS
+
 DHT dht(DHT_PIN, DHT_TYPE);
 Adafruit_BMP085 bmp;
 WebServer server(80);
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1
+);
 
 float temperature = 0.0;
 float humidity = 0.0;
 float pressure = 0.0;
 int lightPercent = 0;
 
+bool bmpReady = false;
+bool oledReady = false;
+
+unsigned long previousRead = 0;
+const unsigned long READ_INTERVAL = 2000;
+
+// [END 03]
+
+// [04] READ SENSORS
+
 void readSensors() {
-  float t = dht.readTemperature();
-  float h = dht.readHumidity();
+    float t = dht.readTemperature();
+    float h = dht.readHumidity();
 
-  if (!isnan(t)) temperature = t;
-  if (!isnan(h)) humidity = h;
+    if (!isnan(t)) temperature = t;
+    if (!isnan(h)) humidity = h;
 
-  pressure = bmp.readPressure() / 100.0;
+    if (bmpReady) {
+        pressure = bmp.readPressure() / 100.0;
+    }
 
-  int ldrRaw = analogRead(LDR_PIN);
-  lightPercent = map(ldrRaw, 0, 4095, 0, 100);
-  lightPercent = constrain(lightPercent, 0, 100);
+    int ldrRaw = analogRead(LDR_PIN);
+
+    lightPercent = map(ldrRaw, 0, 4095, 0, 100);
+    lightPercent = constrain(lightPercent, 0, 100);
 }
+
+// [END 04]
+
+// [05] UPDATE OLED
+
+void updateOLED() {
+    if (!oledReady) return;
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+
+    display.setCursor(0,0);
+    display.println("ENVIRONMENT DATA");
+
+    display.drawLine(0,11,127,11,SSD1306_WHITE);
+
+    display.setCursor(0,17);
+    display.print("Temp: ");
+    display.print(temperature,1);
+    display.println(" C");
+
+    display.setCursor(0,28);
+    display.print("Humidity: ");
+    display.print(humidity,0);
+    display.println(" %");
+
+    display.setCursor(0,39);
+    display.print("Press: ");
+    display.print(pressure,0);
+    display.println(" hPa");
+
+    display.setCursor(0,50);
+    display.print("Light: ");
+    display.print(lightPercent);
+    display.println(" %");
+
+    display.display();
+}
+
+// [END 05]
+
+// [06] JSON SENSOR DATA
 
 void handleData() {
-  String json = "{";
-  json += "\"temperature\":" + String(temperature, 2) + ",";
-  json += "\"humidity\":" + String(humidity, 2) + ",";
-  json += "\"pressure\":" + String(pressure, 2) + ",";
-  json += "\"light\":" + String(lightPercent);
-  json += "}";
-  server.send(200, "application/json", json);
+    String json = "{";
+
+    json += "\"temperature\":" +
+            String(temperature,2) + ",";
+
+    json += "\"humidity\":" +
+            String(humidity,2) + ",";
+
+    json += "\"pressure\":" +
+            String(pressure,2) + ",";
+
+    json += "\"light\":" +
+            String(lightPercent);
+
+    json += "}";
+
+    server.send(200,"application/json",json);
 }
 
+// [END 06]
+
+// [07] WEB DASHBOARD
+
+const char DASHBOARD[] PROGMEM = R"HTML(
+&lt;!DOCTYPE html>
+&lt;html>
+&lt;head>
+&lt;meta name="viewport"
+content="width=device-width,initial-scale=1">
+&lt;title>Environmental Dashboard&lt;/title>
+
+&lt;style>
+*{box-sizing:border-box}
+body{margin:0;padding:24px;font-family:Arial;background:#f4f7fb;color:#1e3a8a}
+main{max-width:900px;margin:auto}
+h1{text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px}
+.card{padding:20px;background:white;border-radius:12px;box-shadow:0 4px 12px #0001}
+.value{font-size:28px;color:#2563eb;font-weight:bold;margin:12px 0}
+.bar{height:12px;border-radius:20px;background:#dbeafe;overflow:hidden}
+.fill{height:100%;width:0%;background:#2563eb}
+.status{margin-top:12px;color:#475569;font-size:14px}
+&lt;/style>
+&lt;/head>
+&lt;body>
+&lt;main>
+&lt;h1>Wireless Environmental Dashboard&lt;/h1>
+
+&lt;div class="grid">
+&lt;div class="card">
+&lt;h2>Temperature&lt;/h2>
+&lt;div class="value" id="temperature">-- °C&lt;/div>
+&lt;div class="bar">&lt;div class="fill" id="tempBar">&lt;/div>&lt;/div>
+&lt;p class="status" id="tempStatus">Reading...&lt;/p>
+&lt;/div>
+
+&lt;div class="card">
+&lt;h2>Humidity&lt;/h2>
+&lt;div class="value" id="humidity">-- %&lt;/div>
+&lt;div class="bar">&lt;div class="fill" id="humBar">&lt;/div>&lt;/div>
+&lt;p class="status" id="humStatus">Reading...&lt;/p>
+&lt;/div>
+
+&lt;div class="card">
+&lt;h2>Atmospheric Pressure&lt;/h2>
+&lt;div class="value" id="pressure">-- hPa&lt;/div>
+&lt;div class="bar">&lt;div class="fill" id="pressBar">&lt;/div>&lt;/div>
+&lt;p class="status" id="pressStatus">Reading...&lt;/p>
+&lt;/div>
+
+&lt;div class="card">
+&lt;h2>Relative Light Level&lt;/h2>
+&lt;div class="value" id="light">-- %&lt;/div>
+&lt;div class="bar">&lt;div class="fill" id="lightBar">&lt;/div>&lt;/div>
+&lt;p class="status" id="lightStatus">Reading...&lt;/p>
+&lt;/div>
+&lt;/div>
+&lt;/main>
+
+&lt;script>
+function setBar(id,value){
+    document.getElementById(id).style.width =
+        Math.max(0,Math.min(100,value)) + "%";
+}
+
+async function refreshData(){
+    try {
+        const response = await fetch("/data");
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        document.getElementById("temperature").textContent =
+            data.temperature.toFixed(1) + " °C";
+
+        document.getElementById("humidity").textContent =
+            data.humidity.toFixed(1) + " %";
+
+        document.getElementById("pressure").textContent =
+            data.pressure.toFixed(1) + " hPa";
+
+        document.getElementById("light").textContent =
+            data.light + " %";
+
+        setBar("tempBar",data.temperature);
+        setBar("humBar",data.humidity);
+        setBar("pressBar",(data.pressure-900)/2);
+        setBar("lightBar",data.light);
+
+        document.getElementById("tempStatus").textContent =
+            data.temperature &lt; 20 ? "Cool" :
+            data.temperature &lt; 35 ? "Warm" :
+            "High Temperature";
+
+        document.getElementById("humStatus").textContent =
+            data.humidity &lt; 30 ? "Dry" :
+            data.humidity &lt; 70 ? "Moderate Humidity" :
+            "High Humidity";
+
+        document.getElementById("pressStatus").textContent =
+            data.pressure &lt; 1000 ? "Lower Pressure" :
+            data.pressure &lt; 1020 ? "Typical Pressure" :
+            "Higher Pressure";
+
+        document.getElementById("lightStatus").textContent =
+            data.light &lt; 30 ? "Low Analog Level" :
+            data.light &lt; 70 ? "Medium Analog Level" :
+            "High Analog Level";
+
+    } catch(error) {
+        console.error(error);
+    }
+}
+
+refreshData();
+setInterval(refreshData,2000);
+&lt;/script>
+&lt;/body>
+&lt;/html>
+)HTML";
+
+// [END 07]
+
+// [08] HTTP ROUTES
+
+void handleRoot() {
+    server.send_P(200,"text/html",DASHBOARD);
+}
+
+void setupRoutes() {
+    server.on("/",HTTP_GET,handleRoot);
+    server.on("/data",HTTP_GET,handleData);
+    server.begin();
+}
+
+// [END 08]
+
+// [09] SENSOR INITIALIZATION
+
+void setup() {
+    Serial.begin(115200);
+
+    Wire.begin(I2C_SDA,I2C_SCL);
+    dht.begin();
+
+    bmpReady = bmp.begin();
+
+    if (!bmpReady) {
+        Serial.println("BMP180 not found");
+    }
+
+    oledReady = display.begin(
+        SSD1306_SWITCHCAPVCC,OLED_ADDRESS
+    );
+
+    if (!oledReady) {
+        Serial.println("OLED not found");
+    }
+
+    pinMode(LDR_PIN,INPUT);
+    analogReadResolution(12);
+
+    readSensors();
+    updateOLED();
+
+// [END 09]
+
+// [10] WIFI INITIALIZATION
+
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid,password);
+
+    Serial.print("Connecting to Wi-Fi");
+
+    unsigned long wifiStart = millis();
+
+    while (
+        WiFi.status() != WL_CONNECTED &&
+        millis() - wifiStart &lt; 15000
+    ) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println();
+
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.print("ESP32 IP Address: ");
+        Serial.println(WiFi.localIP());
+    } else {
+        Serial.println("Wi-Fi unavailable");
+    }
+
+    setupRoutes();
+    previousRead = millis();
+}
+
+// [END 10]
+
+// [11] MAIN LOOP
+
 void loop() {
-  readSensors();
-  updateOLED();
-  server.handleClient();
-  delay(2000);
-}</pre></div></section>
-<section class="section" id="expected-output"><h2>Expected Output</h2><p>The OLED displays temperature, humidity, pressure and light percentage.</p><p>The web dashboard presents the same four measurements in live sensor cards.</p><p>Temperature status changes between cool, warm and high-temperature messages based on the measured value.</p><p>Humidity, pressure and light cards update their progress bars and status messages every two seconds.</p></section>
-<section class="section" id="result"><h2>Result</h2><div class="result-box">The ESP32 successfully monitors four environmental parameters, displays them locally on the OLED and publishes the readings through a Wi-Fi web dashboard.</div></section>
-<section class="section" id="learn"><h2>What You Learn</h2><ul><li>Reading temperature and humidity with DHT22.</li><li>Reading atmospheric pressure with BMP180.</li><li>Reading a 12-bit ESP32 analog input from an LDR module.</li><li>Sharing an I²C bus between BMP180 and OLED.</li><li>Converting analog readings into percentages.</li><li>Creating a JSON sensor-data endpoint.</li><li>Building a live wireless environmental dashboard.</li></ul></section>
-</main><footer><strong>IoT Experiments</strong> · ESP32 Wireless Environmental Dashboard</footer></body></html>
+    server.handleClient();
+
+    if (millis() - previousRead >= READ_INTERVAL) {
+        previousRead = millis();
+
+        readSensors();
+        updateOLED();
+
+        Serial.print("Temp: ");
+        Serial.print(temperature,1);
+
+        Serial.print(" C | Humidity: ");
+        Serial.print(humidity,1);
+
+        Serial.print(" % | Pressure: ");
+        Serial.print(pressure,1);
+
+        Serial.print(" hPa | Light: ");
+        Serial.print(lightPercent);
+
+        Serial.println(" %");
+    }
+
+    delay(5);
+}
+
+// [END 11]
+</textarea>
+
+<!-- INTERACTIVE CODE EXPLORER -->
+<script>
+const program = document
+    .getElementById("esp32-program")
+    .value.trim();
+
+const lines = program.split("\n");
+
+const stepNames = [
+    ["01","LIBRARIES","Load required libraries",
+     "Loads Wi-Fi, web server, I2C, DHT, BMP180 and OLED libraries."],
+    ["02","WIFI AND PINS","Configure Wi-Fi and GPIO",
+     "Defines Wi-Fi credentials and the sensor pin assignments."],
+    ["03","HARDWARE OBJECTS","Initialize hardware objects",
+     "Creates sensor, display and web server objects and measurement variables."],
+    ["04","READ SENSORS","Read environmental measurements",
+     "Reads temperature, humidity, atmospheric pressure and LDR ADC values."],
+    ["05","UPDATE OLED","Display readings on OLED",
+     "Shows environmental readings on the SSD1306 display."],
+    ["06","JSON SENSOR DATA","Return JSON data",
+     "Creates the JSON response returned by the /data endpoint."],
+    ["07","WEB DASHBOARD","Create the dashboard",
+     "Defines dashboard HTML, CSS, JavaScript and status bars."],
+    ["08","HTTP ROUTES","Register web-server routes",
+     "Starts the homepage and JSON data endpoints."],
+    ["09","SENSOR INITIALIZATION","Initialize sensors",
+     "Configures I2C, DHT22, BMP180, OLED and ADC reading."],
+    ["10","WIFI INITIALIZATION","Connect to Wi-Fi",
+     "Connects the ESP32 to Wi-Fi and starts the web server."],
+    ["11","MAIN LOOP","Process sensor updates",
+     "Handles web requests and refreshes sensors every two seconds."]
+];
+
+function escapeHtml(text) {
+    return text.replace(/&/g,"&amp;")
+               .replace(/</g,"&lt;")
+               .replace(/>/g,"&gt;");
+}
+
+function displayCode() {
+    document.getElementById("code-lines").innerHTML =
+        lines.map((line,index) =>
+            '<span class="code-line" id="line-'+(index+1)+'">'+
+            '<span class="line-number">'+(index+1)+'</span>'+
+            '<span>'+escapeHtml(line)+'</span></span>'
+        ).join("");
+}
+
+function findMarker(text) {
+    return lines.findIndex(line => line.trim() === text);
+}
+
+const ranges = stepNames.map(step => {
+    const start = findMarker("// ["+step[0]+"] "+step[1]);
+    const end = findMarker("// [END "+step[0]+"]");
+
+    return {
+        start:start,
+        end:end,
+        valid:start>=0 && end>=start
+    };
+});
+
+function createSteps() {
+    const container = document.getElementById("steps-list");
+
+    stepNames.forEach((step,index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "step";
+        button.textContent =
+            step[0] + "  " + step[2];
+
+        button.addEventListener("click",() => showStep(index));
+        container.appendChild(button);
+    });
+}
+
+function showStep(index) {
+    document.querySelectorAll(".step").forEach((button,i) => {
+        button.classList.toggle("active",i===index);
+    });
+
+    document.querySelectorAll(".code-line").forEach(line => {
+        line.classList.remove("selected");
+    });
+
+    const step = stepNames[index];
+    const range = ranges[index];
+
+    const explanation = document.getElementById("explanation");
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+    heading.textContent = (index+1)+". "+step[2];
+
+    const paragraph = document.createElement("p");
+
+    if (!range.valid) {
+        paragraph.textContent = "Matching source markers not found.";
+        explanation.append(heading,paragraph);
+        return;
+    }
+
+    for (let i=range.start; i<=range.end; i++) {
+        const line = document.getElementById("line-"+(i+1));
+        if (line) line.classList.add("selected");
+    }
+
+    paragraph.textContent = step[3];
+    explanation.append(heading,paragraph);
+
+    const firstLine = document.getElementById("line-"+(range.start+1));
+    const codeBody = document.getElementById("code-body");
+
+    if (firstLine && codeBody) {
+        const offset = firstLine.getBoundingClientRect().top -
+                       codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top:codeBody.scrollTop+offset-20,
+            behavior:"smooth"
+        });
+    }
+}
+
+async function copyCode() {
+    const button = document.querySelector(".code-top .copy-button");
+
+    function copied() {
+        button.textContent = "Copied!";
+        setTimeout(() => button.textContent = "Copy Code",1500);
+    }
+
+    function fallback() {
+        const field = document.createElement("textarea");
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+        document.body.appendChild(field);
+        field.select();
+
+        let ok = false;
+
+        try {
+            ok = document.execCommand("copy");
+        } catch(error) {
+            ok = false;
+        }
+
+        field.remove();
+
+        if (ok) copied();
+        else button.textContent = "Copy failed";
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(program);
+            copied();
+        } catch(error) {
+            fallback();
+        }
+    } else {
+        fallback();
+    }
+}
+
+displayCode();
+createSteps();
+showStep(0);
+</script>
+
+</body>
+</html>
