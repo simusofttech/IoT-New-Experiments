@@ -1,730 +1,701 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Wi-Fi IR Remote Decoder</title>
-
-<style>
-
-/* =========================
-   BASIC PAGE
-========================= */
-
-*{
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
-}
-
-
-/* =========================
-   HEADER
-========================= */
-
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
-.header {
-    background: #2563eb;
-    color: white;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 230px;
-    padding: 25px 0 0;
-    text-align: center;
-}
-
-/* COMPANY LOGO - TOP LEFT */
-
-.header-logo {
-    position: absolute;
-    top: 15px;
-    left: 20px;
-    width: 135px;
-    max-height: 75px;
-    height: auto;
-    object-fit: contain;
-    background: white;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-/* CENTER HEADING */
-
-.header-content {
-    text-align: center;
-    margin: auto 0;
-    padding: 35px 165px;
-}
-
-.header h1 {
-    margin: 0 0 8px;
-    font-size: 34px;
-}
-
-.header p {
-    margin: 0;
-    font-size: 17px;
-}
-
-/* BOTTOM BUTTON BAR */
-
-.header-buttons {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
-}
-
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
-.header-right-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* BUTTON STYLE */
-
-.header-nav-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 38px;
-    padding: 9px 14px;
-    background: white;
-    color: #1e3a8a;
-    border: 1px solid #dbeafe;
-    border-radius: 7px;
-    font-size: 13px;
-    font-weight: bold;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: 0.25s ease;
-}
-
-.header-nav-btn:hover {
-    background: #dbeafe;
-    transform: translateY(-2px);
-}
-
-/* HOME ICON ONLY */
-
-.home-icon-btn {
-    width: 40px;
-    height: 38px;
-    padding: 8px;
-}
-
-.home-icon-btn svg {
-    width: 21px;
-    height: 21px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-/* TABLET */
-
-@media (max-width: 900px) {
-    .header-content {
-        padding: 65px 20px 35px;
-    }
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
-    }
-
-    .header-logo {
-        width: 95px;
-        max-height: 60px;
-        top: 12px;
-        left: 12px;
-    }
-
-    .header-content {
-        padding: 85px 12px 25px;
-    }
-
-    .header h1 {
-        font-size: 25px;
-    }
-
-    .header p {
-        font-size: 15px;
-    }
-
-    .header-buttons {
-        padding: 10px 8px;
-        gap: 8px;
-    }
-
-    .header-left-buttons,
-    .header-right-buttons {
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 8px 7px;
-        font-size: 11px;
-        min-height: 36px;
-    }
-
-    .home-icon-btn {
-        width: 36px;
-        height: 36px;
-        padding: 7px;
-    }
-}
-
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:20;
-}
-
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
-
-nav a:hover{
-    color:#2563eb;
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-    width:90%;
-    max-width:1050px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
-}
-
-.section h3{
-    color:#1e3a8a;
-}
-
-ul,
-ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
-}
-
-.component-card img{
-    width:100%;
-    height:130px;
-    object-fit:contain;
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    min-width:600px;
-    border-collapse:collapse;
-}
-
-th,
-td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-.note{
-    margin-top:15px;
-    padding:14px;
-    background:#eff6ff;
-    border-left:5px solid #2563eb;
-    border-radius:6px;
-}
-
-
-/* =========================
-   CIRCUIT
-========================= */
-
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:700px;
-    margin:20px auto;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-}
-
-
-/* =========================
-   IR STATUS
-========================= */
-
-.status-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-}
-
-.status-card{
-    background:#f8fbff;
-    border:1px solid #bfdbfe;
-    border-radius:12px;
-    padding:18px;
-    text-align:center;
-}
-
-.status-card h3{
-    margin:0 0 8px;
-    font-size:16px;
-}
-
-.status-value{
-    color:#2563eb;
-    font-size:24px;
-    font-weight:bold;
-}
-
-
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-    text-align:center;
-    color:#1e3a8a;
-    font-size:18px;
-    font-weight:bold;
-    line-height:2;
-}
-
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-    color:#142e3a;
-}
-
-.eyebrow{
-    color:#2563eb;
-    font-weight:bold;
-    font-size:13px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    margin:0 0 4px;
-}
-
-.lesson-title{
-    font-size:32px !important;
-    margin:0 0 8px !important;
-    color:#1e3a8a !important;
-    border:0 !important;
-    padding:0 !important;
-}
-
-.intro{
-    color:#526875;
-    margin:0 0 22px;
-}
-
-.code-layout{
-    display:grid;
-    grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-    gap:20px;
-    align-items:start;
-}
-
-
-/* CODE PANEL */
-
-.code-panel{
-    background:white;
-    border:1px solid #bfdbfe;
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 4px 14px rgba(37,99,235,.10);
-}
-
-.code-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    padding:15px 20px;
-    background:#2563eb;
-    color:white;
-}
-
-.filename{
-    font:bold 14px Consolas, monospace;
-}
-
-.copy-button{
-    border:1px solid white;
-    background:white;
-    color:#2563eb;
-    border-radius:8px;
-    padding:8px 14px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.copy-button:hover{
-    background:#eff6ff;
-}
-
-.code-body{
-    height:600px;
-    overflow:auto;
-    padding:16px 0;
-    background:white;
-}
-
-.code-line{
-    display:flex;
-    min-width:max-content;
-    min-height:24px;
-    padding-right:20px;
-    white-space:pre;
-    font:13px/24px Consolas, monospace;
-    color:#1e293b;
-    border-bottom:1px solid #f1f5f9;
-}
-
-.code-line:hover{
-    background:#f8fbff;
-}
-
-.code-line.selected{
-    background:#dbeafe;
-    box-shadow:inset 4px 0 #2563eb;
-}
-
-.line-number{
-    min-width:52px;
-    text-align:right;
-    padding-right:15px;
-    color:#64748b;
-    user-select:none;
-}
-
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-    background:white;
-    border:1px solid #dce6e9;
-    border-radius:14px;
-    padding:22px;
-}
-
-.guide h2{
-    border:0;
-    padding:0;
-    margin:0 0 8px;
-    font-size:21px;
-}
-
-.guide > p{
-    color:#526875;
-}
-
-.steps{
-    display:grid;
-    grid-template-columns:
-    repeat(2,minmax(0,1fr));
-    gap:8px;
-    margin:16px 0;
-}
-
-.step{
-    border:1px solid #dce6e9;
-    border-radius:9px;
-    padding:10px;
-    min-height:65px;
-    background:white;
-    text-align:left;
-    font-size:13px;
-    font-weight:bold;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-    color:#1e3a8a;
-}
-
-.step:hover{
-    border-color:#60a5fa;
-    background:#f8fbff;
-}
-
-.step.active{
-    background:#eff6ff;
-    border-color:#60a5fa;
-}
-
-.step-number{
-    color:#2563eb;
-    font-size:12px;
-}
-
-.explanation{
-    background:#eff6ff;
-    border-radius:9px;
-    padding:16px;
-    min-height:130px;
-}
-
-.explanation h3{
-    margin:0 0 7px;
-    color:#1e3a8a;
-    font-size:17px;
-}
-
-.explanation p{
-    margin:0;
-    color:#526875;
-}
-
-.guide details{
-    border-top:1px solid #dce6e9;
-    margin-top:15px;
-}
-
-.guide summary{
-    cursor:pointer;
-    color:#2563eb;
-    font-weight:bold;
-    padding:13px 0;
-}
-
-.tip{
-    background:#eff6ff;
-    color:#234e87;
-    padding:14px 17px;
-    border-radius:9px;
-    margin-top:20px;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-}
-
-footer strong{
-    color:white;
-}
-
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:850px){
-
-    .code-layout{
-        grid-template-columns:1fr;
-    }
-
-    .status-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-}
-
-@media(max-width:600px){
-
-    .header h1{
-        font-size:28px;
-    }
-
-    .container{
-        width:92%;
-    }
-
-    .section{
-        padding:20px;
-    }
-
-    .steps{
-        grid-template-columns:1fr;
-    }
-
-    .status-grid{
-        grid-template-columns:1fr;
-    }
-
-}
-
-</style>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Wi-Fi IR Remote Decoder
+    </title>
+
+    <style>
+
+        /* ==========================================
+           GENERAL PAGE STYLE
+        ========================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+            line-height: 1.7;
+        }
+
+        /* ==========================================
+           HEADER
+        ========================================== */
+
+        .header {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 230px;
+            padding: 25px 0 0;
+            background: #2563eb;
+            color: white;
+            text-align: center;
+        }
+
+        .header-logo {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 135px;
+            max-height: 75px;
+            height: auto;
+            padding: 5px;
+            object-fit: contain;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .header-content {
+            margin: auto 0;
+            padding: 35px 165px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            width: 100%;
+            padding: 12px 25px;
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .header-left-buttons,
+        .header-right-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 9px 14px;
+            background: white;
+            color: #1e3a8a;
+            border: 1px solid #dbeafe;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: 0.25s ease;
+        }
+
+        .header-nav-btn:hover {
+            background: #dbeafe;
+            transform: translateY(-2px);
+        }
+
+        .home-icon-btn {
+            width: 40px;
+            height: 38px;
+            padding: 8px;
+        }
+
+        .home-icon-btn svg {
+            width: 21px;
+            height: 21px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ==========================================
+           SECTION NAVIGATION
+        ========================================== */
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 13px 15px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav a {
+            color: #1e3a8a;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        /* ==========================================
+           MAIN CONTENT
+        ========================================== */
+
+        .container {
+            width: 90%;
+            max-width: 1050px;
+            margin: 35px auto;
+        }
+
+        .section {
+            margin-bottom: 24px;
+            padding: 28px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            margin: 0 0 18px;
+            padding-bottom: 8px;
+            color: #1e3a8a;
+            font-size: 25px;
+            border-bottom: 2px solid #dbeafe;
+        }
+
+        .section h3 {
+            margin-top: 22px;
+            color: #1e3a8a;
+        }
+
+        ul,
+        ol {
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* ==========================================
+           EXPERIMENT THUMBNAIL
+        ========================================== */
+
+        .project-thumbnail {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .project-thumbnail img {
+            display: block;
+            width: 100%;
+            max-width: 760px;
+            max-height: 420px;
+            height: auto;
+            margin: 0 auto;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        /* ==========================================
+           COMPONENT CARDS
+        ========================================== */
+
+        .components-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .component-card {
+            padding: 20px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .component-card img {
+            display: block;
+            width: 100%;
+            max-width: 180px;
+            height: 150px;
+            margin: 0 auto 15px;
+            object-fit: contain;
+        }
+
+        .component-card h4 {
+            margin: 0 0 8px;
+            color: #1e3a8a;
+            font-size: 17px;
+        }
+
+        .component-card p {
+            margin: 0;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        /* ==========================================
+           TABLES
+        ========================================== */
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        /* ==========================================
+           NOTES AND CIRCUIT
+        ========================================== */
+
+        .note {
+            margin-top: 15px;
+            padding: 14px 16px;
+            background: #eff6ff;
+            border-left: 5px solid #2563eb;
+            border-radius: 6px;
+        }
+
+        .circuit-img {
+            display: block;
+            width: 100%;
+            max-width: 760px;
+            margin: 20px auto 0;
+            padding: 10px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
+        /* ==========================================
+           IR DATA CARDS
+        ========================================== */
+
+        .status-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .status-card {
+            padding: 18px;
+            background: #f8fbff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .status-card h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .status-value {
+            color: #2563eb;
+            font-size: 24px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        /* ==========================================
+           WORKING FLOW
+        ========================================== */
+
+        .flow {
+            color: #1e3a8a;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 2;
+        }
+
+        .flow-step {
+            padding: 5px 10px;
+        }
+
+        .flow-arrow {
+            color: #2563eb;
+            font-size: 22px;
+        }
+
+        /* ==========================================
+           INTERACTIVE CODE EXPLORER
+        ========================================== */
+
+        .eyebrow {
+            margin: 0 0 4px;
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .lesson-title {
+            margin: 0 0 8px !important;
+            padding: 0 !important;
+            border: 0 !important;
+            color: #1e3a8a !important;
+            font-size: 32px !important;
+        }
+
+        .intro {
+            margin: 0 0 22px;
+            color: #526875;
+        }
+
+        .code-layout {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.45fr) minmax(300px, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .code-panel {
+            min-width: 0;
+            background: white;
+            border: 1px solid #bfdbfe;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.10);
+        }
+
+        .code-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 15px 20px;
+            background: #2563eb;
+            color: white;
+        }
+
+        .filename {
+            font: bold 14px Consolas, Monaco, monospace;
+            overflow-wrap: anywhere;
+        }
+
+        .copy-button {
+            min-height: 40px;
+            padding: 8px 14px;
+            background: white;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .copy-button:hover {
+            background: #eff6ff;
+        }
+
+        .code-body {
+            height: 600px;
+            overflow: auto;
+            padding: 16px 0;
+            background: white;
+        }
+
+        .code-line {
+            display: flex;
+            min-width: max-content;
+            min-height: 24px;
+            padding-right: 20px;
+            white-space: pre;
+            color: #1e293b;
+            font: 13px/24px Consolas, Monaco, monospace;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .code-line.selected {
+            background: #dbeafe;
+            box-shadow: inset 4px 0 #2563eb;
+        }
+
+        .line-number {
+            min-width: 52px;
+            padding-right: 15px;
+            color: #64748b;
+            text-align: right;
+            user-select: none;
+        }
+
+        /* ==========================================
+           EXPLANATION GUIDE
+        ========================================== */
+
+        .guide {
+            min-width: 0;
+            padding: 22px;
+            background: white;
+            border: 1px solid #dce6e9;
+            border-radius: 14px;
+        }
+
+        .guide h2 {
+            margin: 0 0 8px;
+            padding: 0;
+            border: 0;
+            font-size: 21px;
+        }
+
+        .guide > p {
+            color: #526875;
+            font-size: 15px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 65px;
+            padding: 10px;
+            background: white;
+            border: 1px solid #dce6e9;
+            border-radius: 9px;
+            color: #1e3a8a;
+            text-align: left;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .step.active {
+            background: #eff6ff;
+            border-color: #60a5fa;
+        }
+
+        .step-number {
+            color: #2563eb;
+            font-size: 12px;
+        }
+
+        .explanation {
+            min-height: 130px;
+            padding: 16px;
+            background: #eff6ff;
+            border-radius: 9px;
+        }
+
+        .explanation h3 {
+            margin: 0 0 7px;
+            color: #1e3a8a;
+            font-size: 17px;
+        }
+
+        .explanation p {
+            margin: 0;
+            color: #526875;
+            font-size: 15px;
+        }
+
+        .guide details {
+            margin-top: 15px;
+            border-top: 1px solid #dce6e9;
+        }
+
+        .guide summary {
+            padding: 13px 0;
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tip {
+            margin-top: 20px;
+            padding: 14px 17px;
+            background: #eff6ff;
+            color: #234e87;
+            border-radius: 9px;
+        }
+
+        /* ==========================================
+           EXPECTED OUTPUT
+        ========================================== */
+
+        .output-box {
+            margin: 15px 0;
+            padding: 16px;
+            background: #f8fafc;
+            border: 1px solid #dbeafe;
+            border-radius: 9px;
+        }
+
+        .output-box pre {
+            margin: 0;
+            color: #1e293b;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font: 14px/1.8 Consolas, Monaco, monospace;
+        }
+
+        /* ==========================================
+           FOOTER
+        ========================================== */
+
+        footer {
+            padding: 25px 20px;
+            background: #0f172a;
+            color: #cbd5e1;
+            text-align: center;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+        /* ==========================================
+           RESPONSIVE DESIGN
+        ========================================== */
+
+        @media (max-width: 900px) {
+
+            .header-content {
+                padding: 65px 20px 35px;
+            }
+
+        }
+
+        @media (max-width: 850px) {
+
+            .code-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .status-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .code-body {
+                height: 450px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .header-logo {
+                top: 12px;
+                left: 12px;
+                width: 95px;
+            }
+
+            .header-content {
+                padding: 85px 12px 25px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .header-buttons {
+                padding: 10px 8px;
+                gap: 8px;
+            }
+
+            .header-left-buttons,
+            .header-right-buttons {
+                gap: 5px;
+            }
+
+            .header-nav-btn {
+                min-height: 36px;
+                padding: 8px 7px;
+                font-size: 11px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .steps,
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
 
 </head>
 
-
 <body>
 
-
-<!-- =========================
+<!-- ==========================================
      HEADER
-========================= -->
-
+========================================== -->
 
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -732,32 +703,28 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
-        <h1>SIMUDIY Exploration Kit</h1>
-        <p>Wi-Fi IR Remote Decoder</p>
-    </div>
 
-    <!-- BOTTOM BUTTON BAR -->
+        <h1>
+            SIMUDIY Exploration Kit
+        </h1>
+
+        <p>
+            Wi-Fi IR Remote Decoder
+        </p>
+
+    </div>
 
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <!-- BACK BUTTON -->
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-                title="Back to ESP32 Experiments"
             >
                 &#8592; Back
             </a>
-
-            <!-- HOME ICON ONLY -->
 
             <a
                 href="../../index.html"
@@ -765,24 +732,26 @@ footer strong{
                 title="Home"
                 aria-label="Home"
             >
+
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                 >
+
                     <path d="M3 10.5L12 3l9 7.5"/>
+
                     <path d="M5 9.5V21h14V9.5"/>
+
                     <path d="M9 21v-7h6v7"/>
+
                 </svg>
+
             </a>
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <!-- ARDUINO BUTTON -->
 
             <a
                 href="../../Arduino Experiments/index.html"
@@ -791,16 +760,12 @@ footer strong{
                 Arduino
             </a>
 
-            <!-- ESP BUTTON -->
-
             <a
                 href="../index.html"
                 class="header-nav-btn"
             >
                 ESP
             </a>
-
-            <!-- RASPBERRY PI BUTTON -->
 
             <a
                 href="../../R-Pi Experiments/index.html"
@@ -815,1182 +780,1521 @@ footer strong{
 
 </header>
 
-
-
-<!-- =========================
+<!-- ==========================================
      NAVIGATION
-========================= -->
+========================================== -->
 
 <nav>
 
-<a href="../index.html">
-← ESP32 Experiments
-</a>
+    <a href="../index.html">
+        &#8592; ESP32 Experiments
+    </a>
 
-<a href="#aim">Aim</a>
+    <a href="#aim">Aim</a>
 
-<a href="#components">Components</a>
+    <a href="#about">About</a>
 
-<a href="#connections">Connections</a>
+    <a href="#components">Components</a>
 
-<a href="#circuit">Circuit</a>
+    <a href="#connections">Connections</a>
 
-<a href="#working">Working</a>
+    <a href="#circuit">Circuit</a>
 
-<a href="#procedure">Procedure</a>
+    <a href="#working">Working</a>
 
-<a href="#code">Code</a>
+    <a href="#procedure">Procedure</a>
 
-<a href="#result">Result</a>
+    <a href="#code">Code</a>
+
+    <a href="#output">Output</a>
+
+    <a href="#result">Result</a>
+
+    <a href="#learn">Learn</a>
 
 </nav>
 
-
 <main class="container">
 
+<!-- ==========================================
+     EXPERIMENT THUMBNAIL
+========================================== -->
 
-<!-- =========================
-     AIM
-========================= -->
+<section class="section project-thumbnail">
 
-<section
-class="section"
-id="aim">
-
-<h2>
-Aim
-</h2>
-
-<p>
-
-To create an ESP32-based
-Wi-Fi IR remote decoder
-that receives infrared signals
-from a remote control,
-decodes the signal information
-and displays the results
-on an OLED and web dashboard.
-
-</p>
+    <img
+        src="Wi-Fi IR Remote Decoder.png"
+        alt="Wi-Fi IR Remote Decoder Thumbnail"
+    >
 
 </section>
 
+<!-- ==========================================
+     1. AIM
+========================================== -->
 
-<!-- =========================
-     ABOUT
-========================= -->
+<section class="section" id="aim">
 
-<section class="section">
+    <h2>Aim</h2>
 
-<h2>
-About the Experiment
-</h2>
-
-<p>
-
-In this Experiment,
-the VS1838B IR receiver
-detects infrared signals
-sent by an IR remote control.
-
-</p>
-
-<p>
-
-The ESP32 decodes the
-IR protocol, command,
-address and raw data.
-
-</p>
-
-<p>
-
-The decoded information
-is displayed on the
-SSD1306 OLED, Serial Monitor
-and a Wi-Fi web dashboard.
-
-</p>
+    <p>
+        To create an ESP32-based
+        Wi-Fi IR Remote Decoder
+        that receives infrared signals
+        from a remote control,
+        decodes the signal information
+        and displays the results
+        on an OLED and
+        wireless web dashboard.
+    </p>
 
 </section>
 
+<!-- ==========================================
+     2. ABOUT THE EXPERIMENT
+========================================== -->
 
-<!-- =========================
-     COMPONENTS
-========================= -->
+<section class="section" id="about">
 
-<section
-class="section"
-id="components">
+    <h2>About the Experiment</h2>
 
-<h2>
-Components Required
-</h2>
+    <p>
+        The Wi-Fi IR Remote Decoder
+        demonstrates infrared communication,
+        signal decoding and wireless
+        monitoring using an ESP32 DevKitC.
+    </p>
 
+    <p>
+        A VS1838B IR Receiver detects
+        infrared signals transmitted
+        by an IR Remote Control.
+    </p>
 
-<div class="components-grid">
+    <p>
+        The receiver converts
+        incoming infrared pulses
+        into digital signals
+        that are processed
+        by the ESP32.
+    </p>
 
+    <p>
+        The IRremote library
+        decodes the received signal
+        and identifies the IR protocol,
+        command, address and raw data.
+    </p>
 
-<div class="component-card">
+    <p>
+        The decoded information
+        is displayed on a
+        0.96-inch SSD1306 OLED.
+    </p>
 
-<img
-src="ESP32 Development Board.png"
-alt="ESP32 Development Board">
+    <p>
+        The Serial Monitor
+        also displays the
+        complete decoded values.
+    </p>
 
-<h4>
-ESP32 DevKitC V4 (×1)
-</h4>
+    <p>
+        The ESP32 connects to Wi-Fi
+        and hosts a web dashboard
+        that displays the latest
+        received IR command.
+    </p>
 
-<p>
-Main controller with
-built-in Wi-Fi.
-</p>
+    <p>
+        The dashboard also shows
+        the protocol, address,
+        raw data, number of
+        received signals and
+        time since the last signal.
+    </p>
 
-</div>
+    <p>
+        The experiment demonstrates
+        how infrared signals
+        can be monitored and
+        analyzed through
+        an IoT-based interface.
+    </p>
 
+    <div class="note">
 
-<div class="component-card">
+        <strong>
+            IR Data Information:
+        </strong>
 
-<img
-src="VS1838B IR Receiver.png"
-alt="VS1838B IR Receiver">
+        <p>
+            Protocol:
+            The communication format
+            used by the remote.
+        </p>
 
-<h4>
-VS1838B IR Receiver (×1)
-</h4>
+        <p>
+            Command:
+            The value associated
+            with a remote button.
+        </p>
 
-<p>
-Receives infrared signals
-from the remote control.
-</p>
+        <p>
+            Address:
+            The address field
+            decoded from the signal.
+        </p>
 
-</div>
+        <p>
+            Raw Data:
+            The received encoded
+            infrared data value.
+        </p>
 
+        <p>
+            Signal Count:
+            The number of decoded
+            signal events.
+        </p>
 
-<div class="component-card">
+    </div>
 
-<img
-src="IR Remote Control.png"
-alt="IR Remote Control">
+    <h3>
+        IR Signal Information
+    </h3>
 
-<h4>
-IR Remote Control (×1)
-</h4>
+    <div class="status-grid">
 
-<p>
-Sends infrared commands
-to the receiver.
-</p>
+        <div class="status-card">
 
-</div>
+            <h3>Protocol</h3>
 
+            <div class="status-value">
+                NEC
+            </div>
 
-<div class="component-card">
+        </div>
 
-<img
-src="OLED.png"
-alt="OLED SSD1306">
+        <div class="status-card">
 
-<h4>
-0.96" SSD1306 OLED (×1)
-</h4>
+            <h3>Command</h3>
 
-<p>
-Displays the decoded
-IR signal information.
-</p>
+            <div class="status-value">
+                0x52
+            </div>
 
-</div>
+        </div>
 
+        <div class="status-card">
 
-<div class="component-card">
+            <h3>Address</h3>
 
-<img
-src="Breadboard.png"
-alt="Breadboard">
+            <div class="status-value">
+                0x0000
+            </div>
 
-<h4>
-Breadboard (×1)
-</h4>
+        </div>
 
-<p>
-Provides a convenient
-base for the circuit.
-</p>
+        <div class="status-card">
 
-</div>
+            <h3>Signals Received</h3>
 
+            <div class="status-value">
+                7
+            </div>
 
-<div class="component-card">
+        </div>
 
-<img
-src="Jumper Wires.png"
-alt="Jumper Wires">
+    </div>
 
-<h4>
-Jumper Wires
-</h4>
+    <div class="note">
 
-<p>
-Used for all
-circuit connections.
-</p>
+        The values shown above
+        are examples.
+        Actual decoded values
+        depend on the IR remote
+        and its protocol.
 
-</div>
-
-
-</div>
+    </div>
 
 </section>
 
+<!-- ==========================================
+     3. COMPONENTS REQUIRED
+========================================== -->
 
-<!-- =========================
-     CONNECTIONS
-========================= -->
+<section class="section" id="components">
 
-<section
-class="section"
-id="connections">
+    <h2>Components Required</h2>
 
-<h2>
-Circuit Connections
-</h2>
+    <div class="components-grid">
 
+        <div class="component-card">
 
-<h3>
-VS1838B IR Receiver → ESP32
-</h3>
+            <img
+                src="ESP32 Development Board.png"
+                alt="ESP32 DevKitC V4"
+            >
 
+            <h4>
+                ESP32 DevKitC V4 (×1)
+            </h4>
 
-<div class="table-wrap">
+            <p>
+                Main microcontroller
+                with built-in Wi-Fi.
+            </p>
 
-<table>
+        </div>
 
-<thead>
+        <div class="component-card">
 
-<tr>
-<th>VS1838B Pin</th>
-<th>ESP32 Pin</th>
-</tr>
+            <img
+                src="VS1838B IR Receiver.png"
+                alt="VS1838B IR Receiver"
+            >
 
-</thead>
+            <h4>
+                VS1838B IR Receiver (×1)
+            </h4>
 
-<tbody>
+            <p>
+                Receives infrared signals
+                from the remote.
+            </p>
 
-<tr>
-<td>VCC</td>
-<td>3.3V</td>
-</tr>
+        </div>
 
-<tr>
-<td>GND</td>
-<td>GND</td>
-</tr>
+        <div class="component-card">
 
-<tr>
-<td>OUT / DATA</td>
-<td>GPIO 15</td>
-</tr>
+            <img
+                src="IR Remote Control.png"
+                alt="IR Remote Control"
+            >
 
-</tbody>
+            <h4>
+                IR Remote Control (×1)
+            </h4>
 
-</table>
+            <p>
+                Transmits infrared
+                command signals.
+            </p>
 
-</div>
+        </div>
 
+        <div class="component-card">
 
-<h3>
-SSD1306 OLED → ESP32
-</h3>
+            <img
+                src="OLED.png"
+                alt="SSD1306 OLED"
+            >
 
+            <h4>
+                0.96-inch SSD1306 OLED (×1)
+            </h4>
 
-<div class="table-wrap">
+            <p>
+                Displays the decoded
+                infrared information.
+            </p>
 
-<table>
+        </div>
 
-<thead>
+        <div class="component-card">
 
-<tr>
-<th>OLED Pin</th>
-<th>ESP32 Pin</th>
-</tr>
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
 
-</thead>
+            <h4>
+                Breadboard (×1)
+            </h4>
 
-<tbody>
+            <p>
+                Used to assemble
+                the circuit.
+            </p>
 
-<tr>
-<td>VCC</td>
-<td>3.3V</td>
-</tr>
+        </div>
 
-<tr>
-<td>GND</td>
-<td>GND</td>
-</tr>
+        <div class="component-card">
 
-<tr>
-<td>SDA</td>
-<td>GPIO 21</td>
-</tr>
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
 
-<tr>
-<td>SCL</td>
-<td>GPIO 22</td>
-</tr>
+            <h4>Jumper Wires</h4>
 
-</tbody>
+            <p>
+                Used for all
+                circuit connections.
+            </p>
 
-</table>
+        </div>
 
-</div>
+    </div>
 
+    <div class="note">
 
-<div class="note">
+        <strong>
+            Required Libraries:
+        </strong>
 
-<strong>
-IR Receiver DATA:
-</strong>
-GPIO 15
+        <ul>
 
-<br>
+            <li>WiFi.h</li>
 
-<strong>
-OLED SDA:
-</strong>
-GPIO 21
+            <li>WebServer.h</li>
 
-<br>
+            <li>Wire.h</li>
 
-<strong>
-OLED SCL:
-</strong>
-GPIO 22
+            <li>Adafruit_GFX.h</li>
 
-<br>
+            <li>Adafruit_SSD1306.h</li>
 
-<strong>
-OLED Address:
-</strong>
-0x3C
+            <li>IRremote.hpp</li>
 
-<br>
+        </ul>
 
-<strong>
-Web Server:
-</strong>
-Port 80
+        <p>
+            Install the IRremote,
+            Adafruit GFX and
+            Adafruit SSD1306 libraries.
+        </p>
 
-</div>
-
-</section>
-
-
-<!-- =========================
-     CIRCUIT
-========================= -->
-
-<section
-class="section"
-id="circuit">
-
-<h2>
-Circuit Diagram
-</h2>
-
-<img
-src="Wi-Fi IR Remote Decoder Circuit.png"
-alt="Wi-Fi IR Remote Decoder Circuit"
-class="circuit-img">
+    </div>
 
 </section>
 
+<!-- ==========================================
+     4. CIRCUIT CONNECTIONS
+========================================== -->
 
-<!-- =========================
-     DECODED DATA
-========================= -->
+<section class="section" id="connections">
 
-<section class="section">
+    <h2>Circuit Connections</h2>
 
-<h2>
-IR Signal Information
-</h2>
+    <h3>
+        VS1838B IR Receiver to ESP32
+    </h3>
 
+    <div class="table-wrap">
 
-<div class="status-grid">
+        <table>
 
+            <thead>
 
-<div class="status-card">
+                <tr>
 
-<h3>
-Protocol
-</h3>
+                    <th>VS1838B Pin</th>
 
-<div class="status-value">
-NEC
-</div>
+                    <th>ESP32 Connection</th>
 
-</div>
+                </tr>
 
+            </thead>
 
-<div class="status-card">
+            <tbody>
 
-<h3>
-Command
-</h3>
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
 
-<div class="status-value">
-0x52
-</div>
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
 
-</div>
+                <tr>
+                    <td>OUT / DATA</td>
+                    <td>GPIO15</td>
+                </tr>
 
+            </tbody>
 
-<div class="status-card">
+        </table>
 
-<h3>
-Address
-</h3>
+    </div>
 
-<div class="status-value">
-0x0000
-</div>
+    <h3>
+        SSD1306 OLED to ESP32
+    </h3>
 
-</div>
+    <div class="table-wrap">
 
+        <table>
 
-<div class="status-card">
+            <thead>
 
-<h3>
-Signals Received
-</h3>
+                <tr>
 
-<div class="status-value">
-7
-</div>
+                    <th>OLED Pin</th>
 
-</div>
+                    <th>ESP32 Connection</th>
 
+                </tr>
 
-</div>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO21</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO22</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>
+        Configuration Summary
+    </h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Parameter</th>
+
+                    <th>Value</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>IR Receiver DATA</td>
+                    <td>GPIO15</td>
+                </tr>
+
+                <tr>
+                    <td>OLED SDA</td>
+                    <td>GPIO21</td>
+                </tr>
+
+                <tr>
+                    <td>OLED SCL</td>
+                    <td>GPIO22</td>
+                </tr>
+
+                <tr>
+                    <td>OLED Address</td>
+                    <td>0x3C</td>
+                </tr>
+
+                <tr>
+                    <td>Web Server Port</td>
+                    <td>80</td>
+                </tr>
+
+                <tr>
+                    <td>Serial Monitor</td>
+                    <td>115200 baud</td>
+                </tr>
+
+                <tr>
+                    <td>Dashboard Refresh</td>
+                    <td>500 ms</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>
+            Important Hardware Notes:
+        </strong>
+
+        <p>
+            Verify the actual
+            VS1838B receiver pinout
+            before connecting VCC,
+            GND and DATA.
+        </p>
+
+        <p>
+            Different IR receiver
+            packages and modules
+            may have different
+            physical pin arrangements.
+        </p>
+
+        <p>
+            GPIO15 is an ESP32
+            strapping pin.
+            The receiver circuit
+            must not interfere with
+            normal board startup.
+        </p>
+
+        <p>
+            The IR remote control
+            is a separate transmitter
+            and does not require
+            a wired connection
+            to the ESP32.
+        </p>
+
+    </div>
 
 </section>
 
+<!-- ==========================================
+     5. CIRCUIT DIAGRAM
+========================================== -->
 
-<!-- =========================
-     WORKING
-========================= -->
+<section class="section" id="circuit">
 
-<section
-class="section"
-id="working">
+    <h2>Circuit Diagram</h2>
 
-<h2>
-Working Principle
-</h2>
-
-
-<div class="flow">
-
-ESP32 Starts
-
-<br>↓<br>
-
-SSD1306 OLED Initializes
-
-<br>↓<br>
-
-VS1838B IR Receiver Starts
-
-<br>↓<br>
-
-ESP32 Connects to Wi-Fi
-
-<br>↓<br>
-
-Web Server Starts
-
-<br>↓<br>
-
-User Presses a Button on IR Remote
-
-<br>↓<br>
-
-VS1838B Receives Infrared Signal
-
-<br>↓<br>
-
-ESP32 Decodes IR Signal
-
-<br>↓<br>
-
-Protocol, Command and Address are Identified
-
-<br>↓<br>
-
-Signal Counter Increases
-
-<br>↓<br>
-
-OLED Displays Decoded Information
-
-<br>↓<br>
-
-Web Dashboard Updates the IR Data
-
-</div>
+    <img
+        src="Wi-Fi IR Remote Decoder Circuit.png"
+        alt="Wi-Fi IR Remote Decoder Circuit"
+        class="circuit-img"
+    >
 
 </section>
 
+<!-- ==========================================
+     6. WORKING PRINCIPLE
+========================================== -->
 
-<!-- =========================
-     PROCEDURE
-========================= -->
+<section class="section" id="working">
 
-<section
-class="section"
-id="procedure">
+    <h2>Working Principle</h2>
 
-<h2>
-Procedure
-</h2>
+    <div class="flow">
 
+        <div class="flow-step">
+            ESP32 DevKitC Starts
+        </div>
 
-<ol>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Place the ESP32 on the breadboard.
-</li>
+        <div class="flow-step">
+            Initialize SSD1306 OLED
+        </div>
 
-<li>
-Connect VS1838B VCC to ESP32 3.3V.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Connect VS1838B GND to ESP32 GND.
-</li>
+        <div class="flow-step">
+            Initialize VS1838B IR Receiver
+        </div>
 
-<li>
-Connect VS1838B OUT / DATA to GPIO 15.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Connect OLED VCC to ESP32 3.3V.
-</li>
+        <div class="flow-step">
+            Connect ESP32 to Wi-Fi
+        </div>
 
-<li>
-Connect OLED GND to ESP32 GND.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Connect OLED SDA to GPIO 21.
-</li>
+        <div class="flow-step">
+            Start HTTP Web Server
+        </div>
 
-<li>
-Connect OLED SCL to GPIO 22.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Open Arduino IDE.
-</li>
+        <div class="flow-step">
+            User Presses IR Remote Button
+        </div>
 
-<li>
-Install the IRremote library.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Install Adafruit GFX library.
-</li>
+        <div class="flow-step">
+            VS1838B Receives IR Signal
+        </div>
 
-<li>
-Install Adafruit SSD1306 library.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Upload the program to the ESP32.
-</li>
+        <div class="flow-step">
+            ESP32 Decodes Signal
+        </div>
 
-<li>
-Open Serial Monitor at 115200 baud.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Wait for ESP32 to connect to Wi-Fi.
-</li>
+        <div class="flow-step">
+            Identify Protocol and Command
+        </div>
 
-<li>
-Note the IP address shown in Serial Monitor.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Open the IP address in a web browser.
-</li>
+        <div class="flow-step">
+            Identify Address and Raw Data
+        </div>
 
-<li>
-Point the IR remote toward the VS1838B receiver.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Press any remote button.
-</li>
+        <div class="flow-step">
+            Increase Signal Counter
+        </div>
 
-<li>
-Observe the decoded command on the OLED.
-</li>
+        <div class="flow-arrow">↓</div>
 
-<li>
-Observe protocol, address,
-raw data and signal count
-on the web dashboard.
-</li>
+        <div class="flow-step">
+            Update OLED and Serial Monitor
+        </div>
 
-<li>
-Try different buttons
-and compare the decoded values.
-</li>
+        <div class="flow-arrow">↓</div>
 
-</ol>
+        <div class="flow-step">
+            Update Wi-Fi Dashboard
+        </div>
+
+    </div>
+
+    <h3>
+        IR Signal Transmission
+    </h3>
+
+    <p>
+        The remote control
+        transmits infrared
+        pulses whenever
+        a button is pressed.
+    </p>
+
+    <h3>
+        IR Signal Reception
+    </h3>
+
+    <p>
+        The VS1838B receiver
+        detects the infrared
+        pulses and sends
+        a digital signal
+        to ESP32 GPIO15.
+    </p>
+
+    <h3>
+        Signal Decoding
+    </h3>
+
+    <p>
+        The IRremote library
+        processes the signal
+        and identifies the
+        decoded protocol,
+        command and address.
+    </p>
+
+    <h3>
+        Signal Counter
+    </h3>
+
+    <p>
+        The counter increases
+        whenever a complete
+        IR signal event
+        is decoded.
+    </p>
+
+    <h3>
+        OLED Display
+    </h3>
+
+    <p>
+        The OLED displays
+        the most recent
+        command, protocol,
+        address and
+        signal count.
+    </p>
+
+    <h3>
+        Web Dashboard
+    </h3>
+
+    <p>
+        The ESP32 sends the
+        stored IR information
+        to a browser through
+        its /data endpoint.
+    </p>
+
+    <p>
+        The dashboard refreshes
+        the displayed values
+        every 500 milliseconds.
+    </p>
 
 </section>
 
-
-<!-- =========================================
-     EXPLORE THE CODE
-========================================= -->
-
-<section
-class="section"
-id="code">
-
-<div class="code-lesson">
-
-
-<p class="eyebrow">
-ESP32 Experiment · Code Review
-</p>
-
-
-<h2 class="lesson-title">
-Explore the Code
-</h2>
-
-
-<p class="intro">
-
-Wi-Fi IR Remote Decoder ·
-Select a step to understand
-what each part of the program does.
-
-</p>
-
-
-<div class="code-layout">
-
-
-<!-- CODE PANEL -->
-
-<article class="code-panel">
-
-
-<div class="code-top">
-
-<span class="filename">
-WiFi_IR_Remote_Decoder.ino
-</span>
-
-
-<button
-class="copy-button"
-onclick="copyCode()">
-
-Copy Code
-
-</button>
-
-</div>
-
-
-<div
-class="code-body"
-id="code-body">
-
-<code id="code-lines"></code>
-
-</div>
-
-
-</article>
-
-
-<!-- GUIDE -->
-
-<article class="guide">
-
-
-<h2>
-Understand it step by step
-</h2>
-
-
-<p>
-Choose a step.
-The matching code
-will light up on the left.
-</p>
-
-
-<div class="steps">
-
-
-<button
-class="step active"
-onclick="showStep(0)">
-
-<span class="step-number">
-01
-</span>
-
-Load libraries
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(1)">
-
-<span class="step-number">
-02
-</span>
-
-Set Wi-Fi
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(2)">
-
-<span class="step-number">
-03
-</span>
-
-Set pins
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(3)">
-
-<span class="step-number">
-04
-</span>
-
-Prepare OLED
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(4)">
-
-<span class="step-number">
-05
-</span>
-
-Store IR data
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(5)">
-
-<span class="step-number">
-06
-</span>
-
-Start receiver
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(6)">
-
-<span class="step-number">
-07
-</span>
-
-Decode signal
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(7)">
-
-<span class="step-number">
-08
-</span>
-
-Update OLED
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(8)">
-
-<span class="step-number">
-09
-</span>
-
-Send web data
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(9)">
-
-<span class="step-number">
-10
-</span>
-
-Listen continuously
-
-</button>
-
-
-</div>
-
-
-<div
-class="explanation"
-id="explanation">
-
-<h3>
-1. Load libraries
-</h3>
-
-<p>
-
-The program loads libraries for
-Wi-Fi, web server, I2C communication,
-SSD1306 OLED and infrared decoding.
-
-</p>
-
-</div>
-
-
-<details>
-
-<summary>
-Explore more: IR decoding
-</summary>
-
-<p>
-
-The IR receiver converts
-infrared light pulses into
-digital data.
-
-</p>
-
-<p>
-
-The IRremote library then
-decodes information such as
-the protocol, command,
-address and raw data.
-
-</p>
-
-</details>
-
-
-<details>
-
-<summary>
-Check your understanding
-</summary>
-
-
-<ul>
-
-<li>
-Which GPIO reads the IR receiver?
-<strong>GPIO 15</strong>
-</li>
-
-<li>
-Which GPIO is OLED SDA?
-<strong>GPIO 21</strong>
-</li>
-
-<li>
-Which GPIO is OLED SCL?
-<strong>GPIO 22</strong>
-</li>
-
-<li>
-What does the signal counter do?
-<strong>Counts received IR signals.</strong>
-</li>
-
-<li>
-How often does the web dashboard request new data?
-<strong>Every 500 ms.</strong>
-</li>
-
-</ul>
-
-
-</details>
-
-
-</article>
-
-
-</div>
-
-
-<p class="tip">
-
-<strong>
-Try it:
-</strong>
-
-Press different buttons
-on the IR remote and compare
-their command values,
-addresses and raw data.
-
-</p>
-
-
-</div>
+<!-- ==========================================
+     7. PROCEDURE
+========================================== -->
+
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Arrange ESP32 DevKitC V4,
+            VS1838B IR Receiver,
+            IR Remote Control,
+            SSD1306 OLED, breadboard
+            and jumper wires.
+        </li>
+
+        <li>
+            Place the ESP32
+            on the breadboard.
+        </li>
+
+        <li>
+            Verify the physical
+            pinout of the
+            VS1838B receiver.
+        </li>
+
+        <li>
+            Connect receiver VCC
+            to 3.3V.
+        </li>
+
+        <li>
+            Connect receiver GND
+            to ESP32 GND.
+        </li>
+
+        <li>
+            Connect receiver OUT
+            to GPIO15.
+        </li>
+
+        <li>
+            Connect OLED VCC
+            to 3.3V.
+        </li>
+
+        <li>
+            Connect OLED GND
+            to GND.
+        </li>
+
+        <li>
+            Connect OLED SDA
+            to GPIO21.
+        </li>
+
+        <li>
+            Connect OLED SCL
+            to GPIO22.
+        </li>
+
+        <li>
+            Verify all connections.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install the ESP32
+            board package.
+        </li>
+
+        <li>
+            Install IRremote,
+            Adafruit GFX and
+            Adafruit SSD1306 libraries.
+        </li>
+
+        <li>
+            Create a sketch named
+            WiFi_IR_Remote_Decoder.ino.
+        </li>
+
+        <li>
+            Copy the complete program
+            from Explore the Code.
+        </li>
+
+        <li>
+            Configure the Wi-Fi
+            network credentials.
+        </li>
+
+        <li>
+            Select the correct
+            ESP32 board and port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 115200 baud.
+        </li>
+
+        <li>
+            Wait for Wi-Fi
+            connection.
+        </li>
+
+        <li>
+            Note the ESP32
+            IP address.
+        </li>
+
+        <li>
+            Open the IP address
+            in a browser on
+            the same network.
+        </li>
+
+        <li>
+            Point the IR Remote
+            toward the VS1838B
+            receiver.
+        </li>
+
+        <li>
+            Press any button
+            on the remote.
+        </li>
+
+        <li>
+            Observe the decoded
+            information on OLED.
+        </li>
+
+        <li>
+            Check the same information
+            in Serial Monitor.
+        </li>
+
+        <li>
+            Observe the latest
+            IR data and signal
+            counter on the dashboard.
+        </li>
+
+        <li>
+            Press different buttons
+            and compare their
+            decoded values.
+        </li>
+
+    </ol>
 
 </section>
 
+<!-- ==========================================
+     8. EXPLORE THE CODE
+========================================== -->
 
-<!-- =========================
-     EXPECTED OUTPUT
-========================= -->
+<section class="section" id="code">
 
-<section class="section">
+    <p class="eyebrow">
+        ESP32 Experiment · Code Review
+    </p>
 
-<h2>
-Expected Output
-</h2>
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
 
-<p>
+    <p class="intro">
+        Select an explanation
+        to highlight its exact
+        source-code section.
+        Copy Code copies the
+        complete ESP32 sketch.
+    </p>
 
-The OLED displays:
+    <div class="code-layout">
 
-</p>
+        <article class="code-panel">
 
-<ul>
+            <div class="code-top">
 
-<li>
-IR command
-</li>
+                <span class="filename">
+                    WiFi_IR_Remote_Decoder.ino
+                </span>
 
-<li>
-IR protocol
-</li>
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
 
-<li>
-IR address
-</li>
+            </div>
 
-<li>
-Number of received signals
-</li>
+            <div
+                class="code-body"
+                id="code-body"
+            >
+                <code id="code-lines"></code>
+            </div>
 
-<li>
-Wi-Fi status
-</li>
+        </article>
 
-</ul>
+        <article class="guide">
 
-<p>
+            <h2>
+                Understand it step by step
+            </h2>
 
-The web dashboard additionally
-shows the raw IR data,
-last received signal time
-and signal activity.
+            <p>
+                Click any step to
+                highlight the matching
+                code lines in blue.
+            </p>
 
-</p>
+            <div
+                class="steps"
+                id="steps-list"
+            ></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore More: IR Decoding
+                </summary>
+
+                <p>
+                    The VS1838B receives
+                    modulated infrared
+                    light and produces
+                    digital pulses.
+                </p>
+
+                <p>
+                    IRremote decodes
+                    the pulses into
+                    structured information.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: IR Protocol
+                </summary>
+
+                <p>
+                    Different remote
+                    controls may use
+                    protocols such as
+                    NEC, Sony or RC5.
+                </p>
+
+                <p>
+                    The displayed
+                    protocol depends
+                    on the remote used.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Raw Data
+                </summary>
+
+                <p>
+                    Raw decoded data
+                    is displayed in
+                    hexadecimal format.
+                </p>
+
+                <p>
+                    The value and
+                    its width depend
+                    on the received
+                    protocol and data.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Wi-Fi
+                </summary>
+
+                <p>
+                    The ESP32 hosts
+                    a local HTTP server.
+                </p>
+
+                <p>
+                    The dashboard requests
+                    updated IR information
+                    every 500 milliseconds.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+
+                    <li>
+                        Which GPIO receives
+                        the IR signal?
+                    </li>
+
+                    <li>
+                        Which GPIO is
+                        OLED SDA?
+                    </li>
+
+                    <li>
+                        Which GPIO is
+                        OLED SCL?
+                    </li>
+
+                    <li>
+                        Which library
+                        decodes IR signals?
+                    </li>
+
+                    <li>
+                        Which route sends
+                        decoded data?
+                    </li>
+
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div
+                    id="quiz-answers"
+                    hidden
+                >
+
+                    <ol>
+
+                        <li>GPIO15</li>
+
+                        <li>GPIO21</li>
+
+                        <li>GPIO22</li>
+
+                        <li>IRremote.hpp</li>
+
+                        <li>/data</li>
+
+                    </ol>
+
+                </div>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+
+        <strong>Try It:</strong>
+
+        Press different buttons
+        on the IR remote and
+        compare the command,
+        address and raw data
+        shown on the OLED
+        and dashboard.
+
+    </p>
 
 </section>
 
+<!-- ==========================================
+     9. EXPECTED OUTPUT
+========================================== -->
 
-<!-- =========================
-     RESULT
-========================= -->
+<section class="section" id="output">
 
-<section
-class="section"
-id="result">
+    <h2>Expected Output</h2>
 
-<h2>
-Result
-</h2>
+    <h3>
+        Initial OLED Display
+    </h3>
 
-<p>
+    <div class="output-box">
 
-The Wi-Fi IR Remote Decoder
-Experiment successfully receives
-and decodes infrared commands
-using the VS1838B IR receiver.
+<pre>IR REMOTE DECODER
+---------------------
 
-</p>
+CMD: --
+PRO: WAITING
+ADDR: --
+RX: 0  WIFI:OK</pre>
 
-<p>
+    </div>
 
-The ESP32 displays the decoded
-IR information on the OLED,
-Serial Monitor and Wi-Fi
-web dashboard.
+    <h3>
+        After Receiving a Signal
+    </h3>
 
-</p>
+    <div class="output-box">
+
+<pre>IR REMOTE DECODER
+---------------------
+
+CMD: 0x52
+PRO: NEC
+ADDR: 0x0000
+RX: 7  WIFI:OK</pre>
+
+    </div>
+
+    <h3>
+        Example Serial Monitor
+    </h3>
+
+    <div class="output-box">
+
+<pre>IR receiver started
+
+WiFi connected!
+IP Address: 192.168.x.x
+Web server started!
+
+============================
+Protocol : NEC
+Command  : 0x52
+Address  : 0x0000
+Raw Data : 0xXXXXXXXX
+Count    : 7</pre>
+
+    </div>
+
+    <h3>
+        Web Dashboard Information
+    </h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Parameter</th>
+
+                    <th>Example Value</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Protocol</td>
+                    <td>NEC</td>
+                </tr>
+
+                <tr>
+                    <td>Command</td>
+                    <td>0x52</td>
+                </tr>
+
+                <tr>
+                    <td>Address</td>
+                    <td>0x0000</td>
+                </tr>
+
+                <tr>
+                    <td>Raw Data</td>
+                    <td>Hexadecimal value</td>
+                </tr>
+
+                <tr>
+                    <td>Signals Received</td>
+                    <td>7</td>
+                </tr>
+
+                <tr>
+                    <td>Last Signal</td>
+                    <td>Seconds ago</td>
+                </tr>
+
+                <tr>
+                    <td>IR Receiver</td>
+                    <td>ACTIVE</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Output Note:</strong>
+
+        <p>
+            Actual command,
+            address and raw data
+            depend on the IR
+            remote control used.
+        </p>
+
+        <p>
+            The example output
+            is for explanation only.
+        </p>
+
+    </div>
 
 </section>
 
+<!-- ==========================================
+     10. RESULT
+========================================== -->
 
-<!-- =========================
-     LEARNING
-========================= -->
+<section class="section" id="result">
 
-<section class="section">
+    <h2>Result</h2>
 
-<h2>
-What You Learn
-</h2>
+    <p>
+        The Wi-Fi IR Remote Decoder
+        experiment demonstrates
+        infrared signal reception
+        using a VS1838B receiver
+        connected to ESP32 GPIO15.
+    </p>
 
-<ul>
+    <p>
+        The ESP32 decodes
+        infrared commands,
+        protocol information,
+        address and raw data.
+    </p>
 
-<li>
-Connecting a VS1838B IR receiver to ESP32.
-</li>
-
-<li>
-Receiving signals from an IR remote.
-</li>
-
-<li>
-Understanding IR protocols.
-</li>
-
-<li>
-Reading IR command values.
-</li>
-
-<li>
-Reading IR address values.
-</li>
-
-<li>
-Using the IRremote library.
-</li>
-
-<li>
-Displaying information on an SSD1306 OLED.
-</li>
-
-<li>
-Using I2C communication.
-</li>
-
-<li>
-Connecting ESP32 to Wi-Fi.
-</li>
-
-<li>
-Displaying decoded data on a web dashboard.
-</li>
-
-</ul>
+    <p>
+        The decoded information
+        is displayed on the
+        SSD1306 OLED,
+        Serial Monitor and
+        Wi-Fi web dashboard.
+    </p>
 
 </section>
 
+<!-- ==========================================
+     11. WHAT YOU LEARN
+========================================== -->
+
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+
+        <li>
+            Connecting a VS1838B
+            IR receiver to ESP32.
+        </li>
+
+        <li>
+            Receiving infrared
+            remote-control signals.
+        </li>
+
+        <li>
+            Using GPIO15 as
+            an IR receiver input.
+        </li>
+
+        <li>
+            Understanding infrared
+            communication protocols.
+        </li>
+
+        <li>
+            Decoding IR commands.
+        </li>
+
+        <li>
+            Reading IR addresses.
+        </li>
+
+        <li>
+            Understanding hexadecimal
+            raw IR data.
+        </li>
+
+        <li>
+            Using the IRremote library.
+        </li>
+
+        <li>
+            Tracking received
+            signal counts.
+        </li>
+
+        <li>
+            Displaying IR information
+            on an SSD1306 OLED.
+        </li>
+
+        <li>
+            Using I²C communication.
+        </li>
+
+        <li>
+            Connecting ESP32
+            to Wi-Fi.
+        </li>
+
+        <li>
+            Creating an HTTP
+            web server.
+        </li>
+
+        <li>
+            Sending decoded
+            information as JSON.
+        </li>
+
+        <li>
+            Updating an IR
+            monitoring dashboard.
+        </li>
+
+    </ul>
+
+</section>
 
 </main>
 
+<!-- ==========================================
+     FOOTER
+========================================== -->
 
 <footer>
 
-<strong>
-ESP32 Experiment
-</strong>
+    <strong>
+        SIMUDIY Exploration Kit
+    </strong>
 
-<br>
-
-Wi-Fi IR Remote Decoder
+    <div>
+        Wi-Fi IR Remote Decoder
+    </div>
 
 </footer>
 
+<!-- ==========================================
+     COMPLETE ESP32 PROGRAM
 
-<!-- =========================================
-     ESP32 PROGRAM
-========================================= -->
+     The program is stored in a textarea
+     so nested dashboard HTML cannot
+     accidentally close the outer script.
 
-<script
-type="text/plain"
-id="esp32-program">
+     HTML entities are decoded by the
+     browser when the source is read.
+========================================== -->
 
-#include <WiFi.h>
-#include <WebServer.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include <IRremote.hpp>
+<textarea
+    id="esp32-program"
+    hidden
+>
+// [01] LOAD LIBRARIES
+
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;Adafruit_GFX.h>
+#include &lt;Adafruit_SSD1306.h>
+#include &lt;IRremote.hpp>
+
+// [END 01]
 
 
-// =====================================================
-// WIFI
-// =====================================================
+// [02] CONFIGURE WIFI
 
-const char* ssid =
-"Wokwi-GUEST";
+const char* ssid = "Wokwi-GUEST";
 
-const char* password =
-"";
+const char* password = "";
 
 WebServer server(80);
 
+// [END 02]
 
-// =====================================================
-// PINS
-// =====================================================
+
+// [03] CONFIGURE GPIO PINS
 
 #define IR_PIN 15
 
 #define OLED_SDA 21
+
 #define OLED_SCL 22
 
 #define OLED_ADDR 0x3C
 
+// [END 03]
 
-// =====================================================
-// OLED
-// =====================================================
+
+// [04] CONFIGURE OLED
 
 #define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
 
+#define SCREEN_HEIGHT 64
 
 Adafruit_SSD1306 display(
     SCREEN_WIDTH,
@@ -1999,60 +2303,46 @@ Adafruit_SSD1306 display(
     -1
 );
 
-
-// =====================================================
-// IR DATA
-// =====================================================
-
-String irProtocol =
-"WAITING";
-
-String irCommand =
-"--";
-
-String irAddress =
-"--";
-
-String irRawData =
-"--";
-
-unsigned long signalCount =
-0;
-
-unsigned long lastSignalTime =
-0;
+// [END 04]
 
 
-// =====================================================
-// OLED
-// =====================================================
+// [05] STORE IR DATA
 
-void updateOLED()
-{
+String irProtocol = "WAITING";
+
+String irCommand = "--";
+
+String irAddress = "--";
+
+String irRawData = "--";
+
+unsigned long signalCount = 0;
+
+unsigned long lastSignalTime = 0;
+
+// [END 05]
+
+
+// [06] UPDATE OLED
+
+void updateOLED() {
 
     display.clearDisplay();
-
 
     display.setTextColor(
         SSD1306_WHITE
     );
 
-
     display.setTextSize(1);
-
-
-    // TITLE
 
     display.setCursor(
         0,
         0
     );
 
-
     display.println(
         "IR REMOTE DECODER"
     );
-
 
     display.drawLine(
         0,
@@ -2062,518 +2352,377 @@ void updateOLED()
         SSD1306_WHITE
     );
 
-
-    // COMMAND
-
     display.setCursor(
         0,
         15
     );
 
+    display.print("CMD: ");
 
-    display.print(
-        "CMD: "
-    );
-
-
-    display.println(
-        irCommand
-    );
-
-
-    // PROTOCOL
+    display.println(irCommand);
 
     display.setCursor(
         0,
         27
     );
 
+    display.print("PRO: ");
 
-    display.print(
-        "PRO: "
-    );
-
-
-    display.println(
-        irProtocol
-    );
-
-
-    // ADDRESS
+    display.println(irProtocol);
 
     display.setCursor(
         0,
         39
     );
 
+    display.print("ADDR:");
 
-    display.print(
-        "ADDR:"
-    );
-
-
-    display.println(
-        irAddress
-    );
-
-
-    // SIGNAL COUNT
+    display.println(irAddress);
 
     display.setCursor(
         0,
         51
     );
 
+    display.print("RX: ");
 
-    display.print(
-        "RX: "
-    );
+    display.print(signalCount);
 
+    if (
+        WiFi.status() == WL_CONNECTED
+    ) {
 
-    display.print(
-        signalCount
-    );
+        display.print(" WIFI:OK");
 
+    } else {
 
-    display.print(
-        " WIFI:OK"
-    );
+        display.print(" WIFI:--");
 
+    }
 
     display.display();
 
 }
 
-
-// =====================================================
-// WEB PAGE
-// =====================================================
-
-const char MAIN_PAGE[]
-PROGMEM =
-R"rawliteral(
-
-<!DOCTYPE html>
-
-<html>
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>
-IR Remote Decoder
-</title>
-
-
-<style>
-
-*{
-    box-sizing:border-box;
-}
-
-
-body{
-
-    margin:0;
-
-    min-height:100vh;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:
-    linear-gradient(
-        135deg,
-        #071525,
-        #020812
-    );
-
-    color:white;
-
-    padding:25px;
-}
-
-
-.dashboard{
-
-    width:94%;
-
-    max-width:900px;
-
-    margin:auto;
-}
-
-
-.header{
-
-    text-align:center;
-
-    margin-bottom:25px;
-}
-
-
-.header h1{
-
-    color:#55dfff;
-
-}
-
-
-.online{
-
-    display:inline-block;
-
-    margin-top:10px;
-
-    padding:8px 15px;
-
-    border-radius:20px;
-
-    color:#4ade80;
-
-    border:1px solid #4ade80;
-}
-
-
-.command-card{
-
-    text-align:center;
-
-    padding:30px;
-
-    border-radius:18px;
-
-    background:#13263a;
-
-    margin-bottom:18px;
-}
-
-
-.command{
-
-    margin-top:10px;
-
-    font-size:48px;
-
-    color:#55dfff;
-
-    font-weight:bold;
-}
-
-
-.grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(
-        2,
-        1fr
-    );
-
-    gap:15px;
-}
-
-
-.card{
-
-    padding:20px;
-
-    border-radius:15px;
-
-    background:#13263a;
-}
-
-
-.label{
-
-    color:#8ea9bf;
-
-    font-size:12px;
-
-    text-transform:uppercase;
-}
-
-
-.value{
-
-    margin-top:8px;
-
-    font-size:24px;
-
-    font-weight:bold;
-
-    color:#55dfff;
-}
-
-
-@media(max-width:600px){
-
-    .grid{
-
-        grid-template-columns:1fr;
-
-    }
-
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<div class="dashboard">
-
-
-<div class="header">
-
-<h1>
-IR Remote Decoder
-</h1>
-
-<p>
-ESP32 Wi-Fi Infrared Monitoring System
-</p>
-
-<div class="online">
-● SYSTEM ONLINE
-</div>
-
-</div>
-
-
-<div class="command-card">
-
-<div>
-Latest IR Command
-</div>
-
-<div
-class="command"
-id="command">
-
---
-
-</div>
-
-</div>
-
-
-<div class="grid">
-
-
-<div class="card">
-
-<div class="label">
-Protocol
-</div>
-
-<div
-class="value"
-id="protocol">
-
---
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="label">
-Address
-</div>
-
-<div
-class="value"
-id="address">
-
---
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="label">
-Raw Data
-</div>
-
-<div
-class="value"
-id="raw">
-
---
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="label">
-Signals Received
-</div>
-
-<div
-class="value"
-id="count">
-
-0
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="label">
-Last Signal
-</div>
-
-<div
-class="value"
-id="lastSignal">
-
-WAITING
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="label">
-IR Receiver
-</div>
-
-<div class="value">
-ACTIVE
-</div>
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-<script>
-
-
-function updateDashboard()
-{
-
-    fetch(
-        "/data"
-    )
-
-    .then(
-        response =>
-        response.json()
-    )
-
-    .then(
-        data =>
-        {
-
-            document
-            .getElementById(
-                "command"
-            )
-            .innerText =
-            data.command;
-
-
-            document
-            .getElementById(
-                "protocol"
-            )
-            .innerText =
-            data.protocol;
-
-
-            document
-            .getElementById(
-                "address"
-            )
-            .innerText =
-            data.address;
-
-
-            document
-            .getElementById(
-                "raw"
-            )
-            .innerText =
-            data.raw;
-
-
-            document
-            .getElementById(
-                "count"
-            )
-            .innerText =
-            data.count;
-
-
-            document
-            .getElementById(
-                "lastSignal"
-            )
-            .innerText =
-            data.lastSignal;
+// [END 06]
+
+
+// [07] CREATE WEB DASHBOARD
+
+const char MAIN_PAGE[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+
+&lt;head>
+
+    &lt;meta charset="UTF-8">
+
+    &lt;meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    &lt;title>
+        IR Remote Decoder
+    &lt;/title>
+
+    &lt;style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 25px;
+            background: linear-gradient(
+                135deg,
+                #071525,
+                #020812
+            );
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .dashboard {
+            width: 94%;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #55dfff;
+        }
+
+        .online {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            border: 1px solid #4ade80;
+            border-radius: 20px;
+            color: #4ade80;
+        }
+
+        .command-card {
+            margin-bottom: 18px;
+            padding: 30px;
+            background: #13263a;
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        .command {
+            margin-top: 10px;
+            color: #55dfff;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            padding: 20px;
+            background: #13263a;
+            border-radius: 15px;
+        }
+
+        .label {
+            color: #8ea9bf;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .value {
+            margin-top: 8px;
+            color: #55dfff;
+            font-size: 24px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 600px) {
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
 
         }
 
-    );
+    &lt;/style>
 
-}
+&lt;/head>
 
+&lt;body>
 
-setInterval(
-    updateDashboard,
-    500
-);
+    &lt;div class="dashboard">
 
+        &lt;div class="header">
 
-updateDashboard();
+            &lt;h1>
+                IR Remote Decoder
+            &lt;/h1>
 
+            &lt;p>
+                ESP32 Wi-Fi Infrared Monitoring System
+            &lt;/p>
 
-</script>
+            &lt;div class="online">
+                SYSTEM ONLINE
+            &lt;/div>
 
+        &lt;/div>
 
-</body>
+        &lt;div class="command-card">
 
-</html>
+            &lt;div>
+                Latest IR Command
+            &lt;/div>
 
+            &lt;div
+                class="command"
+                id="command"
+            >
+                --
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="grid">
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Protocol
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="protocol"
+                >
+                    --
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Address
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="address"
+                >
+                    --
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Raw Data
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="raw"
+                >
+                    --
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Signals Received
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="count"
+                >
+                    0
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Last Signal
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="lastSignal"
+                >
+                    WAITING
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    IR Receiver
+                &lt;/div>
+
+                &lt;div class="value">
+                    ACTIVE
+                &lt;/div>
+
+            &lt;/div>
+
+        &lt;/div>
+
+    &lt;/div>
+
+    &lt;script>
+
+        async function updateDashboard() {
+
+            try {
+
+                const response = await fetch(
+                    "/data"
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Data request failed"
+                    );
+
+                }
+
+                const data = await response.json();
+
+                document.getElementById(
+                    "command"
+                ).textContent = data.command;
+
+                document.getElementById(
+                    "protocol"
+                ).textContent = data.protocol;
+
+                document.getElementById(
+                    "address"
+                ).textContent = data.address;
+
+                document.getElementById(
+                    "raw"
+                ).textContent = data.raw;
+
+                document.getElementById(
+                    "count"
+                ).textContent = data.count;
+
+                document.getElementById(
+                    "lastSignal"
+                ).textContent = data.lastSignal;
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+        }
+
+        updateDashboard();
+
+        setInterval(
+            updateDashboard,
+            500
+        );
+
+    &lt;/script>
+
+&lt;/body>
+
+&lt;/html>
 )rawliteral";
 
+// [END 07]
 
-// =====================================================
-// WEB ROOT
-// =====================================================
 
-void handleRoot()
-{
+// [08] SERVE HOME PAGE
+
+void handleRoot() {
 
     server.send_P(
         200,
@@ -2583,136 +2732,66 @@ void handleRoot()
 
 }
 
-
-// =====================================================
-// WEB DATA
-// =====================================================
-
-void handleData()
-{
-
-    String json =
-    "{";
+// [END 08]
 
 
-    json +=
-    "\"protocol\":\"";
+// [09] SEND JSON DATA
 
-    json +=
-    irProtocol;
+void handleData() {
 
-    json +=
-    "\",";
+    String json = "{";
 
+    json += "\"protocol\":\"";
+    json += irProtocol;
+    json += "\",";
 
-    json +=
-    "\"command\":\"";
+    json += "\"command\":\"";
+    json += irCommand;
+    json += "\",";
 
-    json +=
-    irCommand;
+    json += "\"address\":\"";
+    json += irAddress;
+    json += "\",";
 
-    json +=
-    "\",";
+    json += "\"raw\":\"";
+    json += irRawData;
+    json += "\",";
 
+    json += "\"count\":";
+    json += String(signalCount);
+    json += ",";
 
-    json +=
-    "\"address\":\"";
+    json += "\"lastSignal\":\"";
 
-    json +=
-    irAddress;
+    if (signalCount == 0) {
 
-    json +=
-    "\",";
+        json += "WAITING";
 
-
-    json +=
-    "\"raw\":\"";
-
-    json +=
-    irRawData;
-
-    json +=
-    "\",";
-
-
-    json +=
-    "\"count\":";
-
-    json +=
-    String(
-        signalCount
-    );
-
-    json +=
-    ",";
-
-
-    json +=
-    "\"lastSignal\":\"";
-
-
-    if(
-        lastSignalTime == 0
-    )
-    {
-
-        json +=
-        "WAITING";
-
-    }
-
-    else
-    {
+    } else {
 
         unsigned long seconds =
+            (
+                millis() -
+                lastSignalTime
+            ) / 1000;
 
-        (
-            millis()
-            -
-            lastSignalTime
-        )
-        /
-        1000;
+        if (seconds &lt; 60) {
 
+            json += String(seconds);
+            json += " sec ago";
 
-        if(
-            seconds < 60
-        )
-        {
+        } else {
 
-            json +=
-            String(
-                seconds
-            );
-
-            json +=
-            " sec ago";
-
-        }
-
-        else
-        {
-
-            json +=
-            String(
-                seconds / 60
-            );
-
-            json +=
-            " min ago";
+            json += String(seconds / 60);
+            json += " min ago";
 
         }
 
     }
 
+    json += "\"";
 
-    json +=
-    "\"";
-
-
-    json +=
-    "}";
-
+    json += "}";
 
     server.send(
         200,
@@ -2722,355 +2801,270 @@ void handleData()
 
 }
 
-
-// =====================================================
-// SETUP
-// =====================================================
-
-void setup()
-{
-
-    Serial.begin(
-        115200
-    );
+// [END 09]
 
 
-    delay(
-        1000
-    );
+// [10] INITIALIZE OLED
 
+void setup() {
 
-    // OLED
+    Serial.begin(115200);
+
+    delay(1000);
 
     Wire.begin(
         OLED_SDA,
         OLED_SCL
     );
 
-
-    if(
+    if (
         !display.begin(
             SSD1306_SWITCHCAPVCC,
             OLED_ADDR
         )
-    )
-    {
+    ) {
 
         Serial.println(
             "OLED initialization failed!"
         );
 
+        while (true) {
 
-        while(true)
-        {
-
-            delay(
-                100
-            );
+            delay(100);
 
         }
 
     }
 
-
     display.clearDisplay();
-
 
     display.setTextColor(
         SSD1306_WHITE
     );
 
-
-    display.setTextSize(
-        2
-    );
-
+    display.setTextSize(2);
 
     display.setCursor(
         5,
         10
     );
 
-
     display.println(
         "IR REMOTE"
     );
-
 
     display.setCursor(
         28,
         35
     );
 
-
     display.println(
         "READY"
     );
 
-
     display.display();
 
+    delay(1500);
 
-    delay(
-        1500
-    );
+// [END 10]
 
 
-    // IR RECEIVER
+// [11] START IR RECEIVER
 
     IrReceiver.begin(
         IR_PIN,
         ENABLE_LED_FEEDBACK
     );
 
-
     Serial.println(
         "IR receiver started"
     );
 
+// [END 11]
 
-    // WIFI
+
+// [12] CONNECT WIFI
 
     WiFi.mode(
         WIFI_STA
     );
-
 
     WiFi.begin(
         ssid,
         password
     );
 
-
     Serial.print(
         "Connecting to WiFi"
     );
 
+    while (
+        WiFi.status() != WL_CONNECTED
+    ) {
 
-    while(
-        WiFi.status()
-        !=
-        WL_CONNECTED
-    )
-    {
+        delay(500);
 
-        delay(
-            500
-        );
-
-
-        Serial.print(
-            "."
-        );
+        Serial.print(".");
 
     }
 
-
     Serial.println();
-
 
     Serial.println(
         "WiFi connected!"
     );
 
-
     Serial.print(
         "IP Address: "
     );
-
 
     Serial.println(
         WiFi.localIP()
     );
 
+// [END 12]
 
-    // WEB SERVER
+
+// [13] START WEB SERVER
 
     server.on(
         "/",
+        HTTP_GET,
         handleRoot
     );
 
-
     server.on(
         "/data",
+        HTTP_GET,
         handleData
     );
 
-
     server.begin();
-
 
     Serial.println(
         "Web server started!"
     );
 
-
     updateOLED();
 
 }
 
+// [END 13]
 
-// =====================================================
-// LOOP
-// =====================================================
 
-void loop()
-{
+// [14] LISTEN FOR IR SIGNALS
+
+void loop() {
 
     server.handleClient();
 
+    if (IrReceiver.decode()) {
 
-    if(
-        IrReceiver.decode()
-    )
-    {
-
-        // Protocol
-
-        irProtocol =
-        IrReceiver
-        .getProtocolString();
+// [END 14]
 
 
-        // Command
+// [15] DECODE IR INFORMATION
+
+        irProtocol = String(
+            IrReceiver.getProtocolString()
+        );
 
         char commandBuffer[12];
 
-
-        sprintf(
+        snprintf(
             commandBuffer,
+            sizeof(commandBuffer),
             "0x%02X",
-            IrReceiver
-            .decodedIRData
-            .command
+            IrReceiver.decodedIRData.command
         );
 
-
-        irCommand =
-        String(
+        irCommand = String(
             commandBuffer
         );
 
-
-        // Address
-
         char addressBuffer[12];
 
-
-        sprintf(
+        snprintf(
             addressBuffer,
+            sizeof(addressBuffer),
             "0x%04X",
-            IrReceiver
-            .decodedIRData
-            .address
+            IrReceiver.decodedIRData.address
         );
 
-
-        irAddress =
-        String(
+        irAddress = String(
             addressBuffer
         );
 
+        char rawBuffer[24];
 
-        // Raw Data
-
-        char rawBuffer[20];
-
-
-        sprintf(
+        snprintf(
             rawBuffer,
+            sizeof(rawBuffer),
             "0x%08lX",
             (unsigned long)
-            IrReceiver
-            .decodedIRData
-            .decodedRawData
+            IrReceiver.decodedIRData.decodedRawData
         );
 
-
-        irRawData =
-        String(
+        irRawData = String(
             rawBuffer
         );
 
+// [END 15]
 
-        // Count
+
+// [16] UPDATE SIGNAL COUNT
 
         signalCount++;
 
+        lastSignalTime = millis();
 
-        // Last Signal Time
-
-        lastSignalTime =
-        millis();
+// [END 16]
 
 
-        // Serial Monitor
+// [17] SERIAL MONITOR OUTPUT
 
         Serial.println();
-
 
         Serial.println(
             "============================"
         );
 
-
         Serial.print(
             "Protocol : "
         );
 
-
-        Serial.println(
-            irProtocol
-        );
-
+        Serial.println(irProtocol);
 
         Serial.print(
             "Command  : "
         );
 
-
-        Serial.println(
-            irCommand
-        );
-
+        Serial.println(irCommand);
 
         Serial.print(
             "Address  : "
         );
 
-
-        Serial.println(
-            irAddress
-        );
-
+        Serial.println(irAddress);
 
         Serial.print(
             "Raw Data : "
         );
 
-
-        Serial.println(
-            irRawData
-        );
-
+        Serial.println(irRawData);
 
         Serial.print(
             "Count    : "
         );
 
+        Serial.println(signalCount);
 
-        Serial.println(
-            signalCount
-        );
+// [END 17]
 
 
-        // Update OLED
+// [18] UPDATE DISPLAY AND RESUME
 
         updateOLED();
-
-
-        // Prepare for next IR signal
 
         IrReceiver.resume();
 
@@ -3078,475 +3072,4298 @@ void loop()
 
 }
 
-</script>
+// [END 18]
+</textarea>
 
-
-<!-- =========================================
-     EXPLORE CODE JAVASCRIPT
-========================================= -->
+<!-- ==========================================
+     INTERACTIVE CODE EXPLORER JAVASCRIPT
+========================================== -->
 
 <script>
 
+    /* ==========================================
+       READ COMPLETE ESP32 SOURCE CODE
+    ========================================== */
 
-const program =
+    const program = document
+        .getElementById("esp32-program")
+        .value
+        .trim();
 
-document
-.getElementById(
-    "esp32-program"
-)
-.textContent
-.trim();
+    const lines = program.split("\n");
 
+    /* ==========================================
+       CODE EXPLANATION STEPS
+    ========================================== */
 
-const lines =
-program.split("\n");
+    const steps = [
 
-
-const steps = [
-
-
-{
-
-title:
-"Load libraries",
-
-search:
-"#include <WiFi.h>",
-
-text:
-"The program loads Wi-Fi, web server, I2C, OLED and IRremote libraries."
-
-},
-
-
-{
-
-title:
-"Set Wi-Fi",
-
-search:
-"const char* ssid",
-
-text:
-"The ESP32 uses the SSID and password to connect to Wi-Fi."
-
-},
-
-
-{
-
-title:
-"Set pins",
-
-search:
-"#define IR_PIN",
-
-text:
-"GPIO 15 receives the IR signal. GPIO 21 and GPIO 22 are used by the OLED."
-
-},
-
-
-{
-
-title:
-"Prepare OLED",
-
-search:
-"#define SCREEN_WIDTH",
-
-text:
-"The SSD1306 OLED is configured for a 128 × 64 pixel display."
-
-},
-
-
-{
-
-title:
-"Store IR data",
-
-search:
-"String irProtocol",
-
-text:
-"These variables store the decoded protocol, command, address, raw data and signal count."
-
-},
-
-
-{
-
-title:
-"Start receiver",
-
-search:
-"IrReceiver.begin",
-
-text:
-"The IRremote library starts the VS1838B receiver on GPIO 15."
-
-},
-
-
-{
-
-title:
-"Decode signal",
-
-search:
-"IrReceiver.decode",
-
-text:
-"When an IR signal is received, the ESP32 decodes its protocol, command, address and raw data."
-
-},
-
-
-{
-
-title:
-"Update OLED",
-
-search:
-"void updateOLED",
-
-text:
-"The OLED displays the latest command, protocol, address, received signal count and Wi-Fi status."
-
-},
-
-
-{
-
-title:
-"Send web data",
-
-search:
-"void handleData",
-
-text:
-"The ESP32 sends the decoded IR information to the browser as JSON data."
-
-},
-
-
-{
-
-title:
-"Listen continuously",
-
-search:
-"void loop()",
-
-text:
-"The loop handles browser requests and continuously waits for new infrared signals."
-
-}
-
-];
-
-
-function escapeHtml(text)
-{
-
-    return text
-
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-
-    .replace(
-        /</g,
-        "&lt;"
-    )
-
-    .replace(
-        />/g,
-        "&gt;"
-    );
-
-}
-
-
-function displayCode()
-{
-
-    let output = "";
-
-
-    lines.forEach(
-
-        function(
-            line,
-            index
-        )
         {
+            number: "01",
+            label: "LOAD LIBRARIES",
+            title: "Load libraries",
+            text:
+                "Loads Wi-Fi, WebServer, " +
+                "Wire, OLED graphics " +
+                "and IRremote libraries."
+        },
 
-            output +=
+        {
+            number: "02",
+            label: "CONFIGURE WIFI",
+            title: "Configure Wi-Fi",
+            text:
+                "Stores network credentials " +
+                "and creates an HTTP " +
+                "web server on port 80."
+        },
 
-            '<span class="code-line" ' +
+        {
+            number: "03",
+            label: "CONFIGURE GPIO PINS",
+            title: "Set GPIO pins",
+            text:
+                "Assigns GPIO15 for the " +
+                "IR receiver and GPIO21/22 " +
+                "for the OLED."
+        },
 
-            'id="line-' +
+        {
+            number: "04",
+            label: "CONFIGURE OLED",
+            title: "Configure OLED",
+            text:
+                "Creates the SSD1306 " +
+                "display object with " +
+                "128 by 64 resolution."
+        },
 
-            (index + 1) +
+        {
+            number: "05",
+            label: "STORE IR DATA",
+            title: "Store IR information",
+            text:
+                "Creates variables for " +
+                "protocol, command, address, " +
+                "raw data and signal count."
+        },
 
-            '">' +
+        {
+            number: "06",
+            label: "UPDATE OLED",
+            title: "Update OLED",
+            text:
+                "Displays the latest " +
+                "decoded information " +
+                "and Wi-Fi status."
+        },
 
-            '<span class="line-number">' +
+        {
+            number: "07",
+            label: "CREATE WEB DASHBOARD",
+            title: "Create web dashboard",
+            text:
+                "Contains the HTML, CSS " +
+                "and JavaScript used " +
+                "by the wireless dashboard."
+        },
 
-            (index + 1) +
+        {
+            number: "08",
+            label: "SERVE HOME PAGE",
+            title: "Serve dashboard",
+            text:
+                "Returns the HTML dashboard " +
+                "when a browser opens " +
+                "the ESP32 IP address."
+        },
 
-            '</span>' +
+        {
+            number: "09",
+            label: "SEND JSON DATA",
+            title: "Send decoded data",
+            text:
+                "Creates the JSON response " +
+                "containing decoded IR data " +
+                "and latest signal timing."
+        },
 
-            '<span>' +
+        {
+            number: "10",
+            label: "INITIALIZE OLED",
+            title: "Initialize OLED",
+            text:
+                "Starts I2C communication " +
+                "and shows the startup " +
+                "message on the OLED."
+        },
 
-            escapeHtml(line) +
+        {
+            number: "11",
+            label: "START IR RECEIVER",
+            title: "Start IR receiver",
+            text:
+                "Initializes the IRremote " +
+                "receiver on GPIO15."
+        },
 
-            '</span>' +
+        {
+            number: "12",
+            label: "CONNECT WIFI",
+            title: "Connect to Wi-Fi",
+            text:
+                "Connects ESP32 to Wi-Fi " +
+                "and displays its " +
+                "IP address."
+        },
 
-            '</span>';
+        {
+            number: "13",
+            label: "START WEB SERVER",
+            title: "Start web server",
+            text:
+                "Registers dashboard " +
+                "and JSON routes " +
+                "and starts the server."
+        },
 
+        {
+            number: "14",
+            label: "LISTEN FOR IR SIGNALS",
+            title: "Listen for signals",
+            text:
+                "The main loop handles " +
+                "web requests and checks " +
+                "for received IR signals."
+        },
+
+        {
+            number: "15",
+            label: "DECODE IR INFORMATION",
+            title: "Decode IR data",
+            text:
+                "Extracts protocol, " +
+                "command, address " +
+                "and raw data."
+        },
+
+        {
+            number: "16",
+            label: "UPDATE SIGNAL COUNT",
+            title: "Count IR signals",
+            text:
+                "Increases the signal " +
+                "counter and stores " +
+                "the latest reception time."
+        },
+
+        {
+            number: "17",
+            label: "SERIAL MONITOR OUTPUT",
+            title: "Print decoded data",
+            text:
+                "Prints the decoded " +
+                "information to " +
+                "Serial Monitor."
+        },
+
+        {
+            number: "18",
+            label: "UPDATE DISPLAY AND RESUME",
+            title: "Prepare next signal",
+            text:
+                "Updates the OLED " +
+                "and resumes the " +
+                "IR receiver."
         }
 
-    );
+    ];
 
+    /* ==========================================
+       ESCAPE HTML CHARACTERS
+    ========================================== */
 
-    document
-    .getElementById(
-        "code-lines"
-    )
-    .innerHTML =
-    output;
+    function escapeHtml(value) {
 
-}
-
-
-function showStep(index)
-{
-
-    const step =
-    steps[index];
-
-
-    const buttons =
-
-    document
-    .querySelectorAll(
-        ".step"
-    );
-
-
-    buttons.forEach(
-
-        function(button)
-        {
-
-            button
-            .classList
-            .remove(
-                "active"
-            );
-
-        }
-
-    );
-
-
-    buttons[index]
-    .classList
-    .add(
-        "active"
-    );
-
-
-    document
-    .querySelectorAll(
-        ".code-line"
-    )
-    .forEach(
-
-        function(line)
-        {
-
-            line
-            .classList
-            .remove(
-                "selected"
-            );
-
-        }
-
-    );
-
-
-    let foundLine =
-    -1;
-
-
-    for(
-        let i = 0;
-        i < lines.length;
-        i++
-    )
-    {
-
-        if(
-            lines[i]
-            .includes(
-                step.search
-            )
-        )
-        {
-
-            foundLine =
-            i;
-
-            break;
-
-        }
+        return value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
 
     }
 
+    /* ==========================================
+       DISPLAY CODE WITH LINE NUMBERS
+    ========================================== */
 
-    if(
-        foundLine >= 0
-    )
-    {
+    function displayCode() {
 
-        for(
-            let i =
-            foundLine;
-
-            i <
-            Math.min(
-                foundLine + 12,
-                lines.length
-            );
-
-            i++
-        )
-        {
-
-            document
-            .getElementById(
-                "line-" +
-                (i + 1)
-            )
-            .classList
-            .add(
-                "selected"
-            );
-
-        }
-
-
-        const selectedLine =
-
-        document
-        .getElementById(
-            "line-" +
-            (foundLine + 1)
+        const container = document.getElementById(
+            "code-lines"
         );
 
+        container.innerHTML = lines.map(
+            function(line, index) {
 
-        document
-        .getElementById(
-            "code-body"
-        )
-        .scrollTo({
+                return (
+                    '<span class="code-line" id="line-' +
+                    (index + 1) +
+                    '">' +
+                    '<span class="line-number">' +
+                    (index + 1) +
+                    '</span>' +
+                    '<span>' +
+                    escapeHtml(line) +
+                    '</span>' +
+                    '</span>'
+                );
 
-            top:
-            selectedLine.offsetTop
-            - 20,
-
-            behavior:
-            "smooth"
-
-        });
+            }
+        ).join("");
 
     }
 
+    /* ==========================================
+       FIND SOURCE MARKERS
+    ========================================== */
 
-    document
-    .getElementById(
-        "explanation"
-    )
-    .innerHTML =
+    function findMarker(marker) {
 
-    "<h3>" +
+        return lines.findIndex(
+            function(line) {
 
-    (index + 1) +
+                return line.trim() === marker;
 
-    ". " +
+            }
+        );
 
-    step.title +
+    }
 
-    "</h3>" +
+    /* ==========================================
+       DEFINE EXACT HIGHLIGHT RANGES
+    ========================================== */
 
-    "<p>" +
+    const ranges = steps.map(
+        function(step) {
 
-    step.text +
-
-    "</p>";
-
-}
-
-
-function copyCode()
-{
-
-    navigator
-    .clipboard
-    .writeText(
-        program
-    )
-    .then(
-
-        function()
-        {
-
-            const button =
-
-            document
-            .querySelector(
-                ".copy-button"
+            const start = findMarker(
+                "// [" +
+                step.number +
+                "] " +
+                step.label
             );
 
+            const end = findMarker(
+                "// [END " +
+                step.number +
+                "]"
+            );
 
-            button.innerText =
-            "Copied!";
+            return {
 
+                start: start,
+
+                end: end,
+
+                valid:
+                    start >= 0 &&
+                    end >= start
+
+            };
+
+        }
+    );
+
+    /* ==========================================
+       CREATE EXPLANATION BUTTONS
+    ========================================== */
+
+    function createSteps() {
+
+        const container = document.getElementById(
+            "steps-list"
+        );
+
+        steps.forEach(
+            function(step, index) {
+
+                const button = document.createElement(
+                    "button"
+                );
+
+                button.type = "button";
+
+                button.className = "step";
+
+                const number = document.createElement(
+                    "span"
+                );
+
+                number.className = "step-number";
+
+                number.textContent = step.number;
+
+                const title = document.createElement(
+                    "span"
+                );
+
+                title.textContent = step.title;
+
+                button.append(
+                    number,
+                    title
+                );
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        showStep(index);
+
+                    }
+                );
+
+                container.appendChild(
+                    button
+                );
+
+            }
+        );
+
+    }
+
+    /* ==========================================
+       HIGHLIGHT MATCHING CODE SECTION
+    ========================================== */
+
+    function showStep(index) {
+
+        document.querySelectorAll(".step")
+            .forEach(
+                function(button, i) {
+
+                    button.classList.toggle(
+                        "active",
+                        i === index
+                    );
+
+                }
+            );
+
+        document.querySelectorAll(".code-line")
+            .forEach(
+                function(line) {
+
+                    line.classList.remove(
+                        "selected"
+                    );
+
+                }
+            );
+
+        const step = steps[index];
+
+        const range = ranges[index];
+
+        const explanation = document.getElementById(
+            "explanation"
+        );
+
+        explanation.replaceChildren();
+
+        const heading = document.createElement(
+            "h3"
+        );
+
+        heading.textContent =
+            (index + 1) +
+            ". " +
+            step.title;
+
+        const paragraph = document.createElement(
+            "p"
+        );
+
+        if (!range.valid) {
+
+            paragraph.textContent =
+                "Matching source-code markers " +
+                "were not found.";
+
+            explanation.append(
+                heading,
+                paragraph
+            );
+
+            return;
+
+        }
+
+        for (
+            let i = range.start;
+            i <= range.end;
+            i++
+        ) {
+
+            const line = document.getElementById(
+                "line-" + (i + 1)
+            );
+
+            if (line) {
+
+                line.classList.add(
+                    "selected"
+                );
+
+            }
+
+        }
+
+        paragraph.textContent = step.text;
+
+        explanation.append(
+            heading,
+            paragraph
+        );
+
+        const firstLine = document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+        const codeBody = document.getElementById(
+            "code-body"
+        );
+
+        if (firstLine && codeBody) {
+
+            const offset =
+                firstLine.getBoundingClientRect().top -
+                codeBody.getBoundingClientRect().top;
+
+            codeBody.scrollTo({
+
+                top:
+                    codeBody.scrollTop +
+                    offset -
+                    20,
+
+                behavior: "smooth"
+
+            });
+
+        }
+
+    }
+
+    /* ==========================================
+       COPY COMPLETE ESP32 CODE
+    ========================================== */
+
+    async function copyCode() {
+
+        const button = document.querySelector(
+            ".code-top .copy-button"
+        );
+
+        function copied() {
+
+            button.textContent = "Copied!";
 
             setTimeout(
+                function() {
 
-                function()
-                {
-
-                    button.innerText =
-                    "Copy Code";
+                    button.textContent =
+                        "Copy Code";
 
                 },
-
                 1500
-
             );
 
         }
 
-    );
+        function fallback() {
 
-}
+            const field = document.createElement(
+                "textarea"
+            );
 
+            field.value = program;
 
-displayCode();
+            field.style.position = "fixed";
 
-showStep(0);
+            field.style.opacity = "0";
 
+            document.body.appendChild(
+                field
+            );
+
+            field.select();
+
+            let success = false;
+
+            try {
+
+                success = document.execCommand(
+                    "copy"
+                );
+
+            } catch (error) {
+
+                success = false;
+
+            }
+
+            field.remove();
+
+            if (success) {
+
+                copied();
+
+            } else {
+
+                button.textContent = "Copy failed";
+
+            }
+
+        }
+
+        if (
+            navigator.clipboard &&
+            window.isSecureContext
+        ) {
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    program
+                );
+
+                copied();
+
+            } catch (error) {
+
+                fallback();
+
+            }
+
+        } else {
+
+            fallback();
+
+        }
+
+    }
+
+    /* ==========================================
+       SHOW OR HIDE QUIZ ANSWERS
+    ========================================== */
+
+    function toggleAnswers() {
+
+        const answers = document.getElementById(
+            "quiz-answers"
+        );
+
+        answers.hidden = !answers.hidden;
+
+    }
+
+    /* ==========================================
+       INITIALIZE CODE EXPLORER
+    ========================================== */
+
+    displayCode();
+
+    createSteps();
+
+    showStep(0);
 
 </script>
 
+</body>
+
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Wi-Fi IR Remote Decoder
+    </title>
+
+    <style>
+
+        /* ==========================================
+           GENERAL PAGE STYLE
+        ========================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+            line-height: 1.7;
+        }
+
+        /* ==========================================
+           HEADER
+        ========================================== */
+
+        .header {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 230px;
+            padding: 25px 0 0;
+            background: #2563eb;
+            color: white;
+            text-align: center;
+        }
+
+        .header-logo {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 135px;
+            max-height: 75px;
+            height: auto;
+            padding: 5px;
+            object-fit: contain;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .header-content {
+            margin: auto 0;
+            padding: 35px 165px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            width: 100%;
+            padding: 12px 25px;
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .header-left-buttons,
+        .header-right-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 9px 14px;
+            background: white;
+            color: #1e3a8a;
+            border: 1px solid #dbeafe;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: 0.25s ease;
+        }
+
+        .header-nav-btn:hover {
+            background: #dbeafe;
+            transform: translateY(-2px);
+        }
+
+        .home-icon-btn {
+            width: 40px;
+            height: 38px;
+            padding: 8px;
+        }
+
+        .home-icon-btn svg {
+            width: 21px;
+            height: 21px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ==========================================
+           SECTION NAVIGATION
+        ========================================== */
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 13px 15px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        nav a {
+            color: #1e3a8a;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #2563eb;
+        }
+
+        /* ==========================================
+           MAIN CONTENT
+        ========================================== */
+
+        .container {
+            width: 90%;
+            max-width: 1050px;
+            margin: 35px auto;
+        }
+
+        .section {
+            margin-bottom: 24px;
+            padding: 28px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            scroll-margin-top: 100px;
+        }
+
+        .section h2 {
+            margin: 0 0 18px;
+            padding-bottom: 8px;
+            color: #1e3a8a;
+            font-size: 25px;
+            border-bottom: 2px solid #dbeafe;
+        }
+
+        .section h3 {
+            margin-top: 22px;
+            color: #1e3a8a;
+        }
+
+        ul,
+        ol {
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* ==========================================
+           EXPERIMENT THUMBNAIL
+        ========================================== */
+
+        .project-thumbnail {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .project-thumbnail img {
+            display: block;
+            width: 100%;
+            max-width: 760px;
+            max-height: 420px;
+            height: auto;
+            margin: 0 auto;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        /* ==========================================
+           COMPONENT CARDS
+        ========================================== */
+
+        .components-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .component-card {
+            padding: 20px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .component-card img {
+            display: block;
+            width: 100%;
+            max-width: 180px;
+            height: 150px;
+            margin: 0 auto 15px;
+            object-fit: contain;
+        }
+
+        .component-card h4 {
+            margin: 0 0 8px;
+            color: #1e3a8a;
+            font-size: 17px;
+        }
+
+        .component-card p {
+            margin: 0;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        /* ==========================================
+           TABLES
+        ========================================== */
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        /* ==========================================
+           NOTES AND CIRCUIT
+        ========================================== */
+
+        .note {
+            margin-top: 15px;
+            padding: 14px 16px;
+            background: #eff6ff;
+            border-left: 5px solid #2563eb;
+            border-radius: 6px;
+        }
+
+        .circuit-img {
+            display: block;
+            width: 100%;
+            max-width: 760px;
+            margin: 20px auto 0;
+            padding: 10px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
+        /* ==========================================
+           IR DATA CARDS
+        ========================================== */
+
+        .status-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .status-card {
+            padding: 18px;
+            background: #f8fbff;
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .status-card h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
+        .status-value {
+            color: #2563eb;
+            font-size: 24px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        /* ==========================================
+           WORKING FLOW
+        ========================================== */
+
+        .flow {
+            color: #1e3a8a;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 2;
+        }
+
+        .flow-step {
+            padding: 5px 10px;
+        }
+
+        .flow-arrow {
+            color: #2563eb;
+            font-size: 22px;
+        }
+
+        /* ==========================================
+           INTERACTIVE CODE EXPLORER
+        ========================================== */
+
+        .eyebrow {
+            margin: 0 0 4px;
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .lesson-title {
+            margin: 0 0 8px !important;
+            padding: 0 !important;
+            border: 0 !important;
+            color: #1e3a8a !important;
+            font-size: 32px !important;
+        }
+
+        .intro {
+            margin: 0 0 22px;
+            color: #526875;
+        }
+
+        .code-layout {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1.45fr) minmax(300px, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .code-panel {
+            min-width: 0;
+            background: white;
+            border: 1px solid #bfdbfe;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.10);
+        }
+
+        .code-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 15px 20px;
+            background: #2563eb;
+            color: white;
+        }
+
+        .filename {
+            font: bold 14px Consolas, Monaco, monospace;
+            overflow-wrap: anywhere;
+        }
+
+        .copy-button {
+            min-height: 40px;
+            padding: 8px 14px;
+            background: white;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .copy-button:hover {
+            background: #eff6ff;
+        }
+
+        .code-body {
+            height: 600px;
+            overflow: auto;
+            padding: 16px 0;
+            background: white;
+        }
+
+        .code-line {
+            display: flex;
+            min-width: max-content;
+            min-height: 24px;
+            padding-right: 20px;
+            white-space: pre;
+            color: #1e293b;
+            font: 13px/24px Consolas, Monaco, monospace;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .code-line.selected {
+            background: #dbeafe;
+            box-shadow: inset 4px 0 #2563eb;
+        }
+
+        .line-number {
+            min-width: 52px;
+            padding-right: 15px;
+            color: #64748b;
+            text-align: right;
+            user-select: none;
+        }
+
+        /* ==========================================
+           EXPLANATION GUIDE
+        ========================================== */
+
+        .guide {
+            min-width: 0;
+            padding: 22px;
+            background: white;
+            border: 1px solid #dce6e9;
+            border-radius: 14px;
+        }
+
+        .guide h2 {
+            margin: 0 0 8px;
+            padding: 0;
+            border: 0;
+            font-size: 21px;
+        }
+
+        .guide > p {
+            color: #526875;
+            font-size: 15px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 65px;
+            padding: 10px;
+            background: white;
+            border: 1px solid #dce6e9;
+            border-radius: 9px;
+            color: #1e3a8a;
+            text-align: left;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .step.active {
+            background: #eff6ff;
+            border-color: #60a5fa;
+        }
+
+        .step-number {
+            color: #2563eb;
+            font-size: 12px;
+        }
+
+        .explanation {
+            min-height: 130px;
+            padding: 16px;
+            background: #eff6ff;
+            border-radius: 9px;
+        }
+
+        .explanation h3 {
+            margin: 0 0 7px;
+            color: #1e3a8a;
+            font-size: 17px;
+        }
+
+        .explanation p {
+            margin: 0;
+            color: #526875;
+            font-size: 15px;
+        }
+
+        .guide details {
+            margin-top: 15px;
+            border-top: 1px solid #dce6e9;
+        }
+
+        .guide summary {
+            padding: 13px 0;
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tip {
+            margin-top: 20px;
+            padding: 14px 17px;
+            background: #eff6ff;
+            color: #234e87;
+            border-radius: 9px;
+        }
+
+        /* ==========================================
+           EXPECTED OUTPUT
+        ========================================== */
+
+        .output-box {
+            margin: 15px 0;
+            padding: 16px;
+            background: #f8fafc;
+            border: 1px solid #dbeafe;
+            border-radius: 9px;
+        }
+
+        .output-box pre {
+            margin: 0;
+            color: #1e293b;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font: 14px/1.8 Consolas, Monaco, monospace;
+        }
+
+        /* ==========================================
+           FOOTER
+        ========================================== */
+
+        footer {
+            padding: 25px 20px;
+            background: #0f172a;
+            color: #cbd5e1;
+            text-align: center;
+        }
+
+        footer strong {
+            color: white;
+        }
+
+        /* ==========================================
+           RESPONSIVE DESIGN
+        ========================================== */
+
+        @media (max-width: 900px) {
+
+            .header-content {
+                padding: 65px 20px 35px;
+            }
+
+        }
+
+        @media (max-width: 850px) {
+
+            .code-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .status-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .code-body {
+                height: 450px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .header-logo {
+                top: 12px;
+                left: 12px;
+                width: 95px;
+            }
+
+            .header-content {
+                padding: 85px 12px 25px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .header-buttons {
+                padding: 10px 8px;
+                gap: 8px;
+            }
+
+            .header-left-buttons,
+            .header-right-buttons {
+                gap: 5px;
+            }
+
+            .header-nav-btn {
+                min-height: 36px;
+                padding: 8px 7px;
+                font-size: 11px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .steps,
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- ==========================================
+     HEADER
+========================================== -->
+
+<header class="header">
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+
+        <h1>
+            SIMUDIY Exploration Kit
+        </h1>
+
+        <p>
+            Wi-Fi IR Remote Decoder
+        </p>
+
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+
+                    <path d="M3 10.5L12 3l9 7.5"/>
+
+                    <path d="M5 9.5V21h14V9.5"/>
+
+                    <path d="M9 21v-7h6v7"/>
+
+                </svg>
+
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >
+                Arduino
+            </a>
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                ESP
+            </a>
+
+            <a
+                href="../../R-Pi Experiments/index.html"
+                class="header-nav-btn"
+            >
+                R-Pi
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
+
+<nav>
+
+    <a href="../index.html">
+        &#8592; ESP32 Experiments
+    </a>
+
+    <a href="#aim">Aim</a>
+
+    <a href="#about">About</a>
+
+    <a href="#components">Components</a>
+
+    <a href="#connections">Connections</a>
+
+    <a href="#circuit">Circuit</a>
+
+    <a href="#working">Working</a>
+
+    <a href="#procedure">Procedure</a>
+
+    <a href="#code">Code</a>
+
+    <a href="#output">Output</a>
+
+    <a href="#result">Result</a>
+
+    <a href="#learn">Learn</a>
+
+</nav>
+
+<main class="container">
+
+<!-- ==========================================
+     EXPERIMENT THUMBNAIL
+========================================== -->
+
+<section class="section project-thumbnail">
+
+    <img
+        src="Wi-Fi IR Remote Decoder.png"
+        alt="Wi-Fi IR Remote Decoder Thumbnail"
+    >
+
+</section>
+
+<!-- ==========================================
+     1. AIM
+========================================== -->
+
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To create an ESP32-based
+        Wi-Fi IR Remote Decoder
+        that receives infrared signals
+        from a remote control,
+        decodes the signal information
+        and displays the results
+        on an OLED and
+        wireless web dashboard.
+    </p>
+
+</section>
+
+<!-- ==========================================
+     2. ABOUT THE EXPERIMENT
+========================================== -->
+
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Wi-Fi IR Remote Decoder
+        demonstrates infrared communication,
+        signal decoding and wireless
+        monitoring using an ESP32 DevKitC.
+    </p>
+
+    <p>
+        A VS1838B IR Receiver detects
+        infrared signals transmitted
+        by an IR Remote Control.
+    </p>
+
+    <p>
+        The receiver converts
+        incoming infrared pulses
+        into digital signals
+        that are processed
+        by the ESP32.
+    </p>
+
+    <p>
+        The IRremote library
+        decodes the received signal
+        and identifies the IR protocol,
+        command, address and raw data.
+    </p>
+
+    <p>
+        The decoded information
+        is displayed on a
+        0.96-inch SSD1306 OLED.
+    </p>
+
+    <p>
+        The Serial Monitor
+        also displays the
+        complete decoded values.
+    </p>
+
+    <p>
+        The ESP32 connects to Wi-Fi
+        and hosts a web dashboard
+        that displays the latest
+        received IR command.
+    </p>
+
+    <p>
+        The dashboard also shows
+        the protocol, address,
+        raw data, number of
+        received signals and
+        time since the last signal.
+    </p>
+
+    <p>
+        The experiment demonstrates
+        how infrared signals
+        can be monitored and
+        analyzed through
+        an IoT-based interface.
+    </p>
+
+    <div class="note">
+
+        <strong>
+            IR Data Information:
+        </strong>
+
+        <p>
+            Protocol:
+            The communication format
+            used by the remote.
+        </p>
+
+        <p>
+            Command:
+            The value associated
+            with a remote button.
+        </p>
+
+        <p>
+            Address:
+            The address field
+            decoded from the signal.
+        </p>
+
+        <p>
+            Raw Data:
+            The received encoded
+            infrared data value.
+        </p>
+
+        <p>
+            Signal Count:
+            The number of decoded
+            signal events.
+        </p>
+
+    </div>
+
+    <h3>
+        IR Signal Information
+    </h3>
+
+    <div class="status-grid">
+
+        <div class="status-card">
+
+            <h3>Protocol</h3>
+
+            <div class="status-value">
+                NEC
+            </div>
+
+        </div>
+
+        <div class="status-card">
+
+            <h3>Command</h3>
+
+            <div class="status-value">
+                0x52
+            </div>
+
+        </div>
+
+        <div class="status-card">
+
+            <h3>Address</h3>
+
+            <div class="status-value">
+                0x0000
+            </div>
+
+        </div>
+
+        <div class="status-card">
+
+            <h3>Signals Received</h3>
+
+            <div class="status-value">
+                7
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        The values shown above
+        are examples.
+        Actual decoded values
+        depend on the IR remote
+        and its protocol.
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     3. COMPONENTS REQUIRED
+========================================== -->
+
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="ESP32 Development Board.png"
+                alt="ESP32 DevKitC V4"
+            >
+
+            <h4>
+                ESP32 DevKitC V4 (×1)
+            </h4>
+
+            <p>
+                Main microcontroller
+                with built-in Wi-Fi.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="VS1838B IR Receiver.png"
+                alt="VS1838B IR Receiver"
+            >
+
+            <h4>
+                VS1838B IR Receiver (×1)
+            </h4>
+
+            <p>
+                Receives infrared signals
+                from the remote.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="IR Remote Control.png"
+                alt="IR Remote Control"
+            >
+
+            <h4>
+                IR Remote Control (×1)
+            </h4>
+
+            <p>
+                Transmits infrared
+                command signals.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="OLED.png"
+                alt="SSD1306 OLED"
+            >
+
+            <h4>
+                0.96-inch SSD1306 OLED (×1)
+            </h4>
+
+            <p>
+                Displays the decoded
+                infrared information.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
+            <h4>
+                Breadboard (×1)
+            </h4>
+
+            <p>
+                Used to assemble
+                the circuit.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Used for all
+                circuit connections.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>
+            Required Libraries:
+        </strong>
+
+        <ul>
+
+            <li>WiFi.h</li>
+
+            <li>WebServer.h</li>
+
+            <li>Wire.h</li>
+
+            <li>Adafruit_GFX.h</li>
+
+            <li>Adafruit_SSD1306.h</li>
+
+            <li>IRremote.hpp</li>
+
+        </ul>
+
+        <p>
+            Install the IRremote,
+            Adafruit GFX and
+            Adafruit SSD1306 libraries.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     4. CIRCUIT CONNECTIONS
+========================================== -->
+
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>
+        VS1838B IR Receiver to ESP32
+    </h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>VS1838B Pin</th>
+
+                    <th>ESP32 Connection</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>OUT / DATA</td>
+                    <td>GPIO15</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>
+        SSD1306 OLED to ESP32
+    </h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>OLED Pin</th>
+
+                    <th>ESP32 Connection</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO21</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO22</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>
+        Configuration Summary
+    </h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Parameter</th>
+
+                    <th>Value</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>IR Receiver DATA</td>
+                    <td>GPIO15</td>
+                </tr>
+
+                <tr>
+                    <td>OLED SDA</td>
+                    <td>GPIO21</td>
+                </tr>
+
+                <tr>
+                    <td>OLED SCL</td>
+                    <td>GPIO22</td>
+                </tr>
+
+                <tr>
+                    <td>OLED Address</td>
+                    <td>0x3C</td>
+                </tr>
+
+                <tr>
+                    <td>Web Server Port</td>
+                    <td>80</td>
+                </tr>
+
+                <tr>
+                    <td>Serial Monitor</td>
+                    <td>115200 baud</td>
+                </tr>
+
+                <tr>
+                    <td>Dashboard Refresh</td>
+                    <td>500 ms</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>
+            Important Hardware Notes:
+        </strong>
+
+        <p>
+            Verify the actual
+            VS1838B receiver pinout
+            before connecting VCC,
+            GND and DATA.
+        </p>
+
+        <p>
+            Different IR receiver
+            packages and modules
+            may have different
+            physical pin arrangements.
+        </p>
+
+        <p>
+            GPIO15 is an ESP32
+            strapping pin.
+            The receiver circuit
+            must not interfere with
+            normal board startup.
+        </p>
+
+        <p>
+            The IR remote control
+            is a separate transmitter
+            and does not require
+            a wired connection
+            to the ESP32.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     5. CIRCUIT DIAGRAM
+========================================== -->
+
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Wi-Fi IR Remote Decoder Circuit.png"
+        alt="Wi-Fi IR Remote Decoder Circuit"
+        class="circuit-img"
+    >
+
+</section>
+
+<!-- ==========================================
+     6. WORKING PRINCIPLE
+========================================== -->
+
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            ESP32 DevKitC Starts
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Initialize SSD1306 OLED
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Initialize VS1838B IR Receiver
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Connect ESP32 to Wi-Fi
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Start HTTP Web Server
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            User Presses IR Remote Button
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            VS1838B Receives IR Signal
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            ESP32 Decodes Signal
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Identify Protocol and Command
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Identify Address and Raw Data
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Increase Signal Counter
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Update OLED and Serial Monitor
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Update Wi-Fi Dashboard
+        </div>
+
+    </div>
+
+    <h3>
+        IR Signal Transmission
+    </h3>
+
+    <p>
+        The remote control
+        transmits infrared
+        pulses whenever
+        a button is pressed.
+    </p>
+
+    <h3>
+        IR Signal Reception
+    </h3>
+
+    <p>
+        The VS1838B receiver
+        detects the infrared
+        pulses and sends
+        a digital signal
+        to ESP32 GPIO15.
+    </p>
+
+    <h3>
+        Signal Decoding
+    </h3>
+
+    <p>
+        The IRremote library
+        processes the signal
+        and identifies the
+        decoded protocol,
+        command and address.
+    </p>
+
+    <h3>
+        Signal Counter
+    </h3>
+
+    <p>
+        The counter increases
+        whenever a complete
+        IR signal event
+        is decoded.
+    </p>
+
+    <h3>
+        OLED Display
+    </h3>
+
+    <p>
+        The OLED displays
+        the most recent
+        command, protocol,
+        address and
+        signal count.
+    </p>
+
+    <h3>
+        Web Dashboard
+    </h3>
+
+    <p>
+        The ESP32 sends the
+        stored IR information
+        to a browser through
+        its /data endpoint.
+    </p>
+
+    <p>
+        The dashboard refreshes
+        the displayed values
+        every 500 milliseconds.
+    </p>
+
+</section>
+
+<!-- ==========================================
+     7. PROCEDURE
+========================================== -->
+
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Arrange ESP32 DevKitC V4,
+            VS1838B IR Receiver,
+            IR Remote Control,
+            SSD1306 OLED, breadboard
+            and jumper wires.
+        </li>
+
+        <li>
+            Place the ESP32
+            on the breadboard.
+        </li>
+
+        <li>
+            Verify the physical
+            pinout of the
+            VS1838B receiver.
+        </li>
+
+        <li>
+            Connect receiver VCC
+            to 3.3V.
+        </li>
+
+        <li>
+            Connect receiver GND
+            to ESP32 GND.
+        </li>
+
+        <li>
+            Connect receiver OUT
+            to GPIO15.
+        </li>
+
+        <li>
+            Connect OLED VCC
+            to 3.3V.
+        </li>
+
+        <li>
+            Connect OLED GND
+            to GND.
+        </li>
+
+        <li>
+            Connect OLED SDA
+            to GPIO21.
+        </li>
+
+        <li>
+            Connect OLED SCL
+            to GPIO22.
+        </li>
+
+        <li>
+            Verify all connections.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install the ESP32
+            board package.
+        </li>
+
+        <li>
+            Install IRremote,
+            Adafruit GFX and
+            Adafruit SSD1306 libraries.
+        </li>
+
+        <li>
+            Create a sketch named
+            WiFi_IR_Remote_Decoder.ino.
+        </li>
+
+        <li>
+            Copy the complete program
+            from Explore the Code.
+        </li>
+
+        <li>
+            Configure the Wi-Fi
+            network credentials.
+        </li>
+
+        <li>
+            Select the correct
+            ESP32 board and port.
+        </li>
+
+        <li>
+            Verify and upload
+            the program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 115200 baud.
+        </li>
+
+        <li>
+            Wait for Wi-Fi
+            connection.
+        </li>
+
+        <li>
+            Note the ESP32
+            IP address.
+        </li>
+
+        <li>
+            Open the IP address
+            in a browser on
+            the same network.
+        </li>
+
+        <li>
+            Point the IR Remote
+            toward the VS1838B
+            receiver.
+        </li>
+
+        <li>
+            Press any button
+            on the remote.
+        </li>
+
+        <li>
+            Observe the decoded
+            information on OLED.
+        </li>
+
+        <li>
+            Check the same information
+            in Serial Monitor.
+        </li>
+
+        <li>
+            Observe the latest
+            IR data and signal
+            counter on the dashboard.
+        </li>
+
+        <li>
+            Press different buttons
+            and compare their
+            decoded values.
+        </li>
+
+    </ol>
+
+</section>
+
+<!-- ==========================================
+     8. EXPLORE THE CODE
+========================================== -->
+
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        ESP32 Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Select an explanation
+        to highlight its exact
+        source-code section.
+        Copy Code copies the
+        complete ESP32 sketch.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    WiFi_IR_Remote_Decoder.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div
+                class="code-body"
+                id="code-body"
+            >
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Click any step to
+                highlight the matching
+                code lines in blue.
+            </p>
+
+            <div
+                class="steps"
+                id="steps-list"
+            ></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore More: IR Decoding
+                </summary>
+
+                <p>
+                    The VS1838B receives
+                    modulated infrared
+                    light and produces
+                    digital pulses.
+                </p>
+
+                <p>
+                    IRremote decodes
+                    the pulses into
+                    structured information.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: IR Protocol
+                </summary>
+
+                <p>
+                    Different remote
+                    controls may use
+                    protocols such as
+                    NEC, Sony or RC5.
+                </p>
+
+                <p>
+                    The displayed
+                    protocol depends
+                    on the remote used.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Raw Data
+                </summary>
+
+                <p>
+                    Raw decoded data
+                    is displayed in
+                    hexadecimal format.
+                </p>
+
+                <p>
+                    The value and
+                    its width depend
+                    on the received
+                    protocol and data.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Wi-Fi
+                </summary>
+
+                <p>
+                    The ESP32 hosts
+                    a local HTTP server.
+                </p>
+
+                <p>
+                    The dashboard requests
+                    updated IR information
+                    every 500 milliseconds.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+
+                    <li>
+                        Which GPIO receives
+                        the IR signal?
+                    </li>
+
+                    <li>
+                        Which GPIO is
+                        OLED SDA?
+                    </li>
+
+                    <li>
+                        Which GPIO is
+                        OLED SCL?
+                    </li>
+
+                    <li>
+                        Which library
+                        decodes IR signals?
+                    </li>
+
+                    <li>
+                        Which route sends
+                        decoded data?
+                    </li>
+
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div
+                    id="quiz-answers"
+                    hidden
+                >
+
+                    <ol>
+
+                        <li>GPIO15</li>
+
+                        <li>GPIO21</li>
+
+                        <li>GPIO22</li>
+
+                        <li>IRremote.hpp</li>
+
+                        <li>/data</li>
+
+                    </ol>
+
+                </div>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+
+        <strong>Try It:</strong>
+
+        Press different buttons
+        on the IR remote and
+        compare the command,
+        address and raw data
+        shown on the OLED
+        and dashboard.
+
+    </p>
+
+</section>
+
+<!-- ==========================================
+     9. EXPECTED OUTPUT
+========================================== -->
+
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>
+        Initial OLED Display
+    </h3>
+
+    <div class="output-box">
+
+<pre>IR REMOTE DECODER
+---------------------
+
+CMD: --
+PRO: WAITING
+ADDR: --
+RX: 0  WIFI:OK</pre>
+
+    </div>
+
+    <h3>
+        After Receiving a Signal
+    </h3>
+
+    <div class="output-box">
+
+<pre>IR REMOTE DECODER
+---------------------
+
+CMD: 0x52
+PRO: NEC
+ADDR: 0x0000
+RX: 7  WIFI:OK</pre>
+
+    </div>
+
+    <h3>
+        Example Serial Monitor
+    </h3>
+
+    <div class="output-box">
+
+<pre>IR receiver started
+
+WiFi connected!
+IP Address: 192.168.x.x
+Web server started!
+
+============================
+Protocol : NEC
+Command  : 0x52
+Address  : 0x0000
+Raw Data : 0xXXXXXXXX
+Count    : 7</pre>
+
+    </div>
+
+    <h3>
+        Web Dashboard Information
+    </h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Parameter</th>
+
+                    <th>Example Value</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Protocol</td>
+                    <td>NEC</td>
+                </tr>
+
+                <tr>
+                    <td>Command</td>
+                    <td>0x52</td>
+                </tr>
+
+                <tr>
+                    <td>Address</td>
+                    <td>0x0000</td>
+                </tr>
+
+                <tr>
+                    <td>Raw Data</td>
+                    <td>Hexadecimal value</td>
+                </tr>
+
+                <tr>
+                    <td>Signals Received</td>
+                    <td>7</td>
+                </tr>
+
+                <tr>
+                    <td>Last Signal</td>
+                    <td>Seconds ago</td>
+                </tr>
+
+                <tr>
+                    <td>IR Receiver</td>
+                    <td>ACTIVE</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Output Note:</strong>
+
+        <p>
+            Actual command,
+            address and raw data
+            depend on the IR
+            remote control used.
+        </p>
+
+        <p>
+            The example output
+            is for explanation only.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     10. RESULT
+========================================== -->
+
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Wi-Fi IR Remote Decoder
+        experiment demonstrates
+        infrared signal reception
+        using a VS1838B receiver
+        connected to ESP32 GPIO15.
+    </p>
+
+    <p>
+        The ESP32 decodes
+        infrared commands,
+        protocol information,
+        address and raw data.
+    </p>
+
+    <p>
+        The decoded information
+        is displayed on the
+        SSD1306 OLED,
+        Serial Monitor and
+        Wi-Fi web dashboard.
+    </p>
+
+</section>
+
+<!-- ==========================================
+     11. WHAT YOU LEARN
+========================================== -->
+
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+
+        <li>
+            Connecting a VS1838B
+            IR receiver to ESP32.
+        </li>
+
+        <li>
+            Receiving infrared
+            remote-control signals.
+        </li>
+
+        <li>
+            Using GPIO15 as
+            an IR receiver input.
+        </li>
+
+        <li>
+            Understanding infrared
+            communication protocols.
+        </li>
+
+        <li>
+            Decoding IR commands.
+        </li>
+
+        <li>
+            Reading IR addresses.
+        </li>
+
+        <li>
+            Understanding hexadecimal
+            raw IR data.
+        </li>
+
+        <li>
+            Using the IRremote library.
+        </li>
+
+        <li>
+            Tracking received
+            signal counts.
+        </li>
+
+        <li>
+            Displaying IR information
+            on an SSD1306 OLED.
+        </li>
+
+        <li>
+            Using I²C communication.
+        </li>
+
+        <li>
+            Connecting ESP32
+            to Wi-Fi.
+        </li>
+
+        <li>
+            Creating an HTTP
+            web server.
+        </li>
+
+        <li>
+            Sending decoded
+            information as JSON.
+        </li>
+
+        <li>
+            Updating an IR
+            monitoring dashboard.
+        </li>
+
+    </ul>
+
+</section>
+
+</main>
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<footer>
+
+    <strong>
+        SIMUDIY Exploration Kit
+    </strong>
+
+    <div>
+        Wi-Fi IR Remote Decoder
+    </div>
+
+</footer>
+
+<!-- ==========================================
+     COMPLETE ESP32 PROGRAM
+
+     The program is stored in a textarea
+     so nested dashboard HTML cannot
+     accidentally close the outer script.
+
+     HTML entities are decoded by the
+     browser when the source is read.
+========================================== -->
+
+<textarea
+    id="esp32-program"
+    hidden
+>
+// [01] LOAD LIBRARIES
+
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;Adafruit_GFX.h>
+#include &lt;Adafruit_SSD1306.h>
+#include &lt;IRremote.hpp>
+
+// [END 01]
+
+
+// [02] CONFIGURE WIFI
+
+const char* ssid = "Wokwi-GUEST";
+
+const char* password = "";
+
+WebServer server(80);
+
+// [END 02]
+
+
+// [03] CONFIGURE GPIO PINS
+
+#define IR_PIN 15
+
+#define OLED_SDA 21
+
+#define OLED_SCL 22
+
+#define OLED_ADDR 0x3C
+
+// [END 03]
+
+
+// [04] CONFIGURE OLED
+
+#define SCREEN_WIDTH 128
+
+#define SCREEN_HEIGHT 64
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    -1
+);
+
+// [END 04]
+
+
+// [05] STORE IR DATA
+
+String irProtocol = "WAITING";
+
+String irCommand = "--";
+
+String irAddress = "--";
+
+String irRawData = "--";
+
+unsigned long signalCount = 0;
+
+unsigned long lastSignalTime = 0;
+
+// [END 05]
+
+
+// [06] UPDATE OLED
+
+void updateOLED() {
+
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(1);
+
+    display.setCursor(
+        0,
+        0
+    );
+
+    display.println(
+        "IR REMOTE DECODER"
+    );
+
+    display.drawLine(
+        0,
+        10,
+        127,
+        10,
+        SSD1306_WHITE
+    );
+
+    display.setCursor(
+        0,
+        15
+    );
+
+    display.print("CMD: ");
+
+    display.println(irCommand);
+
+    display.setCursor(
+        0,
+        27
+    );
+
+    display.print("PRO: ");
+
+    display.println(irProtocol);
+
+    display.setCursor(
+        0,
+        39
+    );
+
+    display.print("ADDR:");
+
+    display.println(irAddress);
+
+    display.setCursor(
+        0,
+        51
+    );
+
+    display.print("RX: ");
+
+    display.print(signalCount);
+
+    if (
+        WiFi.status() == WL_CONNECTED
+    ) {
+
+        display.print(" WIFI:OK");
+
+    } else {
+
+        display.print(" WIFI:--");
+
+    }
+
+    display.display();
+
+}
+
+// [END 06]
+
+
+// [07] CREATE WEB DASHBOARD
+
+const char MAIN_PAGE[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+
+&lt;head>
+
+    &lt;meta charset="UTF-8">
+
+    &lt;meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    &lt;title>
+        IR Remote Decoder
+    &lt;/title>
+
+    &lt;style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 25px;
+            background: linear-gradient(
+                135deg,
+                #071525,
+                #020812
+            );
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .dashboard {
+            width: 94%;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #55dfff;
+        }
+
+        .online {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            border: 1px solid #4ade80;
+            border-radius: 20px;
+            color: #4ade80;
+        }
+
+        .command-card {
+            margin-bottom: 18px;
+            padding: 30px;
+            background: #13263a;
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        .command {
+            margin-top: 10px;
+            color: #55dfff;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            padding: 20px;
+            background: #13263a;
+            border-radius: 15px;
+        }
+
+        .label {
+            color: #8ea9bf;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .value {
+            margin-top: 8px;
+            color: #55dfff;
+            font-size: 24px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 600px) {
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    &lt;/style>
+
+&lt;/head>
+
+&lt;body>
+
+    &lt;div class="dashboard">
+
+        &lt;div class="header">
+
+            &lt;h1>
+                IR Remote Decoder
+            &lt;/h1>
+
+            &lt;p>
+                ESP32 Wi-Fi Infrared Monitoring System
+            &lt;/p>
+
+            &lt;div class="online">
+                SYSTEM ONLINE
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="command-card">
+
+            &lt;div>
+                Latest IR Command
+            &lt;/div>
+
+            &lt;div
+                class="command"
+                id="command"
+            >
+                --
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="grid">
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Protocol
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="protocol"
+                >
+                    --
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Address
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="address"
+                >
+                    --
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Raw Data
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="raw"
+                >
+                    --
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Signals Received
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="count"
+                >
+                    0
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    Last Signal
+                &lt;/div>
+
+                &lt;div
+                    class="value"
+                    id="lastSignal"
+                >
+                    WAITING
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="card">
+
+                &lt;div class="label">
+                    IR Receiver
+                &lt;/div>
+
+                &lt;div class="value">
+                    ACTIVE
+                &lt;/div>
+
+            &lt;/div>
+
+        &lt;/div>
+
+    &lt;/div>
+
+    &lt;script>
+
+        async function updateDashboard() {
+
+            try {
+
+                const response = await fetch(
+                    "/data"
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Data request failed"
+                    );
+
+                }
+
+                const data = await response.json();
+
+                document.getElementById(
+                    "command"
+                ).textContent = data.command;
+
+                document.getElementById(
+                    "protocol"
+                ).textContent = data.protocol;
+
+                document.getElementById(
+                    "address"
+                ).textContent = data.address;
+
+                document.getElementById(
+                    "raw"
+                ).textContent = data.raw;
+
+                document.getElementById(
+                    "count"
+                ).textContent = data.count;
+
+                document.getElementById(
+                    "lastSignal"
+                ).textContent = data.lastSignal;
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+
+        }
+
+        updateDashboard();
+
+        setInterval(
+            updateDashboard,
+            500
+        );
+
+    &lt;/script>
+
+&lt;/body>
+
+&lt;/html>
+)rawliteral";
+
+// [END 07]
+
+
+// [08] SERVE HOME PAGE
+
+void handleRoot() {
+
+    server.send_P(
+        200,
+        "text/html",
+        MAIN_PAGE
+    );
+
+}
+
+// [END 08]
+
+
+// [09] SEND JSON DATA
+
+void handleData() {
+
+    String json = "{";
+
+    json += "\"protocol\":\"";
+    json += irProtocol;
+    json += "\",";
+
+    json += "\"command\":\"";
+    json += irCommand;
+    json += "\",";
+
+    json += "\"address\":\"";
+    json += irAddress;
+    json += "\",";
+
+    json += "\"raw\":\"";
+    json += irRawData;
+    json += "\",";
+
+    json += "\"count\":";
+    json += String(signalCount);
+    json += ",";
+
+    json += "\"lastSignal\":\"";
+
+    if (signalCount == 0) {
+
+        json += "WAITING";
+
+    } else {
+
+        unsigned long seconds =
+            (
+                millis() -
+                lastSignalTime
+            ) / 1000;
+
+        if (seconds &lt; 60) {
+
+            json += String(seconds);
+            json += " sec ago";
+
+        } else {
+
+            json += String(seconds / 60);
+            json += " min ago";
+
+        }
+
+    }
+
+    json += "\"";
+
+    json += "}";
+
+    server.send(
+        200,
+        "application/json",
+        json
+    );
+
+}
+
+// [END 09]
+
+
+// [10] INITIALIZE OLED
+
+void setup() {
+
+    Serial.begin(115200);
+
+    delay(1000);
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+    if (
+        !display.begin(
+            SSD1306_SWITCHCAPVCC,
+            OLED_ADDR
+        )
+    ) {
+
+        Serial.println(
+            "OLED initialization failed!"
+        );
+
+        while (true) {
+
+            delay(100);
+
+        }
+
+    }
+
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(2);
+
+    display.setCursor(
+        5,
+        10
+    );
+
+    display.println(
+        "IR REMOTE"
+    );
+
+    display.setCursor(
+        28,
+        35
+    );
+
+    display.println(
+        "READY"
+    );
+
+    display.display();
+
+    delay(1500);
+
+// [END 10]
+
+
+// [11] START IR RECEIVER
+
+    IrReceiver.begin(
+        IR_PIN,
+        ENABLE_LED_FEEDBACK
+    );
+
+    Serial.println(
+        "IR receiver started"
+    );
+
+// [END 11]
+
+
+// [12] CONNECT WIFI
+
+    WiFi.mode(
+        WIFI_STA
+    );
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+    Serial.print(
+        "Connecting to WiFi"
+    );
+
+    while (
+        WiFi.status() != WL_CONNECTED
+    ) {
+
+        delay(500);
+
+        Serial.print(".");
+
+    }
+
+    Serial.println();
+
+    Serial.println(
+        "WiFi connected!"
+    );
+
+    Serial.print(
+        "IP Address: "
+    );
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+// [END 12]
+
+
+// [13] START WEB SERVER
+
+    server.on(
+        "/",
+        HTTP_GET,
+        handleRoot
+    );
+
+    server.on(
+        "/data",
+        HTTP_GET,
+        handleData
+    );
+
+    server.begin();
+
+    Serial.println(
+        "Web server started!"
+    );
+
+    updateOLED();
+
+}
+
+// [END 13]
+
+
+// [14] LISTEN FOR IR SIGNALS
+
+void loop() {
+
+    server.handleClient();
+
+    if (IrReceiver.decode()) {
+
+// [END 14]
+
+
+// [15] DECODE IR INFORMATION
+
+        irProtocol = String(
+            IrReceiver.getProtocolString()
+        );
+
+        char commandBuffer[12];
+
+        snprintf(
+            commandBuffer,
+            sizeof(commandBuffer),
+            "0x%02X",
+            IrReceiver.decodedIRData.command
+        );
+
+        irCommand = String(
+            commandBuffer
+        );
+
+        char addressBuffer[12];
+
+        snprintf(
+            addressBuffer,
+            sizeof(addressBuffer),
+            "0x%04X",
+            IrReceiver.decodedIRData.address
+        );
+
+        irAddress = String(
+            addressBuffer
+        );
+
+        char rawBuffer[24];
+
+        snprintf(
+            rawBuffer,
+            sizeof(rawBuffer),
+            "0x%08lX",
+            (unsigned long)
+            IrReceiver.decodedIRData.decodedRawData
+        );
+
+        irRawData = String(
+            rawBuffer
+        );
+
+// [END 15]
+
+
+// [16] UPDATE SIGNAL COUNT
+
+        signalCount++;
+
+        lastSignalTime = millis();
+
+// [END 16]
+
+
+// [17] SERIAL MONITOR OUTPUT
+
+        Serial.println();
+
+        Serial.println(
+            "============================"
+        );
+
+        Serial.print(
+            "Protocol : "
+        );
+
+        Serial.println(irProtocol);
+
+        Serial.print(
+            "Command  : "
+        );
+
+        Serial.println(irCommand);
+
+        Serial.print(
+            "Address  : "
+        );
+
+        Serial.println(irAddress);
+
+        Serial.print(
+            "Raw Data : "
+        );
+
+        Serial.println(irRawData);
+
+        Serial.print(
+            "Count    : "
+        );
+
+        Serial.println(signalCount);
+
+// [END 17]
+
+
+// [18] UPDATE DISPLAY AND RESUME
+
+        updateOLED();
+
+        IrReceiver.resume();
+
+    }
+
+}
+
+// [END 18]
+</textarea>
+
+<!-- ==========================================
+     INTERACTIVE CODE EXPLORER JAVASCRIPT
+========================================== -->
+
+<script>
+
+    /* ==========================================
+       READ COMPLETE ESP32 SOURCE CODE
+    ========================================== */
+
+    const program = document
+        .getElementById("esp32-program")
+        .value
+        .trim();
+
+    const lines = program.split("\n");
+
+    /* ==========================================
+       CODE EXPLANATION STEPS
+    ========================================== */
+
+    const steps = [
+
+        {
+            number: "01",
+            label: "LOAD LIBRARIES",
+            title: "Load libraries",
+            text:
+                "Loads Wi-Fi, WebServer, " +
+                "Wire, OLED graphics " +
+                "and IRremote libraries."
+        },
+
+        {
+            number: "02",
+            label: "CONFIGURE WIFI",
+            title: "Configure Wi-Fi",
+            text:
+                "Stores network credentials " +
+                "and creates an HTTP " +
+                "web server on port 80."
+        },
+
+        {
+            number: "03",
+            label: "CONFIGURE GPIO PINS",
+            title: "Set GPIO pins",
+            text:
+                "Assigns GPIO15 for the " +
+                "IR receiver and GPIO21/22 " +
+                "for the OLED."
+        },
+
+        {
+            number: "04",
+            label: "CONFIGURE OLED",
+            title: "Configure OLED",
+            text:
+                "Creates the SSD1306 " +
+                "display object with " +
+                "128 by 64 resolution."
+        },
+
+        {
+            number: "05",
+            label: "STORE IR DATA",
+            title: "Store IR information",
+            text:
+                "Creates variables for " +
+                "protocol, command, address, " +
+                "raw data and signal count."
+        },
+
+        {
+            number: "06",
+            label: "UPDATE OLED",
+            title: "Update OLED",
+            text:
+                "Displays the latest " +
+                "decoded information " +
+                "and Wi-Fi status."
+        },
+
+        {
+            number: "07",
+            label: "CREATE WEB DASHBOARD",
+            title: "Create web dashboard",
+            text:
+                "Contains the HTML, CSS " +
+                "and JavaScript used " +
+                "by the wireless dashboard."
+        },
+
+        {
+            number: "08",
+            label: "SERVE HOME PAGE",
+            title: "Serve dashboard",
+            text:
+                "Returns the HTML dashboard " +
+                "when a browser opens " +
+                "the ESP32 IP address."
+        },
+
+        {
+            number: "09",
+            label: "SEND JSON DATA",
+            title: "Send decoded data",
+            text:
+                "Creates the JSON response " +
+                "containing decoded IR data " +
+                "and latest signal timing."
+        },
+
+        {
+            number: "10",
+            label: "INITIALIZE OLED",
+            title: "Initialize OLED",
+            text:
+                "Starts I2C communication " +
+                "and shows the startup " +
+                "message on the OLED."
+        },
+
+        {
+            number: "11",
+            label: "START IR RECEIVER",
+            title: "Start IR receiver",
+            text:
+                "Initializes the IRremote " +
+                "receiver on GPIO15."
+        },
+
+        {
+            number: "12",
+            label: "CONNECT WIFI",
+            title: "Connect to Wi-Fi",
+            text:
+                "Connects ESP32 to Wi-Fi " +
+                "and displays its " +
+                "IP address."
+        },
+
+        {
+            number: "13",
+            label: "START WEB SERVER",
+            title: "Start web server",
+            text:
+                "Registers dashboard " +
+                "and JSON routes " +
+                "and starts the server."
+        },
+
+        {
+            number: "14",
+            label: "LISTEN FOR IR SIGNALS",
+            title: "Listen for signals",
+            text:
+                "The main loop handles " +
+                "web requests and checks " +
+                "for received IR signals."
+        },
+
+        {
+            number: "15",
+            label: "DECODE IR INFORMATION",
+            title: "Decode IR data",
+            text:
+                "Extracts protocol, " +
+                "command, address " +
+                "and raw data."
+        },
+
+        {
+            number: "16",
+            label: "UPDATE SIGNAL COUNT",
+            title: "Count IR signals",
+            text:
+                "Increases the signal " +
+                "counter and stores " +
+                "the latest reception time."
+        },
+
+        {
+            number: "17",
+            label: "SERIAL MONITOR OUTPUT",
+            title: "Print decoded data",
+            text:
+                "Prints the decoded " +
+                "information to " +
+                "Serial Monitor."
+        },
+
+        {
+            number: "18",
+            label: "UPDATE DISPLAY AND RESUME",
+            title: "Prepare next signal",
+            text:
+                "Updates the OLED " +
+                "and resumes the " +
+                "IR receiver."
+        }
+
+    ];
+
+    /* ==========================================
+       ESCAPE HTML CHARACTERS
+    ========================================== */
+
+    function escapeHtml(value) {
+
+        return value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+    }
+
+    /* ==========================================
+       DISPLAY CODE WITH LINE NUMBERS
+    ========================================== */
+
+    function displayCode() {
+
+        const container = document.getElementById(
+            "code-lines"
+        );
+
+        container.innerHTML = lines.map(
+            function(line, index) {
+
+                return (
+                    '<span class="code-line" id="line-' +
+                    (index + 1) +
+                    '">' +
+                    '<span class="line-number">' +
+                    (index + 1) +
+                    '</span>' +
+                    '<span>' +
+                    escapeHtml(line) +
+                    '</span>' +
+                    '</span>'
+                );
+
+            }
+        ).join("");
+
+    }
+
+    /* ==========================================
+       FIND SOURCE MARKERS
+    ========================================== */
+
+    function findMarker(marker) {
+
+        return lines.findIndex(
+            function(line) {
+
+                return line.trim() === marker;
+
+            }
+        );
+
+    }
+
+    /* ==========================================
+       DEFINE EXACT HIGHLIGHT RANGES
+    ========================================== */
+
+    const ranges = steps.map(
+        function(step) {
+
+            const start = findMarker(
+                "// [" +
+                step.number +
+                "] " +
+                step.label
+            );
+
+            const end = findMarker(
+                "// [END " +
+                step.number +
+                "]"
+            );
+
+            return {
+
+                start: start,
+
+                end: end,
+
+                valid:
+                    start >= 0 &&
+                    end >= start
+
+            };
+
+        }
+    );
+
+    /* ==========================================
+       CREATE EXPLANATION BUTTONS
+    ========================================== */
+
+    function createSteps() {
+
+        const container = document.getElementById(
+            "steps-list"
+        );
+
+        steps.forEach(
+            function(step, index) {
+
+                const button = document.createElement(
+                    "button"
+                );
+
+                button.type = "button";
+
+                button.className = "step";
+
+                const number = document.createElement(
+                    "span"
+                );
+
+                number.className = "step-number";
+
+                number.textContent = step.number;
+
+                const title = document.createElement(
+                    "span"
+                );
+
+                title.textContent = step.title;
+
+                button.append(
+                    number,
+                    title
+                );
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        showStep(index);
+
+                    }
+                );
+
+                container.appendChild(
+                    button
+                );
+
+            }
+        );
+
+    }
+
+    /* ==========================================
+       HIGHLIGHT MATCHING CODE SECTION
+    ========================================== */
+
+    function showStep(index) {
+
+        document.querySelectorAll(".step")
+            .forEach(
+                function(button, i) {
+
+                    button.classList.toggle(
+                        "active",
+                        i === index
+                    );
+
+                }
+            );
+
+        document.querySelectorAll(".code-line")
+            .forEach(
+                function(line) {
+
+                    line.classList.remove(
+                        "selected"
+                    );
+
+                }
+            );
+
+        const step = steps[index];
+
+        const range = ranges[index];
+
+        const explanation = document.getElementById(
+            "explanation"
+        );
+
+        explanation.replaceChildren();
+
+        const heading = document.createElement(
+            "h3"
+        );
+
+        heading.textContent =
+            (index + 1) +
+            ". " +
+            step.title;
+
+        const paragraph = document.createElement(
+            "p"
+        );
+
+        if (!range.valid) {
+
+            paragraph.textContent =
+                "Matching source-code markers " +
+                "were not found.";
+
+            explanation.append(
+                heading,
+                paragraph
+            );
+
+            return;
+
+        }
+
+        for (
+            let i = range.start;
+            i <= range.end;
+            i++
+        ) {
+
+            const line = document.getElementById(
+                "line-" + (i + 1)
+            );
+
+            if (line) {
+
+                line.classList.add(
+                    "selected"
+                );
+
+            }
+
+        }
+
+        paragraph.textContent = step.text;
+
+        explanation.append(
+            heading,
+            paragraph
+        );
+
+        const firstLine = document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+        const codeBody = document.getElementById(
+            "code-body"
+        );
+
+        if (firstLine && codeBody) {
+
+            const offset =
+                firstLine.getBoundingClientRect().top -
+                codeBody.getBoundingClientRect().top;
+
+            codeBody.scrollTo({
+
+                top:
+                    codeBody.scrollTop +
+                    offset -
+                    20,
+
+                behavior: "smooth"
+
+            });
+
+        }
+
+    }
+
+    /* ==========================================
+       COPY COMPLETE ESP32 CODE
+    ========================================== */
+
+    async function copyCode() {
+
+        const button = document.querySelector(
+            ".code-top .copy-button"
+        );
+
+        function copied() {
+
+            button.textContent = "Copied!";
+
+            setTimeout(
+                function() {
+
+                    button.textContent =
+                        "Copy Code";
+
+                },
+                1500
+            );
+
+        }
+
+        function fallback() {
+
+            const field = document.createElement(
+                "textarea"
+            );
+
+            field.value = program;
+
+            field.style.position = "fixed";
+
+            field.style.opacity = "0";
+
+            document.body.appendChild(
+                field
+            );
+
+            field.select();
+
+            let success = false;
+
+            try {
+
+                success = document.execCommand(
+                    "copy"
+                );
+
+            } catch (error) {
+
+                success = false;
+
+            }
+
+            field.remove();
+
+            if (success) {
+
+                copied();
+
+            } else {
+
+                button.textContent = "Copy failed";
+
+            }
+
+        }
+
+        if (
+            navigator.clipboard &&
+            window.isSecureContext
+        ) {
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    program
+                );
+
+                copied();
+
+            } catch (error) {
+
+                fallback();
+
+            }
+
+        } else {
+
+            fallback();
+
+        }
+
+    }
+
+    /* ==========================================
+       SHOW OR HIDE QUIZ ANSWERS
+    ========================================== */
+
+    function toggleAnswers() {
+
+        const answers = document.getElementById(
+            "quiz-answers"
+        );
+
+        answers.hidden = !answers.hidden;
+
+    }
+
+    /* ==========================================
+       INITIALIZE CODE EXPLORER
+    ========================================== */
+
+    displayCode();
+
+    createSteps();
+
+    showStep(0);
+
+</script>
 
 </body>
 
