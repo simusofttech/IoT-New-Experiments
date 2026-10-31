@@ -1,57 +1,44 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Potentiometer Web Monitor</title>
 
 <style>
-
-/* =========================
-   BASIC PAGE
-========================= */
-
-*{
-    box-sizing:border-box;
+/* =====================================
+   GENERAL PAGE STYLE
+===================================== */
+* {
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
 }
 
-
-/* =========================
+/* =====================================
    HEADER
-========================= */
-
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
+===================================== */
 .header {
-    background: #2563eb;
-    color: white;
     position: relative;
     display: flex;
     flex-direction: column;
     min-height: 230px;
     padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -65,8 +52,6 @@ body{
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
 
 .header-content {
     text-align: center;
@@ -84,35 +69,22 @@ body{
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 15px;
+    width: 100%;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0, 0, 0, 0.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -136,8 +108,6 @@ body{
     transform: translateY(-2px);
 }
 
-/* HOME ICON ONLY */
-
 .home-icon-btn {
     width: 40px;
     height: 38px;
@@ -154,28 +124,526 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =====================================
+   SECTION NAVIGATION
+===================================== */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
 
+nav a {
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    scroll-margin-top: 100px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    margin-top: 22px;
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   EXPERIMENT THUMBNAIL
+===================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 150px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* =====================================
+   TABLES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* =====================================
+   NOTES AND CIRCUIT
+===================================== */
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* =====================================
+   POTENTIOMETER LEVEL DEMONSTRATION
+===================================== */
+.level-box {
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.level-value {
+    margin-bottom: 15px;
+    color: #2563eb;
+    font-size: 44px;
+    font-weight: bold;
+}
+
+.progress {
+    width: 100%;
+    height: 22px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    width: 51%;
+    height: 100%;
+    background: #2563eb;
+    border-radius: 20px;
+}
+
+.scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* =====================================
+   WORKING PRINCIPLE
+===================================== */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-step {
+    padding: 5px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* =====================================
+   EXPLORE THE CODE
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    overflow: auto;
+    padding: 16px 0;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+
+/* =====================================
+   CODE EXPLANATION PANEL
+===================================== */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+    font-size: 15px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    color: #1e3a8a;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    color: #234e87;
+    border-radius: 9px;
+}
+
+/* =====================================
+   EXPECTED OUTPUT
+===================================== */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    color: #1e293b;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* =====================================
+   DASHBOARD IMAGE
+===================================== */
+.dashboard-image {
+    padding: 20px;
+    text-align: center;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    max-height: 650px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
     }
 
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media (max-width: 600px) {
     .header-logo {
-        width: 95px;
-        max-height: 60px;
         top: 12px;
         left: 12px;
+        width: 95px;
+        max-height: 60px;
     }
 
     .header-content {
@@ -201,9 +669,9 @@ body{
     }
 
     .header-nav-btn {
+        min-height: 36px;
         padding: 8px 7px;
         font-size: 11px;
-        min-height: 36px;
     }
 
     .home-icon-btn {
@@ -211,711 +679,32 @@ body{
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
+    .section {
+        padding: 20px;
     }
 
-    .project-thumbnail img {
-        max-height: 280px;
-    }
-}
-   
-
-/* =========================
-   NAVIGATION
-========================= */
-
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-
-    padding:13px 15px;
-
-    background:white;
-    border-bottom:1px solid #ddd;
-
-    position:sticky;
-    top:0;
-    z-index:20;
-}
-
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
-}
-
-nav a:hover{
-    color:#2563eb;
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-    width:90%;
-    max-width:1050px;
-    margin:35px auto;
-}
-
-.section{
-    background:white;
-
-    margin-bottom:24px;
-
-    padding:28px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    box-shadow:
-    0 4px 12px rgba(0,0,0,.06);
-}
-
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-
-    color:#1e3a8a;
-
-    font-size:25px;
-
-    border-bottom:
-    2px solid #dbeafe;
-
-    padding-bottom:8px;
-}
-
-.section h3{
-    color:#1e3a8a;
-}
-
-ul,
-ol{
-    padding-left:24px;
-}
-
-li{
-    margin-bottom:8px;
-}
-
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-
-    gap:20px;
-}
-
-.component-card{
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    padding:20px;
-
-    text-align:center;
-
-    background:white;
-
-    box-shadow:
-    0 2px 8px rgba(0,0,0,.04);
-}
-
-.component-card img{
-    width:100%;
-
-    height:130px;
-
-    object-fit:contain;
-
-    margin-bottom:15px;
-}
-
-.component-card h4{
-    color:#1e3a8a;
-
-    margin:0 0 8px;
-
-    font-size:18px;
-}
-
-.component-card p{
-    color:#475569;
-
-    font-size:14px;
-
-    margin:0;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-
-    min-width:600px;
-
-    border-collapse:collapse;
-}
-
-th,
-td{
-    padding:12px;
-
-    border:1px solid #ddd;
-
-    text-align:left;
-}
-
-th{
-    background:#2563eb;
-    color:white;
-}
-
-tr:nth-child(even){
-    background:#f8fafc;
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-.note{
-    margin-top:15px;
-
-    padding:14px;
-
-    background:#eff6ff;
-
-    border-left:5px solid #2563eb;
-
-    border-radius:6px;
-}
-
-
-/* =========================
-   CIRCUIT
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-
-    max-width:700px;
-
-    margin:20px auto;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-}
-
-
-/* =========================
-   SENSOR LEVEL
-========================= */
-
-.level-box{
-    max-width:600px;
-
-    margin:20px auto;
-
-    text-align:center;
-}
-
-.level-value{
-    font-size:44px;
-
-    font-weight:bold;
-
-    color:#2563eb;
-
-    margin-bottom:15px;
-}
-
-.progress{
-    width:100%;
-
-    height:22px;
-
-    background:#e2e8f0;
-
-    border-radius:20px;
-
-    overflow:hidden;
-}
-
-.progress-fill{
-    width:51%;
-
-    height:100%;
-
-    background:#2563eb;
-
-    border-radius:20px;
-}
-
-.scale{
-    display:flex;
-
-    justify-content:space-between;
-
-    margin-top:8px;
-
-    color:#64748b;
-
-    font-size:13px;
-}
-
-
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-    text-align:center;
-
-    color:#1e3a8a;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    line-height:2;
-}
-
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-    color:#142e3a;
-}
-
-.eyebrow{
-    color:#2563eb;
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    letter-spacing:.08em;
-
-    text-transform:uppercase;
-
-    margin:0 0 4px;
-}
-
-.lesson-title{
-    font-size:32px !important;
-
-    margin:0 0 8px !important;
-
-    color:#1e3a8a !important;
-
-    border:0 !important;
-
-    padding:0 !important;
-}
-
-.intro{
-    color:#526875;
-
-    margin:0 0 22px;
-}
-
-.code-layout{
-    display:grid;
-
-    grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-
-    gap:20px;
-
-    align-items:start;
-}
-
-
-/* CODE PANEL */
-
-.code-panel{
-    background:white;
-
-    border:1px solid #bfdbfe;
-
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 4px 14px rgba(37,99,235,.10);
-}
-
-.code-top{
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    gap:12px;
-
-    padding:15px 20px;
-
-    background:#2563eb;
-
-    color:white;
-}
-
-.filename{
-    font:
-    bold 14px Consolas, monospace;
-}
-
-.copy-button{
-    border:1px solid white;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:8px;
-
-    padding:8px 14px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-.copy-button:hover{
-    background:#eff6ff;
-}
-
-.code-body{
-    height:600px;
-
-    overflow:auto;
-
-    padding:16px 0;
-
-    background:white;
-}
-
-.code-line{
-    display:flex;
-
-    min-width:max-content;
-
-    min-height:24px;
-
-    padding-right:20px;
-
-    white-space:pre;
-
-    font:
-    13px/24px Consolas, monospace;
-
-    color:#1e293b;
-
-    border-bottom:
-    1px solid #f1f5f9;
-}
-
-.code-line:hover{
-    background:#f8fbff;
-}
-
-.code-line.selected{
-    background:#dbeafe;
-
-    box-shadow:
-    inset 4px 0 #2563eb;
-}
-
-.line-number{
-    min-width:52px;
-
-    text-align:right;
-
-    padding-right:15px;
-
-    color:#64748b;
-
-    user-select:none;
-}
-
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-    background:white;
-
-    border:1px solid #dce6e9;
-
-    border-radius:14px;
-
-    padding:22px;
-}
-
-.guide h2{
-    border:0;
-
-    padding:0;
-
-    margin:0 0 8px;
-
-    font-size:21px;
-}
-
-.guide > p{
-    color:#526875;
-}
-
-.steps{
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-    gap:8px;
-
-    margin:16px 0;
-}
-
-.step{
-    border:1px solid #dce6e9;
-
-    border-radius:9px;
-
-    padding:10px;
-
-    min-height:65px;
-
-    background:white;
-
-    text-align:left;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
-}
-
-.step:hover{
-    border-color:#60a5fa;
-
-    background:#f8fbff;
-}
-
-.step.active{
-    background:#eff6ff;
-
-    border-color:#60a5fa;
-}
-
-.step-number{
-    color:#2563eb;
-
-    font-size:12px;
-}
-
-.explanation{
-    background:#eff6ff;
-
-    border-radius:9px;
-
-    padding:16px;
-
-    min-height:130px;
-}
-
-.explanation h3{
-    margin:0 0 7px;
-
-    color:#1e3a8a;
-
-    font-size:17px;
-}
-
-.explanation p{
-    margin:0;
-
-    color:#526875;
-}
-
-.guide details{
-    border-top:
-    1px solid #dce6e9;
-
-    margin-top:15px;
-}
-
-.guide summary{
-    cursor:pointer;
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    padding:13px 0;
-}
-
-.guide code{
-    background:#e5ecf4;
-
-    padding:2px 5px;
-
-    border-radius:4px;
-}
-
-.tip{
-    background:#eff6ff;
-
-    color:#234e87;
-
-    padding:14px 17px;
-
-    border-radius:9px;
-
-    margin-top:20px;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-    text-align:center;
-
-    padding:25px 20px;
-
-    background:#0f172a;
-
-    color:#cbd5e1;
-}
-
-footer strong{
-    color:white;
-}
-
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:850px){
-
-    .code-layout{
-        grid-template-columns:1fr;
+    .steps {
+        grid-template-columns: 1fr;
     }
 
+    nav {
+        gap: 11px;
+    }
 }
-
-@media(max-width:600px){
-
-    .header h1{
-        font-size:28px;
-    }
-
-    .container{
-        width:92%;
-    }
-
-    .section{
-        padding:20px;
-    }
-
-    .steps{
-        grid-template-columns:1fr;
-    }
-
-}
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================
+<!-- =====================================
      HEADER
-========================= -->
-
-
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -923,32 +712,21 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>ESP32 Potentiometer Web Monitor</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <!-- BACK BUTTON -->
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-                title="Back to ESP32 Experiments"
             >
                 &#8592; Back
             </a>
-
-            <!-- HOME ICON ONLY -->
 
             <a
                 href="../../index.html"
@@ -969,11 +747,7 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <!-- ARDUINO BUTTON -->
 
             <a
                 href="../../Arduino Experiments/index.html"
@@ -982,16 +756,12 @@ footer strong{
                 Arduino
             </a>
 
-            <!-- ESP BUTTON -->
-
             <a
                 href="../index.html"
                 class="header-nav-btn"
             >
                 ESP
             </a>
-
-            <!-- RASPBERRY PI BUTTON -->
 
             <a
                 href="../../R-Pi Experiments/index.html"
@@ -1006,1112 +776,939 @@ footer strong{
 
 </header>
 
-
-
-<!-- =========================
-     NAVIGATION
-========================= -->
-
+<!-- =====================================
+     SECTION NAVIGATION
+===================================== -->
 <nav>
-
-<a href="../index.html">
-← ESP32 Experiments
-</a>
-
-<a href="#aim">
-Aim
-</a>
-
-<a href="#components">
-Components
-</a>
-
-<a href="#connections">
-Connections
-</a>
-
-<a href="#circuit">
-Circuit
-</a>
-
-<a href="#working">
-Working
-</a>
-
-<a href="#procedure">
-Procedure
-</a>
-
-<a href="#code">
-Code
-</a>
-
-<a href="#result">
-Result
-</a>
-
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#result">Result</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#learn">Learn</a>
 </nav>
-
 
 <main class="container">
 
-<!-- PROJECT THUMBNAIL -->
-
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
 <section class="section project-thumbnail">
 
     <img
         src="../Potentiometer Web Monitor.png"
-        alt="Adjustable LED Dimmer Experiment Thumbnail"
+        alt="Potentiometer Web Monitor Thumbnail"
     >
 
 </section>
 
-<!-- AIM -->
-
+<!-- =====================================
+     1. AIM
+===================================== -->
 <section class="section" id="aim">
 
-<h2>
-Aim
-</h2>
+    <h2>Aim</h2>
 
-<p>
-
-To create an ESP32-based
-potentiometer monitoring system
-that reads the knob position,
-displays the value on an OLED
-and sends the live readings
-to a Wi-Fi web dashboard.
-
-</p>
+    <p>
+        To create an ESP32-based potentiometer
+        monitoring system that reads the knob
+        position through an analog input,
+        displays the reading on an SSD1306 OLED,
+        and sends live data to a Wi-Fi dashboard.
+    </p>
 
 </section>
 
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
 
-<!-- =========================
-     ABOUT
-========================= -->
+    <h2>About the Experiment</h2>
 
-<section class="section">
+    <p>
+        The Potentiometer Web Monitor demonstrates
+        analog input measurement using an ESP32
+        DevKitC microcontroller.
+    </p>
 
-<h2>
-About the Experiment
-</h2>
+    <p>
+        A potentiometer is a variable resistor.
+        Turning its knob changes the voltage
+        at its middle terminal.
+    </p>
 
-<p>
+    <p>
+        The middle terminal is connected to GPIO34,
+        which is used as an analog input.
+    </p>
 
-In this Experiment,
-the ESP32 reads the analog
-voltage from a potentiometer.
+    <p>
+        The ESP32 reads this voltage using
+        its Analog-to-Digital Converter (ADC).
+    </p>
 
-</p>
+    <p>
+        With a configured 12-bit resolution,
+        the ADC produces readings from 0 to 4095.
+    </p>
 
-<p>
+    <p>
+        The program converts the raw reading
+        into a percentage between 0% and 100%.
+    </p>
 
-The raw ESP32 ADC value
-ranges from 0 to 4095.
-The program converts this
-value into a percentage
-from 0% to 100%.
+    <p>
+        The SSD1306 OLED displays the percentage,
+        ADC reading, and a graphical progress bar.
+    </p>
 
-</p>
+    <p>
+        The ESP32 connects to Wi-Fi and hosts
+        a web dashboard that displays the
+        potentiometer position in a browser.
+    </p>
 
-<p>
+    <p>
+        The dashboard also shows the raw ADC reading,
+        percentage, and a continuously updating graph.
+    </p>
 
-The percentage and raw ADC
-value are displayed on the
-OLED and on a live
-Wi-Fi dashboard.
+    <div class="note">
 
-</p>
+        <strong>Measurement Note:</strong>
 
-</section>
+        <p>
+            The percentage represents the relative
+            potentiometer position derived from the ADC.
+        </p>
 
+        <p>
+            Actual ADC readings may show noise
+            and may not reach exactly 0 or 4095.
+        </p>
 
-<!-- =========================
-     COMPONENTS
-========================= -->
+        <p>
+            The potentiometer must be supplied
+            with 3.3V and GND so its signal
+            remains within the ESP32 input range.
+        </p>
 
-<section
-class="section"
-id="components">
+    </div>
 
-<h2>
-Components Required
-</h2>
+    <h3>Potentiometer Position Example</h3>
 
+    <div class="level-box">
 
-<div class="components-grid">
+        <div class="level-value">51%</div>
 
+        <div class="progress">
+            <div class="progress-fill"></div>
+        </div>
 
-<div class="component-card">
+        <div class="scale">
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
+        </div>
 
-<img
-src="ESP32 Development Board.png"
-alt="ESP32 Development Board">
+    </div>
 
-<h4>
-ESP32 DevKitC (×1)
-</h4>
-
-<p>
-Main controller with
-built-in Wi-Fi.
-</p>
-
-</div>
-
-
-<div class="component-card">
-
-<img
-src="Potentiometer.png"
-alt="Potentiometer">
-
-<h4>
-Potentiometer (×1)
-</h4>
-
-<p>
-Provides a variable
-analog input to the ESP32.
-</p>
-
-</div>
-
-
-<div class="component-card">
-
-<img
-src="OLED.png"
-alt="OLED SSD1306">
-
-<h4>
-OLED 128×64 I2C (×1)
-</h4>
-
-<p>
-Displays the potentiometer
-percentage and ADC value.
-</p>
-
-</div>
-
-<div class="component-card">
-
-<img
-src="Jumper Wires.png"
-alt="Jumper Wires">
-
-<h4>
-Jumper Wires
-</h4>
-
-<p>
-Used to connect
-all the components.
-</p>
-
-</div>
-
-
-</div>
+    <div class="note">
+        The 51% value is an example, not a live reading.
+    </div>
 
 </section>
 
+<!-- =====================================
+     3. COMPONENTS REQUIRED
+===================================== -->
+<section class="section" id="components">
 
-<!-- =========================
-     CONNECTIONS
-========================= -->
+    <h2>Components Required</h2>
 
-<section
-class="section"
-id="connections">
+    <div class="components-grid">
 
-<h2>
-Circuit Connections
-</h2>
+        <div class="component-card">
 
+            <img
+                src="ESP32 Development Board.png"
+                alt="ESP32 Development Board"
+            >
 
-<div class="table-wrap">
+            <h4>ESP32 DevKitC (×1)</h4>
 
-<table>
+            <p>
+                Main controller with built-in Wi-Fi.
+            </p>
 
-<thead>
+        </div>
 
-<tr>
-<th>Component</th>
-<th>Pin</th>
-<th>ESP32</th>
-</tr>
+        <div class="component-card">
 
-</thead>
+            <img
+                src="Potentiometer.png"
+                alt="Potentiometer"
+            >
 
+            <h4>Potentiometer (×1)</h4>
 
-<tbody>
+            <p>
+                Provides an adjustable analog voltage.
+            </p>
 
-<tr>
-<td>Potentiometer</td>
-<td>VCC</td>
-<td>3.3V</td>
-</tr>
+        </div>
 
-<tr>
-<td>Potentiometer</td>
-<td>GND</td>
-<td>GND</td>
-</tr>
+        <div class="component-card">
 
-<tr>
-<td>Potentiometer</td>
-<td>SIG</td>
-<td>GPIO 34</td>
-</tr>
+            <img
+                src="OLED.png"
+                alt="SSD1306 OLED Display"
+            >
 
-<tr>
-<td>OLED</td>
-<td>VCC</td>
-<td>3.3V</td>
-</tr>
+            <h4>OLED 128×64 I2C (×1)</h4>
 
-<tr>
-<td>OLED</td>
-<td>GND</td>
-<td>GND</td>
-</tr>
+            <p>
+                Displays percentage, ADC value,
+                and a progress bar.
+            </p>
 
-<tr>
-<td>OLED</td>
-<td>SDA</td>
-<td>GPIO 21</td>
-</tr>
+        </div>
 
-<tr>
-<td>OLED</td>
-<td>SCL</td>
-<td>GPIO 22</td>
-</tr>
+        <div class="component-card">
 
-</tbody>
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
 
-</table>
+            <h4>Breadboard (×1)</h4>
 
-</div>
+            <p>
+                Provides convenient connections
+                for the experiment circuit.
+            </p>
 
+        </div>
 
-<div class="note">
+        <div class="component-card">
 
-<strong>
-Potentiometer Signal:
-</strong>
-GPIO 34
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
 
-<br>
+            <h4>Jumper Wires</h4>
 
-<strong>
-OLED SDA:
-</strong>
-GPIO 21
+            <p>
+                Used to connect the ESP32,
+                potentiometer, and OLED.
+            </p>
 
-<br>
+        </div>
 
-<strong>
-OLED SCL:
-</strong>
-GPIO 22
+    </div>
 
-<br>
+    <div class="note">
 
-<strong>
-ADC Resolution:
-</strong>
-12-bit
+        <strong>Required Libraries:</strong>
 
-<br>
+        <ul>
+            <li>WiFi.h</li>
+            <li>WebServer.h</li>
+            <li>Wire.h</li>
+            <li>Adafruit_GFX.h</li>
+            <li>Adafruit_SSD1306.h</li>
+        </ul>
 
-<strong>
-ADC Range:
-</strong>
-0 to 4095
+        <p>
+            Install Adafruit GFX and Adafruit SSD1306
+            libraries using Arduino IDE.
+        </p>
 
-<br>
-
-<strong>
-OLED Address:
-</strong>
-0x3C
-
-</div>
+    </div>
 
 </section>
 
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
 
-<!-- =========================
-     CIRCUIT
-========================= -->
+    <h2>Circuit Connections</h2>
 
-<section
-class="section"
-id="circuit">
+    <h3>Potentiometer to ESP32</h3>
 
-<h2>
-Circuit Diagram
-</h2>
+    <div class="table-wrap">
 
-<img
-src="ESP32 Potentiometer Web Monitor Circuit.png"
-alt="ESP32 Potentiometer Web Monitor Circuit"
-class="circuit-img">
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Terminal</th>
+                    <th>ESP32 Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Potentiometer</td>
+                    <td>Outer Terminal 1</td>
+                    <td>3.3V</td>
+                </tr>
+
+                <tr>
+                    <td>Potentiometer</td>
+                    <td>Outer Terminal 2</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>Potentiometer</td>
+                    <td>Middle Terminal / SIG</td>
+                    <td>GPIO34</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>SSD1306 OLED to ESP32</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>OLED Pin</th>
+                    <th>ESP32 Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V</td>
+                </tr>
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO21</td>
+                </tr>
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO22</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Configuration Summary</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Potentiometer Signal</td>
+                    <td>GPIO34</td>
+                </tr>
+                <tr>
+                    <td>OLED SDA</td>
+                    <td>GPIO21</td>
+                </tr>
+                <tr>
+                    <td>OLED SCL</td>
+                    <td>GPIO22</td>
+                </tr>
+                <tr>
+                    <td>OLED Address</td>
+                    <td>0x3C</td>
+                </tr>
+                <tr>
+                    <td>ADC Resolution</td>
+                    <td>12-bit</td>
+                </tr>
+                <tr>
+                    <td>ADC Range</td>
+                    <td>0 to 4095</td>
+                </tr>
+                <tr>
+                    <td>Web Server Port</td>
+                    <td>80</td>
+                </tr>
+                <tr>
+                    <td>Dashboard Refresh</td>
+                    <td>500 milliseconds</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Connection Note:</strong>
+
+        <p>
+            GPIO34 is an input-only GPIO suitable
+            for reading analog signals.
+        </p>
+
+        <p>
+            Connect the potentiometer's two outer
+            terminals to 3.3V and GND.
+            The middle terminal connects to GPIO34.
+        </p>
+
+        <p>
+            Swapping the two outer terminals reverses
+            the direction in which the reading changes
+            when the knob is rotated.
+        </p>
+
+    </div>
 
 </section>
 
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
 
-<!-- =========================
-     POTENTIOMETER LEVEL
-========================= -->
+    <h2>Circuit Diagram</h2>
 
-<section class="section">
-
-<h2>
-Potentiometer Position
-</h2>
-
-
-<div class="level-box">
-
-<div class="level-value">
-51%
-</div>
-
-<div class="progress">
-
-<div class="progress-fill">
-</div>
-
-</div>
-
-<div class="scale">
-
-<span>
-0%
-</span>
-
-<span>
-50%
-</span>
-
-<span>
-100%
-</span>
-
-</div>
-
-</div>
+    <img
+        src="ESP32 Potentiometer Web Monitor Circuit.png"
+        alt="ESP32 Potentiometer Web Monitor Circuit"
+        class="circuit-img"
+    >
 
 </section>
 
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
+<section class="section" id="working">
 
-<!-- =========================
-     WORKING
-========================= -->
+    <h2>Working Principle</h2>
 
-<section
-class="section"
-id="working">
+    <div class="flow">
 
-<h2>
-Working Principle
-</h2>
+        <div class="flow-step">ESP32 Starts</div>
+        <div class="flow-arrow">↓</div>
 
+        <div class="flow-step">Initialize SSD1306 OLED</div>
+        <div class="flow-arrow">↓</div>
 
-<div class="flow">
+        <div class="flow-step">Connect ESP32 to Wi-Fi</div>
+        <div class="flow-arrow">↓</div>
 
-ESP32 Starts
+        <div class="flow-step">Potentiometer Produces Analog Voltage</div>
+        <div class="flow-arrow">↓</div>
 
-<br>↓<br>
+        <div class="flow-step">Read Voltage Through GPIO34</div>
+        <div class="flow-arrow">↓</div>
 
-OLED Initializes
+        <div class="flow-step">Convert Voltage to ADC Value</div>
+        <div class="flow-arrow">↓</div>
 
-<br>↓<br>
+        <div class="flow-step">Map ADC Value to Percentage</div>
+        <div class="flow-arrow">↓</div>
 
-ESP32 Connects to Wi-Fi
+        <div class="flow-step">Update OLED Percentage and Bar</div>
+        <div class="flow-arrow">↓</div>
 
-<br>↓<br>
+        <div class="flow-step">Send Sensor Values as JSON</div>
+        <div class="flow-arrow">↓</div>
 
-Potentiometer Signal is Read on GPIO 34
+        <div class="flow-step">Refresh Dashboard and Live Graph</div>
 
-<br>↓<br>
+    </div>
 
-ESP32 Gets ADC Value from 0 to 4095
+    <h3>Analog Input</h3>
 
-<br>↓<br>
+    <p>
+        Turning the potentiometer changes the
+        voltage on its middle terminal.
+    </p>
 
-ADC Value is Converted to 0%–100%
+    <h3>ADC Conversion</h3>
 
-<br>↓<br>
+    <p>
+        The ESP32 converts the analog input voltage
+        into a digital reading using analogRead().
+    </p>
 
-OLED Displays Percentage and ADC Value
+    <h3>Percentage Calculation</h3>
 
-<br>↓<br>
+    <p>
+        The ADC reading is mapped from
+        0–4095 into a percentage from 0–100%.
+    </p>
 
-Web Dashboard Shows Live Reading
+    <div class="output-box">
 
-<br>↓<br>
+<pre>Percentage = map(ADC, 0, 4095, 0, 100)</pre>
 
-Graph Updates Every 500 ms
+    </div>
 
-</div>
+    <h3>OLED Monitoring</h3>
 
-</section>
+    <p>
+        The OLED shows the percentage, raw ADC
+        value, and corresponding progress bar.
+    </p>
 
+    <h3>Web Dashboard</h3>
 
-<!-- =========================
-     PROCEDURE
-========================= -->
+    <p>
+        The ESP32 hosts an HTTP web server.
+        A browser displays the current potentiometer reading.
+    </p>
 
-<section
-class="section"
-id="procedure">
+    <h3>Live Graph</h3>
 
-<h2>
-Procedure
-</h2>
+    <p>
+        JavaScript requests updated sensor data
+        from the /data endpoint every 500 milliseconds.
+    </p>
 
-
-<ol>
-
-<li>
-Place the ESP32 on the breadboard.
-</li>
-
-<li>
-Connect potentiometer VCC to ESP32 3.3V.
-</li>
-
-<li>
-Connect potentiometer GND to ESP32 GND.
-</li>
-
-<li>
-Connect potentiometer SIG to GPIO 34.
-</li>
-
-<li>
-Connect OLED VCC to ESP32 3.3V.
-</li>
-
-<li>
-Connect OLED GND to ESP32 GND.
-</li>
-
-<li>
-Connect OLED SDA to GPIO 21.
-</li>
-
-<li>
-Connect OLED SCL to GPIO 22.
-</li>
-
-<li>
-Open Arduino IDE.
-</li>
-
-<li>
-Install Adafruit GFX library.
-</li>
-
-<li>
-Install Adafruit SSD1306 library.
-</li>
-
-<li>
-Upload the program to ESP32.
-</li>
-
-<li>
-Open Serial Monitor at 115200 baud.
-</li>
-
-<li>
-Wait for ESP32 to connect to Wi-Fi.
-</li>
-
-<li>
-Note the ESP32 IP address.
-</li>
-
-<li>
-Open the IP address in a web browser.
-</li>
-
-<li>
-Rotate the potentiometer knob.
-</li>
-
-<li>
-Observe the percentage and ADC value
-change on the OLED.
-</li>
-
-<li>
-Observe the same value changing
-on the web dashboard.
-</li>
-
-<li>
-Observe the live graph responding
-to the potentiometer movement.
-</li>
-
-</ol>
+    <p>
+        The dashboard updates the displayed percentage,
+        progress bar, and graph without reloading the page.
+    </p>
 
 </section>
 
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
+<section class="section" id="procedure">
 
-<!-- =========================================
-     EXPLORE THE CODE
-========================================= -->
+    <h2>Procedure</h2>
 
-<section
-class="section"
-id="code">
+    <ol>
 
-<div class="code-lesson">
+        <li>Arrange the ESP32, potentiometer, OLED, breadboard and jumper wires.</li>
 
+        <li>Place the ESP32 on the breadboard.</li>
 
-<p class="eyebrow">
-ESP32 Experiment · Code Review
-</p>
+        <li>Connect one outer potentiometer terminal to 3.3V.</li>
 
+        <li>Connect the other outer terminal to GND.</li>
 
-<h2 class="lesson-title">
-Explore the Code
-</h2>
+        <li>Connect the middle potentiometer terminal to GPIO34.</li>
 
+        <li>Connect OLED VCC to 3.3V.</li>
 
-<p class="intro">
+        <li>Connect OLED GND to GND.</li>
 
-ESP32 Potentiometer Web Monitor ·
-Select a step to understand
-what each part of the program does.
+        <li>Connect OLED SDA to GPIO21.</li>
 
-</p>
+        <li>Connect OLED SCL to GPIO22.</li>
 
+        <li>Verify all connections.</li>
 
-<div class="code-layout">
+        <li>Open Arduino IDE.</li>
 
+        <li>Install the ESP32 board package.</li>
 
-<!-- CODE PANEL -->
+        <li>Install the Adafruit GFX library.</li>
 
-<article class="code-panel">
+        <li>Install the Adafruit SSD1306 library.</li>
 
+        <li>Create a sketch named ESP32_Potentiometer_Web_Monitor.ino.</li>
 
-<div class="code-top">
+        <li>Copy the complete program from Explore the Code.</li>
 
-<span class="filename">
-ESP32_Potentiometer_Web_Monitor.ino
-</span>
+        <li>Configure your Wi-Fi SSID and password.</li>
 
+        <li>Select the correct ESP32 board and serial port.</li>
 
-<button
-class="copy-button"
-onclick="copyCode()">
+        <li>Verify and upload the sketch.</li>
 
-Copy Code
+        <li>Open Serial Monitor at 115200 baud.</li>
 
-</button>
+        <li>Wait for the ESP32 to connect to Wi-Fi.</li>
 
-</div>
+        <li>Note the IP address shown in Serial Monitor.</li>
 
+        <li>Open that IP address in a browser connected to the same network.</li>
 
-<div
-class="code-body"
-id="code-body">
+        <li>Rotate the potentiometer slowly.</li>
 
-<code id="code-lines"></code>
+        <li>Observe changes on the OLED.</li>
 
-</div>
+        <li>Observe changes in the browser percentage and graph.</li>
 
-
-</article>
-
-
-<!-- GUIDE -->
-
-<article class="guide">
-
-
-<h2>
-Understand it step by step
-</h2>
-
-
-<p>
-
-Choose a step.
-The matching code will
-light up on the left.
-
-</p>
-
-
-<div class="steps">
-
-
-<button
-class="step active"
-onclick="showStep(0)">
-
-<span class="step-number">
-01
-</span>
-
-Load libraries
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(1)">
-
-<span class="step-number">
-02
-</span>
-
-Set pins
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(2)">
-
-<span class="step-number">
-03
-</span>
-
-Set Wi-Fi
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(3)">
-
-<span class="step-number">
-04
-</span>
-
-Create objects
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(4)">
-
-<span class="step-number">
-05
-</span>
-
-Read potentiometer
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(5)">
-
-<span class="step-number">
-06
-</span>
-
-Calculate percentage
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(6)">
-
-<span class="step-number">
-07
-</span>
-
-Update OLED
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(7)">
-
-<span class="step-number">
-08
-</span>
-
-Send JSON data
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(8)">
-
-<span class="step-number">
-09
-</span>
-
-Start Wi-Fi
-
-</button>
-
-
-<button
-class="step"
-onclick="showStep(9)">
-
-<span class="step-number">
-10
-</span>
-
-Keep monitoring
-
-</button>
-
-
-</div>
-
-
-<div
-class="explanation"
-id="explanation">
-
-<h3>
-1. Load libraries
-</h3>
-
-<p>
-
-The program loads libraries
-for Wi-Fi, web server,
-I²C communication and
-the SSD1306 OLED display.
-
-</p>
-
-</div>
-
-
-<details>
-
-<summary>
-Explore more: ADC value
-</summary>
-
-<p>
-
-The ESP32 reads the potentiometer
-using its 12-bit ADC.
-
-</p>
-
-<p>
-
-The ADC produces values from:
-
-</p>
-
-<p>
-<code>0</code>
-to
-<code>4095</code>
-</p>
-
-<p>
-
-The program converts this range
-into a percentage from
-0% to 100%.
-
-</p>
-
-</details>
-
-
-<details>
-
-<summary>
-Check your understanding
-</summary>
-
-
-<ul>
-
-<li>
-
-Which GPIO reads
-the potentiometer?
-
-<strong>
-GPIO 34
-</strong>
-
-</li>
-
-
-<li>
-
-What is the ESP32 ADC range?
-
-<strong>
-0 to 4095
-</strong>
-
-</li>
-
-
-<li>
-
-Which GPIO is OLED SDA?
-
-<strong>
-GPIO 21
-</strong>
-
-</li>
-
-
-<li>
-
-Which GPIO is OLED SCL?
-
-<strong>
-GPIO 22
-</strong>
-
-</li>
-
-
-<li>
-
-How often does the
-web dashboard update?
-
-<strong>
-Every 500 ms
-</strong>
-
-</li>
-
-</ul>
-
-
-</details>
-
-
-</article>
-
-
-</div>
-
-
-<p class="tip">
-
-<strong>
-Try it:
-</strong>
-
-Rotate the potentiometer slowly
-from minimum to maximum and
-watch the percentage, progress bar
-and live web graph change.
-
-</p>
-
-
-</div>
+    </ol>
 
 </section>
 
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
+<section class="section" id="code">
 
-<!-- =========================
-     EXPECTED OUTPUT
-========================= -->
+    <p class="eyebrow">ESP32 Experiment · Code Review</p>
 
-<section class="section">
+    <h2 class="lesson-title">Explore the Code</h2>
 
-<h2>
-Expected Output
-</h2>
+    <p class="intro">
+        Select an explanation to highlight
+        its corresponding source-code section.
+        Copy Code copies the complete ESP32 sketch.
+    </p>
 
-<p>
+    <div class="code-layout">
 
-The OLED displays:
+        <article class="code-panel">
 
-</p>
+            <div class="code-top">
 
-<ul>
+                <span class="filename">
+                    ESP32_Potentiometer_Web_Monitor.ino
+                </span>
 
-<li>
-Potentiometer percentage
-</li>
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
 
-<li>
-Raw ADC value
-</li>
+            </div>
 
-<li>
-Progress bar
-</li>
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
 
-</ul>
+        </article>
 
-<p>
+        <article class="guide">
 
-The web dashboard displays
-the live potentiometer position,
-raw ADC value, Wi-Fi status,
-GPIO information and a
-real-time graph.
+            <h2>Understand it step by step</h2>
 
-</p>
+            <p>
+                Click any explanation to highlight
+                its matching source-code lines in blue.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: ADC</summary>
+
+                <p>
+                    The ESP32 uses an Analog-to-Digital
+                    Converter to read the potentiometer.
+                </p>
+
+                <p>
+                    A 12-bit ADC reading ranges
+                    from 0 to 4095.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: map()</summary>
+
+                <p>
+                    map() converts the ADC reading
+                    into a percentage.
+                </p>
+
+                <p>
+                    constrain() ensures the result
+                    stays between 0 and 100.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: I²C Communication</summary>
+
+                <p>
+                    The OLED uses GPIO21 for SDA
+                    and GPIO22 for SCL.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: JSON Data</summary>
+
+                <p>
+                    The ESP32 returns potentiometer readings
+                    as JSON through the /data endpoint.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+
+                <ol>
+                    <li>Which GPIO reads the potentiometer?</li>
+                    <li>What is the 12-bit ADC range?</li>
+                    <li>Which GPIO is OLED SDA?</li>
+                    <li>Which GPIO is OLED SCL?</li>
+                    <li>How often does the dashboard refresh?</li>
+                </ol>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="toggleAnswers()"
+                >
+                    Show / Hide Answers
+                </button>
+
+                <div id="quiz-answers" hidden>
+                    <ol>
+                        <li>GPIO34</li>
+                        <li>0 to 4095</li>
+                        <li>GPIO21</li>
+                        <li>GPIO22</li>
+                        <li>Every 500 milliseconds</li>
+                    </ol>
+                </div>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Rotate the potentiometer from minimum to maximum
+        and observe the percentage, OLED progress bar,
+        and wireless dashboard graph.
+    </p>
 
 </section>
 
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
 
-<!-- =========================
-     RESULT
-========================= -->
+    <h2>Expected Output</h2>
 
-<section
-class="section"
-id="result">
+    <h3>OLED Display Example</h3>
 
-<h2>
-Result
-</h2>
+    <div class="output-box">
 
-<p>
+<pre>ESP32 POT MONITOR
+------------------------
 
-The ESP32 Potentiometer Web Monitor
-Experiment successfully reads the
-potentiometer through GPIO 34.
+51%       ADC:2088
 
-</p>
+[##########----------]</pre>
 
-<p>
+    </div>
 
-The raw analog value is converted
-to a percentage and displayed
-on both the OLED and
-Wi-Fi web dashboard.
+    <h3>Serial Monitor</h3>
 
-</p>
+    <div class="output-box">
+
+<pre>Connecting to WiFi...
+
+WiFi connected!
+
+IP Address: 192.168.x.x
+
+Web server started!</pre>
+
+    </div>
+
+    <h3>Web Dashboard Data</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Example Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>ADC Reading</td>
+                    <td>2088</td>
+                </tr>
+                <tr>
+                    <td>Potentiometer Position</td>
+                    <td>51%</td>
+                </tr>
+                <tr>
+                    <td>Input GPIO</td>
+                    <td>GPIO34</td>
+                </tr>
+                <tr>
+                    <td>Wi-Fi</td>
+                    <td>Connected</td>
+                </tr>
+                <tr>
+                    <td>Graph Update</td>
+                    <td>500 ms</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Example JSON Response</h3>
+
+    <div class="output-box">
+
+<pre>{
+    "raw": 2088,
+    "percent": 51
+}</pre>
+
+    </div>
+
+    <div class="note">
+        The values above are illustrative.
+        Actual readings depend on the potentiometer position.
+    </div>
 
 </section>
 
+<!-- =====================================
+     10. RESULT
+===================================== -->
+<section class="section" id="result">
 
-<!-- =========================
-     LEARNING
-========================= -->
+    <h2>Result</h2>
 
-<section class="section">
+    <p>
+        The Potentiometer Web Monitor demonstrates
+        analog input monitoring using ESP32 GPIO34.
+    </p>
 
-<h2>
-What You Learn
-</h2>
+    <p>
+        The raw ADC reading is converted into a
+        percentage and displayed on the OLED
+        with a graphical progress bar.
+    </p>
 
-<ul>
-
-<li>
-Connecting a potentiometer to ESP32.
-</li>
-
-<li>
-Reading analog values with ESP32.
-</li>
-
-<li>
-Understanding a 12-bit ADC.
-</li>
-
-<li>
-Mapping ADC values to percentages.
-</li>
-
-<li>
-Using an SSD1306 OLED display.
-</li>
-
-<li>
-Using I²C communication.
-</li>
-
-<li>
-Connecting ESP32 to Wi-Fi.
-</li>
-
-<li>
-Creating an ESP32 web server.
-</li>
-
-<li>
-Sending sensor data as JSON.
-</li>
-
-<li>
-Displaying live sensor data
-in a web dashboard.
-</li>
-
-</ul>
+    <p>
+        The ESP32 web dashboard displays the reading
+        wirelessly and updates its graph in real time.
+    </p>
 
 </section>
 
+<!-- =====================================
+     11. DASHBOARD
+===================================== -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="Potentiometer Web Monitor Dashboard.png"
+            alt="Potentiometer Web Monitor Dashboard"
+        >
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     12. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing a potentiometer with ESP32.</li>
+        <li>Using GPIO34 as an analog input.</li>
+        <li>Understanding variable analog voltage.</li>
+        <li>Using the ESP32 12-bit ADC.</li>
+        <li>Reading analog values with analogRead().</li>
+        <li>Mapping ADC values into percentages.</li>
+        <li>Using map() and constrain().</li>
+        <li>Connecting an SSD1306 OLED.</li>
+        <li>Using I²C communication.</li>
+        <li>Displaying sensor readings on OLED.</li>
+        <li>Creating an OLED progress bar.</li>
+        <li>Connecting ESP32 to Wi-Fi.</li>
+        <li>Hosting an HTTP web server.</li>
+        <li>Sending readings as JSON.</li>
+        <li>Creating a live browser dashboard.</li>
+        <li>Updating a real-time graph with JavaScript.</li>
+    </ul>
+
+</section>
 
 </main>
 
-
+<!-- =====================================
+     FOOTER
+===================================== -->
 <footer>
 
-<strong>
-ESP32 Experiment
-</strong>
+    <strong>SIMUDIY Exploration Kit</strong>
 
-<br>
-
-ESP32 Potentiometer Web Monitor
+    <div>Potentiometer Web Monitor</div>
 
 </footer>
 
+<!-- =====================================
+     COMPLETE ESP32 PROGRAM
+===================================== -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
 
-<!-- =========================================
-     ESP32 PROGRAM
-========================================= -->
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;Adafruit_GFX.h>
+#include &lt;Adafruit_SSD1306.h>
 
-<script
-type="text/plain"
-id="esp32-program">
-
-#include <WiFi.h>
-#include <WebServer.h>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+// [END 01]
 
 
-// =====================================================
-// PIN CONFIGURATION
-// =====================================================
+// [02] CONFIGURE GPIO AND OLED
 
 #define POT_PIN 34
 
@@ -2120,27 +1717,22 @@ id="esp32-program">
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
-
 #define OLED_ADDRESS 0x3C
 
-
-// =====================================================
-// WIFI
-// =====================================================
-
-const char* ssid =
-"Wokwi-GUEST";
-
-const char* password =
-"";
+// [END 02]
 
 
-// =====================================================
-// OBJECTS
-// =====================================================
+// [03] CONFIGURE WIFI
+
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+// [END 03]
+
+
+// [04] CREATE OBJECTS AND VARIABLES
 
 WebServer server(80);
-
 
 Adafruit_SSD1306 display(
     SCREEN_WIDTH,
@@ -2149,31 +1741,24 @@ Adafruit_SSD1306 display(
     -1
 );
 
-
-// =====================================================
-// VARIABLES
-// =====================================================
-
 int potValue = 0;
-
 int percentage = 0;
 
-
-// =====================================================
-// READ POTENTIOMETER
-// =====================================================
-
-void readPot()
-{
-
-    potValue =
-    analogRead(
-        POT_PIN
-    );
+// [END 04]
 
 
-    percentage =
-    map(
+// [05] READ POTENTIOMETER
+
+void readPot() {
+
+    potValue = analogRead(POT_PIN);
+
+// [END 05]
+
+
+// [06] CALCULATE PERCENTAGE
+
+    percentage = map(
         potValue,
         0,
         4095,
@@ -2181,9 +1766,7 @@ void readPot()
         100
     );
 
-
-    percentage =
-    constrain(
+    percentage = constrain(
         percentage,
         0,
         100
@@ -2191,449 +1774,390 @@ void readPot()
 
 }
 
+// [END 06]
 
-// =====================================================
-// OLED
-// =====================================================
 
-void updateOLED()
-{
+// [07] UPDATE OLED
+
+void updateOLED() {
 
     readPot();
 
-
     display.clearDisplay();
-
-
-    display.setTextColor(
-        SSD1306_WHITE
-    );
-
-
-    // Title
+    display.setTextColor(SSD1306_WHITE);
 
     display.setTextSize(1);
-
-
-    display.setCursor(
-        0,
-        0
-    );
-
-
-    display.println(
-        "ESP32 POT MONITOR"
-    );
-
+    display.setCursor(0, 0);
+    display.println("ESP32 POT MONITOR");
 
     display.drawLine(
-        0,
-        11,
-        127,
-        11,
-        SSD1306_WHITE
+        0, 11, 127, 11, SSD1306_WHITE
     );
-
-
-    // Percentage
 
     display.setTextSize(2);
-
-
-    display.setCursor(
-        0,
-        20
-    );
-
-
-    display.print(
-        percentage
-    );
-
-
-    display.print(
-        "%"
-    );
-
-
-    // ADC Value
+    display.setCursor(0, 20);
+    display.print(percentage);
+    display.print("%");
 
     display.setTextSize(1);
-
-
-    display.setCursor(
-        67,
-        22
-    );
-
-
-    display.print(
-        "ADC:"
-    );
-
-
-    display.print(
-        potValue
-    );
-
-
-    // Progress bar
+    display.setCursor(67, 22);
+    display.print("ADC:");
+    display.print(potValue);
 
     display.drawRect(
-        0,
-        43,
-        128,
-        12,
-        SSD1306_WHITE
+        0, 43, 128, 12, SSD1306_WHITE
     );
 
-
-    int barWidth =
-    map(
-        percentage,
-        0,
-        100,
-        0,
-        124
+    int barWidth = map(
+        percentage, 0, 100, 0, 124
     );
 
-
-    if(
-        barWidth > 0
-    )
-    {
-
+    if (barWidth > 0) {
         display.fillRect(
-            2,
-            46,
-            barWidth,
-            6,
-            SSD1306_WHITE
+            2, 46, barWidth, 6, SSD1306_WHITE
         );
-
     }
-
 
     display.display();
 
 }
 
+// [END 07]
+
+
+// [08] CREATE WEB DASHBOARD
+
+const char WEB_PAGE[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+
+&lt;head>
+    &lt;meta charset="UTF-8">
+    &lt;meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    &lt;title>Potentiometer Dashboard&lt;/title>
+
+    &lt;style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #071221;
+            color: white;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 760px;
+            padding: 30px;
+            text-align: center;
+            background: #0f1f35;
+            border: 1px solid #1e3a5f;
+            border-radius: 20px;
+        }
+
+        h1 {
+            color: #60a5fa;
+            margin: 0 0 8px;
+        }
+
+        .subtitle {
+            color: #cbd5e1;
+        }
+
+        .value {
+            margin: 25px 0;
+            font-size: 70px;
+            font-weight: bold;
+        }
+
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #26364c;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .bar {
+            width: 0%;
+            height: 100%;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .stat {
+            padding: 18px;
+            background: #172b46;
+            border-radius: 12px;
+        }
+
+        .stat strong {
+            display: block;
+            margin-top: 8px;
+            color: #60a5fa;
+            font-size: 25px;
+        }
+
+        .chart-box {
+            margin-top: 25px;
+            padding: 15px;
+            background: #172b46;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 180px;
+        }
 
-// =====================================================
-// SIMPLE WEB DASHBOARD
-// =====================================================
+        .connected {
+            color: #4ade80;
+        }
 
-void handleRoot()
-{
+        .disconnected {
+            color: #f87171;
+        }
 
-    readPot();
+        @media (max-width: 550px) {
+            .dashboard {
+                padding: 18px;
+            }
 
+            .value {
+                font-size: 50px;
+            }
 
-    String html =
-    R"rawliteral(
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    &lt;/style>
+&lt;/head>
 
-<!DOCTYPE html>
+&lt;body>
 
-<html>
+    &lt;div class="dashboard">
 
-<head>
+        &lt;h1>Potentiometer Monitor&lt;/h1>
+        &lt;p class="subtitle>Live Analog Input Monitoring&lt;/p>
 
-<meta charset="UTF-8">
+        &lt;div class="value">
+            &lt;span id="percent">0&lt;/span>%
+        &lt;/div>
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+        &lt;div class="progress">
+            &lt;div class="bar" id="bar">&lt;/div>
+        &lt;/div>
 
-<title>
-ESP32 Potentiometer Dashboard
-</title>
+        &lt;div class="stats">
 
+            &lt;div class="stat">
+                Raw ADC Value
+                &lt;strong id="raw">0&lt;/strong>
+            &lt;/div>
 
-<style>
+            &lt;div class="stat">
+                Input Pin
+                &lt;strong>GPIO 34&lt;/strong>
+            &lt;/div>
 
-*{
-    box-sizing:border-box;
-}
+        &lt;/div>
 
+        &lt;div class="chart-box">
+            &lt;strong>Live Potentiometer Graph&lt;/strong>
+            &lt;canvas id="graph">&lt;/canvas>
+        &lt;/div>
 
-body{
+        &lt;p id="connection" class="connected">
+            Waiting for data...
+        &lt;/p>
 
-    margin:0;
+    &lt;/div>
 
-    min-height:100vh;
+    &lt;script>
 
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
+        const samples = [];
+        const maxSamples = 50;
 
-    background:#071221;
+        const canvas = document.getElementById("graph");
+        const ctx = canvas.getContext("2d");
 
-    color:white;
+        function drawGraph() {
 
-    display:flex;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
 
-    justify-content:center;
+            if (!width || !height) return;
 
-    align-items:center;
+            const ratio = window.devicePixelRatio || 1;
 
-    padding:20px;
+            canvas.width = Math.round(width * ratio);
+            canvas.height = Math.round(height * ratio);
 
-}
+            ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            ctx.clearRect(0, 0, width, height);
 
+            const left = 10;
+            const right = width - 10;
+            const top = 10;
+            const bottom = height - 10;
 
-.dashboard{
+            ctx.strokeStyle = "#355574";
+            ctx.lineWidth = 1;
 
-    width:100%;
+            for (let i = 0; i &lt;= 4; i++) {
 
-    max-width:700px;
+                const y = top + (bottom - top) * i / 4;
 
-    background:#0f1f35;
+                ctx.beginPath();
+                ctx.moveTo(left, y);
+                ctx.lineTo(right, y);
+                ctx.stroke();
 
-    border-radius:20px;
+            }
 
-    padding:30px;
+            if (samples.length === 0) return;
 
-    text-align:center;
+            ctx.strokeStyle = "#60a5fa";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
 
-}
+            samples.forEach((value, index) => {
 
+                const x = left +
+                    index * (right - left) / (maxSamples - 1);
 
-h1{
+                const y = bottom -
+                    value / 100 * (bottom - top);
 
-    color:#60a5fa;
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
 
-}
+            });
 
-
-.value{
-
-    font-size:70px;
-
-    font-weight:bold;
-
-    margin:25px 0;
-
-}
-
-
-.progress{
-
-    width:100%;
-
-    height:20px;
-
-    background:#26364c;
-
-    border-radius:20px;
-
-    overflow:hidden;
-
-}
-
-
-.bar{
-
-    height:100%;
-
-    background:#3b82f6;
-
-    width:)rawliteral";
-
-
-html +=
-String(
-    percentage
-);
-
-
-html +=
-R"rawliteral(%;
-
-}
-
-
-.info{
-
-    margin-top:25px;
-
-    font-size:18px;
-
-}
-
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<div class="dashboard">
-
-
-<h1>
-ESP32 Potentiometer
-</h1>
-
-
-<p>
-Real-Time Web Monitor
-</p>
-
-
-<div
-class="value">
-
-)rawliteral";
-
-
-html +=
-String(
-    percentage
-);
-
-
-html +=
-R"rawliteral(%
-
-</div>
-
-
-<div class="progress">
-
-<div class="bar">
-</div>
-
-</div>
-
-
-<div class="info">
-
-Raw ADC Value:
-
-<strong>
-
-)rawliteral";
-
-
-html +=
-String(
-    potValue
-);
-
-
-html +=
-R"rawliteral(
-
-</strong>
-
-<br><br>
-
-Input Pin:
-
-<strong>
-GPIO 34
-</strong>
-
-</div>
-
-
-</div>
-
-
-<script>
-
-function updateData()
-{
-
-    fetch(
-        "/data"
-    )
-
-    .then(
-        response =>
-        response.json()
-    )
-
-    .then(
-        data =>
-        {
-
-            location.reload();
+            ctx.stroke();
 
         }
-    );
 
-}
+        async function updateData() {
 
+            const connection = document.getElementById(
+                "connection"
+            );
 
-setTimeout(
-    updateData,
-    500
-);
+            try {
 
-</script>
+                const response = await fetch(
+                    "/data",
+                    { cache: "no-store" }
+                );
 
+                if (!response.ok) {
+                    throw new Error("Request failed");
+                }
 
-</body>
+                const data = await response.json();
 
-</html>
+                const value = Math.max(
+                    0,
+                    Math.min(100, Number(data.percent) || 0)
+                );
 
+                document.getElementById(
+                    "percent"
+                ).textContent = value;
+
+                document.getElementById(
+                    "raw"
+                ).textContent = data.raw;
+
+                document.getElementById(
+                    "bar"
+                ).style.width = value + "%";
+
+                samples.push(value);
+
+                if (samples.length > maxSamples) {
+                    samples.shift();
+                }
+
+                drawGraph();
+
+                connection.textContent = "Wi-Fi Data Connected";
+                connection.className = "connected";
+
+            } catch (error) {
+
+                connection.textContent = "Connection Lost";
+                connection.className = "disconnected";
+
+            }
+
+        }
+
+        window.addEventListener("resize", drawGraph);
+
+        updateData();
+        setInterval(updateData, 500);
+
+    &lt;/script>
+
+&lt;/body>
+&lt;/html>
 )rawliteral";
 
+// [END 08]
 
-    server.send(
+
+// [09] SERVE DASHBOARD AND JSON DATA
+
+void handleRoot() {
+
+    server.send_P(
         200,
         "text/html",
-        html
+        WEB_PAGE
     );
 
 }
 
-
-// =====================================================
-// JSON DATA
-// =====================================================
-
-void handleData()
-{
+void handleData() {
 
     readPot();
 
+    String json = "{";
 
-    String json =
-    "{";
+    json += "\"raw\":";
+    json += String(potValue);
 
+    json += ",";
 
-    json +=
-    "\"raw\":";
+    json += "\"percent\":";
+    json += String(percentage);
 
-
-    json +=
-    String(
-        potValue
-    );
-
-
-    json +=
-    ",";
-
-
-    json +=
-    "\"percent\":";
-
-
-    json +=
-    String(
-        percentage
-    );
-
-
-    json +=
-    "}";
-
+    json += "}";
 
     server.send(
         200,
@@ -2643,766 +2167,595 @@ void handleData()
 
 }
 
+// [END 09]
 
-// =====================================================
-// SETUP
-// =====================================================
 
-void setup()
-{
+// [10] INITIALIZE AND MONITOR
 
-    Serial.begin(
-        115200
+void setup() {
+
+    Serial.begin(115200);
+
+    analogReadResolution(12);
+
+    Wire.begin(OLED_SDA, OLED_SCL);
+
+    if (!display.begin(
+        SSD1306_SWITCHCAPVCC,
+        OLED_ADDRESS
+    )) {
+
+        Serial.println("OLED initialization failed!");
+
+        while (true) {
+            delay(1000);
+        }
+
+    }
+
+    display.clearDisplay();
+    display.setTextColor(SSD1306_WHITE);
+    display.setTextSize(1);
+    display.setCursor(0, 10);
+    display.println("ESP32 POT MONITOR");
+    display.setCursor(0, 28);
+    display.println("Connecting WiFi...");
+    display.display();
+
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+
+    Serial.print("Connecting to WiFi");
+
+    int attempts = 0;
+
+    while (
+        WiFi.status() != WL_CONNECTED &&
+        attempts < 40
+    ) {
+
+        delay(500);
+        Serial.print(".");
+        attempts++;
+
+    }
+
+    Serial.println();
+
+    if (WiFi.status() == WL_CONNECTED) {
+
+        Serial.println("WiFi connected!");
+
+        Serial.print("IP Address: ");
+        Serial.println(WiFi.localIP());
+
+    } else {
+
+        Serial.println("WiFi connection failed!");
+
+    }
+
+    server.on("/", HTTP_GET, handleRoot);
+    server.on("/data", HTTP_GET, handleData);
+
+    server.begin();
+
+    Serial.println("Web server started!");
+
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setCursor(0, 0);
+    display.println("ESP32 POT MONITOR");
+
+    display.drawLine(
+        0, 11, 127, 11, SSD1306_WHITE
     );
 
+    if (WiFi.status() == WL_CONNECTED) {
 
-    // ADC
+        display.setCursor(0, 20);
+        display.println("WiFi: CONNECTED");
 
-    analogReadResolution(
-        12
-    );
+        display.setCursor(0, 35);
+        display.println(WiFi.localIP());
+
+    } else {
+
+        display.setCursor(0, 25);
+        display.println("WiFi: FAILED");
+
+    }
+
+    display.display();
+    delay(2000);
+
+}
+
+// [END 10]
 
 
-    // OLED
+// [11] CONTINUOUS MONITORING
 
-    Wire.begin(
-        OLED_SDA,
-        OLED_SCL
-    );
+void loop() {
 
+    server.handleClient();
 
-    if(
-        !display.begin(
-            SSD1306_SWITCHCAPVCC,
-            OLED_ADDRESS
-        )
-    )
-    {
+    static unsigned long lastUpdate = 0;
 
-        Serial.println(
-            "OLED initialization failed!"
+    if (millis() - lastUpdate >= 100) {
+
+        lastUpdate = millis();
+        updateOLED();
+
+    }
+
+}
+
+// [END 11]
+</textarea>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER JAVASCRIPT
+===================================== -->
+<script>
+
+    /* =====================================
+       READ COMPLETE ESP32 PROGRAM
+    ===================================== */
+
+    const program = document
+        .getElementById("esp32-program")
+        .value
+        .trim();
+
+    const lines = program.split("\n");
+
+    /* =====================================
+       CODE EXPLANATION STEPS
+    ===================================== */
+
+    const steps = [
+
+        {
+            number: "01",
+            label: "LOAD LIBRARIES",
+            title: "Load libraries",
+            text:
+                "Loads Wi-Fi, WebServer, I2C, " +
+                "Adafruit GFX and OLED libraries."
+        },
+
+        {
+            number: "02",
+            label: "CONFIGURE GPIO AND OLED",
+            title: "Set pins",
+            text:
+                "GPIO34 reads the potentiometer. " +
+                "GPIO21 and GPIO22 connect the OLED."
+        },
+
+        {
+            number: "03",
+            label: "CONFIGURE WIFI",
+            title: "Set Wi-Fi",
+            text:
+                "Stores the Wi-Fi SSID and password."
+        },
+
+        {
+            number: "04",
+            label: "CREATE OBJECTS AND VARIABLES",
+            title: "Create objects",
+            text:
+                "Creates the HTTP web server, OLED object, " +
+                "and sensor reading variables."
+        },
+
+        {
+            number: "05",
+            label: "READ POTENTIOMETER",
+            title: "Read potentiometer",
+            text:
+                "Reads the analog signal using " +
+                "analogRead() on GPIO34."
+        },
+
+        {
+            number: "06",
+            label: "CALCULATE PERCENTAGE",
+            title: "Calculate percentage",
+            text:
+                "Maps the 12-bit ADC reading " +
+                "into a 0% to 100% value."
+        },
+
+        {
+            number: "07",
+            label: "UPDATE OLED",
+            title: "Update OLED",
+            text:
+                "Displays the ADC reading, percentage, " +
+                "and graphical progress bar on OLED."
+        },
+
+        {
+            number: "08",
+            label: "CREATE WEB DASHBOARD",
+            title: "Create dashboard",
+            text:
+                "Defines the dashboard HTML, CSS, " +
+                "JavaScript, progress bar, and live graph."
+        },
+
+        {
+            number: "09",
+            label: "SERVE DASHBOARD AND JSON DATA",
+            title: "Send JSON data",
+            text:
+                "Serves the browser dashboard and " +
+                "returns sensor readings through /data."
+        },
+
+        {
+            number: "10",
+            label: "INITIALIZE AND MONITOR",
+            title: "Start Wi-Fi",
+            text:
+                "Initializes the ADC, OLED, Wi-Fi " +
+                "connection, and HTTP web server."
+        },
+
+        {
+            number: "11",
+            label: "CONTINUOUS MONITORING",
+            title: "Keep monitoring",
+            text:
+                "Handles browser requests and refreshes " +
+                "the OLED using millis()."
+        }
+
+    ];
+
+    /* =====================================
+       ESCAPE HTML FOR CODE DISPLAY
+    ===================================== */
+
+    function escapeHtml(value) {
+
+        return value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+    }
+
+    /* =====================================
+       DISPLAY CODE WITH LINE NUMBERS
+    ===================================== */
+
+    function displayCode() {
+
+        const container = document.getElementById(
+            "code-lines"
         );
 
+        container.innerHTML = lines.map(
+            function(line, index) {
 
-        while(true)
-        {
+                return (
+                    '<span class="code-line" id="line-' +
+                    (index + 1) +
+                    '">' +
+                    '<span class="line-number">' +
+                    (index + 1) +
+                    '</span>' +
+                    '<span>' +
+                    escapeHtml(line) +
+                    '</span>' +
+                    '</span>'
+                );
 
-            delay(
-                1000
+            }
+        ).join("");
+
+    }
+
+    /* =====================================
+       FIND EXACT CODE MARKERS
+    ===================================== */
+
+    function findMarker(marker) {
+
+        return lines.findIndex(
+            function(line) {
+                return line.trim() === marker;
+            }
+        );
+
+    }
+
+    /* =====================================
+       CREATE HIGHLIGHT RANGES
+    ===================================== */
+
+    const ranges = steps.map(
+        function(step) {
+
+            const start = findMarker(
+                "// [" +
+                step.number +
+                "] " +
+                step.label
             );
+
+            const end = findMarker(
+                "// [END " +
+                step.number +
+                "]"
+            );
+
+            return {
+                start: start,
+                end: end,
+                valid: start >= 0 && end >= start
+            };
+
+        }
+    );
+
+    /* =====================================
+       CREATE EXPLANATION BUTTONS
+    ===================================== */
+
+    function createSteps() {
+
+        const container = document.getElementById(
+            "steps-list"
+        );
+
+        steps.forEach(
+            function(step, index) {
+
+                const button = document.createElement(
+                    "button"
+                );
+
+                button.type = "button";
+                button.className = "step";
+
+                const number = document.createElement(
+                    "span"
+                );
+
+                number.className = "step-number";
+                number.textContent = step.number;
+
+                const title = document.createElement(
+                    "span"
+                );
+
+                title.textContent = step.title;
+
+                button.append(number, title);
+
+                button.addEventListener(
+                    "click",
+                    function() {
+                        showStep(index);
+                    }
+                );
+
+                container.appendChild(button);
+
+            }
+        );
+
+    }
+
+    /* =====================================
+       HIGHLIGHT SELECTED CODE SECTION
+    ===================================== */
+
+    function showStep(index) {
+
+        document.querySelectorAll(".step").forEach(
+            function(button, i) {
+
+                button.classList.toggle(
+                    "active",
+                    i === index
+                );
+
+            }
+        );
+
+        document.querySelectorAll(".code-line").forEach(
+            function(line) {
+                line.classList.remove("selected");
+            }
+        );
+
+        const step = steps[index];
+        const range = ranges[index];
+
+        const explanation = document.getElementById(
+            "explanation"
+        );
+
+        explanation.replaceChildren();
+
+        const heading = document.createElement("h3");
+
+        heading.textContent =
+            (index + 1) + ". " + step.title;
+
+        const paragraph = document.createElement("p");
+
+        paragraph.textContent = step.text;
+
+        explanation.append(
+            heading,
+            paragraph
+        );
+
+        if (!range.valid) {
+
+            paragraph.textContent =
+                "Matching source-code markers were not found.";
+
+            return;
+
+        }
+
+        for (
+            let i = range.start;
+            i <= range.end;
+            i++
+        ) {
+
+            const element = document.getElementById(
+                "line-" + (i + 1)
+            );
+
+            if (element) {
+                element.classList.add("selected");
+            }
+
+        }
+
+        const firstLine = document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+        const codeBody = document.getElementById(
+            "code-body"
+        );
+
+        if (firstLine && codeBody) {
+
+            const offset =
+                firstLine.getBoundingClientRect().top -
+                codeBody.getBoundingClientRect().top;
+
+            codeBody.scrollTo({
+
+                top:
+                    codeBody.scrollTop +
+                    offset -
+                    20,
+
+                behavior: "smooth"
+
+            });
 
         }
 
     }
 
+    /* =====================================
+       COPY COMPLETE ESP32 SKETCH
+    ===================================== */
 
-    display.clearDisplay();
+    async function copyCode() {
 
-
-    display.setTextColor(
-        SSD1306_WHITE
-    );
-
-
-    display.setTextSize(1);
-
-
-    display.setCursor(
-        0,
-        10
-    );
-
-
-    display.println(
-        "ESP32 POT MONITOR"
-    );
-
-
-    display.setCursor(
-        0,
-        28
-    );
-
-
-    display.println(
-        "Connecting WiFi..."
-    );
-
-
-    display.display();
-
-
-    // WIFI
-
-    WiFi.mode(
-        WIFI_STA
-    );
-
-
-    WiFi.begin(
-        ssid,
-        password
-    );
-
-
-    Serial.println();
-
-
-    Serial.print(
-        "Connecting to WiFi"
-    );
-
-
-    int attempts = 0;
-
-
-    while(
-        WiFi.status()
-        !=
-        WL_CONNECTED
-        &&
-        attempts < 40
-    )
-    {
-
-        delay(
-            500
+        const button = document.querySelector(
+            ".code-top .copy-button"
         );
 
+        function copied() {
 
-        Serial.print(
-            "."
-        );
+            button.textContent = "Copied!";
 
+            setTimeout(
+                function() {
+                    button.textContent = "Copy Code";
+                },
+                1500
+            );
 
-        attempts++;
+        }
+
+        function fallback() {
+
+            const field = document.createElement(
+                "textarea"
+            );
+
+            field.value = program;
+            field.style.position = "fixed";
+            field.style.opacity = "0";
+
+            document.body.appendChild(field);
+            field.select();
+
+            let success = false;
+
+            try {
+                success = document.execCommand("copy");
+            } catch (error) {
+                success = false;
+            }
+
+            field.remove();
+
+            if (success) {
+                copied();
+            } else {
+                button.textContent = "Copy failed";
+            }
+
+        }
+
+        if (
+            navigator.clipboard &&
+            window.isSecureContext
+        ) {
+
+            try {
+
+                await navigator.clipboard.writeText(
+                    program
+                );
+
+                copied();
+
+            } catch (error) {
+
+                fallback();
+
+            }
+
+        } else {
+
+            fallback();
+
+        }
 
     }
 
+    /* =====================================
+       SHOW OR HIDE QUIZ ANSWERS
+    ===================================== */
 
-    Serial.println();
+    function toggleAnswers() {
 
-
-    if(
-        WiFi.status()
-        ==
-        WL_CONNECTED
-    )
-    {
-
-        Serial.println(
-            "WiFi connected!"
+        const answers = document.getElementById(
+            "quiz-answers"
         );
 
-
-        Serial.print(
-            "IP Address: "
-        );
-
-
-        Serial.println(
-            WiFi.localIP()
-        );
+        answers.hidden = !answers.hidden;
 
     }
 
-    else
-    {
+    /* =====================================
+       INITIALIZE CODE EXPLORER
+    ===================================== */
 
-        Serial.println(
-            "WiFi connection failed!"
-        );
-
-    }
-
-
-    // WEB SERVER
-
-    server.on(
-        "/",
-        handleRoot
-    );
-
-
-    server.on(
-        "/data",
-        handleData
-    );
-
-
-    server.begin();
-
-
-    Serial.println(
-        "Web server started!"
-    );
-
-
-    // Connected Screen
-
-    display.clearDisplay();
-
-
-    display.setTextSize(1);
-
-
-    display.setCursor(
-        0,
-        0
-    );
-
-
-    display.println(
-        "ESP32 POT MONITOR"
-    );
-
-
-    display.drawLine(
-        0,
-        11,
-        127,
-        11,
-        SSD1306_WHITE
-    );
-
-
-    if(
-        WiFi.status()
-        ==
-        WL_CONNECTED
-    )
-    {
-
-        display.setCursor(
-            0,
-            20
-        );
-
-
-        display.println(
-            "WiFi: CONNECTED"
-        );
-
-
-        display.setCursor(
-            0,
-            35
-        );
-
-
-        display.println(
-            WiFi.localIP()
-        );
-
-    }
-
-    else
-    {
-
-        display.setCursor(
-            0,
-            25
-        );
-
-
-        display.println(
-            "WiFi: FAILED"
-        );
-
-    }
-
-
-    display.display();
-
-
-    delay(
-        2000
-    );
-
-}
-
-
-// =====================================================
-// LOOP
-// =====================================================
-
-void loop()
-{
-
-    server.handleClient();
-
-
-    updateOLED();
-
-
-    delay(
-        100
-    );
-
-}
+    displayCode();
+    createSteps();
+    showStep(0);
 
 </script>
-
-
-<!-- =========================================
-     EXPLORE CODE JAVASCRIPT
-========================================= -->
-
-<script>
-
-
-const program =
-
-document
-.getElementById(
-    "esp32-program"
-)
-.textContent
-.trim();
-
-
-const lines =
-program.split("\n");
-
-
-const steps = [
-
-
-{
-
-title:
-"Load libraries",
-
-search:
-"#include <WiFi.h>",
-
-text:
-"The program loads Wi-Fi, WebServer, I2C, graphics and SSD1306 OLED libraries."
-
-},
-
-
-{
-
-title:
-"Set pins",
-
-search:
-"#define POT_PIN",
-
-text:
-"GPIO 34 reads the potentiometer. GPIO 21 and GPIO 22 are used for OLED communication."
-
-},
-
-
-{
-
-title:
-"Set Wi-Fi",
-
-search:
-"const char* ssid",
-
-text:
-"The ESP32 uses these Wi-Fi details to connect to the wireless network."
-
-},
-
-
-{
-
-title:
-"Create objects",
-
-search:
-"WebServer server",
-
-text:
-"The program creates a web server on port 80 and an SSD1306 display object."
-
-},
-
-
-{
-
-title:
-"Read potentiometer",
-
-search:
-"void readPot",
-
-text:
-"The ESP32 reads the potentiometer's analog voltage through GPIO 34."
-
-},
-
-
-{
-
-title:
-"Calculate percentage",
-
-search:
-"percentage =",
-
-text:
-"The raw ADC reading from 0 to 4095 is mapped to a percentage from 0 to 100."
-
-},
-
-
-{
-
-title:
-"Update OLED",
-
-search:
-"void updateOLED",
-
-text:
-"The OLED displays the percentage, raw ADC value and a graphical progress bar."
-
-},
-
-
-{
-
-title:
-"Send JSON data",
-
-search:
-"void handleData",
-
-text:
-"The ESP32 sends the raw ADC reading and percentage to the browser as JSON data."
-
-},
-
-
-{
-
-title:
-"Start Wi-Fi",
-
-search:
-"void setup()",
-
-text:
-"The setup function initializes the ADC, OLED, Wi-Fi connection and web server."
-
-},
-
-
-{
-
-title:
-"Keep monitoring",
-
-search:
-"void loop()",
-
-text:
-"The loop handles browser requests and continuously updates the OLED."
-
-}
-
-];
-
-
-function escapeHtml(text)
-{
-
-return text
-
-.replace(
-    /&/g,
-    "&amp;"
-)
-
-.replace(
-    /</g,
-    "&lt;"
-)
-
-.replace(
-    />/g,
-    "&gt;"
-);
-
-}
-
-
-function displayCode()
-{
-
-let output = "";
-
-
-lines.forEach(
-
-function(
-    line,
-    index
-)
-{
-
-output +=
-
-'<span class="code-line" ' +
-
-'id="line-' +
-
-(index + 1) +
-
-'">' +
-
-'<span class="line-number">' +
-
-(index + 1) +
-
-'</span>' +
-
-'<span>' +
-
-escapeHtml(line) +
-
-'</span>' +
-
-'</span>';
-
-}
-
-);
-
-
-document
-.getElementById(
-    "code-lines"
-)
-.innerHTML =
-output;
-
-}
-
-
-function showStep(index)
-{
-
-const step =
-steps[index];
-
-
-const buttons =
-document
-.querySelectorAll(
-    ".step"
-);
-
-
-buttons.forEach(
-
-function(button)
-{
-
-button
-.classList
-.remove(
-    "active"
-);
-
-}
-
-);
-
-
-buttons[index]
-.classList
-.add(
-    "active"
-);
-
-
-document
-.querySelectorAll(
-    ".code-line"
-)
-.forEach(
-
-function(line)
-{
-
-line
-.classList
-.remove(
-    "selected"
-);
-
-}
-
-);
-
-
-let foundLine = -1;
-
-
-for(
-    let i = 0;
-    i < lines.length;
-    i++
-)
-{
-
-if(
-    lines[i]
-    .includes(
-        step.search
-    )
-)
-{
-
-foundLine =
-i;
-
-break;
-
-}
-
-}
-
-
-if(
-    foundLine >= 0
-)
-{
-
-for(
-    let i = foundLine;
-    i <
-    Math.min(
-        foundLine + 12,
-        lines.length
-    );
-    i++
-)
-{
-
-document
-.getElementById(
-    "line-" +
-    (i + 1)
-)
-.classList
-.add(
-    "selected"
-);
-
-}
-
-
-const selectedLine =
-
-document
-.getElementById(
-    "line-" +
-    (foundLine + 1)
-);
-
-
-document
-.getElementById(
-    "code-body"
-)
-.scrollTo({
-
-top:
-selectedLine.offsetTop - 20,
-
-behavior:
-"smooth"
-
-});
-
-}
-
-
-document
-.getElementById(
-    "explanation"
-)
-.innerHTML =
-
-"<h3>" +
-
-(index + 1) +
-
-". " +
-
-step.title +
-
-"</h3>" +
-
-"<p>" +
-
-step.text +
-
-"</p>";
-
-}
-
-
-function copyCode()
-{
-
-navigator
-.clipboard
-.writeText(
-    program
-)
-.then(
-
-function()
-{
-
-const button =
-document
-.querySelector(
-    ".copy-button"
-);
-
-
-button.innerText =
-"Copied!";
-
-
-setTimeout(
-
-function()
-{
-
-button.innerText =
-"Copy Code";
-
-},
-
-1500
-
-);
-
-}
-
-);
-
-}
-
-
-displayCode();
-
-showStep(0);
-
-</script>
-
 
 </body>
-
 </html>
