@@ -1,1550 +1,1374 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Plant-Growing Environment Supervisor</title>
-
-
 <style>
-
-/* =========================
-   BASIC PAGE STYLE
-========================= */
-
-*{
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-
-    margin:0;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:#f4f7fb;
-
-    color:#222;
-
-    line-height:1.7;
-}
-
-
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
-.header {
-    background: #2563eb;
-    color: white;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 230px;
-    padding: 25px 0 0;
-    text-align: center;
-}
-
-/* COMPANY LOGO - TOP LEFT */
-
-.header-logo {
-    position: absolute;
-    top: 15px;
-    left: 20px;
-    width: 135px;
-    max-height: 75px;
-    height: auto;
-    object-fit: contain;
-    background: white;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-/* CENTER HEADING */
-
-.header-content {
-    text-align: center;
-    margin: auto 0;
-    padding: 35px 165px;
-}
-
-.header h1 {
-    margin: 0 0 8px;
-    font-size: 34px;
-}
-
-.header p {
-    margin: 0;
-    font-size: 17px;
-}
-
-/* BOTTOM BUTTON BAR */
-
-.header-buttons {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
-}
-
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
-.header-right-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* BUTTON STYLE */
-
-.header-nav-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 38px;
-    padding: 9px 14px;
-    background: white;
-    color: #1e3a8a;
-    border: 1px solid #dbeafe;
-    border-radius: 7px;
-    font-size: 13px;
-    font-weight: bold;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: 0.25s ease;
-}
-
-.header-nav-btn:hover {
-    background: #dbeafe;
-    transform: translateY(-2px);
-}
-
-/* HOME ICON ONLY */
-
-.home-icon-btn {
-    width: 40px;
-    height: 38px;
-    padding: 8px;
-}
-
-.home-icon-btn svg {
-    width: 21px;
-    height: 21px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-/* TABLET */
-
-@media (max-width: 900px) {
-    .header-content {
-        padding: 65px 20px 35px;
-    }
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
-    }
-
-    .header-logo {
-        width: 95px;
-        max-height: 60px;
-        top: 12px;
-        left: 12px;
-    }
-
-    .header-content {
-        padding: 85px 12px 25px;
-    }
-
-    .header h1 {
-        font-size: 25px;
-    }
-
-    .header p {
-        font-size: 15px;
-    }
-
-    .header-buttons {
-        padding: 10px 8px;
-        gap: 8px;
-    }
-
-    .header-left-buttons,
-    .header-right-buttons {
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 8px 7px;
-        font-size: 11px;
-        min-height: 36px;
-    }
-
-    .home-icon-btn {
-        width: 36px;
-        height: 36px;
-        padding: 7px;
-    }
-}
-
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
-    }
-
-    .project-thumbnail img {
-        max-height: 280px;
-    }
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-nav{
-
-    display:flex;
-
-    justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:18px;
-
-    padding:13px 15px;
-
-    background:white;
-
-    border-bottom:1px solid #ddd;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:20;
-}
-
-
-nav a{
-
-    text-decoration:none;
-
-    color:#1e3a8a;
-
-    font-size:14px;
-
-    font-weight:bold;
-}
-
-
-nav a:hover{
-
-    color:#2563eb;
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-
-    width:90%;
-
-    max-width:1050px;
-
-    margin:35px auto;
-}
-
-
-.section{
-
-    background:white;
-
-    margin-bottom:24px;
-
-    padding:28px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    box-shadow:
-    0 4px 12px
-    rgba(0,0,0,.06);
-}
-
-
-.section h2{
-
-    margin-top:0;
-
-    margin-bottom:18px;
-
-    color:#1e3a8a;
-
-    font-size:25px;
-
-    border-bottom:
-    2px solid #dbeafe;
-
-    padding-bottom:8px;
-}
-
-
-.section h3{
-
-    color:#1e3a8a;
-}
-
-
-ul,
-ol{
-
-    padding-left:24px;
-}
-
-
-li{
-
-    margin-bottom:8px;
-}
-
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px,1fr)
-    );
-
-    gap:20px;
-}
-
-
-.component-card{
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    padding:20px;
-
-    text-align:center;
-
-    background:white;
-
-    box-shadow:
-    0 2px 8px
-    rgba(0,0,0,.04);
-}
-
-
-.component-card img{
-
-    width:100%;
-
-    height:120px;
-
-    object-fit:contain;
-
-    margin-bottom:15px;
-}
-
-
-.component-card h4{
-
-    color:#1e3a8a;
-
-    margin:0 0 8px;
-
-    font-size:18px;
-}
-
-
-.component-card p{
-
-    color:#475569;
-
-    font-size:14px;
-
-    margin:0;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-
-    overflow-x:auto;
-}
-
-
-table{
-
-    width:100%;
-
-    min-width:620px;
-
-    border-collapse:collapse;
-}
-
-
-th,
-td{
-
-    padding:12px;
-
-    border:1px solid #ddd;
-
-    text-align:left;
-}
-
-
-th{
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-tr:nth-child(even){
-
-    background:#f8fafc;
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-.note{
-
-    margin-top:15px;
-
-    padding:14px;
-
-    background:#eff6ff;
-
-    border-left:
-    5px solid #2563eb;
-
-    border-radius:6px;
-}
-
-
-/* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
-}
-
-
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-
-    text-align:center;
-
-    color:#1e3a8a;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    line-height:2;
-}
-
-
-/* =========================
-   SENSOR CARDS
-========================= */
-
-.sensor-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(3,1fr);
-
-    gap:16px;
-}
-
-
-.sensor-box{
-
-    text-align:center;
-
-    padding:20px;
-
-    border-radius:12px;
-
-    border:1px solid #bfdbfe;
-
-    background:#f8fbff;
-}
-
-
-.sensor-box h3{
-
-    margin-top:0;
-
-    color:#1e3a8a;
-}
-
-
-.sensor-value{
-
-    font-size:26px;
-
-    color:#2563eb;
-
-    font-weight:bold;
-}
-
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-
-    color:#142e3a;
-}
-
-
-.eyebrow{
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    letter-spacing:.08em;
-
-    text-transform:uppercase;
-
-    margin:0 0 4px;
-}
-
-
-.lesson-title{
-
-    font-size:32px !important;
-
-    margin:0 0 8px !important;
-
-    color:#1e3a8a !important;
-
-    border:0 !important;
-
-    padding:0 !important;
-}
-
-
-.intro{
-
-    color:#526875;
-
-    margin:0 0 22px;
-}
-
-
-/* CODE + EXPLANATION */
-
-.code-layout{
-
-    display:grid;
-
-    grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-
-    gap:20px;
-
-    align-items:start;
-}
-
-
-/* =========================
-   CODE PANEL
-========================= */
-
-.code-panel{
-
-    background:white;
-
-    border:1px solid #bfdbfe;
-
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 4px 14px
-    rgba(37,99,235,.10);
-}
-
-
-.code-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    padding:15px 20px;
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-.filename{
-
-    color:white;
-
-    font:
-    bold 14px/1.4
-    Consolas,
-    Monaco,
-    monospace;
-}
-
-
-.copy-button{
-
-    border:1px solid white;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:8px;
-
-    padding:8px 14px;
-
-    min-height:40px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-
-.copy-button:hover{
-
-    background:#eff6ff;
-}
-
-
-.code-body{
-
-    height:600px;
-
-    overflow:auto;
-
-    background:white;
-
-    padding:16px 0;
-}
-
-
-.code-line{
-
-    display:flex;
-
-    min-width:max-content;
-
-    min-height:24px;
-
-    padding-right:22px;
-
-    white-space:pre;
-
-    font:
-    13px/24px
-    Consolas,
-    Monaco,
-    monospace;
-
-    color:#1e293b;
-
-    border-bottom:
-    1px solid #f1f5f9;
-}
-
-
-.code-line:hover{
-
-    background:#f8fbff;
-}
-
-
-.code-line.selected{
-
-    background:#dbeafe;
-
-    box-shadow:
-    inset 4px 0 #2563eb;
-}
-
-
-.line-number{
-
-    user-select:none;
-
-    min-width:52px;
-
-    text-align:right;
-
-    padding-right:15px;
-
-    color:#64748b;
-}
-
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-
-    background:white;
-
-    border:1px solid #dce6e9;
-
-    border-radius:14px;
-
-    padding:22px;
-}
-
-
-.guide h2{
-
-    border:0;
-
-    padding:0;
-
-    margin:0 0 8px;
-
-    font-size:21px;
-}
-
-
-.guide > p{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.steps{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-    gap:8px;
-
-    margin:16px 0;
-}
-
-
-.step{
-
-    border:1px solid #dce6e9;
-
-    border-radius:9px;
-
-    padding:10px;
-
-    min-height:65px;
-
-    background:white;
-
-    text-align:left;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
-}
-
-
-.step:hover{
-
-    border-color:#60a5fa;
-
-    background:#f8fbff;
-}
-
-
-.step.active{
-
-    background:#eff6ff;
-
-    border-color:#60a5fa;
-
-    color:#1e3a8a;
-}
-
-
-.step-number{
-
-    color:#2563eb;
-
-    font-size:12px;
-
-    flex-shrink:0;
-}
-
-
-.explanation{
-
-    background:#eff6ff;
-
-    border-radius:9px;
-
-    padding:16px;
-
-    min-height:130px;
-}
-
-
-.explanation h3{
-
-    font-size:17px;
-
-    margin:0 0 7px;
-
-    color:#1e3a8a;
-}
-
-
-.explanation p{
-
-    margin:0;
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide details{
-
-    border-top:
-    1px solid #dce6e9;
-
-    margin-top:15px;
-}
-
-
-.guide summary{
-
-    cursor:pointer;
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    padding:13px 0;
-}
-
-
-.guide details p,
-.guide details li{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide code{
-
-    background:#e5ecf4;
-
-    padding:2px 4px;
-
-    border-radius:4px;
-}
-
-
-.tip{
-
-    background:#eff6ff;
-
-    color:#234e87;
-
-    padding:14px 17px;
-
-    border-radius:9px;
-
-    margin-top:20px;
-
-    font-size:14px;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-
-    text-align:center;
-
-    padding:25px 20px;
-
-    background:#0f172a;
-
-    color:#cbd5e1;
-
-    font-size:14px;
-}
-
-
-footer strong{
-
-    color:white;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:850px){
-
-    .code-layout{
-
-        grid-template-columns:1fr;
-    }
-
-    .code-body{
-
-        height:450px;
-    }
-
-    .sensor-grid{
-
-        grid-template-columns:1fr;
-    }
-
-}
-
-
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
+
+/* HEADER */
+.header{background:#2563eb;color:white;position:relative;display:flex;flex-direction:column;min-height:230px;padding:25px 0 0;text-align:center}
+.header-logo{position:absolute;top:15px;left:20px;width:135px;max-height:75px;height:auto;object-fit:contain;background:white;border-radius:5px;padding:5px}
+.header-content{text-align:center;margin:auto 0;padding:35px 165px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+.header-buttons{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 25px;background:rgba(0,0,0,.12)}
+.header-left-buttons,.header-right-buttons{display:flex;align-items:center;gap:10px}
+.header-nav-btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;background:white;color:#1e3a8a;border:1px solid #dbeafe;border-radius:7px;font-size:13px;font-weight:bold;text-decoration:none;white-space:nowrap}
+.header-nav-btn:hover{background:#dbeafe}
+.home-icon-btn{width:40px;height:38px;padding:8px}
+.home-icon-btn svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* NAVIGATION */
+nav{position:sticky;top:0;z-index:20;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;padding:13px 15px;background:white;border-bottom:1px solid #ddd}
+nav a{color:#1e3a8a;text-decoration:none;font-size:14px;font-weight:bold}
+nav a:hover{color:#2563eb}
+
+/* PAGE */
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);scroll-margin-top:100px}
+.section h2{margin:0 0 18px;padding-bottom:8px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe}
+.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+.project-thumbnail{text-align:center;padding:20px}
+.project-thumbnail img{display:block;width:100%;max-width:760px;max-height:420px;height:auto;object-fit:contain;margin:0 auto;border-radius:10px}
+
+/* COMPONENTS */
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.component-card{border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{display:block;width:100%;max-width:180px;height:135px;object-fit:contain;margin:0 auto 15px}
+.component-card h4{margin:0 0 8px;font-size:17px;color:#1e3a8a}
+.component-card p{margin:0;font-size:14px;color:#475569}
+
+/* TABLES AND NOTES */
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:600px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px 16px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.circuit-img{display:block;width:100%;max-width:760px;height:auto;margin:20px auto;padding:10px;background:white;border:1px solid #e2e8f0;border-radius:10px;object-fit:contain}
+.flow{text-align:center;color:#1e3a8a;font-size:18px;font-weight:bold;line-height:2}
+.flow-step{padding:5px 10px}
+.flow-arrow{font-size:22px;color:#2563eb}
+.sensor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.sensor-box{text-align:center;padding:20px;border-radius:12px;border:1px solid #bfdbfe;background:#f8fbff}
+.sensor-box h3{margin-top:0;color:#1e3a8a}
+.sensor-value{font-size:24px;font-weight:bold;color:#2563eb}
+
+/* CODE EXPLORER */
+.eyebrow{color:#2563eb;font-size:13px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px}
+.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important}
+.intro{color:#526875;margin:0 0 22px}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{min-width:0;background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
+.filename{color:white;font:bold 14px Consolas,Monaco,monospace;overflow-wrap:anywhere}
+.copy-button{border:1px solid #bfdbfe;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer}
+.copy-button:hover{background:#eff6ff}
+.code-body{height:600px;overflow:auto;background:white;padding:16px 0}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b}
+.guide{min-width:0;background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px}
+.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px}
+.guide>p{color:#526875;font-size:15px}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a}
+.step:hover{border-color:#60a5fa}
+.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
+.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px}
+.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a}
+.explanation p{margin:0;color:#526875}
+.guide details{border-top:1px solid #dce6e9;margin-top:15px}
+.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0}
+.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px}
+
+/* OUTPUT AND DASHBOARD */
+.output-box{margin:15px 0;padding:16px;background:#f8fafc;border:1px solid #dbeafe;border-radius:9px}
+.output-box pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.8 Consolas,Monaco,monospace}
+.dashboard-image{display:flex;align-items:center;justify-content:center;width:100%;padding:20px;text-align:center}
+.dashboard-image img{display:block;width:100%;max-width:650px;height:auto;margin:0 auto;object-fit:contain;border-radius:10px}
+
+/* FOOTER */
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px}
+footer strong{color:white}
+
+/* RESPONSIVE */
+@media(max-width:900px){.header-content{padding:65px 20px 35px}}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr}.code-body{height:450px}.sensor-grid{grid-template-columns:1fr}}
 @media(max-width:600px){
-
-    .header{
-
-        padding:35px 15px;
-    }
-
-    .header h1{
-
-        font-size:28px;
-    }
-
-    .container{
-
-        width:92%;
-    }
-
-    .section{
-
-        padding:21px 18px;
-    }
-
-    .steps{
-
-        grid-template-columns:1fr;
-    }
-
+.header-logo{width:95px;max-height:60px;top:12px;left:12px}
+.header-content{padding:85px 12px 25px}
+.header h1{font-size:25px}
+.header p{font-size:15px}
+.header-buttons{padding:10px 8px;gap:8px}
+.header-left-buttons,.header-right-buttons{gap:5px}
+.header-nav-btn{padding:8px 7px;font-size:11px;min-height:36px}
+.home-icon-btn{width:36px;height:36px;padding:7px}
+.container{width:92%}
+.section{padding:21px 18px}
+.steps{grid-template-columns:1fr}
+nav{gap:11px}
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================
-     HEADER
-========================= -->
-
-
+<!-- HEADER -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
-
     <img
         src="../../Simusoft logo white background.jpeg"
         alt="SimuSoft Company Logo"
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Plant-Growing Environment Supervisor</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <!-- BACK BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to ESP32 Experiments"
-            >
-                &#8592; Back
-            </a>
-
-            <!-- HOME ICON ONLY -->
-
-            <a
-                href="../../index.html"
-                class="header-nav-btn home-icon-btn"
-                title="Home"
-                aria-label="Home"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+            <a href="../index.html" class="header-nav-btn">&#8592; Back</a>
+            <a href="../../index.html" class="header-nav-btn home-icon-btn" title="Home" aria-label="Home">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
             </a>
-
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
+            <a href="../../Arduino Experiments/index.html" class="header-nav-btn">Arduino</a>
+            <a href="../index.html" class="header-nav-btn">ESP</a>
+            <a href="../../R-Pi Experiments/index.html" class="header-nav-btn">R-Pi</a>
+        </div>
+    </div>
+</header>
 
-            <!-- ARDUINO BUTTON -->
+<!-- NAVIGATION -->
+<nav>
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
 
-            <a
-                href="../../Arduino Experiments/index.html"
-                class="header-nav-btn"
-            >
-                Arduino
-            </a>
+<main class="container">
 
-            <!-- ESP BUTTON -->
+<!-- EXPERIMENT THUMBNAIL -->
+<section class="section project-thumbnail">
+    <img
+        src="../Plant-Growing Environment Supervisor.png"
+        alt="Plant-Growing Environment Supervisor Thumbnail"
+    >
+</section>
 
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
-                ESP
-            </a>
+<!-- AIM -->
+<section class="section" id="aim">
+    <h2>Aim</h2>
+    <p>
+        To monitor plant-growing environmental conditions,
+        including temperature, humidity and light,
+        using a DHT22 sensor and a digital LDR module
+        with an ESP32, display the readings and alerts
+        on an SSD1306 OLED, and upload monitoring data
+        to ThingSpeak using Wi-Fi.
+    </p>
+</section>
 
-            <!-- RASPBERRY PI BUTTON -->
+<!-- ABOUT -->
+<section class="section" id="about">
+    <h2>About the Experiment</h2>
+    <p>
+        The Plant-Growing Environment Supervisor is an
+        IoT experiment that monitors environmental
+        conditions relevant to plant growth.
+    </p>
+    <p>
+        The DHT22 sensor measures temperature and
+        relative humidity. A digital LDR sensor module
+        detects whether the surroundings are
+        classified as light or dark.
+    </p>
+    <p>
+        The ESP32 compares sensor readings with
+        predefined thresholds and generates an
+        alert code when a monitored condition is
+        outside the configured range.
+    </p>
+    <p>
+        Under normal conditions, the green LED is ON
+        and the red LED and buzzer are OFF.
+        During an alert, the green LED turns OFF
+        while the red LED and buzzer turn ON.
+    </p>
+    <p>
+        An SSD1306 OLED displays temperature,
+        humidity, light status and the alert code.
+        Every 20 seconds, the ESP32 attempts to
+        upload valid readings to ThingSpeak.
+    </p>
+    <p>
+        ThingSpeak provides online graphs for
+        monitoring the uploaded sensor values.
+        The ESP32 does not host its own local
+        HTML dashboard in this program.
+    </p>
 
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
-                R-Pi
-            </a>
+    <h3>Monitoring Thresholds</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Parameter</th><th>Normal Condition</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Temperature</td><td>18°C to 30°C</td></tr>
+                <tr><td>Humidity</td><td>40% to 80%</td></tr>
+                <tr><td>Light</td><td>LIGHT detected</td></tr>
+            </tbody>
+        </table>
+    </div>
 
+    <h3>Alert Codes</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Code</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>Normal conditions</td></tr>
+                <tr><td>1</td><td>Temperature out of range</td></tr>
+                <tr><td>2</td><td>Humidity out of range</td></tr>
+                <tr><td>3</td><td>Dark condition detected</td></tr>
+                <tr><td>4</td><td>Multiple conditions out of range</td></tr>
+                <tr><td>5</td><td>DHT22 reading error</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Light Detection:</strong>
+        The uploaded sketch treats a LOW signal from
+        the LDR module as LIGHT and HIGH as DARK.
+        Some module configurations have different
+        polarity. Verify your module before testing.
+    </div>
+</section>
+
+<!-- COMPONENTS -->
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="ESP32 Development Board.png" alt="ESP32 Development Board">
+            <h4>ESP32 Development Board (×1)</h4>
+            <p>Main controller with Wi-Fi connectivity.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="DHT22 Temperature Humidity Sensor.png" alt="DHT22 Sensor">
+            <h4>DHT22 Sensor (×1)</h4>
+            <p>Measures temperature and humidity.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="LDR Light Sensor Module.png" alt="LDR Light Sensor Module">
+            <h4>Digital LDR Module (×1)</h4>
+            <p>Detects light or dark condition.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="OLED.png" alt="SSD1306 OLED">
+            <h4>SSD1306 OLED (×1)</h4>
+            <p>Displays readings and alert codes.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Green LED.png" alt="Green LED">
+            <h4>Green LED (×1)</h4>
+            <p>Indicates normal conditions.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Red LED.png" alt="Red LED">
+            <h4>Red LED (×1)</h4>
+            <p>Indicates an alert condition.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="220 ohm resistor.png" alt="220 ohm resistor">
+            <h4>220 Ω Resistor (×2)</h4>
+            <p>Limits current through the two LEDs.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Buzzer.png" alt="Buzzer">
+            <h4>Active Buzzer (×1)</h4>
+            <p>Provides an audible alert.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Connect the components.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Used for circuit assembly.</p>
         </div>
 
     </div>
 
-</header>
+    <div class="note">
+        <strong>Required Libraries:</strong>
+        <ul>
+            <li>WiFi.h</li>
+            <li>ThingSpeak.h</li>
+            <li>Wire.h</li>
+            <li>U8g2lib.h</li>
+            <li>DHT.h</li>
+        </ul>
+        <p>
+            Install the ThingSpeak, U8g2, DHT sensor
+            and required supporting libraries
+            in Arduino IDE.
+        </p>
+    </div>
+</section>
+
+<!-- CONNECTIONS -->
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Component Pin</th><th>ESP32 Connection</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>DHT22 VCC</td><td>3.3V</td></tr>
+                <tr><td>DHT22 DATA</td><td>GPIO16</td></tr>
+                <tr><td>DHT22 GND</td><td>GND</td></tr>
+                <tr><td>LDR VCC</td><td>3.3V</td></tr>
+                <tr><td>LDR DO</td><td>GPIO34</td></tr>
+                <tr><td>LDR GND</td><td>GND</td></tr>
+                <tr><td>OLED VCC</td><td>3.3V</td></tr>
+                <tr><td>OLED GND</td><td>GND</td></tr>
+                <tr><td>OLED SDA</td><td>GPIO21</td></tr>
+                <tr><td>OLED SCL</td><td>GPIO22</td></tr>
+                <tr><td>Green LED Anode</td><td>GPIO25 through 220 Ω</td></tr>
+                <tr><td>Red LED Anode</td><td>GPIO26 through 220 Ω</td></tr>
+                <tr><td>Both LED Cathodes</td><td>GND</td></tr>
+                <tr><td>Buzzer Positive</td><td>GPIO27, for a suitable low-current active buzzer</td></tr>
+                <tr><td>Buzzer Negative</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Hardware Precautions:</strong>
+        <p>
+            GPIO34 is input-only and does not provide
+            an internal pull-up. Use a digital LDR
+            module with a defined 3.3V-compatible output.
+        </p>
+        <p>
+            A bare four-pin DHT22 may require an
+            external pull-up resistor on DATA. Some
+            DHT22 modules already include one.
+        </p>
+        <p>
+            Verify buzzer current consumption.
+            Use a transistor driver if it exceeds
+            the ESP32 GPIO's safe drive capability.
+        </p>
+    </div>
+</section>
+
+<!-- CIRCUIT -->
+<section class="section" id="circuit">
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Plant-Growing Environment Supervisor Circuit.png"
+        alt="Plant-Growing Environment Supervisor Circuit Diagram"
+        class="circuit-img"
+    >
+</section>
+
+<!-- WORKING -->
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        <div class="flow-step">Initialize ESP32 and Sensors</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Initialize OLED Display</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Connect to Wi-Fi</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Read DHT22 Temperature and Humidity</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Read Digital LDR Status</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Compare Sensor Readings With Thresholds</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Calculate Alert Code</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Control Green LED, Red LED and Buzzer</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Update OLED and Serial Monitor</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Upload to ThingSpeak Every 20 Seconds</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Continue Monitoring</div>
+    </div>
+
+    <h3>Sensor Monitoring</h3>
+    <p>
+        DHT22 readings and LDR digital status are
+        sampled approximately every 2.5 seconds.
+    </p>
+
+    <h3>Alert Decision</h3>
+    <p>
+        Temperature, humidity and light conditions
+        are compared against the selected limits.
+        An alert code is generated for the
+        current condition.
+    </p>
+
+    <h3>Local Indication</h3>
+    <p>
+        The OLED displays environmental readings.
+        LEDs and the buzzer indicate normal
+        or alert conditions.
+    </p>
+
+    <h3>Cloud Monitoring</h3>
+    <p>
+        The ESP32 uploads four fields to ThingSpeak.
+        ThingSpeak charts display the data
+        when the channel has been configured correctly.
+    </p>
+</section>
+
+<!-- PROCEDURE -->
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+    <ol>
+        <li>Arrange all required components.</li>
+        <li>Connect DHT22 DATA to GPIO16.</li>
+        <li>Connect LDR digital output to GPIO34.</li>
+        <li>Connect OLED SDA to GPIO21 and SCL to GPIO22.</li>
+        <li>Connect the green LED to GPIO25 through 220 Ω.</li>
+        <li>Connect the red LED to GPIO26 through 220 Ω.</li>
+        <li>Connect a suitable buzzer control circuit to GPIO27.</li>
+        <li>Connect all required supply and ground connections.</li>
+        <li>Verify the circuit before powering it.</li>
+        <li>Open Arduino IDE and install the ESP32 board package.</li>
+        <li>Install DHT, U8g2 and ThingSpeak libraries.</li>
+        <li>Create a ThingSpeak channel with four fields.</li>
+        <li>Copy the complete sketch from Explore the Code.</li>
+        <li>Enter Wi-Fi credentials, channel ID and Write API key.</li>
+        <li>Select the appropriate ESP32 board and port.</li>
+        <li>Verify and upload the sketch.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Observe OLED readings and LED status.</li>
+        <li>Change environmental conditions near the sensors.</li>
+        <li>Observe alert codes and buzzer response.</li>
+        <li>Open ThingSpeak and verify incoming field values.</li>
+    </ol>
+</section>
+
+<!-- EXPLORE THE CODE -->
+<section class="section" id="code">
+    <p class="eyebrow">ESP32 Experiment · Code Review</p>
+    <h2 class="lesson-title">Explore the Code</h2>
+    <p class="intro">
+        Click an explanation to highlight the
+        complete matching code section.
+        Copy Code copies the entire sketch.
+    </p>
+
+    <div class="code-layout">
+        <article class="code-panel">
+            <div class="code-top">
+                <span class="filename">
+                    Plant_Growing_Environment_Supervisor.ino
+                </span>
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >Copy Code</button>
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+        </article>
+
+        <article class="guide">
+            <h2>Understand it step by step</h2>
+            <p>
+                Select a step to highlight
+                the corresponding source-code section.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: DHT22</summary>
+                <p>
+                    DHT22 measures temperature in
+                    degrees Celsius and relative humidity
+                    as a percentage.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: LDR</summary>
+                <p>
+                    This experiment uses the digital output
+                    of an LDR module for LIGHT/DARK detection.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Alert Codes</summary>
+                <p>
+                    Alert codes represent normal, out-of-range,
+                    multiple-error and DHT sensor-error conditions.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: ThingSpeak</summary>
+                <p>
+                    Four channel fields store temperature,
+                    humidity, light status and alert code.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+                <ol>
+                    <li>Which GPIO is connected to DHT22 DATA?</li>
+                    <li>Which pin reads the LDR module?</li>
+                    <li>Which OLED pins are used for I²C?</li>
+                    <li>What does alert code 4 indicate?</li>
+                    <li>How often are readings uploaded?</li>
+                </ol>
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO16; GPIO34; GPIO21 and GPIO22;
+                    multiple alerts; every 20 seconds.
+                </p>
+            </details>
+        </article>
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong> Change the light
+        falling on the LDR and observe the OLED,
+        LEDs, buzzer and ThingSpeak field values.
+    </p>
+</section>
+
+<!-- EXPECTED OUTPUT -->
+<section class="section" id="output">
+    <h2>Expected Output</h2>
+
+    <h3>OLED — Normal Conditions</h3>
+    <div class="output-box">
+<pre>PLANT SUPERVISOR
+
+Temp: 25.0 C
+Humidity: 60.0 %
+Light: LIGHT
+Alert code: 0</pre>
+    </div>
+
+    <h3>OLED — Alert Condition</h3>
+    <div class="output-box">
+<pre>PLANT SUPERVISOR
+
+Temp: 34.0 C
+Humidity: 60.0 %
+Light: DARK
+Alert code: 4</pre>
+    </div>
+
+    <h3>Serial Monitor</h3>
+    <div class="output-box">
+<pre>Temp 25.0, Hum 60.0, Light 100, Alert 0
+Temp 34.0, Hum 60.0, Light 0, Alert 4
+ThingSpeak HTTP status: 200</pre>
+    </div>
+
+    <h3>ThingSpeak Fields</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Parameter</th>
+                    <th>Example Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Field 1</td><td>Temperature (°C)</td><td>25.0</td></tr>
+                <tr><td>Field 2</td><td>Humidity (%)</td><td>60.0</td></tr>
+                <tr><td>Field 3</td><td>Light State</td><td>100 = LIGHT, 0 = DARK</td></tr>
+                <tr><td>Field 4</td><td>Alert Code</td><td>0 to 5</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        These values are illustrative. Actual
+        sensor readings and upload responses
+        depend on the connected hardware,
+        Wi-Fi and ThingSpeak channel.
+    </div>
+</section>
+
+<!-- DASHBOARD — IMMEDIATELY AFTER OUTPUT -->
+<section class="section" id="dashboard">
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+        <img
+            src="Plant-Growing Environment Supervisor Dashboard.png"
+            alt="Plant-Growing Environment Supervisor Dashboard"
+        >
+    </div>
+
+    <div class="note">
+        The screenshot represents the
+        ThingSpeak cloud dashboard.
+        Configure the ThingSpeak channel
+        to display the four monitored fields.
+    </div>
+</section>
+
+<!-- RESULT -->
+<section class="section" id="result">
+    <h2>Result</h2>
+    <p>
+        The Plant-Growing Environment Supervisor
+        demonstrates temperature, humidity and
+        light-state monitoring using ESP32.
+        The system displays readings on an OLED,
+        indicates environmental alerts through
+        LEDs and a buzzer, and uploads valid
+        data to ThingSpeak for cloud monitoring.
+    </p>
+</section>
+
+<!-- WHAT YOU LEARN -->
+<section class="section" id="learn">
+    <h2>What You Learn</h2>
+    <ul>
+        <li>Interfacing ESP32 with a DHT22 sensor.</li>
+        <li>Measuring temperature and humidity.</li>
+        <li>Reading digital LDR sensor output.</li>
+        <li>Using GPIO34 as a digital input.</li>
+        <li>Using GPIO16 for DHT22 communication.</li>
+        <li>Using I²C OLED communication.</li>
+        <li>Controlling green and red LEDs.</li>
+        <li>Controlling an active buzzer.</li>
+        <li>Implementing sensor thresholds.</li>
+        <li>Generating environmental alert codes.</li>
+        <li>Using millis() for periodic tasks.</li>
+        <li>Connecting ESP32 to Wi-Fi.</li>
+        <li>Configuring a ThingSpeak channel.</li>
+        <li>Uploading sensor readings to ThingSpeak.</li>
+        <li>Displaying historical values using cloud graphs.</li>
+        <li>Understanding digital versus analog light measurements.</li>
+    </ul>
+</section>
+</main>
+
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>Plant-Growing Environment Supervisor</div>
+</footer>
+
+<!-- =====================================
+     COMPLETE ESP32 PROGRAM
+     10 INTERACTIVE CODE SECTIONS
+===================================== -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
+
+#include &lt;WiFi.h>
+#include &lt;ThingSpeak.h>
+#include &lt;Wire.h>
+#include &lt;U8g2lib.h>
+#include &lt;DHT.h>
+
+// [END 01]
 
 
+// [02] CONFIGURE WIFI AND THINGSPEAK
 
-<!-- =========================
-     NAVIGATION
-========================= -->
+const char* SSID = "YOUR_WIFI_SSID";
+const char* PASSWORD = "YOUR_WIFI_PASSWORD";
 
-<nav>
+unsigned long CHANNEL_ID = 1234567;
+const char* API_KEY = "YOUR_WRITE_API_KEY";
 
-    <a href="../index.html">
-        ← ESP32 Experiments
-    </a>
-
-    <a href="#aim">
-        Aim
-    </a>
-
-    <a href="#components">
-        Components
-    </a>
-
-    <a href="#connections">
-        Connections
-    </a>
-
-    <a href="#circuit">
-        Circuit
-    </a>
-
-    <a href="#working">
-        Working
-    </a>
-
-    <a href="#procedure">
-        Procedure
-    </a>
-
-    <a href="#code">
-        Code
-    </a>
-
-    <a href="#result">
-        Result
-    </a>
-
-</nav>
-
-
-
-<main class="container"><section class="section project-thumbnail"><img src="../Plant-Growing Environment Supervisor.png" alt="Plant-Growing Environment Supervisor thumbnail"></section><section class="section" id="aim"><h2>Aim</h2><p>Monitor temperature, humidity and light with DHT22 and a digital LDR, show alerts on an OLED, and upload readings to ThingSpeak.</p></section><section class="section"><h2>About the Experiment</h2><p>Monitor temperature, humidity and light with DHT22 and a digital LDR, show alerts on an OLED, and upload readings to ThingSpeak.</p></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32 Development Board.png" alt="ESP32 Development Board"><h4>ESP32 Development Board</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="DHT22 Temperature Humidity Sensor.png" alt="DHT22 Temperature Humidity Sensor"><h4>DHT22 Temperature Humidity Sensor</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="LDR Light Sensor Module.png" alt="LDR Sensor Module"><h4>LDR Sensor Module</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="OLED.png" alt="OLED"><h4>OLED</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Green LED.png" alt="Green LED"><h4>Green LED</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Red LED.png" alt="Red LED"><h4>Red LED</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="220 ohm resistor.png" alt="220 ohm resistor"><h4>220 ohm resistor</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Buzzer.png" alt="Buzzer"><h4>Buzzer</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Required experiment component.</p></div></div></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><tr><th>Component</th><th>Connection</th></tr><tr><td>DHT22 DATA</td><td>GPIO16</td></tr><tr><td>LDR DO</td><td>GPIO34</td></tr><tr><td>OLED SDA</td><td>GPIO21</td></tr><tr><td>OLED SCL</td><td>GPIO22</td></tr><tr><td>Green LED</td><td>GPIO25 through 220 Ω</td></tr><tr><td>Red LED</td><td>GPIO26 through 220 Ω</td></tr><tr><td>Active buzzer +</td><td>GPIO27 (safe low-current only)</td></tr><tr><td>All grounds</td><td>Common GND</td></tr></table></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Plant-Growing Environment Supervisor Circuit.png" alt="Plant-Growing Environment Supervisor circuit diagram"></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">Monitor temperature, humidity and light with DHT22 and a digital LDR, show alerts on an OLED, and upload readings to ThingSpeak. The controller reads inputs, processes them in the sketch and updates outputs.</div></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Verify the components and assemble the circuit using the connection table.</li><li>Install the ESP32 board support and required Arduino libraries.</li><li>Open the sketch, check board and GPIO assignments and configure credentials where applicable.</li><li>Compile and upload the program; open Serial Monitor at 115200 baud.</li><li>Test each input and verify the display and outputs.</li></ol></section><section class="section" id="code"><div class="code-lesson"><p class="eyebrow">ESP32 Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Plant-Growing Environment Supervisor · Select a step to understand the program.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">Plant_Growing_Environment_Supervisor.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step. The matching section of code will light up on the left.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load libraries</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configure hardware</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Initialize system</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Run experiment</button></div><div id="explanation" class="note"></div><details><summary>Check Your Understanding</summary><p>Which pins and libraries are used in this experiment? Review the highlighted source code.</p></details></article></div></div></section><section class="section"><h2>Expected Output</h2><p>OLED shows temperature, humidity, light status and alert code. Green LED indicates normal conditions; red LED and buzzer indicate an alert. Valid readings are uploaded to ThingSpeak every 20 seconds.</p></section><section class="section" id="result"><h2>Result</h2><p>The experiment demonstrates sensor/input processing, display feedback and controller output.</p></section><section class="section"><h2>What You Learn</h2><p>GPIO interfacing, digital inputs and outputs, embedded programming and real-time feedback.</p></section></main><footer><strong>ESP32 Experiment</strong><br>Plant-Growing Environment Supervisor</footer><script type="text/plain" id="esp32-program">
-#include <WiFi.h>
-#include <ThingSpeak.h>
-#include <Wire.h>
-#include <U8g2lib.h>
-#include <DHT.h>
-const char* SSID="YOUR_WIFI_SSID";
-const char* PASSWORD="YOUR_WIFI_PASSWORD";
-unsigned long CHANNEL_ID=1234567;
-const char* API_KEY="YOUR_WRITE_API_KEY";
 WiFiClient client;
-DHT dht(16,DHT22);
-U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0,U8X8_PIN_NONE);
-const int LDR=34,GREEN=25,RED=26,BUZZER=27;
-unsigned long lastRead=0,lastSend=0;
-float temp=NAN,hum=NAN;
-int light=0,alert=5;
-void readSensors(){
- temp=dht.readTemperature();hum=dht.readHumidity();
- light=digitalRead(LDR)==LOW?100:0;
- if(isnan(temp)||isnan(hum))alert=5;
- else {
-  bool t=temp<18||temp>30,h=hum<40||hum>80,l=light==0;
-  int count=t+h+l;
-  alert=count>1?4:t?1:h?2:l?3:0;
- }
- digitalWrite(GREEN,alert==0);
- digitalWrite(RED,alert!=0);
- digitalWrite(BUZZER,alert!=0);
- oled.clearBuffer();oled.setFont(u8g2_font_6x10_tf);
- oled.drawStr(0,10,"PLANT SUPERVISOR");
- char line[32];
- if(isnan(temp))snprintf(line,sizeof(line),"Temp: SENSOR ERROR");
- else snprintf(line,sizeof(line),"Temp: %.1f C",temp);
- oled.drawStr(0,25,line);
- if(isnan(hum))snprintf(line,sizeof(line),"Humidity: ERROR");
- else snprintf(line,sizeof(line),"Humidity: %.1f %%",hum);
- oled.drawStr(0,39,line);
- oled.drawStr(0,51,light?"Light: LIGHT":"Light: DARK");
- snprintf(line,sizeof(line),"Alert code: %d",alert);oled.drawStr(0,63,line);
- oled.sendBuffer();
- Serial.printf("Temp %.1f, Hum %.1f, Light %d, Alert %d\n",temp,hum,light,alert);
-}
-void setup(){
- Serial.begin(115200);pinMode(LDR,INPUT);
- pinMode(GREEN,OUTPUT);pinMode(RED,OUTPUT);pinMode(BUZZER,OUTPUT);
- Wire.begin(21,22);oled.begin();dht.begin();
- WiFi.mode(WIFI_STA);WiFi.begin(SSID,PASSWORD);
- ThingSpeak.begin(client);readSensors();
- lastRead=millis();lastSend=millis();
-}
-void loop(){
- unsigned long now=millis();
- if(now-lastRead>=2500){lastRead=now;readSensors();}
- if(now-lastSend>=20000){
-  lastSend=now;
-  if(WiFi.status()==WL_CONNECTED && !isnan(temp) && !isnan(hum)){
-   ThingSpeak.setField(1,temp);ThingSpeak.setField(2,hum);
-   ThingSpeak.setField(3,light);ThingSpeak.setField(4,alert);
-   Serial.println(ThingSpeak.writeFields(CHANNEL_ID,API_KEY));
-  }
- }
- if(WiFi.status()!=WL_CONNECTED){
-  static unsigned long retry=0;
-  if(now-retry>15000){retry=now;WiFi.disconnect();WiFi.begin(SSID,PASSWORD);}
- }
-}
-</script><script>
+
+// [END 02]
 
 
-const program =
+// [03] CONFIGURE SENSORS AND OUTPUT PINS
 
-document
+#define DHT_PIN 16
+#define DHT_TYPE DHT22
 
-.getElementById(
-    "esp32-program"
-)
+#define LDR_PIN 34
+#define GREEN_LED 25
+#define RED_LED 26
+#define BUZZER_PIN 27
 
-.textContent
+#define OLED_SDA 21
+#define OLED_SCL 22
 
-.trim();
+DHT dht(DHT_PIN, DHT_TYPE);
 
-
-const lines =
-
-program.split(
-    "\n"
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(
+    U8G2_R0,
+    U8X8_PIN_NONE
 );
 
-
-/* =========================
-   CODE STEPS
-========================= */
-
-const steps = [{title:"Load libraries",search:"#include",text:"Load the required libraries for this experiment."},{title:"Configure hardware",search:"const ",text:"Review pin assignments, constants and device configuration."},{title:"Initialize system",search:"void setup",text:"Initialize the ESP32 and connected modules."},{title:"Run experiment",search:"void loop",text:"Run the main experiment logic repeatedly."}];
+// [END 03]
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+// [04] DEFINE TIMING AND SENSOR VARIABLES
 
-function escapeHtml(text)
-{
+const unsigned long READ_INTERVAL = 2500UL;
+const unsigned long SEND_INTERVAL = 20000UL;
 
-    return text
+unsigned long lastRead = 0;
+unsigned long lastSend = 0;
 
-    .replace(
-        /&/g,
-        "&amp;"
-    )
+float temp = NAN;
+float hum = NAN;
 
-    .replace(
-        /</g,
-        "&lt;"
-    )
+int light = 0;
+int alert = 5;
 
-    .replace(
-        />/g,
-        "&gt;"
-    );
-
-}
+// [END 04]
 
 
-/* =========================
-   DISPLAY CODE
-========================= */
+// [05] READ TEMPERATURE HUMIDITY AND LIGHT
 
-function displayCode()
-{
+void readSensors() {
 
-    let output = "";
+    temp = dht.readTemperature();
+    hum = dht.readHumidity();
+
+    // Original experiment logic:
+    // LOW = LIGHT, HIGH = DARK.
+    // Verify your LDR module's polarity.
+
+    light = digitalRead(LDR_PIN) == LOW
+        ? 100
+        : 0;
+
+// [END 05]
 
 
-    lines.forEach(
+// [06] DETERMINE ALERT CODE
 
-        function(
-            line,
-            index
-        )
-        {
+    if (isnan(temp) || isnan(hum)) {
 
-            output +=
+        alert = 5;
 
-            '<span class="code-line" ' +
+    } else {
 
-            'id="line-' +
+        bool temperatureAlert =
+            temp &lt; 18 || temp > 30;
 
-            (index + 1) +
+        bool humidityAlert =
+            hum &lt; 40 || hum > 80;
 
-            '">' +
+        bool lightAlert =
+            light == 0;
 
-            '<span class="line-number">' +
+        int alertCount =
+            temperatureAlert +
+            humidityAlert +
+            lightAlert;
 
-            (index + 1) +
-
-            '</span>' +
-
-            '<span>' +
-
-            escapeHtml(line) +
-
-            '</span>' +
-
-            '</span>';
-
+        if (alertCount > 1) {
+            alert = 4;
         }
+        else if (temperatureAlert) {
+            alert = 1;
+        }
+        else if (humidityAlert) {
+            alert = 2;
+        }
+        else if (lightAlert) {
+            alert = 3;
+        }
+        else {
+            alert = 0;
+        }
+    }
 
+// [END 06]
+
+
+// [07] CONTROL LEDS AND BUZZER
+
+    digitalWrite(
+        GREEN_LED,
+        alert == 0
     );
 
+    digitalWrite(
+        RED_LED,
+        alert != 0
+    );
 
-    document
+    digitalWrite(
+        BUZZER_PIN,
+        alert != 0
+    );
 
-    .getElementById(
-        "code-lines"
-    )
+// [END 07]
 
-    .innerHTML =
-    output;
 
+// [08] DISPLAY READINGS ON OLED
+
+    oled.clearBuffer();
+    oled.setFont(u8g2_font_6x10_tf);
+
+    oled.drawStr(
+        0, 10, "PLANT SUPERVISOR"
+    );
+
+    char line[32];
+
+    if (isnan(temp)) {
+
+        snprintf(
+            line,
+            sizeof(line),
+            "Temp: SENSOR ERROR"
+        );
+
+    } else {
+
+        snprintf(
+            line,
+            sizeof(line),
+            "Temp: %.1f C",
+            temp
+        );
+    }
+
+    oled.drawStr(0, 25, line);
+
+    if (isnan(hum)) {
+
+        snprintf(
+            line,
+            sizeof(line),
+            "Humidity: ERROR"
+        );
+
+    } else {
+
+        snprintf(
+            line,
+            sizeof(line),
+            "Humidity: %.1f %%",
+            hum
+        );
+    }
+
+    oled.drawStr(0, 39, line);
+
+    oled.drawStr(
+        0,
+        51,
+        light ? "Light: LIGHT" : "Light: DARK"
+    );
+
+    snprintf(
+        line,
+        sizeof(line),
+        "Alert code: %d",
+        alert
+    );
+
+    oled.drawStr(0, 63, line);
+
+    oled.sendBuffer();
+
+    Serial.printf(
+        "Temp %.1f, Hum %.1f, Light %d, Alert %d\n",
+        temp,
+        hum,
+        light,
+        alert
+    );
 }
 
+// [END 08]
 
-/* =========================
-   SHOW STEP
-========================= */
 
-function showStep(index)
-{
+// [09] INITIALIZE ESP32 AND MODULES
+
+void setup() {
+
+    Serial.begin(115200);
+
+    pinMode(LDR_PIN, INPUT);
+    pinMode(GREEN_LED, OUTPUT);
+    pinMode(RED_LED, OUTPUT);
+    pinMode(BUZZER_PIN, OUTPUT);
+
+    digitalWrite(GREEN_LED, LOW);
+    digitalWrite(RED_LED, LOW);
+    digitalWrite(BUZZER_PIN, LOW);
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+    oled.begin();
+    dht.begin();
+
+    WiFi.mode(WIFI_STA);
+
+    WiFi.begin(
+        SSID,
+        PASSWORD
+    );
+
+    ThingSpeak.begin(client);
+
+    readSensors();
+
+    lastRead = millis();
+    lastSend = millis();
+}
+
+// [END 09]
+
+
+// [10] MONITOR AND UPLOAD TO THINGSPEAK
+
+void loop() {
+
+    unsigned long now = millis();
+
+    // Read sensors every 2.5 seconds.
+    if (
+        now - lastRead >=
+        READ_INTERVAL
+    ) {
+
+        lastRead = now;
+        readSensors();
+    }
+
+    // Upload every 20 seconds.
+    if (
+        now - lastSend >=
+        SEND_INTERVAL
+    ) {
+
+        lastSend = now;
+
+        if (
+            WiFi.status() == WL_CONNECTED &&
+            !isnan(temp) &&
+            !isnan(hum)
+        ) {
+
+            ThingSpeak.setField(1, temp);
+            ThingSpeak.setField(2, hum);
+            ThingSpeak.setField(3, light);
+            ThingSpeak.setField(4, alert);
+
+            int response = ThingSpeak.writeFields(
+                CHANNEL_ID,
+                API_KEY
+            );
+
+            Serial.print(
+                "ThingSpeak HTTP status: "
+            );
+
+            Serial.println(response);
+        }
+    }
+
+    // Retry disconnected Wi-Fi periodically.
+    if (WiFi.status() != WL_CONNECTED) {
+
+        static unsigned long lastRetry = 0;
+
+        if (
+            now - lastRetry >
+            15000UL
+        ) {
+
+            lastRetry = now;
+
+            WiFi.disconnect();
+
+            WiFi.begin(
+                SSID,
+                PASSWORD
+            );
+        }
+    }
+}
+
+// [END 10]
+</textarea>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER JAVASCRIPT
+===================================== -->
+<script>
+
+const program = document
+    .getElementById("esp32-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+const steps = [
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text: "Loads Wi-Fi, ThingSpeak, I²C, OLED and DHT libraries."
+    },
+    {
+        number: "02",
+        label: "CONFIGURE WIFI AND THINGSPEAK",
+        title: "Configure Wi-Fi and ThingSpeak",
+        text: "Defines network credentials, channel ID, API key and the network client."
+    },
+    {
+        number: "03",
+        label: "CONFIGURE SENSORS AND OUTPUT PINS",
+        title: "Configure Hardware",
+        text: "Assigns ESP32 pins to DHT22, LDR, LEDs, buzzer and OLED."
+    },
+    {
+        number: "04",
+        label: "DEFINE TIMING AND SENSOR VARIABLES",
+        title: "Set Monitoring Variables",
+        text: "Defines sampling intervals, upload intervals and sensor value storage."
+    },
+    {
+        number: "05",
+        label: "READ TEMPERATURE HUMIDITY AND LIGHT",
+        title: "Read Sensor Values",
+        text: "Reads DHT22 measurements and converts the digital LDR input to LIGHT/DARK status."
+    },
+    {
+        number: "06",
+        label: "DETERMINE ALERT CODE",
+        title: "Determine Alert Code",
+        text: "Compares readings with thresholds and assigns an alert code from 0 to 5."
+    },
+    {
+        number: "07",
+        label: "CONTROL LEDS AND BUZZER",
+        title: "Control Alerts",
+        text: "Activates the green LED during normal operation or the red LED and buzzer during alerts."
+    },
+    {
+        number: "08",
+        label: "DISPLAY READINGS ON OLED",
+        title: "Update OLED",
+        text: "Displays temperature, humidity, light status and alert code, then prints Serial readings."
+    },
+    {
+        number: "09",
+        label: "INITIALIZE ESP32 AND MODULES",
+        title: "Initialize System",
+        text: "Configures pins, starts the sensors and OLED, connects Wi-Fi and starts ThingSpeak."
+    },
+    {
+        number: "10",
+        label: "MONITOR AND UPLOAD TO THINGSPEAK",
+        title: "Monitor and Upload",
+        text: "Samples sensors every 2.5 seconds, uploads valid data every 20 seconds and retries Wi-Fi."
+    }
+];
+
+function escapeHtml(value) {
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function displayCode() {
+    const container = document.getElementById(
+        "code-lines"
+    );
+
+    container.innerHTML = lines.map(
+        function(line, index) {
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+                '<span class="line-number">' +
+                (index + 1) + '</span>' +
+                '<span>' + escapeHtml(line) + '</span>' +
+                '</span>'
+            );
+        }
+    ).join("");
+}
+
+function findMarker(marker) {
+    return lines.findIndex(
+        line => line.trim() === marker
+    );
+}
+
+const ranges = steps.map(function(step) {
+    const start = findMarker(
+        "// [" + step.number + "] " + step.label
+    );
+
+    const end = findMarker(
+        "// [END " + step.number + "]"
+    );
+
+    return {
+        start: start,
+        end: end,
+        valid: start >= 0 && end >= start
+    };
+});
+
+function createSteps() {
+    const container = document.getElementById(
+        "steps-list"
+    );
+
+    steps.forEach(function(step, index) {
+        const button = document.createElement(
+            "button"
+        );
+
+        button.type = "button";
+        button.className = "step";
+
+        const number = document.createElement(
+            "span"
+        );
+
+        number.className = "step-number";
+        number.textContent = step.number;
+
+        const title = document.createElement(
+            "span"
+        );
+
+        title.textContent = step.title;
+
+        button.append(number, title);
+
+        button.addEventListener(
+            "click",
+            () => showStep(index)
+        );
+
+        container.appendChild(button);
+    });
+}
+
+function showStep(index) {
+    document.querySelectorAll(".step").forEach(
+        (button, i) => {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        line => line.classList.remove("selected")
+    );
+
     const step = steps[index];
-    document.querySelectorAll(".step").forEach(function(button, i) {
-        button.classList.toggle("active", i === index);
-    });
-    document.querySelectorAll(".code-line").forEach(function(line) {
-        line.classList.remove("selected");
-    });
+    const range = ranges[index];
 
-    // Find the matching source statement. Use the first non-comment
-    // occurrence, and never highlight an unrelated fixed 12-line range.
-    let foundLine = lines.findIndex(function(line) {
-        return line.trim().startsWith(step.search.trim());
-    });
-    if (foundLine < 0) {
-        foundLine = lines.findIndex(function(line) {
-            return line.includes(step.search);
+    const explanation = document.getElementById(
+        "explanation"
+    );
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+        paragraph.textContent =
+            "Matching code section not found.";
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+        const line = document.getElementById(
+            "line-" + (i + 1)
+        );
+
+        if (line) {
+            line.classList.add("selected");
+        }
+    }
+
+    const firstLine = document.getElementById(
+        "line-" + (range.start + 1)
+    );
+
+    const codeBody = document.getElementById(
+        "code-body"
+    );
+
+    if (firstLine && codeBody) {
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
         });
     }
-
-    if (foundLine >= 0) {
-        let lastLine = foundLine;
-        // Extend across a declaration or a brace-delimited code block.
-        let depth = 0;
-        let blockStarted = false;
-        for (let i = foundLine; i < lines.length; i++) {
-            const current = lines[i];
-            for (const ch of current) {
-                if (ch === "{") { depth++; blockStarted = true; }
-                if (ch === "}") { depth--; }
-            }
-            lastLine = i;
-            if (blockStarted && depth <= 0) break;
-            if (!blockStarted && i > foundLine && current.trim() === "") {
-                lastLine = i - 1;
-                break;
-            }
-            if (i - foundLine >= 35) break;
-        }
-        for (let i = foundLine; i <= lastLine; i++) {
-            document.getElementById("line-" + (i + 1))?.classList.add("selected");
-        }
-        const selectedLine = document.getElementById("line-" + (foundLine + 1));
-        const codeBody = document.getElementById("code-body");
-        if (selectedLine && codeBody) {
-            codeBody.scrollTo({
-                top: selectedLine.offsetTop - codeBody.offsetTop - 20,
-                behavior: "smooth"
-            });
-        }
-    }
-    document.getElementById("explanation").innerHTML =
-        "<h3>" + (index + 1) + ". " + step.title + "</h3>" +
-        "<p>" + step.text + "</p>";
 }
 
-
-/* =========================
-   COPY CODE
-========================= */
-
-function copyCode()
-{
-
-    navigator
-
-    .clipboard
-
-    .writeText(
-        program
-    )
-
-    .then(
-
-        function()
-        {
-
-            const button =
-
-            document
-
-            .querySelector(
-                ".copy-button"
-            );
-
-
-            button.innerText =
-            "Copied!";
-
-
-            setTimeout(
-
-                function()
-                {
-
-                    button.innerText =
-                    "Copy Code";
-
-                },
-
-                1500
-
-            );
-
-        }
-
+async function copyCode() {
+    const button = document.querySelector(
+        ".code-top .copy-button"
     );
 
+    function copied() {
+        button.textContent = "Copied!";
+
+        setTimeout(
+            () => button.textContent = "Copy Code",
+            1500
+        );
+    }
+
+    function fallback() {
+        const field = document.createElement(
+            "textarea"
+        );
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch (error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+        try {
+            await navigator.clipboard.writeText(
+                program
+            );
+            copied();
+        } catch (error) {
+            fallback();
+        }
+    } else {
+        fallback();
+    }
 }
 
-
-/* =========================
-   START
-========================= */
-
 displayCode();
-
+createSteps();
 showStep(0);
 
+</script>
 
-</script></body></html>
+</body>
+</html>
