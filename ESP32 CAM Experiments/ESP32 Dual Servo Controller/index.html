@@ -1,53 +1,32 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ESP32 Dual Servo Controller</title>
 
-
 <style>
-
-/* =========================
+/* =====================================
    BASIC PAGE STYLE
-========================= */
-
-*{
-    box-sizing:border-box;
+===================================== */
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-
-    margin:0;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:#f4f7fb;
-
-    color:#222;
-
-    line-height:1.7;
-}
-
-
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
+/* =====================================
+   HEADER
+===================================== */
 .header {
     background: #2563eb;
     color: white;
@@ -58,9 +37,6 @@ body{
     padding: 25px 0 0;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
-
 .header-logo {
     position: absolute;
     top: 15px;
@@ -73,27 +49,19 @@ body{
     border-radius: 5px;
     padding: 5px;
 }
-
-/* CENTER HEADING */
-
 .header-content {
     text-align: center;
     margin: auto 0;
     padding: 35px 165px;
 }
-
 .header h1 {
     margin: 0 0 8px;
     font-size: 34px;
 }
-
 .header p {
     margin: 0;
     font-size: 17px;
 }
-
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
     width: 100%;
     display: flex;
@@ -103,25 +71,12 @@ body{
     padding: 12px 25px;
     background: rgba(0,0,0,0.12);
 }
-
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
-
 .header-nav-btn {
     display: inline-flex;
     align-items: center;
@@ -138,20 +93,15 @@ body{
     white-space: nowrap;
     transition: 0.25s ease;
 }
-
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
-
 .home-icon-btn {
     width: 40px;
     height: 38px;
     padding: 8px;
 }
-
 .home-icon-btn svg {
     width: 21px;
     height: 21px;
@@ -162,85 +112,13 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
-
-@media (max-width: 900px) {
-    .header-content {
-        padding: 65px 20px 35px;
-    }
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
-    }
-
-    .header-logo {
-        width: 95px;
-        max-height: 60px;
-        top: 12px;
-        left: 12px;
-    }
-
-    .header-content {
-        padding: 85px 12px 25px;
-    }
-
-    .header h1 {
-        font-size: 25px;
-    }
-
-    .header p {
-        font-size: 15px;
-    }
-
-    .header-buttons {
-        padding: 10px 8px;
-        gap: 8px;
-    }
-
-    .header-left-buttons,
-    .header-right-buttons {
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 8px 7px;
-        font-size: 11px;
-        min-height: 36px;
-    }
-
-    .home-icon-btn {
-        width: 36px;
-        height: 36px;
-        padding: 7px;
-    }
-}
-
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-
-/* PROJECT THUMBNAIL */
-
+/* =====================================
+   PROJECT THUMBNAIL
+===================================== */
 .project-thumbnail {
     text-align: center;
     padding: 20px;
 }
-
 .project-thumbnail img {
     display: block;
     width: 100%;
@@ -252,846 +130,484 @@ body{
     border-radius: 10px;
 }
 
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
-    }
-
-    .project-thumbnail img {
-        max-height: 280px;
-    }
-}
-
-
-/* =========================
+/* =====================================
    NAVIGATION
-========================= */
-
-nav{
-
-    display:flex;
-
-    justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:18px;
-
-    padding:13px 15px;
-
-    background:white;
-
-    border-bottom:1px solid #ddd;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:20;
+===================================== */
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+nav a {
+    text-decoration: none;
+    color: #1e3a8a;
+    font-size: 14px;
+    font-weight: bold;
+}
+nav a:hover {
+    color: #2563eb;
 }
 
-
-nav a{
-
-    text-decoration:none;
-
-    color:#1e3a8a;
-
-    font-size:14px;
-
-    font-weight:bold;
+/* =====================================
+   MAIN SECTIONS
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+.section {
+    background: white;
+    margin-bottom: 24px;
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    scroll-margin-top: 100px;
+}
+.section h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+    padding-bottom: 8px;
+}
+.section h3 {
+    color: #1e3a8a;
+}
+ul, ol {
+    padding-left: 24px;
+}
+li {
+    margin-bottom: 8px;
 }
 
-
-nav a:hover{
-
-    color:#2563eb;
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-
-    width:90%;
-
-    max-width:1050px;
-
-    margin:35px auto;
-}
-
-
-.section{
-
-    background:white;
-
-    margin-bottom:24px;
-
-    padding:28px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    box-shadow:
-    0 4px 12px
-    rgba(0,0,0,.06);
-}
-
-
-.section h2{
-
-    margin-top:0;
-
-    margin-bottom:18px;
-
-    color:#1e3a8a;
-
-    font-size:25px;
-
-    border-bottom:
-    2px solid #dbeafe;
-
-    padding-bottom:8px;
-}
-
-
-.section h3{
-
-    color:#1e3a8a;
-}
-
-
-ul,
-ol{
-
-    padding-left:24px;
-}
-
-
-li{
-
-    margin-bottom:8px;
-}
-
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-
-    display:grid;
-
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
     grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px,1fr)
-    );
-
-    gap:20px;
+        repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+}
+.component-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.component-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+.component-card h3 {
+    color: #1e3a8a;
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+.component-card p {
+    color: #475569;
+    font-size: 14px;
+    margin: 0;
 }
 
-
-.component-card{
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    padding:20px;
-
-    text-align:center;
-
-    background:white;
-
-    box-shadow:
-    0 2px 8px
-    rgba(0,0,0,.04);
+/* =====================================
+   CONNECTION TABLE
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background: #2563eb;
+    color: white;
+}
+tr:nth-child(even) {
+    background: #f8fafc;
 }
 
-
-.component-card img{
-
-    width:100%;
-
-    height:120px;
-
-    object-fit:contain;
-
-    margin-bottom:15px;
-}
-
-
-.component-card h4{
-
-    color:#1e3a8a;
-
-    margin:0 0 8px;
-
-    font-size:18px;
-}
-
-
-.component-card p{
-
-    color:#475569;
-
-    font-size:14px;
-
-    margin:0;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-
-    overflow-x:auto;
-}
-
-
-table{
-
-    width:100%;
-
-    min-width:620px;
-
-    border-collapse:collapse;
-}
-
-
-th,
-td{
-
-    padding:12px;
-
-    border:1px solid #ddd;
-
-    text-align:left;
-}
-
-
-th{
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-tr:nth-child(even){
-
-    background:#f8fafc;
-}
-
-
-/* =========================
+/* =====================================
    NOTE
-========================= */
-
-.note{
-
-    margin-top:15px;
-
-    padding:14px;
-
-    background:#eff6ff;
-
-    border-left:
-    5px solid #2563eb;
-
-    border-radius:6px;
+===================================== */
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
 }
 
-
-/* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
+/* =====================================
+   CIRCUIT DIAGRAM
+===================================== */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+    padding: 10px;
+    object-fit: contain;
 }
 
-
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-
-    text-align:center;
-
-    color:#1e3a8a;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    line-height:2;
+/* =====================================
+   WORKING FLOW
+===================================== */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+.flow-step {
+    padding: 5px 10px;
+}
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
 }
 
-
-/* =========================
-   SENSOR CARDS
-========================= */
-
-.sensor-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(3,1fr);
-
-    gap:16px;
-}
-
-
-.sensor-box{
-
-    text-align:center;
-
-    padding:20px;
-
-    border-radius:12px;
-
-    border:1px solid #bfdbfe;
-
-    background:#f8fbff;
-}
-
-
-.sensor-box h3{
-
-    margin-top:0;
-
-    color:#1e3a8a;
-}
-
-
-.sensor-value{
-
-    font-size:26px;
-
-    color:#2563eb;
-
-    font-weight:bold;
-}
-
-
-/* =========================================
+/* =====================================
    EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-
-    color:#142e3a;
+===================================== */
+.code-lesson {
+    color: #142e3a;
 }
-
-
-.eyebrow{
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    letter-spacing:.08em;
-
-    text-transform:uppercase;
-
-    margin:0 0 4px;
+.eyebrow {
+    color: #2563eb;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
 }
-
-
-.lesson-title{
-
-    font-size:32px !important;
-
-    margin:0 0 8px !important;
-
-    color:#1e3a8a !important;
-
-    border:0 !important;
-
-    padding:0 !important;
+.lesson-title {
+    font-size: 32px !important;
+    margin: 0 0 8px !important;
+    color: #1e3a8a !important;
+    border: 0 !important;
+    padding: 0 !important;
 }
-
-
-.intro{
-
-    color:#526875;
-
-    margin:0 0 22px;
+.intro {
+    color: #526875;
+    margin: 0 0 22px;
 }
-
-
-/* CODE + EXPLANATION */
-
-.code-layout{
-
-    display:grid;
-
+.code-layout {
+    display: grid;
     grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-
-    gap:20px;
-
-    align-items:start;
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+.code-panel {
+    min-width: 0;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.10);
+}
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+.filename {
+    color: white;
+    font: bold 14px/1.4 Consolas, Monaco, monospace;
+}
+.copy-button {
+    border: 1px solid white;
+    background: white;
+    color: #2563eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.copy-button:hover {
+    background: #eff6ff;
+}
+.code-body {
+    height: 600px;
+    overflow: auto;
+    background: white;
+    padding: 16px 0;
+}
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 22px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+.code-line:hover {
+    background: #f8fbff;
+}
+.code-line.selected,
+.code-line.selected:hover {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+.line-number {
+    user-select: none;
+    min-width: 52px;
+    text-align: right;
+    padding-right: 15px;
+    color: #64748b;
 }
 
-
-/* =========================
-   CODE PANEL
-========================= */
-
-.code-panel{
-
-    background:white;
-
-    border:1px solid #bfdbfe;
-
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 4px 14px
-    rgba(37,99,235,.10);
+/* =====================================
+   EXPLANATION PANEL
+===================================== */
+.guide {
+    min-width: 0;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+    padding: 22px;
 }
-
-
-.code-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    padding:15px 20px;
-
-    background:#2563eb;
-
-    color:white;
+.guide h2 {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px;
+    font-size: 21px;
 }
-
-
-.filename{
-
-    color:white;
-
-    font:
-    bold 14px/1.4
-    Consolas,
-    Monaco,
-    monospace;
+.guide > p {
+    color: #526875;
+    font-size: 15px;
 }
-
-
-.copy-button{
-
-    border:1px solid white;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:8px;
-
-    padding:8px 14px;
-
-    min-height:40px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-
-.copy-button:hover{
-
-    background:#eff6ff;
-}
-
-
-.code-body{
-
-    height:600px;
-
-    overflow:auto;
-
-    background:white;
-
-    padding:16px 0;
-}
-
-
-.code-line{
-
-    display:flex;
-
-    min-width:max-content;
-
-    min-height:24px;
-
-    padding-right:22px;
-
-    white-space:pre;
-
-    font:
-    13px/24px
-    Consolas,
-    Monaco,
-    monospace;
-
-    color:#1e293b;
-
-    border-bottom:
-    1px solid #f1f5f9;
-}
-
-
-.code-line:hover{
-
-    background:#f8fbff;
-}
-
-
-.code-line.selected{
-
-    background:#dbeafe;
-
-    box-shadow:
-    inset 4px 0 #2563eb;
-}
-
-
-.line-number{
-
-    user-select:none;
-
-    min-width:52px;
-
-    text-align:right;
-
-    padding-right:15px;
-
-    color:#64748b;
-}
-
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-
-    background:white;
-
-    border:1px solid #dce6e9;
-
-    border-radius:14px;
-
-    padding:22px;
-}
-
-
-.guide h2{
-
-    border:0;
-
-    padding:0;
-
-    margin:0 0 8px;
-
-    font-size:21px;
-}
-
-
-.guide > p{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.steps{
-
-    display:grid;
-
+.steps {
+    display: grid;
     grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-    gap:8px;
-
-    margin:16px 0;
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+.step {
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    padding: 10px;
+    min-height: 65px;
+    background: white;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: #1e3a8a;
+}
+.step:hover {
+    border-color: #60a5fa;
+    background: #f8fbff;
+}
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+.step-number {
+    color: #2563eb;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+.explanation {
+    background: #eff6ff;
+    border-radius: 9px;
+    padding: 16px;
+    min-height: 130px;
+}
+.explanation h3 {
+    font-size: 17px;
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+.explanation p {
+    margin: 0;
+    color: #526875;
+    font-size: 15px;
+}
+.guide details {
+    border-top: 1px solid #dce6e9;
+    margin-top: 15px;
+}
+.guide summary {
+    cursor: pointer;
+    color: #2563eb;
+    font-weight: bold;
+    padding: 13px 0;
+}
+.tip {
+    background: #eff6ff;
+    color: #234e87;
+    padding: 14px 17px;
+    border-radius: 9px;
+    margin-top: 20px;
+    font-size: 14px;
 }
 
-
-.step{
-
-    border:1px solid #dce6e9;
-
-    border-radius:9px;
-
-    padding:10px;
-
-    min-height:65px;
-
-    background:white;
-
-    text-align:left;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
+/* =====================================
+   EXPECTED OUTPUT
+===================================== */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
 }
 
+/* CENTER DASHBOARD IMAGE */
 
-.step:hover{
-
-    border-color:#60a5fa;
-
-    background:#f8fbff;
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
 }
 
-
-.step.active{
-
-    background:#eff6ff;
-
-    border-color:#60a5fa;
-
-    color:#1e3a8a;
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
 }
 
-
-.step-number{
-
-    color:#2563eb;
-
-    font-size:12px;
-
-    flex-shrink:0;
-}
-
-
-.explanation{
-
-    background:#eff6ff;
-
-    border-radius:9px;
-
-    padding:16px;
-
-    min-height:130px;
-}
-
-
-.explanation h3{
-
-    font-size:17px;
-
-    margin:0 0 7px;
-
-    color:#1e3a8a;
-}
-
-
-.explanation p{
-
-    margin:0;
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide details{
-
-    border-top:
-    1px solid #dce6e9;
-
-    margin-top:15px;
-}
-
-
-.guide summary{
-
-    cursor:pointer;
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    padding:13px 0;
-}
-
-
-.guide details p,
-.guide details li{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide code{
-
-    background:#e5ecf4;
-
-    padding:2px 4px;
-
-    border-radius:4px;
-}
-
-
-.tip{
-
-    background:#eff6ff;
-
-    color:#234e87;
-
-    padding:14px 17px;
-
-    border-radius:9px;
-
-    margin-top:20px;
-
-    font-size:14px;
-}
-
-
-/* =========================
+/* =====================================
    FOOTER
-========================= */
-
-footer{
-
-    text-align:center;
-
-    padding:25px 20px;
-
-    background:#0f172a;
-
-    color:#cbd5e1;
-
-    font-size:14px;
+===================================== */
+footer {
+    text-align: center;
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+footer strong {
+    color: white;
 }
 
-
-footer strong{
-
-    color:white;
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+@media(max-width:900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
 }
 
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:850px){
-
-    .code-layout{
-
-        grid-template-columns:1fr;
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
     }
-
-    .code-body{
-
-        height:450px;
+    .code-body {
+        height: 450px;
     }
-
-    .sensor-grid{
-
-        grid-template-columns:1fr;
-    }
-
 }
 
-
-@media(max-width:600px){
-
-    .header{
-
-        padding:35px 15px;
+@media(max-width:600px) {
+    .header-logo {
+        width: 95px;
+        max-height: 60px;
+        top: 12px;
+        left: 12px;
     }
-
-    .header h1{
-
-        font-size:28px;
+    .header-content {
+        padding: 85px 12px 25px;
     }
-
-    .container{
-
-        width:92%;
+    .header h1 {
+        font-size: 25px;
     }
-
-    .section{
-
-        padding:21px 18px;
+    .header p {
+        font-size: 15px;
     }
-
-    .steps{
-
-        grid-template-columns:1fr;
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
     }
-
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+    .header-nav-btn {
+        padding: 8px 7px;
+        font-size: 11px;
+        min-height: 36px;
+    }
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+    .container {
+        width: 92%;
+    }
+    .section {
+        padding: 21px 18px;
+    }
+    .steps {
+        grid-template-columns: 1fr;
+    }
+    nav {
+        gap: 11px;
+    }
 }
 
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================
+<!-- =====================================
      HEADER
-========================= -->
-
-
+===================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -1099,22 +615,14 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>ESP32 Dual Servo Controller</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <!-- BACK BUTTON -->
 
             <a
                 href="../index.html"
@@ -1123,8 +631,6 @@ footer strong{
             >
                 &#8592; Back
             </a>
-
-            <!-- HOME ICON ONLY -->
 
             <a
                 href="../../index.html"
@@ -1145,11 +651,7 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <!-- ARDUINO BUTTON -->
 
             <a
                 href="../../Arduino Experiments/index.html"
@@ -1158,16 +660,12 @@ footer strong{
                 Arduino
             </a>
 
-            <!-- ESP BUTTON -->
-
             <a
                 href="../index.html"
                 class="header-nav-btn"
             >
                 ESP
             </a>
-
-            <!-- RASPBERRY PI BUTTON -->
 
             <a
                 href="../../R-Pi Experiments/index.html"
@@ -1182,432 +680,992 @@ footer strong{
 
 </header>
 
-
-
-<!-- =========================
+<!-- =====================================
      NAVIGATION
-========================= -->
-
+===================================== -->
 <nav>
-
-    <a href="../index.html">
-        ← ESP32 Experiments
-    </a>
-
-    <a href="#aim">
-        Aim
-    </a>
-
-    <a href="#components">
-        Components
-    </a>
-
-    <a href="#connections">
-        Connections
-    </a>
-
-    <a href="#circuit">
-        Circuit
-    </a>
-
-    <a href="#working">
-        Working
-    </a>
-
-    <a href="#procedure">
-        Procedure
-    </a>
-
-    <a href="#code">
-        Code
-    </a>
-
-    <a href="#result">
-        Result
-    </a>
-
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
-
-
 
 <main class="container">
 
-        <!-- ==========================
-             PROJECT THUMBNAIL
-        ========================== -->
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
 
-        <section class="section project-thumbnail">
+    <img
+        src="../ESP32 Dual Servo Controller.png"
+        alt="ESP32 Dual Servo Controller Thumbnail"
+    >
+
+</section>
+
+<!-- =====================================
+     1. AIM
+===================================== -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To control two SG90 servo motors independently
+        using an ESP32 DevKit V1 and a Wi-Fi web
+        dashboard with angle sliders, preset positions,
+        Center Both and Refresh controls.
+    </p>
+
+</section>
+
+<!-- =====================================
+     2. ABOUT THE EXPERIMENT
+===================================== -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The ESP32 Dual Servo Controller demonstrates
+        wireless control of two SG90 servo motors
+        using a browser-based dashboard hosted
+        directly by the ESP32.
+    </p>
+
+    <p>
+        The ESP32 generates servo control signals
+        on GPIO13 and GPIO14. Each servo motor
+        can be moved independently between
+        0° and 180°.
+    </p>
+
+    <p>
+        The dashboard provides separate sliders
+        for the left and right motors.
+        Each motor also has preset buttons
+        for 0°, 90° and 180°.
+    </p>
+
+    <p>
+        The Center Both button commands both
+        servo motors to their 90° center positions.
+    </p>
+
+    <p>
+        The Refresh button retrieves the currently
+        commanded angles from the ESP32.
+    </p>
+
+    <p>
+        The browser displays a connection status
+        based on whether its requests to
+        the ESP32 succeed.
+    </p>
+
+    <div class="note">
+        <strong>Important:</strong>
+        The webpage displays the angles commanded
+        to the servos. The experiment does not
+        include a feedback sensor that measures
+        their actual physical positions.
+    </div>
+
+    <h3>Dashboard Functions</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Control</th>
+                    <th>Function</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Left Slider</td>
+                    <td>Controls servo connected to GPIO13</td>
+                </tr>
+
+                <tr>
+                    <td>Right Slider</td>
+                    <td>Controls servo connected to GPIO14</td>
+                </tr>
+
+                <tr>
+                    <td>0°</td>
+                    <td>Commands selected servo to 0°</td>
+                </tr>
+
+                <tr>
+                    <td>90°</td>
+                    <td>Commands selected servo to 90°</td>
+                </tr>
+
+                <tr>
+                    <td>180°</td>
+                    <td>Commands selected servo to 180°</td>
+                </tr>
+
+                <tr>
+                    <td>Center Both</td>
+                    <td>Commands both servos to 90°</td>
+                </tr>
+
+                <tr>
+                    <td>Refresh</td>
+                    <td>Reads the latest commanded angles</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     3. COMPONENTS
+===================================== -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
 
             <img
-                src="../ESP32 Dual Servo Controller.png"
-                alt="ESP32 Dual Servo Controller Thumbnail"
+                src="ESP32 Development Board.png"
+                alt="ESP32 DevKit V1"
             >
 
-        </section>
+            <h3>ESP32 DevKit V1</h3>
+            <p>Quantity: 1</p>
 
-        <!-- ==========================
-             AIM
-        ========================== -->
+        </div>
 
-        <section class="section" id="aim">
-
-            <h2>Aim</h2>
-
-            <p>
-                Control two SG90 servo motors independently
-                using a Wi-Fi web dashboard hosted by ESP32.
-            </p>
-
-        </section>
-
-        <!-- ==========================
-             ABOUT THE EXPERIMENT
-        ========================== -->
-
-        <section class="section">
-
-            <h2>About the Experiment</h2>
-
-            <p>
-                ESP32 serves a local webpage with two angle
-                sliders, 0°, 90°, 180° presets, Center Both,
-                Refresh and browser connection status.
-            </p>
-
-            <p>
-                Servo positions shown are commanded angles,
-                not physical feedback.
-            </p>
-
-        </section>
-
-        <!-- ==========================
-             COMPONENTS REQUIRED
-        ========================== -->
-
-        <section class="section" id="components">
-
-            <h2>Components Required</h2>
-
-            <div class="components-grid">
-
-                <!-- ESP32 -->
-
-                <div class="component-card">
-
-                    <img
-                        src="ESP32 Development Board.png"
-                        alt="ESP32 DevKit V1"
-                    >
-
-                    <h3>ESP32 DevKit V1</h3>
-
-                    <p>Quantity: 1</p>
-
-                </div>
-
-                <!-- SERVO MOTOR -->
-
-                <div class="component-card">
-
-                    <img
-                        src="Servo Motor.png"
-                        alt="SG90 Servo Motor"
-                    >
-
-                    <h3>SG90 Servo Motor</h3>
-
-                    <p>Quantity: 2</p>
-
-                </div>
-
-                <!-- BREADBOARD -->
-
-                <div class="component-card">
-
-                    <img
-                        src="Breadboard.png"
-                        alt="Breadboard"
-                    >
-
-                    <h3>Breadboard</h3>
-
-                    <p>Quantity: 1</p>
-
-                </div>
-
-                <!-- JUMPER WIRES -->
-
-                <div class="component-card">
-
-                    <img
-                        src="Jumper Wires.png"
-                        alt="Jumper Wires"
-                    >
-
-                    <h3>Jumper Wires</h3>
-
-                    <p>Quantity: As required</p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- ==========================
-             CIRCUIT CONNECTIONS
-        ========================== -->
-
-        <section class="section" id="connections">
-
-            <h2>Circuit Connections</h2>
-
-            <div class="table-wrap">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Component</th>
-                            <th>Connection</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>
-                                Left SG90 signal
-                                (orange/yellow)
-                            </td>
-                            <td>ESP32 GPIO 13</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                Right SG90 signal
-                                (orange/yellow)
-                            </td>
-                            <td>ESP32 GPIO 14</td>
-                        </tr>
-
-                        <tr>
-                            <td>Both servo red wires</td>
-                            <td>External regulated +5 V</td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                Both servo brown/black wires
-                            </td>
-                            <td>External supply GND</td>
-                        </tr>
-
-                        <tr>
-                            <td>ESP32 GND</td>
-                            <td>
-                                External supply GND
-                                (common ground)
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div class="note">
-
-                <strong>Safety:</strong>
-
-                Both servos need a regulated external
-                5V supply with adequate current.
-
-                Never connect them to ESP32 3.3V.
-
-                Disconnect power before changing wiring.
-
-            </div>
-
-        </section>
-
-        <!-- ==========================
-             CIRCUIT DIAGRAM
-        ========================== -->
-
-        <section class="section" id="circuit">
-
-            <h2>Circuit Diagram</h2>
+        <div class="component-card">
 
             <img
-                class="circuit-img"
-                src="ESP32 Dual Servo Controller Circuit.png"
-                alt="ESP32 Dual Servo Controller Circuit Diagram"
+                src="Servo Motor.png"
+                alt="SG90 Servo Motor"
             >
 
-        </section>
+            <h3>SG90 Servo Motor</h3>
+            <p>Quantity: 2</p>
 
-        <!-- ==========================
-             WORKING PRINCIPLE
-        ========================== -->
+        </div>
 
-        <section class="section" id="working">
+        <div class="component-card">
 
-            <h2>Working Principle</h2>
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
 
-            <p class="flow">
-                Browser sliders / preset buttons
-                &rarr; Wi-Fi
-                &rarr; ESP32 HTTP server
-                &rarr; GPIO 13 and GPIO 14 PWM
-                &rarr; Two SG90 servos
-            </p>
+            <h3>Breadboard</h3>
+            <p>Quantity: 1</p>
 
-            <p>
-                The dashboard reads software angle values
-                through <code>/angles</code> and sends
-                new positions through <code>/set</code>.
-            </p>
+        </div>
 
-        </section>
+        <div class="component-card">
 
-        <!-- ==========================
-             PROCEDURE
-        ========================== -->
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
 
-        <section class="section" id="procedure">
+            <h3>Jumper Wires</h3>
+            <p>Quantity: As required</p>
 
-            <h2>Procedure</h2>
+        </div>
 
-            <ol>
+    </div>
 
-                <li>
-                    Connect left servo signal to GPIO13
-                    and right servo signal to GPIO14.
-                </li>
+    <div class="note">
 
-                <li>
-                    Connect both servos to an external
-                    regulated 5V supply, and connect its
-                    ground to ESP32 GND.
-                </li>
+        <strong>Additional Power Requirement:</strong>
 
-                <li>
-                    Install the ESP32 board support and
-                    ESP32Servo library in Arduino IDE.
-                </li>
+        <p>
+            Use a separate regulated 5V supply
+            rated for the combined current
+            required by both servo motors.
+        </p>
 
-                <li>
-                    Replace the Wi-Fi placeholders in the
-                    sketch with your own 2.4 GHz network
-                    credentials.
-                </li>
+        <p>
+            The servos must share a common ground
+            with the ESP32.
+        </p>
 
-                <li>
-                    Select your ESP32 DevKit board and
-                    upload the code.
-                </li>
+        <strong>Required Libraries:</strong>
 
-                <li>
-                    Open Serial Monitor at 115200 baud
-                    and note the displayed IP address.
-                </li>
+        <ul>
+            <li>WiFi.h</li>
+            <li>WebServer.h</li>
+            <li>ESP32Servo.h</li>
+        </ul>
 
-                <li>
-                    Open that address in a browser on
-                    the same reachable network.
-                </li>
+    </div>
 
-                <li>
-                    Move sliders, test presets,
-                    Center Both and Refresh.
-                </li>
+</section>
 
-            </ol>
+<!-- =====================================
+     4. CIRCUIT CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
 
-        </section>
+    <h2>Circuit Connections</h2>
 
-        <!-- ==========================
-             ARDUINO CODE
-        ========================== -->
+    <div class="table-wrap">
 
-        <section class="section" id="code"><div class="code-lesson"><p class="eyebrow">ESP32 Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">ESP32 Dual Servo Controller · Select a step to highlight the corresponding program section.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">ESP32_Dual_Servo_Controller.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step. The matching section of code will light up on the left.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load libraries</button>
-<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set Wi-Fi credentials</button>
-<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Assign servo pins</button>
-<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Serve dashboard</button>
-<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Set servo angles</button>
-<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Initialize and connect</button>
-<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Handle browser requests</button>
-<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Run server</button></div><div class="explanation" id="explanation"></div><details><summary>Check Your Understanding</summary><p>Which GPIO pins control the two servos? <strong>GPIO 13 and GPIO 14.</strong></p></details></article></div><p class="tip"><strong>Try it:</strong> Connect to the ESP32 web dashboard and move the two servos independently.</p></div></section>
+        <table>
 
-        <!-- ==========================
-             EXPECTED OUTPUT
-        ========================== -->
+            <thead>
+                <tr>
+                    <th>Component Pin</th>
+                    <th>Connection</th>
+                    <th>Function</th>
+                </tr>
+            </thead>
 
-        <section class="section">
+            <tbody>
 
-            <h2>Expected Output</h2>
+                <tr>
+                    <td>Left SG90 Signal (Orange/Yellow)</td>
+                    <td>ESP32 GPIO13</td>
+                    <td>Left Servo Control</td>
+                </tr>
 
-            <p>
-                The webpage shows separate left and right
-                servo sliders and preset controls.
-            </p>
+                <tr>
+                    <td>Right SG90 Signal (Orange/Yellow)</td>
+                    <td>ESP32 GPIO14</td>
+                    <td>Right Servo Control</td>
+                </tr>
 
-            <p>
-                At startup both servos move to 90°.
-                Changing either slider commands its
-                servo to the selected angle between
-                0° and 180°.
-            </p>
+                <tr>
+                    <td>Both Servo Red Wires</td>
+                    <td>External Regulated +5V</td>
+                    <td>Motor Power</td>
+                </tr>
 
-        </section>
+                <tr>
+                    <td>Both Servo Brown/Black Wires</td>
+                    <td>External Supply GND</td>
+                    <td>Motor Ground</td>
+                </tr>
 
-        <!-- ==========================
-             RESULT
-        ========================== -->
+                <tr>
+                    <td>ESP32 GND</td>
+                    <td>External Supply GND</td>
+                    <td>Common Ground</td>
+                </tr>
 
-        <section class="section" id="result">
+            </tbody>
 
-            <h2>Result</h2>
+        </table>
 
-            <p>
-                Two SG90 servos can be independently
-                commanded through the ESP32 local
-                Wi-Fi dashboard.
-            </p>
+    </div>
 
-        </section>
+    <h3>Servo Configuration</h3>
 
-        <!-- ==========================
-             WHAT YOU LEARN
-        ========================== -->
+    <div class="table-wrap">
 
-        <section class="section">
+        <table>
 
-            <h2>What You Learn</h2>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
 
-            <p>
-                ESP32 web server programming,
-                Wi-Fi communication,
-                servo PWM signals,
-                GPIO interfacing,
-                common-ground wiring,
-                browser controls and
-                JSON API responses.
-            </p>
+            <tbody>
 
-        </section>
+                <tr>
+                    <td>Left Servo</td>
+                    <td>GPIO13</td>
+                </tr>
 
-    </main><footer><strong>ESP32 Experiment</strong><br>ESP32 Dual Servo Controller</footer>
-<script type="text/plain" id="esp32-program">
-#include &lt;WiFi.h&gt;
-#include &lt;WebServer.h&gt;
-#include &lt;ESP32Servo.h&gt;
+                <tr>
+                    <td>Right Servo</td>
+                    <td>GPIO14</td>
+                </tr>
 
-const char* WIFI_SSID = "YOUR_WIFI_NAME";
-const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
+                <tr>
+                    <td>Servo Frequency</td>
+                    <td>50 Hz</td>
+                </tr>
+
+                <tr>
+                    <td>Servo Angle Range</td>
+                    <td>0°–180° commanded</td>
+                </tr>
+
+                <tr>
+                    <td>Initial Angle</td>
+                    <td>90° for both servos</td>
+                </tr>
+
+                <tr>
+                    <td>Web Server</td>
+                    <td>Port 80</td>
+                </tr>
+
+                <tr>
+                    <td>Serial Monitor</td>
+                    <td>115200 baud</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Important Safety Instructions:</strong>
+
+        <p>
+            Power both SG90 servo motors using an
+            external regulated 5V supply with
+            adequate current capacity.
+        </p>
+
+        <p>
+            Do not power the two servos from
+            the ESP32 3.3V pin.
+        </p>
+
+        <p>
+            Connect ESP32 GND and external
+            supply GND together.
+        </p>
+
+        <p>
+            Servo motors can draw high startup
+            and stall currents. Avoid forcing
+            the servo arms against mechanical stops.
+        </p>
+
+        <p>
+            The 500–2400 µs pulse range used
+            in the sketch should be checked
+            against the actual servo specification.
+            Not every SG90 unit supports the
+            entire range without mechanical strain.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     5. CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="ESP32 Dual Servo Controller Circuit.png"
+        alt="ESP32 Dual Servo Controller Circuit Diagram"
+    >
+
+</section>
+
+<!-- =====================================
+     6. WORKING PRINCIPLE
+===================================== -->
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">ESP32 Initializes</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Both Servos Move to 90°</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">ESP32 Connects to Wi-Fi</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">HTTP Web Server Starts</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Open Dashboard in Browser</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Adjust Servo Slider or Preset</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Browser Sends Angle Request</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">ESP32 Checks Requested Angles</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Servo Control Signals Updated</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Dashboard Displays Commanded Angles</div>
+
+    </div>
+
+    <h3>Servo PWM Signals</h3>
+
+    <p>
+        The ESP32Servo library generates
+        periodic servo control signals
+        on GPIO13 and GPIO14.
+    </p>
+
+    <h3>Independent Servo Control</h3>
+
+    <p>
+        The web interface allows different
+        commanded angles for each servo.
+    </p>
+
+    <h3>HTTP Communication</h3>
+
+    <p>
+        The browser sends angle commands
+        to the /set endpoint.
+    </p>
+
+    <p>
+        The /angles endpoint returns
+        the currently commanded angles
+        in JSON format.
+    </p>
+
+    <h3>Center Both</h3>
+
+    <p>
+        Selecting Center Both sends
+        a 90° command to each servo.
+    </p>
+
+    <h3>Refresh</h3>
+
+    <p>
+        The Refresh control retrieves
+        the current stored angle values
+        from the ESP32.
+    </p>
+
+</section>
+
+<!-- =====================================
+     7. PROCEDURE
+===================================== -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+
+        <li>
+            Arrange the ESP32 DevKit V1,
+            two SG90 servo motors,
+            breadboard and jumper wires.
+        </li>
+
+        <li>
+            Connect the left servo signal
+            wire to GPIO13.
+        </li>
+
+        <li>
+            Connect the right servo signal
+            wire to GPIO14.
+        </li>
+
+        <li>
+            Connect both servo red wires
+            to an external regulated +5V supply.
+        </li>
+
+        <li>
+            Connect both servo ground wires
+            to the external supply ground.
+        </li>
+
+        <li>
+            Connect ESP32 GND to
+            the external supply ground.
+        </li>
+
+        <li>
+            Check all wiring before applying power.
+        </li>
+
+        <li>
+            Open Arduino IDE and install
+            the ESP32 board package.
+        </li>
+
+        <li>
+            Install the ESP32Servo library.
+        </li>
+
+        <li>
+            Create a sketch named
+            ESP32_Dual_Servo_Controller.ino.
+        </li>
+
+        <li>
+            Copy the complete program
+            from Explore the Code.
+        </li>
+
+        <li>
+            Enter your Wi-Fi SSID
+            and password.
+        </li>
+
+        <li>
+            Select the correct ESP32 board
+            and serial port.
+        </li>
+
+        <li>
+            Verify and upload the program.
+        </li>
+
+        <li>
+            Open Serial Monitor
+            at 115200 baud.
+        </li>
+
+        <li>
+            Note the IP address
+            printed by the ESP32.
+        </li>
+
+        <li>
+            Connect your browser device
+            to the same reachable network.
+        </li>
+
+        <li>
+            Open the ESP32 IP address.
+        </li>
+
+        <li>
+            Observe the Dual Servo
+            Control dashboard.
+        </li>
+
+        <li>
+            Move the left servo slider.
+        </li>
+
+        <li>
+            Move the right servo slider.
+        </li>
+
+        <li>
+            Test 0°, 90° and 180°
+            presets as supported by the servos.
+        </li>
+
+        <li>
+            Select Center Both and observe
+            both motors moving to 90°.
+        </li>
+
+        <li>
+            Select Refresh and verify
+            both angle values.
+        </li>
+
+    </ol>
+
+</section>
+
+<!-- =====================================
+     8. EXPLORE THE CODE
+===================================== -->
+<section class="section" id="code">
+
+    <div class="code-lesson">
+
+        <p class="eyebrow">
+            ESP32 Experiment · Code Review
+        </p>
+
+        <h2 class="lesson-title">
+            Explore the Code
+        </h2>
+
+        <p class="intro">
+            Select an explanation to highlight
+            the complete corresponding code
+            section in blue.
+            Copy Code copies the full ESP32 sketch.
+        </p>
+
+        <div class="code-layout">
+
+            <article class="code-panel">
+
+                <div class="code-top">
+
+                    <span class="filename">
+                        ESP32_Dual_Servo_Controller.ino
+                    </span>
+
+                    <button
+                        type="button"
+                        class="copy-button"
+                        onclick="copyCode()"
+                    >
+                        Copy Code
+                    </button>
+
+                </div>
+
+                <div class="code-body" id="code-body">
+                    <code id="code-lines"></code>
+                </div>
+
+            </article>
+
+            <article class="guide">
+
+                <h2>Understand it step by step</h2>
+
+                <p>
+                    Choose a step to highlight
+                    its matching code section
+                    on the left.
+                </p>
+
+                <div
+                    class="steps"
+                    id="steps-list"
+                ></div>
+
+                <div
+                    class="explanation"
+                    id="explanation"
+                    aria-live="polite"
+                ></div>
+
+                <details>
+                    <summary>
+                        Explore More: Servo PWM
+                    </summary>
+
+                    <p>
+                        SG90 servos respond to periodic
+                        control pulses that represent
+                        target positions.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        Explore More: Independent Control
+                    </summary>
+
+                    <p>
+                        Separate Servo objects allow
+                        each motor to receive
+                        its own angle command.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        Explore More: Web API
+                    </summary>
+
+                    <p>
+                        The /set route accepts requested
+                        angles and /angles returns
+                        the current software values.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        Explore More: Common Ground
+                    </summary>
+
+                    <p>
+                        Sharing a ground reference
+                        lets the externally powered
+                        servos interpret the ESP32
+                        control signals correctly.
+                    </p>
+                </details>
+
+                <details>
+                    <summary>
+                        Check Your Understanding
+                    </summary>
+
+                    <ol>
+                        <li>Which GPIO controls the left servo?</li>
+                        <li>Which GPIO controls the right servo?</li>
+                        <li>What is the initial position?</li>
+                        <li>Why is external 5V required?</li>
+                        <li>Does the dashboard measure actual servo position?</li>
+                    </ol>
+
+                    <p>
+                        <strong>Answers:</strong>
+                        GPIO13; GPIO14; 90°;
+                        to provide adequate motor power;
+                        no, it displays commanded angles.
+                    </p>
+                </details>
+
+            </article>
+
+        </div>
+
+        <p class="tip">
+            <strong>Try It:</strong>
+            Command the left servo to 45°
+            and the right servo to 135°.
+            Observe their independent movements.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     9. EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Initial Dashboard</h3>
+
+    <div class="output-box">
+<pre>DUAL SERVO CONTROL
+
+Status: Connected
+
+LEFT SERVO
+Angle: 90°
+
+RIGHT SERVO
+Angle: 90°
+
+[ Center Both ] [ Refresh ]</pre>
+    </div>
+
+    <h3>Independent Servo Movement</h3>
+
+    <div class="output-box">
+<pre>LEFT SERVO: 45°
+
+RIGHT SERVO: 135°
+
+Both servo motors receive
+independent angle commands.</pre>
+    </div>
+
+    <h3>Serial Monitor</h3>
+
+    <div class="output-box">
+<pre>Left: 90 | Right: 90
+
+Dashboard: http://192.168.x.x
+
+Left: 45 | Right: 135
+
+Left: 0 | Right: 135
+
+Left: 90 | Right: 90</pre>
+    </div>
+
+    <h3>Dashboard Controls</h3>
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Control</th>
+                    <th>Expected Output</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Left Slider</td>
+                    <td>Changes left servo command</td>
+                </tr>
+
+                <tr>
+                    <td>Right Slider</td>
+                    <td>Changes right servo command</td>
+                </tr>
+
+                <tr>
+                    <td>Preset Buttons</td>
+                    <td>Commands 0°, 90° or 180°</td>
+                </tr>
+
+                <tr>
+                    <td>Center Both</td>
+                    <td>Sets both commands to 90°</td>
+                </tr>
+
+                <tr>
+                    <td>Refresh</td>
+                    <td>Reads both stored angles</td>
+                </tr>
+
+                <tr>
+                    <td>Status</td>
+                    <td>Shows browser connection result</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+        The actual angular movement depends
+        on servo calibration, supply voltage
+        and mechanical limitations.
+    </div>
+
+</section>
+
+<!-- =====================================
+     10. DASHBOARD
+     IMMEDIATELY AFTER OUTPUT
+===================================== -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="ESP32 Dual Servo Controller Dashboard.png"
+            alt="ESP32 Dual Servo Controller Dashboard"
+        >
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     11. RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The ESP32 Dual Servo Controller
+        demonstrates independent wireless
+        control of two SG90 servo motors
+        using an ESP32-hosted web dashboard.
+    </p>
+
+    <p>
+        Users can command individual servo
+        angles using sliders or preset buttons,
+        center both servos at 90°,
+        and retrieve the current software
+        angle values.
+    </p>
+
+</section>
+
+<!-- =====================================
+     12. WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing SG90 servos with ESP32.</li>
+        <li>Using GPIO13 and GPIO14 for servo signals.</li>
+        <li>Understanding servo control pulses.</li>
+        <li>Using the ESP32Servo library.</li>
+        <li>Controlling two servos independently.</li>
+        <li>Using an external regulated motor supply.</li>
+        <li>Understanding common-ground connections.</li>
+        <li>Setting servo positions from 0° to 180°.</li>
+        <li>Using angle presets.</li>
+        <li>Centering two servo motors.</li>
+        <li>Connecting ESP32 to Wi-Fi.</li>
+        <li>Creating an HTTP web server.</li>
+        <li>Sending commands from a web browser.</li>
+        <li>Using sliders in a webpage.</li>
+        <li>Returning data using JSON.</li>
+        <li>Understanding commanded versus measured angles.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>ESP32 Dual Servo Controller</div>
+</footer>
+
+<!-- =====================================
+     COMPLETE ESP32 PROGRAM
+     8 CODE HIGHLIGHT SECTIONS
+===================================== -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
+
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;ESP32Servo.h>
+
+// [END 01]
+
+
+// [02] CONFIGURE WIFI
+
+const char* WIFI_SSID =
+    "YOUR_WIFI_NAME";
+
+const char* WIFI_PASSWORD =
+    "YOUR_WIFI_PASSWORD";
+
+// [END 02]
+
+
+// [03] CONFIGURE SERVO PINS
 
 const int LEFT_PIN = 13;
 const int RIGHT_PIN = 14;
@@ -1615,29 +1673,45 @@ const int RIGHT_PIN = 14;
 const int SERVO_MIN_US = 500;
 const int SERVO_MAX_US = 2400;
 
-Servo leftServo, rightServo;
+Servo leftServo;
+Servo rightServo;
+
 WebServer server(80);
 
 int leftAngle = 90;
 int rightAngle = 90;
 
+// [END 03]
+
+
+// [04] CREATE WEB DASHBOARD
+
 const char PAGE[] PROGMEM = R"HTML(
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;!DOCTYPE html>
+&lt;html lang="en">
 
-&lt;head&gt;
-    &lt;meta name="viewport"
-          content="width=device-width, initial-scale=1"&gt;
+&lt;head>
+    &lt;meta charset="UTF-8">
 
-    &lt;title&gt;Dual Servo Control&lt;/title&gt;
+    &lt;meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
-    &lt;style&gt;
+    &lt;title>Dual Servo Control&lt;/title>
+
+    &lt;style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial;
+            font-family: Arial, Helvetica, sans-serif;
             background: #eff6ff;
             color: #1e3a8a;
             text-align: center;
             padding: 20px;
+            margin: 0;
         }
 
         main {
@@ -1653,36 +1727,52 @@ const char PAGE[] PROGMEM = R"HTML(
             border-bottom: 1px solid #ddd;
         }
 
-        input {
+        input[type="range"] {
             width: 90%;
+            accent-color: #2563eb;
         }
 
         button {
-            padding: 10px;
+            padding: 10px 14px;
             margin: 4px;
-            border: 0;
+            border: none;
             border-radius: 7px;
             background: #2563eb;
             color: white;
+            font-weight: bold;
+            cursor: pointer;
         }
-    &lt;/style&gt;
 
-&lt;/head&gt;
+        button:hover {
+            background: #1d4ed8;
+        }
 
-&lt;body&gt;
+        #status {
+            font-weight: bold;
+            color: #2563eb;
+        }
 
-    &lt;main&gt;
+        .note {
+            font-size: 13px;
+            color: #64748b;
+        }
+    &lt;/style>
+&lt;/head>
 
-        &lt;h1&gt;Dual Servo Control&lt;/h1&gt;
+&lt;body>
 
-        &lt;p id="status"&gt;Connecting...&lt;/p&gt;
+    &lt;main>
 
-        &lt;section&gt;
+        &lt;h1>Dual Servo Control&lt;/h1>
 
-            &lt;h2&gt;
+        &lt;p id="status">Connecting...&lt;/p>
+
+        &lt;section>
+
+            &lt;h2>
                 Left:
-                &lt;span id="lv"&gt;90&lt;/span&gt;&amp;deg;
-            &lt;/h2&gt;
+                &lt;span id="lv">90&lt;/span>&amp;deg;
+            &lt;/h2>
 
             &lt;input
                 id="left"
@@ -1691,30 +1781,30 @@ const char PAGE[] PROGMEM = R"HTML(
                 max="180"
                 value="90"
                 oninput="display()"
-            &gt;
+            >
 
-            &lt;div&gt;
-                &lt;button onclick="preset('left',0)"&gt;
+            &lt;div>
+                &lt;button onclick="preset('left',0)">
                     0&amp;deg;
-                &lt;/button&gt;
+                &lt;/button>
 
-                &lt;button onclick="preset('left',90)"&gt;
+                &lt;button onclick="preset('left',90)">
                     90&amp;deg;
-                &lt;/button&gt;
+                &lt;/button>
 
-                &lt;button onclick="preset('left',180)"&gt;
+                &lt;button onclick="preset('left',180)">
                     180&amp;deg;
-                &lt;/button&gt;
-            &lt;/div&gt;
+                &lt;/button>
+            &lt;/div>
 
-        &lt;/section&gt;
+        &lt;/section>
 
-        &lt;section&gt;
+        &lt;section>
 
-            &lt;h2&gt;
+            &lt;h2>
                 Right:
-                &lt;span id="rv"&gt;90&lt;/span&gt;&amp;deg;
-            &lt;/h2&gt;
+                &lt;span id="rv">90&lt;/span>&amp;deg;
+            &lt;/h2>
 
             &lt;input
                 id="right"
@@ -1723,129 +1813,204 @@ const char PAGE[] PROGMEM = R"HTML(
                 max="180"
                 value="90"
                 oninput="display()"
-            &gt;
+            >
 
-            &lt;div&gt;
-                &lt;button onclick="preset('right',0)"&gt;
+            &lt;div>
+                &lt;button onclick="preset('right',0)">
                     0&amp;deg;
-                &lt;/button&gt;
+                &lt;/button>
 
-                &lt;button onclick="preset('right',90)"&gt;
+                &lt;button onclick="preset('right',90)">
                     90&amp;deg;
-                &lt;/button&gt;
+                &lt;/button>
 
-                &lt;button onclick="preset('right',180)"&gt;
+                &lt;button onclick="preset('right',180)">
                     180&amp;deg;
-                &lt;/button&gt;
-            &lt;/div&gt;
+                &lt;/button>
+            &lt;/div>
 
-        &lt;/section&gt;
+        &lt;/section>
 
-        &lt;button onclick="presetBoth()"&gt;
+        &lt;button onclick="centerBoth()">
             Center Both
-        &lt;/button&gt;
+        &lt;/button>
 
-        &lt;button onclick="refresh()"&gt;
+        &lt;button onclick="refresh()">
             Refresh
-        &lt;/button&gt;
+        &lt;/button>
 
-    &lt;/main&gt;
+        &lt;p class="note">
+            Displayed angles are commanded values,
+            not physical position feedback.
+        &lt;/p>
 
-&lt;script&gt;
+    &lt;/main>
 
-const l = document.getElementById('left');
-const r = document.getElementById('right');
+    &lt;script>
+        const left = document.getElementById(
+            "left"
+        );
 
-function display() {
-    document.getElementById('lv').textContent = l.value;
-    document.getElementById('rv').textContent = r.value;
-}
+        const right = document.getElementById(
+            "right"
+        );
 
-let debounce;
+        let debounce;
 
-function send() {
-    clearTimeout(debounce);
+        function display() {
+            document.getElementById(
+                "lv"
+            ).textContent = left.value;
 
-    debounce = setTimeout(async () =&gt; {
-        try {
-            let res = await fetch(
-                '/set?left=' + l.value + '&amp;right=' + r.value
+            document.getElementById(
+                "rv"
+            ).textContent = right.value;
+        }
+
+        function setStatus(message) {
+            document.getElementById(
+                "status"
+            ).textContent = message;
+        }
+
+        function apply(angles) {
+            left.value = angles.left;
+            right.value = angles.right;
+            display();
+        }
+
+        function send() {
+            clearTimeout(debounce);
+
+            debounce = setTimeout(
+                async function() {
+                    try {
+                        const response = await fetch(
+                            "/set?left=" +
+                            left.value +
+                            "&right=" +
+                            right.value,
+                            {cache: "no-store"}
+                        );
+
+                        if (!response.ok) {
+                            throw new Error(
+                                "Request failed"
+                            );
+                        }
+
+                        apply(
+                            await response.json()
+                        );
+
+                        setStatus("Connected");
+
+                    } catch (error) {
+                        setStatus(
+                            "Connection error"
+                        );
+                    }
+                },
+                80
             );
+        }
 
-            if (!res.ok) {
-                throw Error();
+        function preset(id, angle) {
+            document.getElementById(
+                id
+            ).value = angle;
+
+            display();
+            send();
+        }
+
+        function centerBoth() {
+            left.value = 90;
+            right.value = 90;
+
+            display();
+            send();
+        }
+
+        async function refresh() {
+            try {
+                const response = await fetch(
+                    "/angles",
+                    {cache: "no-store"}
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Request failed"
+                    );
+                }
+
+                apply(
+                    await response.json()
+                );
+
+                setStatus("Connected");
+
+            } catch (error) {
+                setStatus(
+                    "Connection error"
+                );
             }
-
-            apply(await res.json());
-            status('Connected');
-
-        } catch (e) {
-            status('Connection error');
-        }
-    }, 80);
-}
-
-function status(s) {
-    document.getElementById('status').textContent = s;
-}
-
-function apply(a) {
-    l.value = a.left;
-    r.value = a.right;
-    display();
-}
-
-function preset(id, a) {
-    document.getElementById(id).value = a;
-    display();
-    send();
-}
-
-function presetBoth() {
-    l.value = 90;
-    r.value = 90;
-    display();
-    send();
-}
-
-async function refresh() {
-    try {
-        let res = await fetch('/angles');
-
-        if (!res.ok) {
-            throw Error();
         }
 
-        apply(await res.json());
-        status('Connected');
+        left.addEventListener(
+            "change",
+            send
+        );
 
-    } catch (e) {
-        status('Connection error');
-    }
-}
+        right.addEventListener(
+            "change",
+            send
+        );
 
-l.addEventListener('change', send);
-r.addEventListener('change', send);
+        refresh();
+    &lt;/script>
 
-refresh();
-
-&lt;/script&gt;
-
-&lt;/body&gt;
-&lt;/html&gt;
+&lt;/body>
+&lt;/html>
 )HTML";
 
+// [END 04]
+
+
+// [05] SET SERVO ANGLES
+
 String anglesJSON() {
-    return String("{\"left\":") + leftAngle +
-           ",\"right\":" + rightAngle + "}";
+
+    return String("{\"left\":") +
+        leftAngle +
+        ",\"right\":" +
+        rightAngle +
+        "}";
 }
 
-void setAngles(int l, int r) {
-    leftAngle = constrain(l, 0, 180);
-    rightAngle = constrain(r, 0, 180);
 
-    leftServo.write(leftAngle);
-    rightServo.write(rightAngle);
+void setAngles(int l, int r) {
+
+    leftAngle = constrain(
+        l,
+        0,
+        180
+    );
+
+    rightAngle = constrain(
+        r,
+        0,
+        180
+    );
+
+    leftServo.write(
+        leftAngle
+    );
+
+    rightServo.write(
+        rightAngle
+    );
 
     Serial.printf(
         "Left: %d | Right: %d\n",
@@ -1853,6 +2018,11 @@ void setAngles(int l, int r) {
         rightAngle
     );
 }
+
+// [END 05]
+
+
+// [06] INITIALIZE HARDWARE AND WIFI
 
 void setup() {
 
@@ -1876,16 +2046,23 @@ void setup() {
         SERVO_MAX_US
     );
 
-    setAngles(90, 90);
+    setAngles(
+        90,
+        90
+    );
 
     WiFi.mode(WIFI_STA);
-    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+    WiFi.begin(
+        WIFI_SSID,
+        WIFI_PASSWORD
+    );
 
     unsigned long started = millis();
 
     while (
         WiFi.status() != WL_CONNECTED &amp;&amp;
-        millis() - started &lt; 30000
+        millis() - started &lt; 30000UL
     ) {
         delay(500);
         Serial.print(".");
@@ -1893,8 +2070,13 @@ void setup() {
 
     if (WiFi.status() == WL_CONNECTED) {
 
-        Serial.print("\nDashboard: http://");
-        Serial.println(WiFi.localIP());
+        Serial.print(
+            "\nDashboard: http://"
+        );
+
+        Serial.println(
+            WiFi.localIP()
+        );
 
     } else {
 
@@ -1903,317 +2085,542 @@ void setup() {
         );
     }
 
-    server.on("/", HTTP_GET, []() {
-        server.send_P(
-            200,
-            "text/html",
-            PAGE
-        );
-    });
+// [END 06]
 
-    server.on("/angles", HTTP_GET, []() {
 
-        server.sendHeader(
-            "Cache-Control",
-            "no-store"
-        );
+// [07] HANDLE BROWSER REQUESTS
 
-        server.send(
-            200,
-            "application/json",
-            anglesJSON()
-        );
-    });
+    server.on(
+        "/",
+        HTTP_GET,
+        []() {
+            server.send_P(
+                200,
+                "text/html",
+                PAGE
+            );
+        }
+    );
 
-    server.on("/set", HTTP_GET, []() {
+    server.on(
+        "/angles",
+        HTTP_GET,
+        []() {
 
-        if (
-            !server.hasArg("left") ||
-            !server.hasArg("right")
-        ) {
-            server.send(
-                400,
-                "application/json",
-                "{\"error\":\"Missing angles\"}"
+            server.sendHeader(
+                "Cache-Control",
+                "no-store"
             );
 
-            return;
+            server.send(
+                200,
+                "application/json",
+                anglesJSON()
+            );
         }
+    );
 
-        setAngles(
-            server.arg("left").toInt(),
-            server.arg("right").toInt()
-        );
+    server.on(
+        "/set",
+        HTTP_GET,
+        []() {
 
-        server.sendHeader(
-            "Cache-Control",
-            "no-store"
-        );
+            if (
+                !server.hasArg("left") ||
+                !server.hasArg("right")
+            ) {
 
-        server.send(
-            200,
-            "application/json",
-            anglesJSON()
-        );
-    });
+                server.send(
+                    400,
+                    "application/json",
+                    "{\"error\":\"Missing angles\"}"
+                );
+
+                return;
+            }
+
+            String leftText =
+                server.arg("left");
+
+            String rightText =
+                server.arg("right");
+
+            // Reject non-integer parameters.
+
+            for (size_t i = 0;
+                 i &lt; leftText.length();
+                 i++) {
+
+                if (!isDigit(leftText[i])) {
+
+                    server.send(
+                        400,
+                        "application/json",
+                        "{\"error\":\"Invalid left angle\"}"
+                    );
+
+                    return;
+                }
+            }
+
+            for (size_t i = 0;
+                 i &lt; rightText.length();
+                 i++) {
+
+                if (!isDigit(rightText[i])) {
+
+                    server.send(
+                        400,
+                        "application/json",
+                        "{\"error\":\"Invalid right angle\"}"
+                    );
+
+                    return;
+                }
+            }
+
+            if (
+                leftText.length() == 0 ||
+                rightText.length() == 0
+            ) {
+
+                server.send(
+                    400,
+                    "application/json",
+                    "{\"error\":\"Empty angle\"}"
+                );
+
+                return;
+            }
+
+            int requestedLeft =
+                leftText.toInt();
+
+            int requestedRight =
+                rightText.toInt();
+
+            setAngles(
+                requestedLeft,
+                requestedRight
+            );
+
+            server.sendHeader(
+                "Cache-Control",
+                "no-store"
+            );
+
+            server.send(
+                200,
+                "application/json",
+                anglesJSON()
+            );
+        }
+    );
 
     server.begin();
+
+    Serial.println(
+        "Dual Servo Web Server Started"
+    );
 }
+
+// [END 07]
+
+
+// [08] RUN WEB SERVER
 
 void loop() {
+
     server.handleClient();
 }
-</script>
+
+// [END 08]
+</textarea>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER JAVASCRIPT
+===================================== -->
 <script>
 
+const program = document
+    .getElementById("esp32-program")
+    .value
+    .trim();
 
-const program =
+const lines = program.split("\n");
 
-document
-
-.getElementById(
-    "esp32-program"
-)
-
-.textContent
-
-.trim();
-
-
-const lines =
-
-program.split(
-    "\n"
-);
-
-
-/* =========================
-   CODE STEPS
-========================= */
-
+/* CODE EXPLANATIONS */
 const steps = [
-{title:"Load libraries",search:"#include <WiFi.h>",text:"Wi-Fi, WebServer and ESP32Servo libraries are loaded."},
-{title:"Set Wi-Fi credentials",search:"const char* WIFI_SSID",text:"Enter network credentials before uploading."},
-{title:"Assign servo pins",search:"const int LEFT_PIN",text:"GPIO 13 and GPIO 14 provide servo control signals."},
-{title:"Serve dashboard",search:"const char PAGE[] PROGMEM",text:"The ESP32 serves a browser interface for both servo angles."},
-{title:"Set servo angles",search:"void setAngles(",text:"Servo commands are constrained to valid angles."},
-{title:"Initialize and connect",search:"void setup()",text:"Attach servos, start Wi-Fi and register web routes."},
-{title:"Handle browser requests",search:"server.on(",text:"The ESP32 responds to dashboard and angle requests."},
-{title:"Run server",search:"void loop()",text:"Handle incoming web requests continuously."}
+
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Loads WiFi.h, WebServer.h and " +
+            "ESP32Servo.h for wireless servo control."
+    },
+
+    {
+        number: "02",
+        label: "CONFIGURE WIFI",
+        title: "Configure Wi-Fi",
+        text:
+            "Defines the network SSID and " +
+            "password for the ESP32 connection."
+    },
+
+    {
+        number: "03",
+        label: "CONFIGURE SERVO PINS",
+        title: "Configure Servo Pins",
+        text:
+            "Assigns GPIO13 and GPIO14, " +
+            "configures pulse ranges and " +
+            "creates the servo objects."
+    },
+
+    {
+        number: "04",
+        label: "CREATE WEB DASHBOARD",
+        title: "Create Web Dashboard",
+        text:
+            "Defines the complete HTML, CSS " +
+            "and JavaScript dashboard with " +
+            "two sliders, presets and controls."
+    },
+
+    {
+        number: "05",
+        label: "SET SERVO ANGLES",
+        title: "Set Servo Angles",
+        text:
+            "Constrains requested angles, " +
+            "updates both servo commands " +
+            "and returns their software values."
+    },
+
+    {
+        number: "06",
+        label: "INITIALIZE HARDWARE AND WIFI",
+        title: "Initialize and Connect",
+        text:
+            "Sets the servo frequency, " +
+            "attaches both motors, moves them " +
+            "to 90 degrees and connects Wi-Fi."
+    },
+
+    {
+        number: "07",
+        label: "HANDLE BROWSER REQUESTS",
+        title: "Handle Browser Requests",
+        text:
+            "Registers the dashboard, angles " +
+            "and set routes and responds " +
+            "with JSON data."
+    },
+
+    {
+        number: "08",
+        label: "RUN WEB SERVER",
+        title: "Run Server",
+        text:
+            "Continuously handles browser " +
+            "requests through the ESP32 " +
+            "HTTP web server."
+    }
+
 ];
 
+/* ESCAPE HTML */
+function escapeHtml(value) {
 
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHtml(text)
-{
-
-    return text
-
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-
-    .replace(
-        /</g,
-        "&lt;"
-    )
-
-    .replace(
-        />/g,
-        "&gt;"
-    );
-
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
+/* DISPLAY CODE WITH LINE NUMBERS */
+function displayCode() {
 
-/* =========================
-   DISPLAY CODE
-========================= */
-
-function displayCode()
-{
-
-    let output = "";
-
-
-    lines.forEach(
-
-        function(
-            line,
-            index
-        )
-        {
-
-            output +=
-
-            '<span class="code-line" ' +
-
-            'id="line-' +
-
-            (index + 1) +
-
-            '">' +
-
-            '<span class="line-number">' +
-
-            (index + 1) +
-
-            '</span>' +
-
-            '<span>' +
-
-            escapeHtml(line) +
-
-            '</span>' +
-
-            '</span>';
-
-        }
-
-    );
-
-
-    document
-
-    .getElementById(
+    const container = document.getElementById(
         "code-lines"
-    )
+    );
 
-    .innerHTML =
-    output;
+    container.innerHTML = lines.map(
+        function(line, index) {
 
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+        }
+    ).join("");
 }
 
+/* FIND EXACT CODE MARKERS */
+function findMarker(marker) {
 
-/* =========================
-   SHOW STEP
-========================= */
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
 
-function showStep(index)
-{
+/* DETERMINE HIGHLIGHT RANGES */
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "// [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "// [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid: start >= 0 && end >= start
+        };
+    }
+);
+
+/* CREATE STEP BUTTONS */
+function createSteps() {
+
+    const container = document.getElementById(
+        "steps-list"
+    );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button = document.createElement(
+                "button"
+            );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number = document.createElement(
+                "span"
+            );
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const label = document.createElement(
+                "span"
+            );
+
+            label.textContent = step.title;
+
+            button.append(number, label);
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+/* HIGHLIGHT COMPLETE CODE SECTION */
+function showStep(index) {
+
+    document.querySelectorAll(".step").forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+            line.classList.remove("selected");
+        }
+    );
+
     const step = steps[index];
-    document.querySelectorAll(".step").forEach(function(button, i) {
-        button.classList.toggle("active", i === index);
-    });
-    document.querySelectorAll(".code-line").forEach(function(line) {
-        line.classList.remove("selected");
-    });
+    const range = ranges[index];
 
-    // Find the matching source statement. Use the first non-comment
-    // occurrence, and never highlight an unrelated fixed 12-line range.
-    let foundLine = lines.findIndex(function(line) {
-        return line.trim().startsWith(step.search.trim());
-    });
-    if (foundLine < 0) {
-        foundLine = lines.findIndex(function(line) {
-            return line.includes(step.search);
+    const explanation = document.getElementById(
+        "explanation"
+    );
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement(
+        "h3"
+    );
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement(
+        "p"
+    );
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching code section not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const line = document.getElementById(
+            "line-" + (i + 1)
+        );
+
+        if (line) {
+            line.classList.add("selected");
+        }
+    }
+
+    const firstLine = document.getElementById(
+        "line-" + (range.start + 1)
+    );
+
+    const codeBody = document.getElementById(
+        "code-body"
+    );
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+
+            behavior: "smooth"
         });
     }
-
-    if (foundLine >= 0) {
-        let lastLine = foundLine;
-        // Extend across a declaration or a brace-delimited code block.
-        let depth = 0;
-        let blockStarted = false;
-        for (let i = foundLine; i < lines.length; i++) {
-            const current = lines[i];
-            for (const ch of current) {
-                if (ch === "{") { depth++; blockStarted = true; }
-                if (ch === "}") { depth--; }
-            }
-            lastLine = i;
-            if (blockStarted && depth <= 0) break;
-            if (!blockStarted && i > foundLine && current.trim() === "") {
-                lastLine = i - 1;
-                break;
-            }
-            if (i - foundLine >= 35) break;
-        }
-        for (let i = foundLine; i <= lastLine; i++) {
-            document.getElementById("line-" + (i + 1))?.classList.add("selected");
-        }
-        const selectedLine = document.getElementById("line-" + (foundLine + 1));
-        const codeBody = document.getElementById("code-body");
-        if (selectedLine && codeBody) {
-            codeBody.scrollTo({
-                top: selectedLine.offsetTop - codeBody.offsetTop - 20,
-                behavior: "smooth"
-            });
-        }
-    }
-    document.getElementById("explanation").innerHTML =
-        "<h3>" + (index + 1) + ". " + step.title + "</h3>" +
-        "<p>" + step.text + "</p>";
 }
 
+/* COPY COMPLETE ESP32 PROGRAM */
+async function copyCode() {
 
-/* =========================
-   COPY CODE
-========================= */
-
-function copyCode()
-{
-
-    navigator
-
-    .clipboard
-
-    .writeText(
-        program
-    )
-
-    .then(
-
-        function()
-        {
-
-            const button =
-
-            document
-
-            .querySelector(
-                ".copy-button"
-            );
-
-
-            button.innerText =
-            "Copied!";
-
-
-            setTimeout(
-
-                function()
-                {
-
-                    button.innerText =
-                    "Copy Code";
-
-                },
-
-                1500
-
-            );
-
-        }
-
+    const button = document.querySelector(
+        ".code-top .copy-button"
     );
 
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field = document.createElement(
+            "textarea"
+        );
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch (error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch (error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
 
-
-/* =========================
-   START
-========================= */
-
+/* INITIALIZE */
 displayCode();
-
+createSteps();
 showStep(0);
 
-
 </script>
+
 </body>
 </html>
