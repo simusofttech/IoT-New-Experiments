@@ -1,66 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ESP32-CAM Motion Security Monitor</title>
 
-
 <style>
-
-/* =========================
-   BASIC PAGE STYLE
-========================= */
-
-*{
-    box-sizing:border-box;
+/* GENERAL DESIGN */
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
 }
 
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-
-    margin:0;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:#f4f7fb;
-
-    color:#222;
-
-    line-height:1.7;
-}
-
-
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
+/* HEADER */
 .header {
-    background: #2563eb;
-    color: white;
     position: relative;
     display: flex;
     flex-direction: column;
     min-height: 230px;
-    padding: 25px 0 0;
+    padding-top: 25px;
+    background: #2563eb;
+    color: white;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
-
 .header-logo {
     position: absolute;
     top: 15px;
@@ -68,90 +40,60 @@ body{
     width: 135px;
     max-height: 75px;
     height: auto;
-    object-fit: contain;
+    padding: 5px;
     background: white;
     border-radius: 5px;
-    padding: 5px;
+    object-fit: contain;
 }
-
-/* CENTER HEADING */
-
 .header-content {
-    text-align: center;
     margin: auto 0;
     padding: 35px 165px;
 }
-
 .header h1 {
     margin: 0 0 8px;
     font-size: 34px;
 }
-
 .header p {
     margin: 0;
     font-size: 17px;
 }
-
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
-
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
-
 .header-nav-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 38px;
     padding: 9px 14px;
-    background: white;
     color: #1e3a8a;
+    background: white;
     border: 1px solid #dbeafe;
     border-radius: 7px;
-    font-size: 13px;
-    font-weight: bold;
     text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    font-size: 13px;
+    font-weight: bold;
 }
-
 .header-nav-btn:hover {
     background: #dbeafe;
-    transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
-
 .home-icon-btn {
     width: 40px;
     height: 38px;
     padding: 8px;
 }
-
 .home-icon-btn svg {
     width: 21px;
     height: 21px;
@@ -162,936 +104,453 @@ body{
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* NAVIGATION */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+nav a:hover {
+    color: #2563eb;
+}
 
+/* MAIN SECTIONS */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 100px;
+}
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+.section h3 {
+    color: #1e3a8a;
+}
+ul, ol {
+    padding-left: 24px;
+}
+li {
+    margin-bottom: 8px;
+}
+
+/* THUMBNAIL */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* COMPONENTS */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+}
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* TABLES */
+.table-wrap {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    min-width: 580px;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background: #2563eb;
+    color: white;
+}
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* CIRCUIT AND NOTES */
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* WORKING FLOW */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+.flow-step {
+    padding: 5px 10px;
+}
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* STATUS CARDS */
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+.status-card {
+    padding: 20px;
+    background: #f8fbff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* CODE EXPLORER */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+.intro {
+    margin-bottom: 22px;
+    color: #526875;
+}
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+.code-panel {
+    min-width: 0;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+}
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.copy-button:hover {
+    background: #eff6ff;
+}
+.code-body {
+    height: 600px;
+    overflow: auto;
+    padding: 16px 0;
+    background: white;
+}
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+.guide > p {
+    color: #526875;
+}
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.step:hover {
+    border-color: #60a5fa;
+}
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+}
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* EXPECTED OUTPUT */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, monospace;
+}
+
+/* CENTERED DASHBOARD */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* FOOTER */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+footer strong {
+    color: white;
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
     }
-
+    .code-body {
+        height: 450px;
+    }
+}
+@media (max-width: 600px) {
     .header-logo {
-        width: 95px;
-        max-height: 60px;
         top: 12px;
         left: 12px;
+        width: 95px;
+        max-height: 60px;
     }
-
     .header-content {
         padding: 85px 12px 25px;
     }
-
     .header h1 {
         font-size: 25px;
     }
-
     .header p {
         font-size: 15px;
     }
-
     .header-buttons {
         padding: 10px 8px;
         gap: 8px;
     }
-
     .header-left-buttons,
     .header-right-buttons {
         gap: 5px;
     }
-
     .header-nav-btn {
+        min-height: 36px;
         padding: 8px 7px;
         font-size: 11px;
-        min-height: 36px;
     }
-
-    .home-icon-btn {
-        width: 36px;
-        height: 36px;
-        padding: 7px;
+    .container {
+        width: 92%;
     }
-}
-
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .section {
+        padding: 20px;
     }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .steps, .status-grid {
+        grid-template-columns: 1fr;
+    }
+    nav {
+        gap: 11px;
     }
 }
-
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
-    }
-
-    .project-thumbnail img {
-        max-height: 280px;
-    }
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-nav{
-
-    display:flex;
-
-    justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:18px;
-
-    padding:13px 15px;
-
-    background:white;
-
-    border-bottom:1px solid #ddd;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:20;
-}
-
-
-nav a{
-
-    text-decoration:none;
-
-    color:#1e3a8a;
-
-    font-size:14px;
-
-    font-weight:bold;
-}
-
-
-nav a:hover{
-
-    color:#2563eb;
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-
-    width:90%;
-
-    max-width:1050px;
-
-    margin:35px auto;
-}
-
-
-.section{
-
-    background:white;
-
-    margin-bottom:24px;
-
-    padding:28px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    box-shadow:
-    0 4px 12px
-    rgba(0,0,0,.06);
-}
-
-
-.section h2{
-
-    margin-top:0;
-
-    margin-bottom:18px;
-
-    color:#1e3a8a;
-
-    font-size:25px;
-
-    border-bottom:
-    2px solid #dbeafe;
-
-    padding-bottom:8px;
-}
-
-
-.section h3{
-
-    color:#1e3a8a;
-}
-
-
-ul,
-ol{
-
-    padding-left:24px;
-}
-
-
-li{
-
-    margin-bottom:8px;
-}
-
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px,1fr)
-    );
-
-    gap:20px;
-}
-
-
-.component-card{
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    padding:20px;
-
-    text-align:center;
-
-    background:white;
-
-    box-shadow:
-    0 2px 8px
-    rgba(0,0,0,.04);
-}
-
-
-.component-card img{
-
-    width:100%;
-
-    height:120px;
-
-    object-fit:contain;
-
-    margin-bottom:15px;
-}
-
-
-.component-card h4{
-
-    color:#1e3a8a;
-
-    margin:0 0 8px;
-
-    font-size:18px;
-}
-
-
-.component-card p{
-
-    color:#475569;
-
-    font-size:14px;
-
-    margin:0;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-
-    overflow-x:auto;
-}
-
-
-table{
-
-    width:100%;
-
-    min-width:620px;
-
-    border-collapse:collapse;
-}
-
-
-th,
-td{
-
-    padding:12px;
-
-    border:1px solid #ddd;
-
-    text-align:left;
-}
-
-
-th{
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-tr:nth-child(even){
-
-    background:#f8fafc;
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-.note{
-
-    margin-top:15px;
-
-    padding:14px;
-
-    background:#eff6ff;
-
-    border-left:
-    5px solid #2563eb;
-
-    border-radius:6px;
-}
-
-
-/* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
-}
-
-
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-
-    text-align:center;
-
-    color:#1e3a8a;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    line-height:2;
-}
-
-
-/* =========================
-   SENSOR CARDS
-========================= */
-
-.sensor-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(3,1fr);
-
-    gap:16px;
-}
-
-
-.sensor-box{
-
-    text-align:center;
-
-    padding:20px;
-
-    border-radius:12px;
-
-    border:1px solid #bfdbfe;
-
-    background:#f8fbff;
-}
-
-
-.sensor-box h3{
-
-    margin-top:0;
-
-    color:#1e3a8a;
-}
-
-
-.sensor-value{
-
-    font-size:26px;
-
-    color:#2563eb;
-
-    font-weight:bold;
-}
-
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-
-    color:#142e3a;
-}
-
-
-.eyebrow{
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    letter-spacing:.08em;
-
-    text-transform:uppercase;
-
-    margin:0 0 4px;
-}
-
-
-.lesson-title{
-
-    font-size:32px !important;
-
-    margin:0 0 8px !important;
-
-    color:#1e3a8a !important;
-
-    border:0 !important;
-
-    padding:0 !important;
-}
-
-
-.intro{
-
-    color:#526875;
-
-    margin:0 0 22px;
-}
-
-
-/* CODE + EXPLANATION */
-
-.code-layout{
-
-    display:grid;
-
-    grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-
-    gap:20px;
-
-    align-items:start;
-}
-
-
-/* =========================
-   CODE PANEL
-========================= */
-
-.code-panel{
-
-    background:white;
-
-    border:1px solid #bfdbfe;
-
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 4px 14px
-    rgba(37,99,235,.10);
-}
-
-
-.code-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    padding:15px 20px;
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-.filename{
-
-    color:white;
-
-    font:
-    bold 14px/1.4
-    Consolas,
-    Monaco,
-    monospace;
-}
-
-
-.copy-button{
-
-    border:1px solid white;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:8px;
-
-    padding:8px 14px;
-
-    min-height:40px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-
-.copy-button:hover{
-
-    background:#eff6ff;
-}
-
-
-.code-body{
-
-    height:600px;
-
-    overflow:auto;
-
-    background:white;
-
-    padding:16px 0;
-}
-
-
-.code-line{
-
-    display:flex;
-
-    min-width:max-content;
-
-    min-height:24px;
-
-    padding-right:22px;
-
-    white-space:pre;
-
-    font:
-    13px/24px
-    Consolas,
-    Monaco,
-    monospace;
-
-    color:#1e293b;
-
-    border-bottom:
-    1px solid #f1f5f9;
-}
-
-
-.code-line:hover{
-
-    background:#f8fbff;
-}
-
-
-.code-line.selected{
-
-    background:#dbeafe;
-
-    box-shadow:
-    inset 4px 0 #2563eb;
-}
-
-
-.line-number{
-
-    user-select:none;
-
-    min-width:52px;
-
-    text-align:right;
-
-    padding-right:15px;
-
-    color:#64748b;
-}
-
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-
-    background:white;
-
-    border:1px solid #dce6e9;
-
-    border-radius:14px;
-
-    padding:22px;
-}
-
-
-.guide h2{
-
-    border:0;
-
-    padding:0;
-
-    margin:0 0 8px;
-
-    font-size:21px;
-}
-
-
-.guide > p{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.steps{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-    gap:8px;
-
-    margin:16px 0;
-}
-
-
-.step{
-
-    border:1px solid #dce6e9;
-
-    border-radius:9px;
-
-    padding:10px;
-
-    min-height:65px;
-
-    background:white;
-
-    text-align:left;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
-}
-
-
-.step:hover{
-
-    border-color:#60a5fa;
-
-    background:#f8fbff;
-}
-
-
-.step.active{
-
-    background:#eff6ff;
-
-    border-color:#60a5fa;
-
-    color:#1e3a8a;
-}
-
-
-.step-number{
-
-    color:#2563eb;
-
-    font-size:12px;
-
-    flex-shrink:0;
-}
-
-
-.explanation{
-
-    background:#eff6ff;
-
-    border-radius:9px;
-
-    padding:16px;
-
-    min-height:130px;
-}
-
-
-.explanation h3{
-
-    font-size:17px;
-
-    margin:0 0 7px;
-
-    color:#1e3a8a;
-}
-
-
-.explanation p{
-
-    margin:0;
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide details{
-
-    border-top:
-    1px solid #dce6e9;
-
-    margin-top:15px;
-}
-
-
-.guide summary{
-
-    cursor:pointer;
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    padding:13px 0;
-}
-
-
-.guide details p,
-.guide details li{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide code{
-
-    background:#e5ecf4;
-
-    padding:2px 4px;
-
-    border-radius:4px;
-}
-
-
-.tip{
-
-    background:#eff6ff;
-
-    color:#234e87;
-
-    padding:14px 17px;
-
-    border-radius:9px;
-
-    margin-top:20px;
-
-    font-size:14px;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-
-    text-align:center;
-
-    padding:25px 20px;
-
-    background:#0f172a;
-
-    color:#cbd5e1;
-
-    font-size:14px;
-}
-
-
-footer strong{
-
-    color:white;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:850px){
-
-    .code-layout{
-
-        grid-template-columns:1fr;
-    }
-
-    .code-body{
-
-        height:450px;
-    }
-
-    .sensor-grid{
-
-        grid-template-columns:1fr;
-    }
-
-}
-
-
-@media(max-width:600px){
-
-    .header{
-
-        padding:35px 15px;
-    }
-
-    .header h1{
-
-        font-size:28px;
-    }
-
-    .container{
-
-        width:92%;
-    }
-
-    .section{
-
-        padding:21px 18px;
-    }
-
-    .steps{
-
-        grid-template-columns:1fr;
-    }
-
-}
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================
-     HEADER
-========================= -->
-
-
+<!-- HEADER -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -1099,32 +558,18 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>ESP32-CAM Motion Security Monitor</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
-            <!-- BACK BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to ESP32 Experiments"
-            >
+            <a href="../index.html" class="header-nav-btn">
                 &#8592; Back
             </a>
-
-            <!-- HOME ICON ONLY -->
 
             <a
                 href="../../index.html"
@@ -1132,11 +577,7 @@ footer strong{
                 title="Home"
                 aria-label="Home"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -1145,203 +586,783 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <!-- ARDUINO BUTTON -->
 
             <a
                 href="../../Arduino Experiments/index.html"
                 class="header-nav-btn"
-            >
-                Arduino
-            </a>
+            >Arduino</a>
 
-            <!-- ESP BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html" class="header-nav-btn">
                 ESP
             </a>
-
-            <!-- RASPBERRY PI BUTTON -->
 
             <a
                 href="../../R-Pi Experiments/index.html"
                 class="header-nav-btn"
-            >
-                R-Pi
-            </a>
+            >R-Pi</a>
 
         </div>
 
     </div>
-
 </header>
 
-
-
-<!-- =========================
-     NAVIGATION
-========================= -->
-
+<!-- NAVIGATION -->
 <nav>
-
-    <a href="../index.html">
-        ← ESP32 Experiments
-    </a>
-
-    <a href="#aim">
-        Aim
-    </a>
-
-    <a href="#components">
-        Components
-    </a>
-
-    <a href="#connections">
-        Connections
-    </a>
-
-    <a href="#circuit">
-        Circuit
-    </a>
-
-    <a href="#working">
-        Working
-    </a>
-
-    <a href="#procedure">
-        Procedure
-    </a>
-
-    <a href="#code">
-        Code
-    </a>
-
-    <a href="#result">
-        Result
-    </a>
-
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
+<main class="container">
 
+<!-- EXPERIMENT THUMBNAIL -->
+<section class="section project-thumbnail">
+    <img
+        src="../ESP32-CAM Motion Security Monitor.png"
+        alt="ESP32-CAM Motion Security Monitor Thumbnail"
+    >
+</section>
 
-<main class="container"><section class="section project-thumbnail"><img src="../ESP32-CAM Motion Security Monitor.png" alt="ESP32-CAM Motion Security Monitor thumbnail"></section><section class="section" id="aim"><h2>Aim</h2><p>To develop an ESP32-CAM security monitor that detects movement using a PIR sensor, activates a buzzer, displays alerts on a 1.3-inch SH1106 OLED, and provides a Wi-Fi dashboard with live camera view and event counter.</p></section><section class="section"><h2>About the Experiment</h2><p>The AI-Thinker ESP32-CAM monitors a restricted area using an HC-SR501 PIR sensor. On motion, it sounds an alarm for five seconds, updates the OLED and event counter, and reports status through a browser-based dashboard. The camera supplies periodically refreshed JPEG snapshots. No SD card or physical control button is required.</p></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32-CAM.png" alt="AI-Thinker ESP32-CAM"><h4>AI-Thinker ESP32-CAM</h4><p>Required for the motion security monitor.</p></div><div class="component-card"><img src="HC-SR501 PIR Motion Sensor Module.png" alt="HC-SR501 PIR Motion Sensor"><h4>HC-SR501 PIR Motion Sensor</h4><p>Required for the motion security monitor.</p></div><div class="component-card"><img src="OLED.png" alt="1.3-inch I²C SH1106 OLED"><h4>1.3-inch I²C SH1106 OLED</h4><p>Required for the motion security monitor.</p></div><div class="component-card"><img src="Buzzer.png" alt="Active Buzzer"><h4>Active Buzzer</h4><p>Required for the motion security monitor.</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Required for the motion security monitor.</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Required for the motion security monitor.</p></div></div><p><strong>Programming accessory:</strong> A USB-to-TTL programmer is used for flashing the ESP32-CAM.</p></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component Pin</th><th>ESP32-CAM Connection</th></tr></thead><tbody><tr><td>OLED GND</td><td>GND</td></tr><tr><td>OLED VCC</td><td>5V (verify OLED module voltage rating)</td></tr><tr><td>OLED SCL</td><td>GPIO14</td></tr><tr><td>OLED SDA</td><td>GPIO13</td></tr><tr><td>PIR VCC</td><td>5V</td></tr><tr><td>PIR GND</td><td>GND</td></tr><tr><td>PIR OUT</td><td>GPIO12</td></tr><tr><td>Buzzer +</td><td>GPIO4</td></tr><tr><td>Buzzer −</td><td>GND</td></tr></tbody></table><p><strong>Note:</strong> GPIO12 is a boot-strapping pin. If the PIR output causes boot problems, disconnect PIR OUT during flashing/startup and reconnect after boot. GPIO4 also controls the onboard flash LED on some ESP32-CAM boards.</p></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="ESP32-CAM Motion Security Monitor Circuit.png" alt="ESP32-CAM Motion Security Monitor circuit diagram"></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow"><span>1. Initialize camera, OLED and Wi-Fi</span><span>2. Monitor PIR motion</span><span>3. Activate buzzer for 5 seconds</span><span>4. Update OLED and event count</span><span>5. Refresh camera and security dashboard</span><span>6. Return to monitoring</span></div></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the ESP32-CAM, PIR sensor, OLED and active buzzer according to the circuit connections.</li><li>In Arduino IDE, install the ESP32 board package and the <strong>U8g2</strong> library.</li><li>Select <strong>AI Thinker ESP32-CAM</strong> and the correct COM port.</li><li>Replace the Wi-Fi SSID and password placeholders in the program with your own 2.4 GHz network details.</li><li>For manual USB-to-TTL programming, connect GPIO0 to GND, upload the code, disconnect GPIO0 from GND, then reset.</li><li>Open Serial Monitor at 115200 baud and read the ESP32-CAM IP address.</li><li>Open the IP address in a browser connected to the same Wi-Fi network.</li><li>Move in front of the PIR sensor and observe the buzzer, OLED, motion counter, camera and dashboard.</li></ol></section><section class="section" id="code"><div class="code-lesson"><p class="eyebrow">ESP32 Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">ESP32-CAM Motion Security Monitor · Select a step to highlight the matching code.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">ESP32_CAM_Motion_Security_Monitor.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step. The matching section of code will light up on the left.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load camera libraries</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configure Wi-Fi</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Set up camera</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Update OLED</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Monitor motion</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Capture snapshot</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>Initialize hardware</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Run monitor</button></div><div class="note" id="explanation"></div><details><summary>Check Your Understanding</summary><p>What detects motion? <strong>The PIR sensor.</strong> What provides visual status? <strong>The SH1106 OLED.</strong></p></details></article></div><p class="tip">Open the device's local IP address to view the security dashboard.</p></div></section><section class="section"><h2>Expected Output</h2><p>Serial Monitor prints the device IP address and motion events. The OLED normally shows <strong>AREA: MONITORING</strong> and <strong>BUZZER: OFF</strong>. On motion, it shows <strong>MOTION ALERT</strong>, the buzzer turns on for five seconds, and the event counter increases. The web dashboard shows the camera snapshot, motion status, buzzer state, event count and IP address.</p></section><section class="section" id="result"><h2>Result</h2><p>The ESP32-CAM Motion Security Monitor detects restricted-area motion, provides a local audible alert and OLED indication, and updates a Wi-Fi security dashboard with a live camera view and motion event counter.</p></section><section class="section"><h2>What You Learn</h2><p>ESP32-CAM camera initialization, PIR motion sensing, digital output control, I2C SH1106 display interfacing, Wi-Fi networking, web dashboard development, and event counting.</p></section></main><footer><strong>ESP32-CAM Experiment</strong><br>ESP32-CAM Motion Security Monitor</footer><script type="text/plain" id="esp32-program">
+<!-- AIM -->
+<section class="section" id="aim">
+    <h2>Aim</h2>
+
+    <p>
+        To develop an ESP32-CAM security monitor
+        that detects motion using an HC-SR501 PIR sensor,
+        activates a buzzer, displays alerts on a
+        1.3-inch SH1106 OLED, and provides a Wi-Fi
+        dashboard with a camera view and event counter.
+    </p>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+    <h2>About the Experiment</h2>
+
+    <p>
+        The ESP32-CAM Motion Security Monitor
+        monitors an area using the HC-SR501 PIR sensor.
+        When motion is detected, the ESP32-CAM
+        activates a buzzer for five seconds.
+    </p>
+
+    <p>
+        It also updates the OLED with the
+        motion alert and increases the event counter.
+    </p>
+
+    <p>
+        A Wi-Fi webpage displays the monitored area,
+        alarm condition, event count and camera image.
+    </p>
+
+    <p>
+        The camera provides periodically refreshed
+        JPEG snapshots rather than a continuous
+        streaming video connection.
+    </p>
+
+    <p>
+        The OLED shows AREA: MONITORING during
+        normal operation and MOTION ALERT
+        when the alarm is active.
+    </p>
+
+    <h3>Security Monitoring States</h3>
+
+    <div class="status-grid">
+
+        <div class="status-card">
+            <h3>Normal Monitoring</h3>
+            <p>Area: MONITORING</p>
+            <p>Buzzer: OFF</p>
+            <p>Motion event count retained</p>
+        </div>
+
+        <div class="status-card">
+            <h3>Motion Alert</h3>
+            <p>Area: MOTION DETECTED</p>
+            <p>Buzzer: ON</p>
+            <p>New motion event recorded</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- COMPONENTS -->
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="ESP32-CAM.png" alt="AI-Thinker ESP32-CAM">
+            <h4>AI-Thinker ESP32-CAM (×1)</h4>
+            <p>Wi-Fi controller with camera support.</p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="HC-SR501 PIR Motion Sensor Module.png"
+                alt="HC-SR501 PIR Sensor"
+            >
+            <h4>HC-SR501 PIR Motion Sensor (×1)</h4>
+            <p>Detects changes in infrared radiation.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="OLED.png" alt="SH1106 OLED">
+            <h4>1.3-inch SH1106 OLED (×1)</h4>
+            <p>Displays security alerts and event count.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Buzzer.png" alt="Active Buzzer">
+            <h4>Active Buzzer (×1)</h4>
+            <p>Provides an audible motion alert.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Used for low-voltage circuit connections.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Connect the ESP32-CAM and components.</p>
+        </div>
+
+    </div>
+
+    <div class="note">
+        <strong>Required Libraries:</strong>
+        <ul>
+            <li>esp_camera.h</li>
+            <li>WiFi.h</li>
+            <li>WebServer.h</li>
+            <li>Wire.h</li>
+            <li>U8g2lib.h</li>
+        </ul>
+
+        <p>
+            Install the ESP32 board package and U8g2
+            library using the Arduino IDE.
+        </p>
+    </div>
+</section>
+
+<!-- CONNECTIONS -->
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component Pin</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>OLED GND</td><td>GND</td></tr>
+                <tr>
+                    <td>OLED VCC</td>
+                    <td>5V, only if module supports 5V</td>
+                </tr>
+                <tr><td>OLED SCL</td><td>GPIO14</td></tr>
+                <tr><td>OLED SDA</td><td>GPIO13</td></tr>
+                <tr><td>PIR VCC</td><td>5V</td></tr>
+                <tr><td>PIR GND</td><td>GND</td></tr>
+                <tr><td>PIR OUT</td><td>GPIO12</td></tr>
+                <tr>
+                    <td>Buzzer Positive (+)</td>
+                    <td>GPIO4, subject to current rating</td>
+                </tr>
+                <tr><td>Buzzer Negative (-)</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>GPIO Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>PIR Sensor</td><td>GPIO12</td></tr>
+                <tr><td>Active Buzzer</td><td>GPIO4</td></tr>
+                <tr><td>OLED SDA</td><td>GPIO13</td></tr>
+                <tr><td>OLED SCL</td><td>GPIO14</td></tr>
+                <tr><td>Camera</td><td>AI-Thinker onboard camera</td></tr>
+                <tr><td>Web Server</td><td>Port 80</td></tr>
+                <tr><td>Alarm Duration</td><td>5000 ms</td></tr>
+                <tr><td>Serial Monitor</td><td>115200 baud</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Important Hardware Notes:</strong>
+
+        <p>
+            GPIO12 is an ESP32 boot-strapping pin.
+            A HIGH level on this pin during reset may
+            prevent an ESP32-CAM from starting.
+            Verify a boot-safe sensor interface.
+        </p>
+
+        <p>
+            GPIO4 may also operate the ESP32-CAM
+            onboard flash LED.
+        </p>
+
+        <p>
+            Confirm OLED power and I²C logic-voltage
+            compatibility. Use an appropriate transistor
+            driver if the buzzer exceeds GPIO current
+            capabilities.
+        </p>
+
+        <p>
+            A stable power source is important because
+            camera operation and Wi-Fi can cause
+            significant current peaks.
+        </p>
+    </div>
+</section>
+
+<!-- CIRCUIT -->
+<section class="section" id="circuit">
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="ESP32-CAM Motion Security Monitor Circuit.png"
+        alt="ESP32-CAM Motion Security Monitor Circuit Diagram"
+    >
+</section>
+
+<!-- WORKING -->
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        <div class="flow-step">ESP32-CAM Starts</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Initialize OLED and Camera</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Connect to Wi-Fi</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Start Security Web Server</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Read PIR Motion Sensor</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Check for Motion</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Activate Buzzer for 5 Seconds</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Update OLED and Event Count</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Update Wi-Fi Dashboard</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Continue Monitoring</div>
+    </div>
+
+    <h3>PIR Detection</h3>
+    <p>
+        The HC-SR501 produces a digital output
+        when its sensing circuitry detects motion.
+    </p>
+
+    <h3>Alarm Control</h3>
+    <p>
+        The ESP32-CAM activates the buzzer when
+        a new motion event is registered and
+        turns it off after five seconds.
+    </p>
+
+    <h3>OLED Monitoring</h3>
+    <p>
+        The SH1106 OLED displays the current
+        security state, buzzer status
+        and cumulative motion event count.
+    </p>
+
+    <h3>Camera Snapshot</h3>
+    <p>
+        The browser requests a JPEG image
+        from the /snapshot endpoint every second.
+    </p>
+
+    <h3>Web Dashboard</h3>
+    <p>
+        The /status endpoint provides
+        motion, buzzer and event count values
+        as JSON. The webpage uses these values
+        to update its status indicators.
+    </p>
+</section>
+
+<!-- PROCEDURE -->
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the ESP32-CAM, PIR sensor, SH1106 OLED, buzzer, breadboard and jumper wires.</li>
+        <li>Connect OLED SDA to GPIO13.</li>
+        <li>Connect OLED SCL to GPIO14.</li>
+        <li>Connect OLED power according to its module rating and GND to common ground.</li>
+        <li>Connect PIR VCC to its appropriate supply and GND to GND.</li>
+        <li>Connect PIR OUT to GPIO12 using a boot-compatible interface.</li>
+        <li>Connect the buzzer control circuit to GPIO4.</li>
+        <li>Verify all wiring and voltage compatibility.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Install the ESP32 board package and U8g2 library.</li>
+        <li>Select the AI Thinker ESP32-CAM board.</li>
+        <li>Create the sketch ESP32_CAM_Motion_Security_Monitor.ino.</li>
+        <li>Copy the complete program from Explore the Code.</li>
+        <li>Enter your 2.4 GHz Wi-Fi SSID and password.</li>
+        <li>Connect the USB-to-TTL programmer for uploading.</li>
+        <li>Connect GPIO0 to GND for flashing, upload the program, then remove the connection and reset.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Note the IP address displayed in Serial Monitor.</li>
+        <li>Open the IP address on a device connected to the same Wi-Fi network.</li>
+        <li>Observe the camera snapshot and security status.</li>
+        <li>Move in front of the PIR sensor.</li>
+        <li>Observe the buzzer, OLED alert and motion counter.</li>
+        <li>Wait five seconds and observe the return to monitoring.</li>
+    </ol>
+</section>
+
+<!-- EXPLORE THE CODE -->
+<section class="section" id="code">
+
+    <p class="eyebrow">ESP32-CAM Experiment · Code Review</p>
+
+    <h2 class="lesson-title">Explore the Code</h2>
+
+    <p class="intro">
+        Select any step to highlight the matching
+        source-code section in blue.
+        Copy Code copies the complete ESP32-CAM sketch.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+                <span class="filename">
+                    ESP32_CAM_Motion_Security_Monitor.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Click a topic to highlight the
+                entire corresponding code section.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: PIR Sensor</summary>
+                <p>
+                    The PIR sensor provides a digital
+                    indication when motion is detected.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Camera</summary>
+                <p>
+                    The ESP32-CAM captures JPEG frames
+                    using its onboard camera.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Web Server</summary>
+                <p>
+                    The root route serves the dashboard,
+                    /snapshot serves an image,
+                    and /status returns JSON data.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Alarm Timer</summary>
+                <p>
+                    millis() is used to time the
+                    five-second alarm interval.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+                <ol>
+                    <li>Which sensor detects motion?</li>
+                    <li>Which GPIO reads the PIR output?</li>
+                    <li>Which GPIO controls the buzzer?</li>
+                    <li>How long does the alarm last?</li>
+                    <li>What endpoint serves camera images?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    HC-SR501, GPIO12, GPIO4,
+                    five seconds, /snapshot.
+                </p>
+            </details>
+
+        </article>
+    </div>
+
+    <p class="note">
+        The ESP32-CAM provides refreshed camera
+        snapshots and event information over Wi-Fi.
+    </p>
+
+</section>
+
+<!-- EXPECTED OUTPUT -->
+<section class="section" id="output">
+    <h2>Expected Output</h2>
+
+    <h3>Initial OLED Display</h3>
+
+    <div class="output-box">
+<pre>SECURITY MONITOR
+--------------------
+
+AREA: MONITORING
+
+BUZZER: OFF
+
+EVENTS: 0</pre>
+    </div>
+
+    <h3>After Motion Detection</h3>
+
+    <div class="output-box">
+<pre>SECURITY MONITOR
+--------------------
+
+!!! MOTION ALERT !!!
+
+BUZZER: ON
+
+EVENTS: 1</pre>
+    </div>
+
+    <h3>Serial Monitor</h3>
+
+    <div class="output-box">
+<pre>ESP32-CAM SECURITY MONITOR READY
+Open: http://192.168.x.x
+Waiting for motion...
+
+==============================
+MOTION DETECTED
+Security event: 1
+BUZZER: ON
+==============================
+
+BUZZER: OFF
+AREA: MONITORING</pre>
+    </div>
+
+    <h3>Web Dashboard Status</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Displayed Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Live Camera</td>
+                    <td>Periodically refreshed JPEG snapshot</td>
+                </tr>
+                <tr>
+                    <td>Area Status</td>
+                    <td>MONITORING / MOTION DETECTED</td>
+                </tr>
+                <tr>
+                    <td>Buzzer</td>
+                    <td>ON / OFF</td>
+                </tr>
+                <tr>
+                    <td>Motion Events</td>
+                    <td>Cumulative event count</td>
+                </tr>
+                <tr>
+                    <td>IP Address</td>
+                    <td>ESP32-CAM local network address</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        The values above are examples. Actual IP addresses
+        and motion-event counts depend on operation.
+    </div>
+</section>
+
+<!-- DASHBOARD: IMMEDIATELY AFTER OUTPUT -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+        <img
+            src="ESP32-CAM Motion Security Monitor Dashboard.png"
+            alt="ESP32-CAM Motion Security Monitor Dashboard"
+        >
+    </div>
+
+</section>
+
+<!-- RESULT -->
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The ESP32-CAM Motion Security Monitor
+        demonstrates PIR-based movement detection,
+        audible alarm indication, OLED status
+        monitoring and a Wi-Fi security dashboard
+        with refreshed camera snapshots
+        and a motion event counter.
+    </p>
+</section>
+
+<!-- WHAT YOU LEARN -->
+<section class="section" id="learn">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using an AI-Thinker ESP32-CAM.</li>
+        <li>Initializing the onboard camera.</li>
+        <li>Capturing JPEG snapshots.</li>
+        <li>Interfacing the HC-SR501 PIR sensor.</li>
+        <li>Using GPIO12 for motion detection.</li>
+        <li>Controlling an active buzzer.</li>
+        <li>Using millis() to time alarms.</li>
+        <li>Interfacing a 1.3-inch SH1106 OLED.</li>
+        <li>Using I²C on GPIO13 and GPIO14.</li>
+        <li>Connecting the ESP32-CAM to Wi-Fi.</li>
+        <li>Creating an HTTP web server.</li>
+        <li>Building a browser security dashboard.</li>
+        <li>Serving camera snapshots through HTTP.</li>
+        <li>Sending motion data as JSON.</li>
+        <li>Counting motion events.</li>
+        <li>Understanding ESP32 boot-strapping pins.</li>
+    </ul>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>ESP32-CAM Motion Security Monitor</div>
+</footer>
+
+<!-- =====================================
+     COMPLETE ESP32-CAM SKETCH
+     10 EXPLANATION SECTIONS
+===================================== -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
+
 #include "esp_camera.h"
-#include <WiFi.h>
-#include <WebServer.h>
-#include <Wire.h>
-#include <U8g2lib.h>
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;U8g2lib.h>
+
+// [END 01]
 
 
-// ===============================
-// WIFI
-// ===============================
+// [02] CONFIGURE WIFI
+
 const char* ssid = "YOUR_WIFI_NAME";
 const char* password = "YOUR_WIFI_PASSWORD";
 
+// [END 02]
 
-// ===============================
-// PINS
-// ===============================
 
+// [03] CONFIGURE PINS AND CAMERA
 
 #define OLED_SDA 13
 #define OLED_SCL 14
+
 #define PIR_PIN 12
 #define BUZZER_PIN 4
 
-
-// Alarm duration after motion
 const unsigned long ALARM_DURATION = 5000UL;
-
-
-// Small lockout to avoid repeated events while PIR stays HIGH
 const unsigned long MOTION_COOLDOWN = 2000UL;
 
-
 U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
- U8G2_R0, U8X8_PIN_NONE, OLED_SCL, OLED_SDA
+    U8G2_R0,
+    U8X8_PIN_NONE,
+    OLED_SCL,
+    OLED_SDA
 );
-
 
 WebServer server(80);
 
+// AI-THINKER CAMERA PIN MAPPING
 
-// ===============================
-// AI-THINKER CAMERA PINS
-// ===============================
-#define PWDN_GPIO_NUM              32
-#define RESET_GPIO_NUM             -1
-#define XCLK_GPIO_NUM              0
-#define SIOD_GPIO_NUM           26
-#define SIOC_GPIO_NUM          27
+#define PWDN_GPIO_NUM   32
+#define RESET_GPIO_NUM  -1
+#define XCLK_GPIO_NUM    0
+#define SIOD_GPIO_NUM   26
+#define SIOC_GPIO_NUM   27
 
+#define Y9_GPIO_NUM     35
+#define Y8_GPIO_NUM     34
+#define Y7_GPIO_NUM     39
+#define Y6_GPIO_NUM     36
+#define Y5_GPIO_NUM     21
+#define Y4_GPIO_NUM     19
+#define Y3_GPIO_NUM     18
+#define Y2_GPIO_NUM      5
 
-#define Y9_GPIO_NUM           35
-#define Y8_GPIO_NUM           34
-#define Y7_GPIO_NUM           39
-#define Y6_GPIO_NUM           36
-#define Y5_GPIO_NUM           21
-#define Y4_GPIO_NUM           19
-#define Y3_GPIO_NUM           18
-#define Y2_GPIO_NUM            5
-#define VSYNC_GPIO_NUM             25
-#define HREF_GPIO_NUM           23
-#define PCLK_GPIO_NUM           22
-
+#define VSYNC_GPIO_NUM  25
+#define HREF_GPIO_NUM   23
+#define PCLK_GPIO_NUM   22
 
 bool motionActive = false;
 bool alarmActive = false;
+
 unsigned long alarmStart = 0;
 unsigned long lastMotionEvent = 0;
 unsigned long eventCount = 0;
+
 int pirState = LOW;
 
+// [END 03]
+
+
+// [04] UPDATE OLED
 
 void showOLED() {
- oled.clearBuffer();
 
+    oled.clearBuffer();
 
- oled.setFont(u8g2_font_helvB10_tr);
- oled.drawStr(12, 13, "SECURITY MONITOR");
- oled.drawHLine(5, 17, 118);
+    oled.setFont(u8g2_font_6x10_tr);
 
+    oled.drawStr(
+        12, 12, "SECURITY MONITOR"
+    );
 
- oled.setFont(u8g2_font_6x10_tr);
+    oled.drawHLine(5, 17, 118);
 
+    if (alarmActive) {
 
- if (alarmActive) {
-     oled.drawStr(8, 33, "!!! MOTION ALERT !!!");
-     oled.drawStr(8, 46, "BUZZER: ON");
- } else {
-     oled.drawStr(8, 33, "AREA: MONITORING");
-     oled.drawStr(8, 46, "BUZZER: OFF");
- }
+        oled.drawStr(
+            8, 33, "!! MOTION ALERT !!"
+        );
 
+        oled.drawStr(
+            8, 46, "BUZZER: ON"
+        );
 
- char eventText[24];
+    } else {
 
+        oled.drawStr(
+            8, 33, "AREA: MONITORING"
+        );
 
-    sprintf(eventText, "EVENTS: %lu", eventCount);
-    oled.drawStr(8, 59, eventText);
+        oled.drawStr(
+            8, 46, "BUZZER: OFF"
+        );
+    }
 
+    char eventText[24];
+
+    snprintf(
+        eventText,
+        sizeof(eventText),
+        "EVENTS: %lu",
+        eventCount
+    );
+
+    oled.drawStr(
+        8, 59, eventText
+    );
 
     oled.sendBuffer();
 }
 
+// [END 04]
+
+
+// [05] INITIALIZE CAMERA
 
 bool initCamera() {
-    camera_config_t config;
 
+    camera_config_t config = {};
 
     config.ledc_channel = LEDC_CHANNEL_0;
     config.ledc_timer = LEDC_TIMER_0;
-
 
     config.pin_d0 = Y2_GPIO_NUM;
     config.pin_d1 = Y3_GPIO_NUM;
@@ -1352,664 +1373,1250 @@ bool initCamera() {
     config.pin_d6 = Y8_GPIO_NUM;
     config.pin_d7 = Y9_GPIO_NUM;
 
-
     config.pin_xclk = XCLK_GPIO_NUM;
     config.pin_pclk = PCLK_GPIO_NUM;
+
     config.pin_vsync = VSYNC_GPIO_NUM;
     config.pin_href = HREF_GPIO_NUM;
+
     config.pin_sccb_sda = SIOD_GPIO_NUM;
     config.pin_sccb_scl = SIOC_GPIO_NUM;
+
     config.pin_pwdn = PWDN_GPIO_NUM;
     config.pin_reset = RESET_GPIO_NUM;
 
-
     config.xclk_freq_hz = 20000000;
+
     config.pixel_format = PIXFORMAT_JPEG;
+
     config.frame_size = FRAMESIZE_VGA;
     config.jpeg_quality = 12;
     config.fb_count = 1;
 
-
-    esp_err_t result = esp_camera_init(&config);
-
+    esp_err_t result = esp_camera_init(
+        &config
+    );
 
     if (result != ESP_OK) {
-        Serial.print("Camera initialization failed: 0x");
-        Serial.println(result, HEX);
+
+        Serial.print(
+            "Camera initialization failed: 0x"
+        );
+
+        Serial.println(
+            result,
+            HEX
+        );
+
         return false;
     }
-
 
     return true;
 }
 
+// [END 05]
+
+
+// [06] MONITOR MOTION
 
 void captureMotionEvent() {
+
     eventCount++;
+
     motionActive = true;
     alarmActive = true;
+
     alarmStart = millis();
 
+    digitalWrite(
+        BUZZER_PIN,
+        HIGH
+    );
 
-    digitalWrite(BUZZER_PIN, HIGH);
+    Serial.println(
+        "=============================="
+    );
 
+    Serial.println(
+        "MOTION DETECTED"
+    );
 
-    Serial.println("==============================");
-    Serial.println("MOTION DETECTED");
-    Serial.print("Security event: ");
+    Serial.print(
+        "Security event: "
+    );
+
     Serial.println(eventCount);
-    Serial.println("BUZZER: ON");
-    Serial.println("==============================");
 
+    Serial.println(
+        "BUZZER: ON"
+    );
+
+    Serial.println(
+        "=============================="
+    );
 
     showOLED();
-
-
 }
 
 
 void updateSecurity() {
+
     pirState = digitalRead(PIR_PIN);
 
+    unsigned long now = millis();
 
-    if (pirState == HIGH &&
-         !alarmActive &&
-         (millis() - lastMotionEvent > MOTION_COOLDOWN)) {
+    if (
+        pirState == HIGH &&
+        !alarmActive &&
+        (
+            lastMotionEvent == 0 ||
+            now - lastMotionEvent >
+            MOTION_COOLDOWN
+        )
+    ) {
 
+        lastMotionEvent = now;
 
-        lastMotionEvent = millis();
         captureMotionEvent();
     }
 
-
-    if (alarmActive &&
-         (millis() - alarmStart >= ALARM_DURATION)) {
-
+    if (
+        alarmActive &&
+        now - alarmStart >=
+        ALARM_DURATION
+    ) {
 
         alarmActive = false;
         motionActive = false;
-        digitalWrite(BUZZER_PIN, LOW);
 
+        digitalWrite(
+            BUZZER_PIN,
+            LOW
+        );
 
-        Serial.println("BUZZER: OFF");
-        Serial.println("AREA: MONITORING");
+        Serial.println(
+            "BUZZER: OFF"
+        );
 
+        Serial.println(
+            "AREA: MONITORING"
+        );
 
         showOLED();
     }
 }
 
+// [END 06]
+
+
+// [07] CREATE WEB DASHBOARD
 
 void handleRoot() {
+
     String ip = WiFi.localIP().toString();
 
-
     String html = R"rawliteral(
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ESP32-CAM Motion Security Monitor</title>
-<style>
-*{box-sizing:border-box}
-body{
-    margin:0;background:#09111f;color:#fff;
-    font-family:Arial,Helvetica,sans-serif;
-}
-.header{
-    padding:20px;background:#0e192b;
-    border-bottom:1px solid #24344d;
-}
-.header-inner{
-    width:92%;max-width:1150px;margin:auto;
-    display:flex;justify-content:space-between;align-items:center;
-}
-.brand h1{margin:0;font-size:22px}
-.brand p{margin:5px 0 0;color:#8fa0b8;font-size:12px}
-.online{
-    padding:9px 14px;border-radius:20px;
-    background:#113522;color:#4ade80;font-size:12px;font-weight:bold;
-}
-.container{width:92%;max-width:1150px;margin:auto;padding:22px 0 40px}
-.grid{
-    display:grid;grid-template-columns:2fr 1fr;gap:18px;
-}
-.card{
-    background:#121e31;border:1px solid #263753;
+&lt;!DOCTYPE html>
+&lt;html lang="en">
 
+&lt;head>
 
-    border-radius:18px;padding:18px;
-}
-.title{font-size:17px;font-weight:bold;margin-bottom:12px}
-.sub{color:#8091aa;font-size:12px}
-.camera{
-    background:#02060c;border-radius:13px;overflow:hidden;
-    border:1px solid #25364e;
-}
-.camera img{width:100%;display:block;max-height:520px;object-fit:contain}
-.badge{
-    display:inline-block;margin-top:10px;padding:7px 10px;
-    border-radius:8px;background:#24344d;font-size:11px;
-}
-.status{
-    margin-bottom:12px;padding:15px;border-radius:13px;
-    background:#1b2a40;
-}
-.label{font-size:11px;color:#8da0b9;text-transform:uppercase}
-.value{margin-top:6px;font-size:20px;font-weight:bold}
-.ok{color:#4ade80}.alert{color:#ff5965}.blue{color:#60a5fa}
-.log{
-    margin-top:18px;padding:16px;border-radius:15px;
-    background:#121e31;border:1px solid #263753;
-}
-.event{
-    padding:10px 0;border-bottom:1px solid #22324a;
-    font-size:12px;color:#cbd5e1;
-}
-.event:last-child{border-bottom:0}
-@media(max-width:800px){.grid{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<div class="header">
-    <div class="header-inner">
-     <div class="brand">
-      <h1>ESP32-CAM MOTION SECURITY MONITOR</h1>
-      <p>Restricted Area • PIR Detection • Audible Alarm</p>
-     </div>
-     <div class="online">● ONLINE</div>
-    </div>
-</div>
+&lt;meta charset="UTF-8">
 
+&lt;meta
+    name="viewport"
+    content="width=device-width,initial-scale=1.0"
+>
 
-<div class="container">
-<div class="grid">
+&lt;title>
+ESP32-CAM Motion Security Monitor
+&lt;/title>
 
+&lt;style>
 
-<div class="card">
-    <div class="title">Live Camera <span class="sub">| VGA / JPEG</span></div>
-    <div class="camera">
-     <img id="cam" src="/snapshot" alt="ESP32-CAM Live View">
-    </div>
-    <div class="badge">Camera view refreshes automatically</div>
-</div>
-
-
-<div class="card">
-    <div class="title">Security Status</div>
-
-
-    <div class="status">
-     <div class="label">Area Status</div>
-     <div id="area" class="value ok">MONITORING</div>
-    </div>
-
-
-    <div class="status">
-
-
-     <div class="label">Buzzer</div>
-     <div id="buzzer" class="value ok">OFF</div>
-    </div>
-
-
-    <div class="status">
-     <div class="label">Motion Events</div>
-     <div id="events" class="value blue">0</div>
-    </div>
-
-
-    <div class="status">
-     <div class="label">IP Address</div>
-     <div class="value blue" style="font-size:14px">)rawliteral";
-
-
-    html += ip;
-
-
-    html += R"rawliteral(</div>
-    </div>
-</div>
-
-
-</div>
-
-
-<div class="log">
-    <div class="title">Event Log</div>
-    <div id="log" class="event">System started. Waiting for motion...</div>
-</div>
-
-
-</div>
-
-
-<script>
-let lastEvents=0;
-
-
-async function updateStatus(){
-    try{
-     const r=await fetch('/status');
-     const d=await r.json();
-
-
-     const area=document.getElementById('area');
-     const buzzer=document.getElementById('buzzer');
-
-
-     document.getElementById('events').innerText=d.events;
-
-
-     if(d.motion){
-         area.innerText='MOTION DETECTED';
-         area.className='value alert';
-         buzzer.innerText='ON';
-         buzzer.className='value alert';
-     }else{
-         area.innerText='MONITORING';
-         area.className='value ok';
-         buzzer.innerText='OFF';
-         buzzer.className='value ok';
-     }
-
-
-     if(d.events > lastEvents){
-         document.getElementById('log').innerText =
-          new Date().toLocaleTimeString() +
-          ' • Motion detected • Buzzer activated';
-         lastEvents=d.events;
-     }
-    }catch(e){}
+* {
+    box-sizing: border-box;
 }
 
+body {
+    margin: 0;
+    background: #09111f;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
-setInterval(()=>{
+.header {
+    padding: 20px;
+    background: #0e192b;
+    border-bottom: 1px solid #24344d;
+}
 
+.header-inner {
+    width: 92%;
+    max-width: 1150px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
 
-    document.getElementById('cam').src='/snapshot?t='+Date.now();
-},1000);
+.brand h1 {
+    margin: 0;
+    font-size: 22px;
+}
 
+.brand p {
+    margin: 5px 0 0;
+    color: #8fa0b8;
+    font-size: 12px;
+}
 
-setInterval(updateStatus,500);
+.online {
+    padding: 9px 14px;
+    border-radius: 20px;
+    background: #113522;
+    color: #4ade80;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.container {
+    width: 92%;
+    max-width: 1150px;
+    margin: auto;
+    padding: 22px 0 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 18px;
+}
+
+.card {
+    padding: 18px;
+    background: #121e31;
+    border: 1px solid #263753;
+    border-radius: 18px;
+}
+
+.title {
+    margin-bottom: 12px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.sub {
+    color: #8091aa;
+    font-size: 12px;
+}
+
+.camera {
+    background: #02060c;
+    border: 1px solid #25364e;
+    border-radius: 13px;
+    overflow: hidden;
+}
+
+.camera img {
+    display: block;
+    width: 100%;
+    max-height: 520px;
+    object-fit: contain;
+}
+
+.badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 7px 10px;
+    background: #24344d;
+    border-radius: 8px;
+    font-size: 11px;
+}
+
+.status {
+    margin-bottom: 12px;
+    padding: 15px;
+    background: #1b2a40;
+    border-radius: 13px;
+}
+
+.label {
+    font-size: 11px;
+    color: #8da0b9;
+    text-transform: uppercase;
+}
+
+.value {
+    margin-top: 6px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.ok {
+    color: #4ade80;
+}
+
+.alert {
+    color: #ff5965;
+}
+
+.blue {
+    color: #60a5fa;
+}
+
+.log {
+    margin-top: 18px;
+    padding: 16px;
+    background: #121e31;
+    border: 1px solid #263753;
+    border-radius: 15px;
+}
+
+.event {
+    padding: 10px 0;
+    color: #cbd5e1;
+    font-size: 12px;
+}
+
+@media (max-width: 800px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .header-inner {
+        flex-wrap: wrap;
+    }
+
+    .brand h1 {
+        font-size: 18px;
+    }
+}
+
+&lt;/style>
+
+&lt;/head>
+
+&lt;body>
+
+&lt;div class="header">
+
+    &lt;div class="header-inner">
+
+        &lt;div class="brand">
+
+            &lt;h1>
+                ESP32-CAM MOTION SECURITY MONITOR
+            &lt;/h1>
+
+            &lt;p>
+                Restricted Area |
+                PIR Detection |
+                Audible Alarm
+            &lt;/p>
+
+        &lt;/div>
+
+        &lt;div class="online">
+            ONLINE
+        &lt;/div>
+
+    &lt;/div>
+
+&lt;/div>
+
+&lt;div class="container">
+
+    &lt;div class="grid">
+
+        &lt;div class="card">
+
+            &lt;div class="title">
+                Live Camera
+                &lt;span class="sub">
+                    | VGA / JPEG
+                &lt;/span>
+            &lt;/div>
+
+            &lt;div class="camera">
+
+                &lt;img
+                    id="cam"
+                    src="/snapshot"
+                    alt="ESP32-CAM Camera View"
+                >
+
+            &lt;/div>
+
+            &lt;div class="badge">
+                Camera view refreshes automatically
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="card">
+
+            &lt;div class="title">
+                Security Status
+            &lt;/div>
+
+            &lt;div class="status">
+
+                &lt;div class="label">
+                    Area Status
+                &lt;/div>
+
+                &lt;div id="area" class="value ok">
+                    MONITORING
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="status">
+
+                &lt;div class="label">
+                    Buzzer
+                &lt;/div>
+
+                &lt;div id="buzzer" class="value ok">
+                    OFF
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="status">
+
+                &lt;div class="label">
+                    Motion Events
+                &lt;/div>
+
+                &lt;div id="events" class="value blue">
+                    0
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="status">
+
+                &lt;div class="label">
+                    IP Address
+                &lt;/div>
+
+                &lt;div
+                    class="value blue"
+                    style="font-size:14px"
+                >
+                    %IP_ADDRESS%
+                &lt;/div>
+
+            &lt;/div>
+
+        &lt;/div>
+
+    &lt;/div>
+
+    &lt;div class="log">
+
+        &lt;div class="title">
+            Event Log
+        &lt;/div>
+
+        &lt;div id="log" class="event">
+            System started.
+            Waiting for motion...
+        &lt;/div>
+
+    &lt;/div>
+
+&lt;/div>
+
+&lt;script>
+
+let lastEvents = null;
+
+async function updateStatus() {
+
+    try {
+
+        const response = await fetch(
+            "/status",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        const area = document.getElementById(
+            "area"
+        );
+
+        const buzzer = document.getElementById(
+            "buzzer"
+        );
+
+        document.getElementById(
+            "events"
+        ).textContent = data.events;
+
+        if (data.motion) {
+
+            area.textContent =
+                "MOTION DETECTED";
+
+            area.className =
+                "value alert";
+
+        } else {
+
+            area.textContent =
+                "MONITORING";
+
+            area.className =
+                "value ok";
+        }
+
+        if (data.buzzer) {
+
+            buzzer.textContent = "ON";
+            buzzer.className = "value alert";
+
+        } else {
+
+            buzzer.textContent = "OFF";
+            buzzer.className = "value ok";
+        }
+
+        if (
+            lastEvents !== null &&
+            data.events > lastEvents
+        ) {
+
+            document.getElementById(
+                "log"
+            ).textContent =
+                new Date().toLocaleTimeString() +
+                " - Motion detected - Alarm activated";
+        }
+
+        lastEvents = data.events;
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+let cameraBusy = false;
+
+function refreshCamera() {
+
+    if (cameraBusy) return;
+
+    cameraBusy = true;
+
+    const camera = document.getElementById(
+        "cam"
+    );
+
+    camera.onload = function() {
+        cameraBusy = false;
+    };
+
+    camera.onerror = function() {
+        cameraBusy = false;
+    };
+
+    camera.src =
+        "/snapshot?t=" + Date.now();
+}
+
 updateStatus();
-</script>
-</body>
-</html>
+
+setInterval(
+    updateStatus,
+    500
+);
+
+setInterval(
+    refreshCamera,
+    1000
+);
+
+&lt;/script>
+
+&lt;/body>
+
+&lt;/html>
 )rawliteral";
 
+    html.replace(
+        "%IP_ADDRESS%",
+        ip
+    );
 
-    server.send(200, "text/html", html);
+    server.send(
+        200,
+        "text/html; charset=UTF-8",
+        html
+    );
 }
 
+// [END 07]
+
+
+// [08] SERVE CAMERA AND STATUS
 
 void handleSnapshot() {
-    camera_fb_t* fb = esp_camera_fb_get();
 
+    camera_fb_t* fb =
+        esp_camera_fb_get();
 
     if (!fb) {
-        server.send(500, "text/plain", "Camera error");
+
+        server.send(
+            500,
+            "text/plain",
+            "Camera error"
+        );
+
         return;
     }
 
+    server.setContentLength(
+        fb->len
+    );
 
-    server.setContentLength(fb->len);
-    server.send(200, "image/jpeg", "");
+    server.send(
+        200,
+        "image/jpeg",
+        ""
+    );
 
+    WiFiClient client =
+        server.client();
 
-    WiFiClient client = server.client();
-    client.write(fb->buf, fb->len);
-
+    client.write(
+        fb->buf,
+        fb->len
+    );
 
     esp_camera_fb_return(fb);
 }
 
 
 void handleStatus() {
+
     String json = "{";
+
     json += "\"motion\":";
-    json += alarmActive ? "true" : "false";
+    json += (
+        motionActive ? "true" : "false"
+    );
+
     json += ",";
+
     json += "\"buzzer\":";
-    json += alarmActive ? "true" : "false";
+    json += (
+        alarmActive ? "true" : "false"
+    );
+
     json += ",";
+
     json += "\"events\":";
     json += String(eventCount);
+
     json += "}";
 
-
-    server.send(200, "application/json", json);
+    server.send(
+        200,
+        "application/json",
+        json
+    );
 }
 
+// [END 08]
+
+
+// [09] INITIALIZE SYSTEM
 
 void setup() {
+
     Serial.begin(115200);
     delay(1000);
 
+    pinMode(
+        PIR_PIN,
+        INPUT
+    );
 
-    pinMode(PIR_PIN, INPUT);
-    pinMode(BUZZER_PIN, OUTPUT);
-    digitalWrite(BUZZER_PIN, LOW);
+    pinMode(
+        BUZZER_PIN,
+        OUTPUT
+    );
 
+    digitalWrite(
+        BUZZER_PIN,
+        LOW
+    );
 
-    // OLED
-    Wire.begin(OLED_SDA, OLED_SCL);
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
     Wire.setClock(100000);
+
     oled.begin();
 
-
     oled.clearBuffer();
-    oled.setFont(u8g2_font_helvB12_tr);
-    oled.drawStr(20, 22, "SECURITY");
-    oled.setFont(u8g2_font_6x10_tr);
-    oled.drawStr(28, 42, "STARTING...");
 
+    oled.setFont(
+        u8g2_font_helvB12_tr
+    );
+
+    oled.drawStr(
+        20, 22, "SECURITY"
+    );
+
+    oled.setFont(
+        u8g2_font_6x10_tr
+    );
+
+    oled.drawStr(
+        28, 42, "STARTING..."
+    );
 
     oled.sendBuffer();
 
-
-    // Camera
     if (!initCamera()) {
+
         oled.clearBuffer();
-        oled.setFont(u8g2_font_helvB12_tr);
-        oled.drawStr(28, 25, "CAMERA");
-        oled.drawStr(38, 45, "ERROR");
+
+        oled.setFont(
+            u8g2_font_helvB12_tr
+        );
+
+        oled.drawStr(
+            28, 25, "CAMERA"
+        );
+
+        oled.drawStr(
+            38, 45, "ERROR"
+        );
+
         oled.sendBuffer();
 
-
-        while(true){
+        while (true) {
             delay(1000);
         }
     }
 
-
-    // Wi-Fi
     oled.clearBuffer();
-    oled.setFont(u8g2_font_helvB12_tr);
-    oled.drawStr(35, 22, "WiFi");
-    oled.setFont(u8g2_font_6x10_tr);
-    oled.drawStr(20, 42, "CONNECTING...");
+
+    oled.setFont(
+        u8g2_font_6x10_tr
+    );
+
+    oled.drawStr(
+        20, 22, "WiFi CONNECTING"
+    );
+
     oled.sendBuffer();
 
+    WiFi.mode(WIFI_STA);
 
-    WiFi.begin(ssid, password);
+    WiFi.begin(
+        ssid,
+        password
+    );
 
+    Serial.print(
+        "Connecting to WiFi"
+    );
 
-    Serial.print("Connecting to WiFi");
-    while(WiFi.status() != WL_CONNECTED){
+    while (
+        WiFi.status() != WL_CONNECTED
+    ) {
+
         delay(500);
         Serial.print(".");
     }
 
-
     Serial.println();
-    Serial.println("WiFi connected!");
 
+    Serial.println(
+        "WiFi connected!"
+    );
 
-    server.on("/", HTTP_GET, handleRoot);
-    server.on("/snapshot", HTTP_GET, handleSnapshot);
-    server.on("/status", HTTP_GET, handleStatus);
+    server.on(
+        "/",
+        HTTP_GET,
+        handleRoot
+    );
 
+    server.on(
+        "/snapshot",
+        HTTP_GET,
+        handleSnapshot
+    );
+
+    server.on(
+        "/status",
+        HTTP_GET,
+        handleStatus
+    );
 
     server.begin();
 
-
     showOLED();
 
+    Serial.println(
+        "=============================="
+    );
 
-    Serial.println("==============================");
-    Serial.println("ESP32-CAM SECURITY MONITOR READY");
-    Serial.print("Open: http://");
-    Serial.println(WiFi.localIP());
-    Serial.println("Waiting for motion...");
-    Serial.println("==============================");
+    Serial.println(
+        "ESP32-CAM SECURITY MONITOR READY"
+    );
+
+    Serial.print(
+        "Open: http://"
+    );
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+    Serial.println(
+        "Waiting for motion..."
+    );
+
+    Serial.println(
+        "=============================="
+    );
 }
 
+// [END 09]
+
+
+// [10] RUN SECURITY MONITOR
 
 void loop() {
+
     server.handleClient();
+
     updateSecurity();
 }
-</script><script>
 
+// [END 10]
+</textarea>
 
-const program =
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER JAVASCRIPT
+===================================== -->
+<script>
 
-document
+const program = document
+    .getElementById("esp32-program")
+    .value
+    .trim();
 
-.getElementById(
-    "esp32-program"
-)
+const lines = program.split("\n");
 
-.textContent
+const steps = [
 
-.trim();
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load libraries",
+        text:
+            "Loads the ESP32 camera, Wi-Fi, " +
+            "web server, I2C and OLED libraries."
+    },
 
+    {
+        number: "02",
+        label: "CONFIGURE WIFI",
+        title: "Configure Wi-Fi",
+        text:
+            "Sets the Wi-Fi SSID and password " +
+            "used by the ESP32-CAM."
+    },
 
-const lines =
+    {
+        number: "03",
+        label: "CONFIGURE PINS AND CAMERA",
+        title: "Configure pins",
+        text:
+            "Defines PIR, buzzer, OLED and " +
+            "AI-Thinker camera pin assignments."
+    },
 
-program.split(
-    "\n"
+    {
+        number: "04",
+        label: "UPDATE OLED",
+        title: "Update OLED",
+        text:
+            "Displays normal monitoring status, " +
+            "motion alerts and event count."
+    },
+
+    {
+        number: "05",
+        label: "INITIALIZE CAMERA",
+        title: "Initialize camera",
+        text:
+            "Configures the onboard camera " +
+            "for VGA JPEG snapshots."
+    },
+
+    {
+        number: "06",
+        label: "MONITOR MOTION",
+        title: "Monitor motion",
+        text:
+            "Reads the PIR input, activates " +
+            "the buzzer and controls " +
+            "the five-second alarm."
+    },
+
+    {
+        number: "07",
+        label: "CREATE WEB DASHBOARD",
+        title: "Create dashboard",
+        text:
+            "Creates the security monitoring " +
+            "webpage with live snapshots " +
+            "and event information."
+    },
+
+    {
+        number: "08",
+        label: "SERVE CAMERA AND STATUS",
+        title: "Serve camera and status",
+        text:
+            "Sends JPEG images and provides " +
+            "security data through JSON."
+    },
+
+    {
+        number: "09",
+        label: "INITIALIZE SYSTEM",
+        title: "Initialize system",
+        text:
+            "Starts the OLED, camera, " +
+            "Wi-Fi and web server."
+    },
+
+    {
+        number: "10",
+        label: "RUN SECURITY MONITOR",
+        title: "Run security monitor",
+        text:
+            "Continuously handles HTTP requests " +
+            "and checks the motion sensor."
+    }
+
+];
+
+/* ESCAPE HTML */
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* DISPLAY CODE */
+function displayCode() {
+
+    const container = document.getElementById(
+        "code-lines"
+    );
+
+    container.innerHTML = lines.map(
+        function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+        }
+    ).join("");
+}
+
+/* FIND SOURCE MARKERS */
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
+
+/* GENERATE HIGHLIGHT RANGES */
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "// [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "// [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid: start >= 0 && end >= start
+        };
+    }
 );
 
+/* CREATE STEP BUTTONS */
+function createSteps() {
 
-/* =========================
-   CODE STEPS
-========================= */
-
-const steps = [{title:"Load camera libraries",search:"#include \"esp_camera.h\"",text:"Load the ESP32 camera, networking, OLED, and web server libraries."},{title:"Configure Wi-Fi",search:"const char* ssid",text:"Set network credentials before uploading."},{title:"Set up camera",search:"esp_camera_init",text:"Initialize the AI-Thinker camera with the required pin mapping."},{title:"Update OLED",search:"void showOLED",text:"Show the security status and detected motion on the OLED."},{title:"Monitor motion",search:"void updateSecurity",text:"Read the PIR sensor and control alarm state."},{title:"Capture snapshot",search:"void handleSnapshot",text:"Send a camera snapshot to the web browser."},{title:"Initialize hardware",search:"void setup()",text:"Initialize the camera, display, alarm and web routes."},{title:"Run monitor",search:"void loop()",text:"Serve browser requests and monitor motion continuously."}];
-
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHtml(text)
-{
-
-    return text
-
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-
-    .replace(
-        /</g,
-        "&lt;"
-    )
-
-    .replace(
-        />/g,
-        "&gt;"
+    const container = document.getElementById(
+        "steps-list"
     );
 
-}
+    steps.forEach(
+        function(step, index) {
 
+            const button = document.createElement(
+                "button"
+            );
 
-/* =========================
-   DISPLAY CODE
-========================= */
+            button.type = "button";
+            button.className = "step";
 
-function displayCode()
-{
+            const number = document.createElement(
+                "span"
+            );
 
-    let output = "";
+            number.className = "step-number";
+            number.textContent = step.number;
 
+            const label = document.createElement(
+                "span"
+            );
 
-    lines.forEach(
+            label.textContent = step.title;
 
-        function(
-            line,
-            index
-        )
-        {
+            button.append(number, label);
 
-            output +=
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
 
-            '<span class="code-line" ' +
-
-            'id="line-' +
-
-            (index + 1) +
-
-            '">' +
-
-            '<span class="line-number">' +
-
-            (index + 1) +
-
-            '</span>' +
-
-            '<span>' +
-
-            escapeHtml(line) +
-
-            '</span>' +
-
-            '</span>';
-
+            container.appendChild(button);
         }
-
     );
-
-
-    document
-
-    .getElementById(
-        "code-lines"
-    )
-
-    .innerHTML =
-    output;
-
 }
 
+/* HIGHLIGHT COMPLETE CODE SECTION */
+function showStep(index) {
 
-/* =========================
-   SHOW STEP
-========================= */
+    document.querySelectorAll(".step").forEach(
+        function(button, i) {
 
-function showStep(index)
-{
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+            line.classList.remove("selected");
+        }
+    );
+
     const step = steps[index];
-    document.querySelectorAll(".step").forEach(function(button, i) {
-        button.classList.toggle("active", i === index);
-    });
-    document.querySelectorAll(".code-line").forEach(function(line) {
-        line.classList.remove("selected");
-    });
+    const range = ranges[index];
 
-    // Find the matching source statement. Use the first non-comment
-    // occurrence, and never highlight an unrelated fixed 12-line range.
-    let foundLine = lines.findIndex(function(line) {
-        return line.trim().startsWith(step.search.trim());
-    });
-    if (foundLine < 0) {
-        foundLine = lines.findIndex(function(line) {
-            return line.includes(step.search);
+    const explanation = document.getElementById(
+        "explanation"
+    );
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement(
+        "h3"
+    );
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement(
+        "p"
+    );
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching source-code markers not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element = document.getElementById(
+            "line-" + (i + 1)
+        );
+
+        if (element) {
+            element.classList.add("selected");
+        }
+    }
+
+    const firstLine = document.getElementById(
+        "line-" + (range.start + 1)
+    );
+
+    const codeBody = document.getElementById(
+        "code-body"
+    );
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+
+            behavior: "smooth"
         });
     }
-
-    if (foundLine >= 0) {
-        let lastLine = foundLine;
-        // Extend across a declaration or a brace-delimited code block.
-        let depth = 0;
-        let blockStarted = false;
-        for (let i = foundLine; i < lines.length; i++) {
-            const current = lines[i];
-            for (const ch of current) {
-                if (ch === "{") { depth++; blockStarted = true; }
-                if (ch === "}") { depth--; }
-            }
-            lastLine = i;
-            if (blockStarted && depth <= 0) break;
-            if (!blockStarted && i > foundLine && current.trim() === "") {
-                lastLine = i - 1;
-                break;
-            }
-            if (i - foundLine >= 35) break;
-        }
-        for (let i = foundLine; i <= lastLine; i++) {
-            document.getElementById("line-" + (i + 1))?.classList.add("selected");
-        }
-        const selectedLine = document.getElementById("line-" + (foundLine + 1));
-        const codeBody = document.getElementById("code-body");
-        if (selectedLine && codeBody) {
-            codeBody.scrollTo({
-                top: selectedLine.offsetTop - codeBody.offsetTop - 20,
-                behavior: "smooth"
-            });
-        }
-    }
-    document.getElementById("explanation").innerHTML =
-        "<h3>" + (index + 1) + ". " + step.title + "</h3>" +
-        "<p>" + step.text + "</p>";
 }
 
+/* COPY FULL SKETCH */
+async function copyCode() {
 
-/* =========================
-   COPY CODE
-========================= */
-
-function copyCode()
-{
-
-    navigator
-
-    .clipboard
-
-    .writeText(
-        program
-    )
-
-    .then(
-
-        function()
-        {
-
-            const button =
-
-            document
-
-            .querySelector(
-                ".copy-button"
-            );
-
-
-            button.innerText =
-            "Copied!";
-
-
-            setTimeout(
-
-                function()
-                {
-
-                    button.innerText =
-                    "Copy Code";
-
-                },
-
-                1500
-
-            );
-
-        }
-
+    const button = document.querySelector(
+        ".code-top .copy-button"
     );
 
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field = document.createElement(
+            "textarea"
+        );
+
+        field.value = program;
+
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+
+        field.select();
+
+        let success = false;
+
+        try {
+
+            success = document.execCommand(
+                "copy"
+            );
+
+        } catch (error) {
+
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch (error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
 
-
-/* =========================
-   START
-========================= */
-
+/* INITIALIZE */
 displayCode();
-
+createSteps();
 showStep(0);
 
+</script>
 
-</script></body></html>
+</body>
+</html>
