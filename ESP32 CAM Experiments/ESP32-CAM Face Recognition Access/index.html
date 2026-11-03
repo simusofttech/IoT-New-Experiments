@@ -1,32 +1,44 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>ESP32-CAM Face Recognition Access</title>
 
 <style>
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
+/* ==========================================
+   GENERAL PAGE DESIGN
+========================================== */
+* {
+    box-sizing: border-box;
+}
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+html {
+    scroll-behavior: smooth;
+}
 
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.7;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
 .header {
-    background: #2563eb;
-    color: white;
     position: relative;
     display: flex;
     flex-direction: column;
     min-height: 230px;
     padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -35,16 +47,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     width: 135px;
     max-height: 75px;
     height: auto;
-    object-fit: contain;
+    padding: 5px;
     background: white;
     border-radius: 5px;
-    padding: 5px;
+    object-fit: contain;
 }
 
-/* CENTER HEADING */
-
 .header-content {
-    text-align: center;
     margin: auto 0;
     padding: 35px 165px;
 }
@@ -59,35 +68,21 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
-    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     gap: 15px;
     padding: 12px 25px;
     background: rgba(0,0,0,0.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
-/* BUTTON STYLE */
 
 .header-nav-btn {
     display: inline-flex;
@@ -99,19 +94,17 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     color: #1e3a8a;
     border: 1px solid #dbeafe;
     border-radius: 7px;
+    text-decoration: none;
     font-size: 13px;
     font-weight: bold;
-    text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: 0.25s;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -129,28 +122,483 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* ==========================================
+   NAVIGATION
+========================================== */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
 
-@media (max-width: 900px) {
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* ==========================================
+   MAIN PAGE
+========================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    scroll-margin-top: 100px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* ==========================================
+   EXPERIMENT THUMBNAIL
+========================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* ==========================================
+   COMPONENT CARDS
+========================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 135px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* ==========================================
+   TABLES
+========================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* ==========================================
+   NOTES AND CIRCUIT
+========================================== */
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* ==========================================
+   WORKING PRINCIPLE
+========================================== */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-step {
+    padding: 5px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* ==========================================
+   EXPLORE THE CODE
+========================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line.selected,
+.code-line.selected:hover {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+
+/* ==========================================
+   CODE EXPLANATIONS
+========================================== */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* ==========================================
+   EXPECTED OUTPUT
+========================================== */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* CENTER DASHBOARD IMAGE */
+
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
     }
 
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media(max-width:600px) {
     .header-logo {
-        width: 95px;
-        max-height: 60px;
         top: 12px;
         left: 12px;
+        width: 95px;
+        max-height: 60px;
     }
 
     .header-content {
@@ -176,9 +624,9 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     }
 
     .header-nav-btn {
+        min-height: 36px;
         padding: 8px 7px;
         font-size: 11px;
-        min-height: 36px;
     }
 
     .home-icon-btn {
@@ -186,418 +634,32 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
-
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
-.container{width:90%;max-width:1050px;margin:35px auto;}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
-.section h3{color:#1e3a8a;}
-ul,ol{padding-left:24px;}
-li{margin-bottom:8px;}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
-.component-card p{color:#475569;font-size:14px;margin:0;}
-.table-wrap{overflow-x:auto;}
-table{width:100%;min-width:620px;border-collapse:collapse;}
-th,td{padding:12px;border:1px solid #ddd;text-align:left;}
-th{background:#2563eb;color:white;}
-tr:nth-child(even){background:#f8fafc;}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
-
-/* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
-}
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-    color:#142e3a;
-}
-
-.eyebrow{
-    color:#2563eb;
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    letter-spacing:.08em;
-
-    text-transform:uppercase;
-
-    margin:0 0 4px;
-}
-
-.lesson-title{
-    font-size:32px !important;
-
-    margin:0 0 8px !important;
-
-    color:#1e3a8a !important;
-
-    border:0 !important;
-
-    padding:0 !important;
-}
-
-.intro{
-    color:#526875;
-
-    margin:0 0 22px;
-}
-
-.code-layout{
-    display:grid;
-
-    grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-
-    gap:20px;
-
-    align-items:start;
-}
-
-.code-panel{
-    background:white;
-
-    border:
-    1px solid #bfdbfe;
-
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 4px 14px rgba(37,99,235,.10);
-}
-
-.code-top{
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    padding:15px 20px;
-
-    background:#2563eb;
-
-    color:white;
-}
-
-.filename{
-    color:white;
-
-    font:bold 14px/1.4
-    Consolas, Monaco, monospace;
-}
-
-.copy-button{
-    border:1px solid white;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:8px;
-
-    padding:8px 14px;
-
-    min-height:40px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-.copy-button:hover{
-    background:#eff6ff;
-}
-
-.code-body{
-    height:600px;
-
-    overflow:auto;
-
-    background:white;
-
-    padding:16px 0;
-}
-
-.code-line{
-    display:flex;
-
-    min-width:max-content;
-
-    min-height:24px;
-
-    padding-right:22px;
-
-    white-space:pre;
-
-    font:
-    13px/24px
-    Consolas, Monaco, monospace;
-
-    color:#1e293b;
-
-    border-bottom:
-    1px solid #f1f5f9;
-}
-
-.code-line:hover{
-    background:#f8fbff;
-}
-
-.code-line.selected{
-    background:#dbeafe;
-
-    box-shadow:
-    inset 4px 0 #2563eb;
-}
-
-.line-number{
-    user-select:none;
-
-    min-width:52px;
-
-    text-align:right;
-
-    padding-right:15px;
-
-    color:#64748b;
-}
-
-.token-comment{
-    color:#64748b;
-}
-
-.token-keyword{
-    color:#1d4ed8;
-    font-weight:bold;
-}
-
-.token-number{
-    color:#b45309;
-}
-
-.token-string{
-    color:#047857;
-}
-
-.guide{
-    background:white;
-
-    border:
-    1px solid #dce6e9;
-
-    border-radius:14px;
-
-    padding:22px;
-}
-
-.guide h2{
-    border:0;
-
-    padding:0;
-
-    margin:0 0 8px;
-
-    font-size:21px;
-}
-
-.guide > p{
-    color:#526875;
-
-    font-size:15px;
-}
-
-.steps{
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-    gap:8px;
-
-    margin:16px 0;
-}
-
-.step{
-    border:
-    1px solid #dce6e9;
-
-    border-radius:9px;
-
-    padding:10px;
-
-    min-height:65px;
-
-    background:white;
-
-    text-align:left;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
-}
-
-.step:hover{
-    border-color:#60a5fa;
-
-    background:#f8fbff;
-}
-
-.step.active{
-    background:#eff6ff;
-
-    border-color:#60a5fa;
-
-    color:#1e3a8a;
-}
-
-.step-number{
-    color:#2563eb;
-
-    font-size:12px;
-
-    flex-shrink:0;
-}
-
-.explanation{
-    background:#eff6ff;
-
-    border-radius:9px;
-
-    padding:16px;
-
-    min-height:130px;
-}
-
-.explanation h3{
-    font-size:17px;
-
-    margin:0 0 7px;
-
-    color:#1e3a8a;
-}
-
-.explanation p{
-    margin:0;
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-.guide details{
-    border-top:
-    1px solid #dce6e9;
-
-    margin-top:15px;
-}
-
-.guide summary{
-    cursor:pointer;
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    padding:13px 0;
-}
-
-.guide details p,
-.guide details li{
-    color:#526875;
-
-    font-size:15px;
-}
-
-.guide code{
-    background:#e5ecf4;
-
-    padding:2px 4px;
-
-    border-radius:4px;
-}
-
-.tip{
-    background:#eff6ff;
-
-    color:#234e87;
-
-    padding:14px 17px;
-
-    border-radius:9px;
-
-    margin-top:20px;
-
-    font-size:14px;
-}
-
-
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
-footer strong{color:white;}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr;}.steps{grid-template-columns:1fr;}}
 </style>
 </head>
+
 <body>
 
-
+<!-- ==========================================
+     HEADER
+========================================== -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -605,32 +667,17 @@ footer strong{color:white;}
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>ESP32-CAM Face Recognition Access</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <!-- BACK BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to ESP32 Experiments"
-            >
+            <a href="../index.html" class="header-nav-btn">
                 &#8592; Back
             </a>
-
-            <!-- HOME ICON ONLY -->
 
             <a
                 href="../../index.html"
@@ -638,87 +685,217 @@ footer strong{color:white;}
                 title="Home"
                 aria-label="Home"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
                 </svg>
             </a>
-
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <!-- ARDUINO BUTTON -->
-
-            <a
-                href="../../Arduino Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../Arduino Experiments/index.html" class="header-nav-btn">
                 Arduino
             </a>
 
-            <!-- ESP BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
+            <a href="../index.html" class="header-nav-btn">
                 ESP
             </a>
 
-            <!-- RASPBERRY PI BUTTON -->
-
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
+            <a href="../../R-Pi Experiments/index.html" class="header-nav-btn">
                 R-Pi
             </a>
-
         </div>
 
     </div>
-
 </header>
 
-
+<!-- ==========================================
+     NAVIGATION
+========================================== -->
 <nav>
-    <a href="../index.html">← ESP32 Experiments</a>
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
     <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
     <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- ==========================================
+     EXPERIMENT THUMBNAIL
+========================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../ESP32-CAM Face Recognition Access.png"
+        alt="ESP32-CAM Face Recognition Access Thumbnail"
+    >
+
+</section>
+
+<!-- ==========================================
+     AIM
+========================================== -->
 <section class="section" id="aim">
+
     <h2>Aim</h2>
-    <p>To build a face-recognition access-control prototype using an ESP32-CAM, OLED, servo motor and buzzer with a browser-based recognition interface.</p>
+
+    <p>
+        To design a face-recognition-based
+        access-control prototype using an
+        AI-Thinker ESP32-CAM, SH1106 OLED,
+        servo motor and buzzer, with browser-based
+        face registration, recognition,
+        manual door control and automatic
+        relocking after approximately 5 seconds.
+    </p>
+
 </section>
 
-<section class="section">
+<!-- ==========================================
+     ABOUT
+========================================== -->
+<section class="section" id="about">
+
     <h2>About the Experiment</h2>
-    <p>The ESP32-CAM supplies camera images to a browser dashboard where face-api.js is used for face registration and recognition.</p>
-    <p>An authorized face unlocks the servo-controlled door for approximately 5 seconds, while an unknown face produces an access-denied indication and buzzer alert.</p>
-    <p>The OLED shows GRANTED, DENIED and LOCKED states, and the dashboard also provides manual lock and unlock controls.</p>
+
+    <p>
+        The ESP32-CAM Face Recognition Access
+        experiment demonstrates a camera-based
+        access-control prototype.
+    </p>
+
+    <p>
+        The onboard camera captures JPEG
+        images and sends them to a browser
+        over a local Wi-Fi network.
+    </p>
+
+    <p>
+        The browser uses face-api.js to detect
+        faces, create a mathematical face
+        descriptor during registration,
+        and compare subsequent faces with
+        the registered descriptor.
+    </p>
+
+    <p>
+        When the browser recognizes an
+        authorized face, it sends an unlock
+        command to the ESP32-CAM.
+    </p>
+
+    <p>
+        The servo motor moves to the
+        configured unlock position of 90°.
+        After approximately five seconds,
+        it returns to the locked position
+        of 0°.
+    </p>
+
+    <p>
+        If a face is classified as unknown,
+        the browser sends a denied-event
+        command and the buzzer produces
+        three short warning sounds.
+    </p>
+
+    <p>
+        The SH1106 OLED displays the
+        access state, while the web
+        dashboard includes recognition
+        controls and manual lock/unlock buttons.
+    </p>
+
+    <h3>Access-Control Conditions</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Servo State</th>
+                    <th>Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Authorized face</td>
+                    <td>90°</td>
+                    <td>Access granted</td>
+                </tr>
+                <tr>
+                    <td>Unknown face</td>
+                    <td>Remains locked</td>
+                    <td>Denied alert</td>
+                </tr>
+                <tr>
+                    <td>Unlock timeout</td>
+                    <td>0°</td>
+                    <td>Automatic relock</td>
+                </tr>
+                <tr>
+                    <td>Manual unlock</td>
+                    <td>90°</td>
+                    <td>Temporary unlock</td>
+                </tr>
+                <tr>
+                    <td>Manual lock</td>
+                    <td>0°</td>
+                    <td>Door locked</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Important:</strong>
+
+        <p>
+            Face recognition is performed in the
+            browser, not on the ESP32-CAM.
+        The browser must be able to load
+        the face-api.js library and its models.
+        An internet connection may be required
+        for these external resources.
+        The camera and control dashboard operate
+        over the local Wi-Fi network.
+        </p>
+
+        <p>
+            Face descriptors are sensitive biometric
+            information. The example stores a
+            registered descriptor in the browser's
+            local storage. Use consented test
+            subjects only, and clear stored
+            descriptors after the demonstration.
+        </p>
+
+        <p>
+            This is a teaching demonstration.
+            The local HTTP commands are not
+            authenticated, and face recognition
+            alone is insufficient for securing
+            a real door or protecting access
+            to people or valuable property.
+        </p>
+    </div>
+
 </section>
 
-<!-- =========================
-     COMPONENTS
-========================= -->
-
+<!-- ==========================================
+     COMPONENTS REQUIRED
+========================================== -->
 <section class="section" id="components">
 
     <h2>Components Required</h2>
@@ -726,2465 +903,2796 @@ footer strong{color:white;}
     <div class="components-grid">
 
         <div class="component-card">
-            <img
-            src="ESP32-CAM.png"
-            alt="AI-Thinker ESP32-CAM">
-            <h4>
-                AI-Thinker ESP32-CAM with OV2640 (×1)
-            </h4>
+            <img src="ESP32-CAM.png" alt="AI-Thinker ESP32-CAM">
+            <h4>AI-Thinker ESP32-CAM (×1)</h4>
             <p>
-                Main camera and Wi-Fi controller.
+                Wi-Fi microcontroller with
+                an onboard camera.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="OLED.png"
-            alt="OLED SSD1306">
-            <h4>
-                1.3&quot; SH1106 OLED 128×64 I²C (×1)
-            </h4>
+            <img src="OLED.png" alt="SH1106 OLED">
+            <h4>SH1106 OLED 128×64 (×1)</h4>
             <p>
                 Displays access and door status.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="Servo Motor.png"
-            alt="Servo Motor">
-            <h4>
-                Servo Motor (×1)
-            </h4>
+            <img src="Servo Motor.png" alt="Servo Motor">
+            <h4>Servo Motor (×1)</h4>
             <p>
-                Acts as the door lock actuator.
+                Acts as the prototype
+                door-lock actuator.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="Buzzer.png"
-            alt="Buzzer">
-            <h4>
-                Buzzer (×1)
-            </h4>
+            <img src="Buzzer.png" alt="Buzzer">
+            <h4>Active Buzzer (×1)</h4>
             <p>
-                Provides access-denied alerts.
+                Produces audible access alerts.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="USB-TTL Programmer.png"
-            alt="USB-to-TTL Programmer">
-            <h4>
-                USB-to-TTL Programmer (×1)
-            </h4>
+            <img src="USB-TTL Programmer.png" alt="USB-to-TTL Programmer">
+            <h4>USB-to-TTL Programmer (×1)</h4>
             <p>
-                Used to upload the program.
+                Used to upload the firmware.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="Breadboard.png"
-            alt="Breadboard">
-            <h4>
-                Breadboard (×1)
-            </h4>
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
             <p>
-                Used to assemble the external circuit.
+                Used for circuit connections.
             </p>
         </div>
 
         <div class="component-card">
-            <img
-            src="Jumper Wires.png"
-            alt="Jumper Wires">
-            <h4>
-                Jumper Wires
-            </h4>
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
             <p>
-                Used for electrical connections.
+                Used to connect the components.
             </p>
         </div>
 
     </div>
 
+    <div class="note">
+        <strong>Required Arduino Libraries:</strong>
+        <ul>
+            <li>esp_camera.h</li>
+            <li>WiFi.h</li>
+            <li>WebServer.h</li>
+            <li>Wire.h</li>
+            <li>U8g2lib.h</li>
+            <li>ESP32Servo.h</li>
+        </ul>
+
+        <strong>Browser Recognition Software:</strong>
+        <ul>
+            <li>face-api.js</li>
+            <li>Tiny Face Detector model</li>
+            <li>Face Landmark 68 model</li>
+            <li>Face Recognition model</li>
+        </ul>
+    </div>
+
 </section>
 
+<!-- ==========================================
+     CIRCUIT CONNECTIONS
+========================================== -->
 <section class="section" id="connections">
+
     <h2>Circuit Connections</h2>
+
     <div class="table-wrap">
         <table>
-            <thead><tr><th>Component</th><th>Pin</th><th>ESP32-CAM Connection</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Pin</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+
             <tbody>
-                <tr><td>OLED</td><td>VCC</td><td>3.3V</td></tr>
-                <tr><td>OLED</td><td>GND</td><td>GND</td></tr>
-                <tr><td>OLED</td><td>SDA</td><td>GPIO 13</td></tr>
-                <tr><td>OLED</td><td>SCL</td><td>GPIO 14</td></tr>
-                <tr><td>Servo Motor</td><td>Signal</td><td>GPIO 2</td></tr>
-                <tr><td>Servo Motor</td><td>VCC</td><td>External 5V</td></tr>
-                <tr><td>Servo Motor</td><td>GND</td><td>External GND / common GND</td></tr>
-                <tr><td>Buzzer</td><td>+</td><td>GPIO 15</td></tr>
-                <tr><td>Buzzer</td><td>-</td><td>GND</td></tr>
-                <tr><td>USB-TTL</td><td>5V</td><td>5V</td></tr>
-                <tr><td>USB-TTL</td><td>GND</td><td>GND</td></tr>
-                <tr><td>USB-TTL</td><td>TX</td><td>U0R / GPIO 3</td></tr>
-                <tr><td>USB-TTL</td><td>RX</td><td>U0T / GPIO 1</td></tr>
+                <tr>
+                    <td>SH1106 OLED</td>
+                    <td>VCC</td>
+                    <td>3.3V for compatible module</td>
+                </tr>
+
+                <tr>
+                    <td>SH1106 OLED</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>SH1106 OLED</td>
+                    <td>SDA</td>
+                    <td>GPIO13</td>
+                </tr>
+
+                <tr>
+                    <td>SH1106 OLED</td>
+                    <td>SCL</td>
+                    <td>GPIO14</td>
+                </tr>
+
+                <tr>
+                    <td>Servo Motor</td>
+                    <td>Signal</td>
+                    <td>GPIO2</td>
+                </tr>
+
+                <tr>
+                    <td>Servo Motor</td>
+                    <td>VCC</td>
+                    <td>External regulated 5V</td>
+                </tr>
+
+                <tr>
+                    <td>Servo Motor</td>
+                    <td>GND</td>
+                    <td>Common GND</td>
+                </tr>
+
+                <tr>
+                    <td>Buzzer</td>
+                    <td>Positive</td>
+                    <td>GPIO15 for suitable low-current buzzer</td>
+                </tr>
+
+                <tr>
+                    <td>Buzzer</td>
+                    <td>Negative</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>USB-to-TTL Programmer</td>
+                    <td>TX</td>
+                    <td>U0R / GPIO3</td>
+                </tr>
+
+                <tr>
+                    <td>USB-to-TTL Programmer</td>
+                    <td>RX</td>
+                    <td>U0T / GPIO1</td>
+                </tr>
+
+                <tr>
+                    <td>USB-to-TTL Programmer</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
             </tbody>
         </table>
     </div>
+
+    <h3>Configuration Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr><td>OLED SDA</td><td>GPIO13</td></tr>
+                <tr><td>OLED SCL</td><td>GPIO14</td></tr>
+                <tr><td>Servo Signal</td><td>GPIO2</td></tr>
+                <tr><td>Buzzer</td><td>GPIO15</td></tr>
+                <tr><td>Locked Position</td><td>0°</td></tr>
+                <tr><td>Unlocked Position</td><td>90°</td></tr>
+                <tr><td>Unlock Duration</td><td>5000 ms</td></tr>
+                <tr><td>Web Server</td><td>Port 80</td></tr>
+                <tr><td>Serial Monitor</td><td>115200 baud</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Hardware Precautions:</strong>
+
+        <p>
+            Servo motors may draw significant
+            startup current. Use a suitable
+            regulated 5V source for the servo
+            and connect its ground to the
+            ESP32-CAM ground.
+        </p>
+
+        <p>
+            GPIO2 and GPIO15 are ESP32
+            boot-strapping pins. Connected
+            hardware must not force unsuitable
+            levels during flashing or startup.
+        </p>
+
+        <p>
+            The USB-to-TTL programmer must use
+            3.3V UART signal levels, even if
+            the ESP32-CAM receives a regulated
+            5V input at its 5V supply pin.
+        </p>
+
+        <p>
+            If the buzzer draws more current
+            than a GPIO can safely provide,
+            use an appropriate transistor driver.
+        </p>
+    </div>
+
 </section>
 
-<!-- =========================
-     CIRCUIT
-========================= -->
+<!-- ==========================================
+     CIRCUIT DIAGRAM
+========================================== -->
+<section class="section" id="circuit">
 
-<section
-class="section"
-id="circuit">
-
-    <h2>
-        Circuit Diagram
-    </h2>
+    <h2>Circuit Diagram</h2>
 
     <img
-    class="circuit-img"
-    src="ESP32-CAM Face Recognition Access Circuit.png"
-    alt="ESP32-CAM Face Recognition Access Circuit">
+        src="ESP32-CAM Face Recognition Access Circuit.png"
+        alt="ESP32-CAM Face Recognition Access Circuit Diagram"
+        class="circuit-img"
+    >
 
 </section>
 
+<!-- ==========================================
+     WORKING PRINCIPLE
+========================================== -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
+
     <div class="flow">
-        ESP32-CAM Starts<br>↓<br>
-        Camera, OLED, Servo and Buzzer Initialize<br>↓<br>
-        ESP32-CAM Connects to Wi-Fi<br>↓<br>
-        Authorized Face is Registered in Browser<br>↓<br>
-        Recognition Starts<br>↓<br>
-        Live Face is Compared with Stored Descriptor<br>↓<br>
-        Match → Servo Unlocks to 90°<br>↓<br>
-        No Match → Buzzer Alerts and Access is Denied<br>↓<br>
-        Door Automatically Returns to 0°
+
+        <div class="flow-step">ESP32-CAM Starts</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Initialize Camera, OLED, Servo and Buzzer</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Connect to Wi-Fi</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Start Web Dashboard</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Register an Authorized Face in Browser</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Start Face Recognition</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Capture JPEG Camera Image</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Browser Compares Face Descriptors</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Authorized → Unlock Servo to 90°</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Unknown → Denied Indication and Buzzer</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Automatic Relock After 5 Seconds</div>
+
     </div>
+
+    <h3>Face Registration</h3>
+    <p>
+        The user captures a face in the
+        browser dashboard. The browser
+        processes the captured image
+        and stores its face descriptor locally.
+    </p>
+
+    <h3>Face Recognition</h3>
+    <p>
+        The browser compares new face
+        descriptors with the authorized
+        descriptor using face-api.js.
+    </p>
+
+    <h3>Access Granted</h3>
+    <p>
+        When a matching face is recognized,
+        the ESP32-CAM receives an unlock
+        command and moves the servo to 90°.
+    </p>
+
+    <h3>Access Denied</h3>
+    <p>
+        For an unknown face, the browser
+        sends a denied-event command.
+        The OLED displays DENIED and
+        the buzzer produces warning beeps.
+    </p>
+
+    <h3>Automatic Relock</h3>
+    <p>
+        The ESP32-CAM uses millis()
+        to return the servo to its
+        0° locked position after
+        approximately five seconds.
+    </p>
+
 </section>
 
+<!-- ==========================================
+     PROCEDURE
+========================================== -->
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
+
     <ol>
-        <li>Connect OLED SDA to GPIO 13 and SCL to GPIO 14.</li>
-        <li>Connect the servo signal to GPIO 2 and power the servo from an external 5V supply with common ground.</li>
-        <li>Connect the buzzer positive terminal to GPIO 15 and negative terminal to GND.</li>
-        <li>Connect the USB-to-TTL programmer to the ESP32-CAM for uploading.</li>
-        <li>Connect GPIO 0 to GND only during programming, then remove it after upload.</li>
-        <li>Enter your Wi-Fi credentials in the program and upload it.</li>
-        <li>Open Serial Monitor at 115200 baud and note the IP address.</li>
-        <li>Open the dashboard in a browser and capture an authorized face.</li>
-        <li>Start recognition and test authorized and unknown faces.</li>
-        <li>Confirm that the servo relocks automatically after approximately 5 seconds.</li>
+        <li>Arrange all required components.</li>
+        <li>Connect OLED SDA to GPIO13.</li>
+        <li>Connect OLED SCL to GPIO14.</li>
+        <li>Connect the OLED power and ground.</li>
+        <li>Connect the servo signal wire to GPIO2.</li>
+        <li>Connect the servo to a regulated 5V supply.</li>
+        <li>Connect servo ground and ESP32-CAM ground together.</li>
+        <li>Connect the buzzer control to GPIO15.</li>
+        <li>Verify all GPIO and power connections.</li>
+        <li>Connect the USB-to-TTL programmer.</li>
+        <li>Connect GPIO0 to GND for flashing.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Install the ESP32 board support package.</li>
+        <li>Install U8g2 and ESP32Servo libraries.</li>
+        <li>Select AI Thinker ESP32-CAM board.</li>
+        <li>Create ESP32_CAM_Face_Recognition_Access.ino.</li>
+        <li>Copy the complete sketch from Explore the Code.</li>
+        <li>Enter Wi-Fi credentials.</li>
+        <li>Verify and upload the sketch.</li>
+        <li>Disconnect GPIO0 from GND and restart the ESP32-CAM.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Note the printed IP address.</li>
+        <li>Open the IP address in a browser on the same network.</li>
+        <li>Ensure face-api.js and its models have loaded.</li>
+        <li>Click CAPTURE AUTHORIZED FACE using a consenting test subject.</li>
+        <li>Click START RECOGNITION.</li>
+        <li>Present the registered face in front of the camera.</li>
+        <li>Observe the access-granted event and servo movement.</li>
+        <li>Verify automatic relocking after approximately five seconds.</li>
+        <li>Test an unknown face and observe the denied indication.</li>
+        <li>Test the manual LOCK and UNLOCK controls.</li>
     </ol>
+
 </section>
 
-<!-- =========================================
+<!-- ==========================================
      EXPLORE THE CODE
-========================================= -->
-
+========================================== -->
 <section class="section" id="code">
 
-<div class="code-lesson">
+    <p class="eyebrow">
+        ESP32-CAM Experiment · Code Review
+    </p>
 
-<p class="eyebrow">
-    ESP32 Experiment · Code Review
-</p>
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
 
-<h2 class="lesson-title">
-    Explore the Code
-</h2>
+    <p class="intro">
+        Select a step to highlight the
+        complete matching source-code section.
+        Copy Code copies the full
+        ESP32-CAM Arduino sketch.
+    </p>
 
-<p class="intro">
-    ESP32-CAM Face Recognition Access · Select a step to see
-    what each part of the ESP32 program does.
-</p>
+    <div class="code-layout">
 
-<div class="code-layout">
+        <article class="code-panel">
 
-<article class="code-panel">
+            <div class="code-top">
 
-<div class="code-top">
-    <span class="filename">
-        ESP32_CAM_Face_Recognition_Access.ino
-    </span>
-    <button
-    class="copy-button"
-    onclick="copyCode()">
-        Copy Code
-    </button>
-</div>
+                <span class="filename">
+                    ESP32_CAM_Face_Recognition_Access.ino
+                </span>
 
-<div
-class="code-body"
-id="code-body">
-<code id="code-lines"></code>
-</div>
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
 
-</article>
+            </div>
 
-<article class="guide">
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
 
-<h2>
-    Understand it step by step
-</h2>
+        </article>
 
-<p>
-    Choose a step.
-    The matching code will light up on the left.
-</p>
+        <article class="guide">
 
-<div class="steps">
+            <h2>Understand it step by step</h2>
 
-<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load the libraries</button>
-<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set OLED, servo and buzzer</button>
-<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Initialize the camera</button>
-<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Control door lock</button>
-<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Handle denied access</button>
-<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Serve camera image</button>
-<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Build web dashboard</button>
-<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Start Wi-Fi and server</button>
-<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Relock automatically</button>
+            <p>
+                Click a step to highlight
+                its corresponding source-code section.
+            </p>
 
-</div>
+            <div class="steps" id="steps-list"></div>
 
-<div class="explanation" id="explanation">
-<h3>1. Load the libraries</h3>
-<p>The program loads the camera, Wi-Fi, web server, I²C, SH1106 OLED and ESP32 servo libraries.</p>
-</div>
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
 
-<details>
-<summary>Explore more: access control</summary>
-<p>The servo signal is connected to <code>GPIO 2</code>.</p>
-<p>The locked position is <strong>0°</strong> and the unlocked position is <strong>90°</strong>.</p>
-<p>The door remains unlocked for approximately <strong>5 seconds</strong>.</p>
-</details>
+            <details>
+                <summary>Explore More: Face Recognition</summary>
+                <p>
+                    The browser uses face-api.js
+                    to detect faces and compare
+                    their numerical descriptors.
+                </p>
+            </details>
 
-<details>
-<summary>Check your understanding</summary>
-<ul>
-<li>Which GPIO controls the servo? <strong>GPIO 2</strong></li>
-<li>Which GPIO controls the buzzer? <strong>GPIO 15</strong></li>
-<li>Which pins are used for OLED I²C? <strong>GPIO 13 and GPIO 14</strong></li>
-<li>What happens after an authorized face is detected? <strong>The servo unlocks the door for about 5 seconds.</strong></li>
-</ul>
-</details>
+            <details>
+                <summary>Explore More: Servo Control</summary>
+                <p>
+                    GPIO2 commands the servo
+                    to 0° for LOCKED and
+                    90° for UNLOCKED.
+                </p>
+            </details>
 
-</article>
+            <details>
+                <summary>Explore More: Automatic Relocking</summary>
+                <p>
+                    millis() tracks the unlock
+                    duration without blocking
+                    the main loop.
+                </p>
+            </details>
 
-</div>
+            <details>
+                <summary>Explore More: HTTP Commands</summary>
+                <p>
+                    Browser requests control the
+                    prototype's lock, unlock
+                    and denied-event functions.
+                </p>
+            </details>
 
-<p class="tip">
-<strong>Try it:</strong>
-Register an authorized face, start recognition and verify the servo, OLED and buzzer response.
-</p>
+            <details>
+                <summary>Check Your Understanding</summary>
 
-</div>
+                <ol>
+                    <li>Which GPIO controls the servo?</li>
+                    <li>Which GPIO controls the buzzer?</li>
+                    <li>Which GPIO pins connect to OLED?</li>
+                    <li>What is the unlock duration?</li>
+                    <li>Where does face recognition run?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO2; GPIO15; GPIO13 and GPIO14;
+                    5 seconds; in the browser.
+                </p>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Register a face, start recognition,
+        and observe the access state
+        and automatic servo relocking.
+    </p>
 
 </section>
 
-<section class="section">
+<!-- ==========================================
+     EXPECTED OUTPUT
+========================================== -->
+<section class="section" id="output">
+
     <h2>Expected Output</h2>
-    <p>The dashboard shows live camera, face registration, recognition status and door controls.</p>
-    <p>An authorized face produces ACCESS GRANTED and moves the servo from 0° to 90°.</p>
-    <p>After about 5 seconds the servo returns to 0° and locks the door.</p>
-    <p>An unknown face keeps the servo locked and triggers three short buzzer beeps.</p>
-    <p>The OLED displays GRANTED, DENIED or LOCKED messages.</p>
+
+    <h3>Initial OLED Display</h3>
+
+    <div class="output-box">
+<pre>FACE ACCESS
+
+LOCKED
+
+Door secured
+Scan face...</pre>
+    </div>
+
+    <h3>Authorized Face</h3>
+
+    <div class="output-box">
+<pre>FACE ACCESS
+
+GRANTED
+
+Access allowed
+Door open 5 sec</pre>
+    </div>
+
+    <h3>Unknown Face</h3>
+
+    <div class="output-box">
+<pre>FACE ACCESS
+
+DENIED
+
+Unknown face
+Access blocked</pre>
+    </div>
+
+    <h3>Serial Monitor</h3>
+
+    <div class="output-box">
+<pre>Starting Face Recognition Access...
+
+Camera initialized.
+
+Connecting to Wi-Fi...
+
+Wi-Fi connected.
+
+Dashboard: http://192.168.x.x
+
+Web server started.
+
+ACCESS GRANTED
+
+DOOR LOCKED
+
+ACCESS DENIED</pre>
+    </div>
+
+    <h3>Dashboard Functions</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Control</th>
+                    <th>Expected Result</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Capture Authorized Face</td>
+                    <td>Registers a face descriptor in browser storage</td>
+                </tr>
+
+                <tr>
+                    <td>Start Recognition</td>
+                    <td>Begins browser-based face matching</td>
+                </tr>
+
+                <tr>
+                    <td>Stop Recognition</td>
+                    <td>Stops recognition requests</td>
+                </tr>
+
+                <tr>
+                    <td>Unlock Door</td>
+                    <td>Commands servo to 90°</td>
+                </tr>
+
+                <tr>
+                    <td>Lock Door</td>
+                    <td>Commands servo to 0°</td>
+                </tr>
+
+                <tr>
+                    <td>Door Status</td>
+                    <td>LOCKED / UNLOCKED</td>
+                </tr>
+
+                <tr>
+                    <td>Camera Preview</td>
+                    <td>Displays refreshed JPEG snapshots</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+        Results depend on camera quality,
+        lighting, browser compatibility,
+        network reliability and recognition
+        model availability. False matches and
+        recognition failures are possible.
+    </div>
+
 </section>
 
+<!-- ==========================================
+     DASHBOARD - AFTER OUTPUT
+========================================== -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="ESP32-CAM Face Recognition Access Dashboard.png"
+            alt="ESP32-CAM Face Recognition Access Dashboard"
+        >
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     RESULT
+========================================== -->
 <section class="section" id="result">
+
     <h2>Result</h2>
-    <p>The ESP32-CAM Face Recognition Access experiment combines browser-based face recognition with servo door control, OLED status and buzzer feedback.</p>
+
+    <p>
+        The ESP32-CAM Face Recognition Access
+        experiment demonstrates browser-based
+        face recognition with a servo-controlled
+        prototype lock, SH1106 OLED indication
+        and buzzer feedback.
+    </p>
+
+    <p>
+        Authorized recognition commands
+        a temporary unlock, while an unknown
+        face produces a denied indication.
+        The system automatically commands
+        the servo back to the locked position
+        after approximately five seconds.
+    </p>
+
 </section>
 
-<section class="section">
+<!-- ==========================================
+     WHAT YOU LEARN
+========================================== -->
+<section class="section" id="learn">
+
     <h2>What You Learn</h2>
+
     <ul>
-        <li>Capturing face images with ESP32-CAM.</li>
-        <li>Using browser-based face-api.js recognition.</li>
-        <li>Controlling a servo from GPIO 2.</li>
-        <li>Providing buzzer feedback on GPIO 15.</li>
-        <li>Displaying access states on an OLED.</li>
-        <li>Creating automatic unlock and relock logic.</li>
+        <li>Using AI-Thinker ESP32-CAM.</li>
+        <li>Capturing JPEG images.</li>
+        <li>Creating a Wi-Fi web server.</li>
+        <li>Understanding browser-based face recognition.</li>
+        <li>Using face-api.js.</li>
+        <li>Registering a face descriptor.</li>
+        <li>Comparing face descriptors.</li>
+        <li>Controlling servo motors.</li>
+        <li>Using GPIO2 for servo control.</li>
+        <li>Using GPIO15 for buzzer alerts.</li>
+        <li>Interfacing SH1106 OLED with I²C.</li>
+        <li>Using GPIO13 and GPIO14 for OLED.</li>
+        <li>Implementing automatic relocking.</li>
+        <li>Using millis() for nonblocking timing.</li>
+        <li>Creating HTML dashboard controls.</li>
+        <li>Handling HTTP requests.</li>
+        <li>Sending JSON status information.</li>
+        <li>Understanding biometric data privacy.</li>
+        <li>Understanding prototype security limitations.</li>
     </ul>
+
 </section>
 
 </main>
 
+<!-- ==========================================
+     FOOTER
+========================================== -->
 <footer>
-<strong>ESP32-CAM Experiment</strong><br>
-ESP32-CAM Face Recognition Access
+
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>ESP32-CAM Face Recognition Access</div>
+
 </footer>
 
-<textarea id="esp32-program" style="display:none;">
-#include "esp_camera.h"
-#include <WiFi.h>
-#include <WebServer.h>
-#include <Wire.h>
-#include <U8g2lib.h>
-#include <ESP32Servo.h>
+<!-- ==========================================
+     COMPLETE ESP32-CAM PROGRAM
+     TEN CODE EXPLANATION SECTIONS
+========================================== -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
 
-// =======================================================
-// WIFI
-// =======================================================
+#include "esp_camera.h"
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;U8g2lib.h>
+#include &lt;ESP32Servo.h>
+
+// [END 01]
+
+
+// [02] CONFIGURE WIFI AND HARDWARE
 
 const char* ssid = "YOUR_WIFI_NAME";
 const char* password = "YOUR_WIFI_PASSWORD";
 
-// =======================================================
-// OLED
-// =======================================================
-
 #define OLED_SDA 13
 #define OLED_SCL 14
 
-U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
-  U8G2_R0,
-  U8X8_PIN_NONE
-);
-
-// =======================================================
-// SERVO
-// =======================================================
-
 #define SERVO_PIN 2
-
-
-
+#define BUZZER_PIN 15
 
 #define LOCK_POSITION 0
 #define UNLOCK_POSITION 90
 
+const unsigned long UNLOCK_TIME = 5000UL;
+
+U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
+    U8G2_R0,
+    U8X8_PIN_NONE
+);
+
 Servo doorServo;
-
-// =======================================================
-// BUZZER
-// =======================================================
-
-#define BUZZER_PIN 15
-
-// =======================================================
-// CAMERA - AI THINKER
-// =======================================================
-
-#define PWDN_GPIO_NUM     32
-#define RESET_GPIO_NUM    -1
-#define XCLK_GPIO_NUM      0
-#define SIOD_GPIO_NUM      26
-#define SIOC_GPIO_NUM      27
-
-#define Y9_GPIO_NUM       35
-#define Y8_GPIO_NUM       34
-#define Y7_GPIO_NUM       39
-#define Y6_GPIO_NUM       36
-#define Y5_GPIO_NUM       21
-#define Y4_GPIO_NUM       19
-#define Y3_GPIO_NUM       18
-#define Y2_GPIO_NUM        5
-
-#define VSYNC_GPIO_NUM    25
-#define HREF_GPIO_NUM     23
-#define PCLK_GPIO_NUM     22
-
-// =======================================================
-// WEB SERVER
-// =======================================================
-
 WebServer server(80);
 
-// =======================================================
-// SYSTEM STATE
-// =======================================================
-
 bool doorUnlocked = false;
+bool cameraReady = false;
 
 unsigned long unlockTime = 0;
 
-const unsigned long UNLOCK_TIME = 5000;
-
 String lastEvent = "System ready";
 
-// =======================================================
-// OLED
-// =======================================================
+// AI-Thinker ESP32-CAM pin mapping
+
+#define PWDN_GPIO_NUM 32
+#define RESET_GPIO_NUM -1
+#define XCLK_GPIO_NUM 0
+#define SIOD_GPIO_NUM 26
+#define SIOC_GPIO_NUM 27
+
+#define Y9_GPIO_NUM 35
+#define Y8_GPIO_NUM 34
+#define Y7_GPIO_NUM 39
+#define Y6_GPIO_NUM 36
+#define Y5_GPIO_NUM 21
+#define Y4_GPIO_NUM 19
+#define Y3_GPIO_NUM 18
+#define Y2_GPIO_NUM 5
+
+#define VSYNC_GPIO_NUM 25
+#define HREF_GPIO_NUM 23
+#define PCLK_GPIO_NUM 22
+
+// [END 02]
+
+
+// [03] UPDATE OLED AND BUZZER
 
 void oledScreen(
-  const char* title,
-  const char* line1,
-  const char* line2
+    const char* title,
+    const char* line1,
+    const char* line2
 ) {
 
-  oled.clearBuffer();
+    oled.clearBuffer();
 
-  oled.setFont(
-    u8g2_font_6x10_tf
-  );
+    oled.setFont(u8g2_font_6x10_tf);
 
-  oled.drawStr(
-    5,
-    10,
-    "ESP32-CAM ACCESS"
-  );
+    oled.drawStr(
+        4, 10, "FACE ACCESS"
+    );
 
-  oled.drawLine(
-    0,
-    13,
-    127,
-    13
-  );
+    oled.drawHLine(
+        0, 14, 128
+    );
 
-  oled.setFont(
-    u8g2_font_helvB14_tf
-  );
+    oled.setFont(
+        u8g2_font_helvB14_tf
+    );
 
-  oled.drawStr(
-    5,
-    33,
-    title
-  );
+    oled.drawStr(
+        4, 33, title
+    );
 
-  oled.setFont(
-    u8g2_font_6x10_tf
-  );
+    oled.setFont(
+        u8g2_font_6x10_tf
+    );
 
-  oled.drawStr(
-    5,
-    48,
-    line1
-  );
+    oled.drawStr(
+        4, 48, line1
+    );
 
-  oled.drawStr(
-    5,
-    61,
-    line2
-  );
+    oled.drawStr(
+        4, 61, line2
+    );
 
-  oled.sendBuffer();
+    oled.sendBuffer();
 }
 
-// =======================================================
-// BUZZER
-// =======================================================
 
 void beepOnce() {
 
-  digitalWrite(
-    BUZZER_PIN,
-    HIGH
-  );
+    digitalWrite(
+        BUZZER_PIN,
+        HIGH
+    );
 
-  delay(120);
+    delay(120);
 
-  digitalWrite(
-    BUZZER_PIN,
-    LOW
-  );
+    digitalWrite(
+        BUZZER_PIN,
+        LOW
+    );
 }
+
 
 void deniedBeep() {
 
-  for (int i = 0; i < 3; i++) {
+    for (int i = 0; i &lt; 3; i++) {
 
-    digitalWrite(
-      BUZZER_PIN,
-      HIGH
-    );
+        digitalWrite(
+            BUZZER_PIN,
+            HIGH
+        );
 
-    delay(120);
+        delay(120);
 
-    digitalWrite(
-      BUZZER_PIN,
-      LOW
-    );
+        digitalWrite(
+            BUZZER_PIN,
+            LOW
+        );
 
-    delay(120);
-  }
+        delay(120);
+    }
 }
 
-// =======================================================
-// UNLOCK
-// =======================================================
+// [END 03]
+
+
+// [04] CONTROL SERVO DOOR LOCK
 
 void unlockDoor() {
 
-  doorUnlocked = true;
+    doorUnlocked = true;
+    unlockTime = millis();
 
-  unlockTime = millis();
+    doorServo.write(
+        UNLOCK_POSITION
+    );
 
-  doorServo.write(
-    UNLOCK_POSITION
-  );
+    beepOnce();
 
-  beepOnce();
+    lastEvent =
+        "AUTHORIZED FACE - ACCESS GRANTED";
 
-  lastEvent =
-    "AUTHORIZED FACE - ACCESS GRANTED";
+    oledScreen(
+        "GRANTED",
+        "Access allowed",
+        "Door open 5 sec"
+    );
 
-  oledScreen(
-    "GRANTED",
-    "Access allowed",
-    "Door open 5 sec"
-  );
-
-  Serial.println(
-    "ACCESS GRANTED"
-  );
+    Serial.println(
+        "ACCESS GRANTED"
+    );
 }
 
-// =======================================================
-// LOCK
-// =======================================================
 
 void lockDoor() {
 
-  doorUnlocked = false;
+    doorUnlocked = false;
 
-  doorServo.write(
-    LOCK_POSITION
-  );
+    doorServo.write(
+        LOCK_POSITION
+    );
 
-  lastEvent =
-    "Door locked";
+    lastEvent = "Door locked";
 
-  oledScreen(
-    "LOCKED",
-    "Door secured",
-    "Scan face..."
-  );
+    oledScreen(
+        "LOCKED",
+        "Door secured",
+        "Scan face..."
+    );
 
-  Serial.println(
-    "DOOR LOCKED"
-  );
+    Serial.println(
+        "DOOR LOCKED"
+    );
 }
 
-// =======================================================
-// DENIED
-// =======================================================
 
 void accessDenied() {
 
-  deniedBeep();
+    // Do not change an already
+    // unlocked door to locked here.
+    // Auto-relock is handled separately.
 
-  lastEvent =
-    "UNKNOWN FACE - ACCESS DENIED";
-  oledScreen(
-    "DENIED",
-    "Unknown face",
-    "Access blocked"
-  );
+    deniedBeep();
 
-  Serial.println(
-    "ACCESS DENIED"
-  );
+    lastEvent =
+        "UNKNOWN FACE - ACCESS DENIED";
+
+    oledScreen(
+        "DENIED",
+        "Unknown face",
+        "Access blocked"
+    );
+
+    Serial.println(
+        "ACCESS DENIED"
+    );
 }
 
-// =======================================================
-// CAMERA INITIALIZATION
-// =======================================================
+// [END 04]
+
+
+// [05] INITIALIZE CAMERA
 
 bool initCamera() {
 
-  camera_config_t config;
+    camera_config_t config = {};
 
-  config.ledc_channel =
-    LEDC_CHANNEL_0;
+    config.ledc_channel = LEDC_CHANNEL_0;
+    config.ledc_timer = LEDC_TIMER_0;
 
-  config.ledc_timer =
-    LEDC_TIMER_0;
+    config.pin_d0 = Y2_GPIO_NUM;
+    config.pin_d1 = Y3_GPIO_NUM;
+    config.pin_d2 = Y4_GPIO_NUM;
+    config.pin_d3 = Y5_GPIO_NUM;
+    config.pin_d4 = Y6_GPIO_NUM;
+    config.pin_d5 = Y7_GPIO_NUM;
+    config.pin_d6 = Y8_GPIO_NUM;
+    config.pin_d7 = Y9_GPIO_NUM;
 
-  config.pin_d0 =
-    Y2_GPIO_NUM;
+    config.pin_xclk = XCLK_GPIO_NUM;
+    config.pin_pclk = PCLK_GPIO_NUM;
 
-  config.pin_d1 =
-    Y3_GPIO_NUM;
+    config.pin_vsync = VSYNC_GPIO_NUM;
+    config.pin_href = HREF_GPIO_NUM;
 
-  config.pin_d2 =
-    Y4_GPIO_NUM;
+    config.pin_sccb_sda = SIOD_GPIO_NUM;
+    config.pin_sccb_scl = SIOC_GPIO_NUM;
 
-  config.pin_d3 =
-    Y5_GPIO_NUM;
+    config.pin_pwdn = PWDN_GPIO_NUM;
+    config.pin_reset = RESET_GPIO_NUM;
 
-  config.pin_d4 =
-    Y6_GPIO_NUM;
+    config.xclk_freq_hz = 20000000;
+    config.pixel_format = PIXFORMAT_JPEG;
 
-  config.pin_d5 =
-    Y7_GPIO_NUM;
+    if (psramFound()) {
 
-  config.pin_d6 =
-    Y8_GPIO_NUM;
+        config.frame_size = FRAMESIZE_VGA;
+        config.jpeg_quality = 12;
+        config.fb_count = 2;
 
-  config.pin_d7 =
-    Y9_GPIO_NUM;
+        config.fb_location =
+            CAMERA_FB_IN_PSRAM;
 
-  config.pin_xclk =
-    XCLK_GPIO_NUM;
+        config.grab_mode =
+            CAMERA_GRAB_LATEST;
 
-  config.pin_pclk =
-    PCLK_GPIO_NUM;
+    } else {
 
-  config.pin_vsync =
-    VSYNC_GPIO_NUM;
+        config.frame_size = FRAMESIZE_QVGA;
+        config.jpeg_quality = 14;
+        config.fb_count = 1;
 
-  config.pin_href =
-    HREF_GPIO_NUM;
+        config.fb_location =
+            CAMERA_FB_IN_DRAM;
 
-  config.pin_sccb_sda =
-    SIOD_GPIO_NUM;
+        config.grab_mode =
+            CAMERA_GRAB_WHEN_EMPTY;
+    }
 
-  config.pin_sccb_scl =
-    SIOC_GPIO_NUM;
-
-  config.pin_pwdn =
-    PWDN_GPIO_NUM;
-
-  config.pin_reset =
-    RESET_GPIO_NUM;
-
-  config.xclk_freq_hz =
-    20000000;
-
-  config.pixel_format =
-    PIXFORMAT_JPEG;
-
-  if (psramFound()) {
-
-    config.frame_size =
-      FRAMESIZE_VGA;
-
-    config.jpeg_quality =
-      10;
-
-    config.fb_count =
-      2;
-
-  } else {
-
-    config.frame_size =
-      FRAMESIZE_QVGA;
-
-    config.jpeg_quality =
-      12;
-
-    config.fb_count =
-      1;
-  }
-
-  esp_err_t err =
-    esp_camera_init(
-      &config
+    esp_err_t err = esp_camera_init(
+        &config
     );
 
-  if (err != ESP_OK) {
+    if (err != ESP_OK) {
 
-    Serial.printf(
-      "Camera init failed: 0x%x\n",
-      err
+        Serial.printf(
+            "Camera initialization failed: 0x%x\n",
+            err
+        );
+
+        return false;
+    }
+
+    sensor_t* sensor =
+        esp_camera_sensor_get();
+
+    if (sensor != nullptr) {
+
+        sensor->set_vflip(sensor, 1);
+        sensor->set_hmirror(sensor, 0);
+    }
+
+    Serial.println(
+        "Camera initialized."
     );
 
-    return false;
-  }
-
-  sensor_t* s =
-    esp_camera_sensor_get();
-
-  if (s != NULL) {
-
-    // Your camera was upside down
-    s->set_vflip(
-      s,
-      1
-    );
-
-    s->set_hmirror(
-      s,
-      0
-    );
-  }
-
-  return true;
+    return true;
 }
 
-// =======================================================
-// CAMERA CAPTURE
-// =======================================================
+// [END 05]
+
+
+// [06] SERVE CAMERA IMAGES
 
 void handleCapture() {
 
-  camera_fb_t* fb =
-    esp_camera_fb_get();
+    if (!cameraReady) {
 
-  if (!fb) {
+        server.send(
+            503,
+            "text/plain",
+            "Camera not ready"
+        );
 
-    server.send(
-      500,
-      "text/plain",
-      "Camera capture failed"
+        return;
+    }
+
+    camera_fb_t* fb =
+        esp_camera_fb_get();
+
+    if (!fb) {
+
+        server.send(
+            500,
+            "text/plain",
+            "Camera capture failed"
+        );
+
+        return;
+    }
+
+    server.sendHeader(
+        "Cache-Control",
+        "no-store"
     );
 
-    return;
-  }
+    server.setContentLength(
+        fb->len
+    );
 
-  WiFiClient client =
-    server.client();
+    server.send(
+        200,
+        "image/jpeg",
+        ""
+    );
 
-  client.println(
-    "HTTP/1.1 200 OK"
-  );
+    WiFiClient client = server.client();
 
-  client.println(
-    "Content-Type: image/jpeg"
-  );
+    client.write(
+        fb->buf,
+        fb->len
+    );
 
-  client.println(
-    "Cache-Control: no-cache"
-  );
-
-  client.println(
-    "Connection: close"
-  );
-
-  client.print(
-    "Content-Length: "
-  );
-
-  client.println(
-    fb->len
-  );
-
-  client.println();
-
-  client.write(
-    fb->buf,
-    fb->len
-  );
-
-  esp_camera_fb_return(
-    fb
-  );
+    esp_camera_fb_return(fb);
 }
 
-// =======================================================
-// COMMAND PAGE
-// =======================================================
+// [END 06]
+
+
+// [07] HANDLE ACCESS COMMANDS AND STATUS
 
 void handleStatus() {
 
-  String json = "{";
+    String json = "{";
 
-  json += "\"door\":";
-  json += doorUnlocked
-          ? "\"UNLOCKED\""
-          : "\"LOCKED\"";
+    json += "\"door\":";
+    json += doorUnlocked
+        ? "\"UNLOCKED\""
+        : "\"LOCKED\"";
 
-  json += ",";
+    json += ",";
 
-  json += "\"event\":\"";
-  json += lastEvent;
-  json += "\"";
+    json += "\"event\":\"";
+    json += lastEvent;
+    json += "\"";
 
-  json += "}";
+    json += "}";
 
-  server.send(
-    200,
-    "application/json",
-    json
-  );
+    server.sendHeader(
+        "Cache-Control",
+        "no-store"
+    );
+
+    server.send(
+        200,
+        "application/json",
+        json
+    );
 }
 
-// =======================================================
-// UNLOCK URL
-// =======================================================
 
 void handleUnlock() {
 
-  unlockDoor();
+    unlockDoor();
 
-  server.send(
-    200,
-    "text/plain",
-    "UNLOCKED"
-  );
+    server.send(
+        200,
+        "text/plain",
+        "UNLOCKED"
+    );
 }
 
-// =======================================================
-// LOCK URL
-// =======================================================
 
 void handleLock() {
 
-  lockDoor();
+    lockDoor();
 
-  server.send(
-    200,
-    "text/plain",
-    "LOCKED"
-  );
+    server.send(
+        200,
+        "text/plain",
+        "LOCKED"
+    );
 }
 
-// =======================================================
-// DENIED URL
-// =======================================================
 
 void handleDenied() {
 
-  accessDenied();
+    accessDenied();
 
-  server.send(
-    200,
-    "text/plain",
-    "DENIED"
-  );
+    server.send(
+        200,
+        "text/plain",
+        "DENIED"
+    );
 }
 
-// =======================================================
-// DASHBOARD
-// =======================================================
+// [END 07]
 
-void handleRoot() {
 
-  String html = R"rawliteral(
-<!DOCTYPE html>
+// [08] CREATE FACE RECOGNITION DASHBOARD
 
-<html>
+const char dashboardHTML[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE html>
+&lt;html lang="en">
 
-<head>
+&lt;head>
+&lt;meta charset="UTF-8">
+&lt;meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+&lt;title>Face Recognition Access&lt;/title>
 
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
+&lt;script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js">&lt;/script>
 
-<title>
-ESP32-CAM Smart Access
-</title>
-
-<!-- FACE API -->
-
-<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js">
-</script>
-
-<style>
-
+&lt;style>
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-
-  margin: 0;
-
-  background:
-  linear-gradient(
-    135deg,
-    #080d1b,
-    #101827,
-    #172554
-  );
-
-  color: white;
-
-  font-family:
-  Arial,
-  Helvetica,
-  sans-serif;
-
-  min-height: 100vh;
-
-  padding: 22px;
-
+    margin: 0;
+    padding: 22px;
+    background: linear-gradient(
+        135deg,
+        #080d1b,
+        #101827,
+        #172554
+    );
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .container {
-
-  max-width: 1200px;
-
-  margin: auto;
-
+    max-width: 1200px;
+    margin: auto;
 }
 
 .header {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 15px;
-
-  margin-bottom: 22px;
-
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
 }
 
 .logo {
-
-  width: 58px;
-
-  height: 58px;
-
-  border-radius: 17px;
-
-  background:
-  linear-gradient(
-    135deg,
-    #2563eb,
-    #7c3aed
-  );
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-weight: bold;
-
-  font-size: 16px;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 17px;
+    background: #2563eb;
+    font-weight: bold;
 }
 
 .title {
-
-  flex: 1;
-
+    flex: 1;
 }
 
 .title h1 {
-
-  margin: 0;
-
-  font-size: 28px;
-
+    margin: 0;
+    font-size: 27px;
 }
 
 .title p {
-
-  margin: 5px 0 0;
-
-  color: #94a3b8;
-
+    margin: 5px 0 0;
+    color: #94a3b8;
 }
 
 .online {
-
-  padding:
-  9px 17px;
-
-  border-radius: 30px;
-
-  background:
-  rgba(22,163,74,.12);
-
-  border:
-  1px solid #16a34a;
-
-  color: #4ade80;
-
-  font-weight: bold;
-
+    padding: 9px 16px;
+    border-radius: 25px;
+    background: rgba(22,163,74,.12);
+    border: 1px solid #16a34a;
+    color: #4ade80;
+    font-weight: bold;
 }
 
 .main {
-
-  display: grid;
-
-  grid-template-columns:
-  380px 1fr;
-
-  gap: 20px;
-
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 20px;
 }
 
 .card {
-
-  background:
-  rgba(30,41,59,.92);
-
-  border:
-  1px solid
-  rgba(255,255,255,.08);
-
-  border-radius: 22px;
-
-  padding: 20px;
-
-  box-shadow:
-  0 15px 45px
-  rgba(0,0,0,.3);
-
-  margin-bottom: 18px;
-
+    padding: 20px;
+    margin-bottom: 18px;
+    border-radius: 20px;
+    background: #1e293b;
+    border: 1px solid #334155;
 }
 
 .card h2 {
-
-  margin:
-  0 0 15px;
-
-  font-size: 18px;
-
+    margin: 0 0 15px;
+    font-size: 18px;
 }
 
 .status {
-
-  background:
-  #111b31;
-
-  border-radius: 15px;
-
-  padding: 15px;
-
-  margin-bottom: 12px;
-
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    background: #111b31;
 }
 
 .label {
-
-  color: #8da2c0;
-
-  font-size: 10px;
-
-  text-transform: uppercase;
-
+    font-size: 11px;
+    color: #8da2c0;
+    text-transform: uppercase;
 }
 
 .value {
-
-  font-size: 21px;
-
-  font-weight: bold;
-
-  margin-top: 6px;
-
+    margin-top: 6px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .green {
-
-  color: #4ade80;
+    color: #4ade80;
 }
 
 .red {
-
-  color: #f87171;
+    color: #f87171;
 }
 
 .blue {
-
-  color: #60a5fa;
+    color: #60a5fa;
 }
 
 .buttons {
-
-  display: grid;
-
-  grid-template-columns:
-  1fr 1fr;
-
-  gap: 10px;
-
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
 }
 
 button {
-
-  border: 0;
-
-  border-radius: 12px;
-
-  padding: 14px 8px;
-
-  color: white;
-
-  font-weight: bold;
-
-  font-size: 12px;
-
-  cursor: pointer;
-
+    min-height: 48px;
+    padding: 12px 8px;
+    border: none;
+    border-radius: 11px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 button:hover {
-
-  filter:
-  brightness(1.15);
-
-  transform:
-  translateY(-2px);
-
+    filter: brightness(1.15);
 }
 
 .blueBtn {
-
-  background:
-  linear-gradient(
-    135deg,
-    #2563eb,
-    #3b82f6
-  );
-
+    background: #2563eb;
 }
 
 .greenBtn {
-
-  background:
-  linear-gradient(
-    135deg,
-    #16a34a,
-    #22c55e
-  );
-
+    background: #16a34a;
 }
 
 .redBtn {
-
-  background:
-  linear-gradient(
-    135deg,
-    #dc2626,
-    #ef4444
-  );
-
-}
-
-.orangeBtn {
-
-  background:
-  linear-gradient(
-    135deg,
-    #ea580c,
-    #f97316
-  );
-
-}
-
-.cameraCard {
-
-  min-height: 650px;
-
+    background: #dc2626;
 }
 
 .cameraBox {
-
-  background:
-  #020617;
-
-  border-radius: 18px;
-
-  padding: 10px;
-
-  border:
-  1px solid #334155;
-
+    padding: 10px;
+    background: #020617;
+    border-radius: 15px;
 }
 
 #camera {
-
-  width: 100%;
-
-  display: block;
-
-  border-radius: 12px;
-
-  background: #000;
-
+    display: block;
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 10px;
 }
 
 .cameraStatus {
-
-  display: flex;
-
-  justify-content:
-  space-between;
-
-  background:
-  #111b31;
-
-  padding: 12px;
-
-  border-radius: 12px;
-
-  margin-top: 12px;
-
-  font-size: 13px;
-
-}
-
-.dot {
-
-  color: #4ade80;
-
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding: 12px;
+    background: #111b31;
+    border-radius: 12px;
+    font-size: 13px;
 }
 
 .event {
-
-  background:
-  #111b31;
-
-  border-radius: 13px;
-
-  padding: 15px;
-
-  font-size: 13px;
-
-  color: #cbd5e1;
-
+    padding: 12px;
+    border-radius: 10px;
+    background: #111b31;
+    color: #cbd5e1;
+    overflow-wrap: anywhere;
 }
 
 .recognitionBox {
-
-  margin-top: 15px;
-
-  padding: 15px;
-
-  border-radius: 15px;
-
-  background:
-  #111b31;
-
+    margin-top: 15px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #111b31;
 }
 
 #recognitionText {
-
-  font-size: 18px;
-
-  font-weight: bold;
-
-  margin-top: 7px;
-
+    margin-top: 8px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .footer {
-
-  text-align: center;
-
-  color: #64748b;
-
-  font-size: 12px;
-
-  margin-top: 15px;
-
+    margin-top: 20px;
+    color: #94a3b8;
+    text-align: center;
+    font-size: 12px;
 }
 
 @media(max-width:800px) {
-
-  .main {
-
-    grid-template-columns:
-    1fr;
-  }
-
-  .cameraCard {
-
-    min-height: auto;
-  }
-
+    .main {
+        grid-template-columns: 1fr;
+    }
 }
 
-</style>
+@media(max-width:500px) {
+    body {
+        padding: 12px;
+    }
 
-</head>
+    .title h1 {
+        font-size: 20px;
+    }
 
-<body>
+    .card {
+        padding: 15px;
+    }
+}
+&lt;/style>
+&lt;/head>
 
-<div class="container">
+&lt;body>
 
-<div class="header">
+&lt;div class="container">
 
-<div class="logo">
-CAM
-</div>
+    &lt;div class="header">
 
-<div class="title">
+        &lt;div class="logo">CAM&lt;/div>
 
-<h1>
-ESP32-CAM Smart Access
-</h1>
+        &lt;div class="title">
+            &lt;h1>Face Recognition Access&lt;/h1>
+            &lt;p>Face Recognition Prototype&lt;/p>
+        &lt;/div>
 
-<p>
-Face Recognition Security System
-</p>
+        &lt;div class="online" id="connection">
+            CONNECTING
+        &lt;/div>
 
-</div>
+    &lt;/div>
 
-<div class="online">
-ONLINE
-</div>
+    &lt;div class="main">
 
-</div>
+        &lt;div>
+
+            &lt;div class="card">
+
+                &lt;h2>Face Recognition&lt;/h2>
+
+                &lt;div class="status">
+                    &lt;div class="label">
+                        Recognition Status
+                    &lt;/div>
+                    &lt;div
+                        id="recognitionStatus"
+                        class="value red"
+                    >STOPPED&lt;/div>
+                &lt;/div>
 
+                &lt;div class="status">
+                    &lt;div class="label">
+                        Authorized Face
+                    &lt;/div>
+                    &lt;div
+                        id="authorizedStatus"
+                        class="value red"
+                    >NOT REGISTERED&lt;/div>
+                &lt;/div>
 
-<div class="main">
+                &lt;div class="buttons">
 
+                    &lt;button
+                        class="blueBtn"
+                        onclick="registerFace()"
+                    >CAPTURE AUTHORIZED FACE&lt;/button>
 
-<!-- ==========================================
-     LEFT
-=========================================== -->
+                    &lt;button
+                        class="greenBtn"
+                        onclick="startRecognition()"
+                    >START RECOGNITION&lt;/button>
 
-<div>
+                    &lt;button
+                        class="redBtn"
+                        onclick="stopRecognition()"
+                    >STOP RECOGNITION&lt;/button>
 
+                    &lt;button
+                        class="redBtn"
+                        onclick="clearRegisteredFace()"
+                    >CLEAR REGISTERED FACE&lt;/button>
 
-<div class="card">
+                &lt;/div>
 
-<h2>
-Face Recognition
-</h2>
+            &lt;/div>
 
-<div class="status">
+            &lt;div class="card">
 
-<div class="label">
-Recognition Status
-</div>
+                &lt;h2>Door Control&lt;/h2>
 
-<div
-id="recognitionStatus"
-class="value red">
+                &lt;div class="status">
+                    &lt;div class="label">
+                        Door Status
+                    &lt;/div>
+                    &lt;div
+                        id="doorStatus"
+                        class="value blue"
+                    >LOCKED&lt;/div>
+                &lt;/div>
 
-STOPPED
+                &lt;div class="buttons">
 
-</div>
+                    &lt;button
+                        class="greenBtn"
+                        onclick="manualUnlock()"
+                    >UNLOCK DOOR&lt;/button>
 
-</div>
+                    &lt;button
+                        class="redBtn"
+                        onclick="manualLock()"
+                    >LOCK DOOR&lt;/button>
 
+                &lt;/div>
 
-<div class="status">
+            &lt;/div>
 
-<div class="label">
-Authorized Face
-</div>
+            &lt;div class="card">
 
-<div
-id="authorizedStatus"
-class="value red">
+                &lt;h2>System Information&lt;/h2>
 
-NOT REGISTERED
+                &lt;div class="status">
+                    &lt;div class="label">
+                        Last Event
+                    &lt;/div>
+                    &lt;div
+                        id="lastEvent"
+                        class="event"
+                    >System ready&lt;/div>
+                &lt;/div>
 
-</div>
+                &lt;div class="status">
+                    &lt;div class="label">
+                        Recognition Mode
+                    &lt;/div>
+                    &lt;div class="value blue">
+                        BROWSER FACE MATCHING
+                    &lt;/div>
+                &lt;/div>
 
-</div>
+            &lt;/div>
 
+        &lt;/div>
 
-<div class="buttons">
+        &lt;div class="card">
 
-<button
-class="blueBtn"
-onclick="registerFace()">
+            &lt;h2>Live Camera&lt;/h2>
 
-CAPTURE AUTHORIZED FACE
+            &lt;div class="cameraBox">
 
-</button>
+                &lt;img
+                    id="camera"
+                    src="/capture"
+                    alt="Camera Preview"
+                >
 
-<button
-class="greenBtn"
-onclick="startRecognition()">
+            &lt;/div>
 
-START RECOGNITION
+            &lt;div class="cameraStatus">
 
-</button>
+                &lt;span id="cameraState">
+                    Camera loading
+                &lt;/span>
 
-<button
-class="redBtn"
-onclick="stopRecognition()">
+                &lt;span>LIVE SNAPSHOTS&lt;/span>
 
-STOP RECOGNITION
+            &lt;/div>
 
-</button>
+            &lt;div class="recognitionBox">
 
-</div>
+                &lt;div class="label">
+                    Recognition Result
+                &lt;/div>
 
-</div>
+                &lt;div id="recognitionText">
+                    Loading models...
+                &lt;/div>
 
+            &lt;/div>
 
-<div class="card">
+            &lt;div class="status">
 
-<h2>
-Door Control
-</h2>
+                &lt;div class="label">
+                    Last Event
+                &lt;/div>
 
-<div class="status">
+                &lt;div
+                    id="cameraEvent"
+                    class="event"
+                >System ready&lt;/div>
 
-<div class="label">
-Door Status
-</div>
+            &lt;/div>
 
-<div
-id="doorStatus"
-class="value blue">
+        &lt;/div>
 
-LOCKED
+    &lt;/div>
 
-</div>
+    &lt;div class="footer">
+        Educational Face Recognition Prototype
+    &lt;/div>
 
-</div>
+&lt;/div>
 
-<div class="buttons">
+&lt;script>
 
-<button
-class="greenBtn"
-onclick="manualUnlock()">
-
-UNLOCK DOOR
-
-</button>
-
-<button
-class="redBtn"
-onclick="manualLock()">
-
-LOCK DOOR
-
-</button>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>
-System Information
-</h2>
-
-<div class="status">
-
-<div class="label">
-Last Event
-</div>
-
-<div
-id="lastEvent"
-class="event">
-
-System ready
-
-</div>
-
-</div>
-
-<div class="status">
-
-<div class="label">
-Security Mode
-</div>
-
-<div class="value">
-
-FACE AUTHENTICATION
-
-</div>
-
-</div>
-
-</div>
-
-
-</div>
-
-
-<!-- ==========================================
-     RIGHT CAMERA
-=========================================== -->
-
-<div class="card cameraCard">
-
-<h2>
-Live Camera
-</h2>
-
-<div class="cameraBox">
-
-<img
-id="camera"
-src="/capture"
->
-
-</div>
-
-
-<div class="cameraStatus">
-
-<span>
-
-<span class="dot">
-●
-</span>
-
-Camera Online
-
-</span>
-
-<span>
-AI-THINKER
-</span>
-
-</div>
-
-
-<div class="recognitionBox">
-
-<div class="label">
-Recognition Result
-</div>
-
-<div
-id="recognitionText">
-
-Waiting...
-
-</div>
-
-</div>
-
-
-<div class="status">
-
-<div class="label">
-Last Event
-</div>
-
-<div
-id="cameraEvent"
-class="event">
-
-System ready
-
-</div>
-
-</div>
-
-</div>
-
-
-</div>
-
-
-<div class="footer">
-
-ESP32-CAM Smart Access Control Prototype
-
-</div>
-
-</div>
-
-
-<script>
-// =====================================================
-// FACE API
-// =====================================================
-
+// FACE RECOGNITION MODELS
 const MODEL_URL =
-"https://justadudewhohacks.github.io/face-api.js/models";
+    "https://justadudewhohacks.github.io/face-api.js/models";
 
 let faceMatcher = null;
-
-let recognitionRunning = false;
-
 let modelsLoaded = false;
+let recognitionRunning = false;
+let recognitionTask = null;
+let cameraBusy = false;
+let lastDeniedAt = 0;
 
-
-// =====================================================
-// LOAD MODELS
-// =====================================================
-
-async function loadModels() {
-
-  setRecognitionText(
-    "Loading face recognition..."
-  );
-
-  try {
-
-    await faceapi.nets.tinyFaceDetector.loadFromUri(
-      MODEL_URL
-    );
-
-    await faceapi.nets.faceLandmark68Net.loadFromUri(
-      MODEL_URL
-    );
-
-    await faceapi.nets.faceRecognitionNet.loadFromUri(
-      MODEL_URL
-    );
-
-    modelsLoaded = true;
-
-    setRecognitionText(
-      "Face recognition ready"
-    );
-
-    console.log(
-      "Face models loaded"
-    );
-
-  } catch(error) {
-
-    console.error(error);
-
-    setRecognitionText(
-      "Model loading failed"
-    );
-  }
+// DISPLAY HELPERS
+function setRecognitionText(text) {
+    document.getElementById(
+        "recognitionText"
+    ).textContent = text;
 }
 
-
-// =====================================================
-// CAPTURE CURRENT IMAGE
-// =====================================================
-
-async function getCameraImage() {
-
-  const response =
-    await fetch(
-      "/capture?t=" +
-      Date.now()
-    );
-
-  const blob =
-    await response.blob();
-
-  const url =
-    URL.createObjectURL(blob);
-
-  const image =
-    new Image();
-
-  image.src = url;
-
-  await new Promise(
-    resolve => {
-
-      image.onload =
-        resolve;
-
-    }
-  );
-
-  return image;
-}
-
-
-// =====================================================
-// REGISTER AUTHORIZED FACE
-// =====================================================
-
-async function registerFace() {
-
-  if (!modelsLoaded) {
-
-    setRecognitionText(
-      "Face models still loading..."
-    );
-
-    return;
-  }
-
-  setRecognitionText(
-    "Look at camera..."
-  );
-
-  setEvent(
-    "Capturing authorized face..."
-  );
-
-  try {
-
-    const image =
-      await getCameraImage();
-
-    const result =
-      await faceapi
-      .detectSingleFace(
-        image,
-        new faceapi.TinyFaceDetectorOptions({
-          inputSize: 224,
-          scoreThreshold: 0.5
-        })
-      )
-      .withFaceLandmarks()
-      .withFaceDescriptor();
-
-    if (!result) {
-
-      setRecognitionText(
-        "No face detected"
-      );
-
-      setEvent(
-        "Registration failed"
-      );
-
-      return;
-    }
-
-    const descriptor =
-      result.descriptor;
-
-    localStorage.setItem(
-      "authorizedFace",
-      JSON.stringify(
-        Array.from(descriptor)
-      )
-    );
-
-    faceMatcher =
-      new faceapi.FaceMatcher(
-        new faceapi.LabeledFaceDescriptors(
-          "AUTHORIZED",
-          [descriptor]
-        ),
-        0.55
-      );
+function setEvent(text) {
+    document.getElementById(
+        "lastEvent"
+    ).textContent = text;
 
     document.getElementById(
-      "authorizedStatus"
-    ).innerText =
-      "REGISTERED";
+        "cameraEvent"
+    ).textContent = text;
+}
 
-    document.getElementById(
-      "authorizedStatus"
-    ).className =
-      "value green";
-
-    setRecognitionText(
-      "AUTHORIZED FACE REGISTERED"
+function setRecognitionState(text, active) {
+    const el = document.getElementById(
+        "recognitionStatus"
     );
 
-    setEvent(
-      "Authorized face captured successfully"
-    );
-
-  } catch(error) {
-
-    console.error(error);
-
-    setRecognitionText(
-      "Registration error"
-    );
-  }
-}
-
-
-// =====================================================
-// LOAD SAVED FACE
-// =====================================================
-
-function loadSavedFace() {
-
-  const saved =
-    localStorage.getItem(
-      "authorizedFace"
-    );
-
-  if (!saved) {
-
-    return;
-  }
-
-  const values =
-    JSON.parse(saved);
-
-  const descriptor =
-    new Float32Array(values);
-
-  faceMatcher =
-    new faceapi.FaceMatcher(
-      new faceapi.LabeledFaceDescriptors(
-        "AUTHORIZED",
-        [descriptor]
-      ),
-      0.55
-    );
-
-  document.getElementById(
-    "authorizedStatus"
-  ).innerText =
-    "REGISTERED";
-
-  document.getElementById(
-    "authorizedStatus"
-  ).className =
-    "value green";
-
-  setEvent(
-    "Saved authorized face loaded"
-  );
-}
-
-
-// =====================================================
-// START RECOGNITION
-// =====================================================
-
-async function startRecognition() {
-
-  if (!modelsLoaded) {
-
-    setRecognitionText(
-      "Models are loading..."
-    );
-
-    return;
-  }
-
-  if (!faceMatcher) {
-
-    setRecognitionText(
-      "Register authorized face first"
-    );
-
-    setEvent(
-      "No authorized face registered"
-    );
-
-    return;
-  }
-
-  recognitionRunning = true;
-
-  document.getElementById(
-    "recognitionStatus"
-  ).innerText =
-    "ACTIVE";
-
-  document.getElementById(
-    "recognitionStatus"
-  ).className =
-    "value green";
-
-  setRecognitionText(
-    "Scanning..."
-  );
-
-  setEvent(
-    "Face recognition started"
-  );
-
-  recognitionLoop();
-}
-
-
-// =====================================================
-// STOP
-// =====================================================
-
-function stopRecognition() {
-
-  recognitionRunning = false;
-
-  document.getElementById(
-    "recognitionStatus"
-  ).innerText =
-    "STOPPED";
-
-  document.getElementById(
-    "recognitionStatus"
-  ).className =
-    "value red";
-
-  setRecognitionText(
-    "Recognition stopped"
-  );
-
-  setEvent(
-    "Recognition stopped"
-  );
-}
-
-
-// =====================================================
-// RECOGNITION LOOP
-// =====================================================
-
-async function recognitionLoop() {
-
-  while (recognitionRunning) {
-
-    try {
-
-      const image =
-        await getCameraImage();
-
-      const result =
-        await faceapi
-        .detectSingleFace(
-          image,
-          new faceapi.TinyFaceDetectorOptions({
-            inputSize: 224,
-            scoreThreshold: 0.5
-          })
-        )
-        .withFaceLandmarks()
-        .withFaceDescriptor();
-
-      if (!result) {
-
-        setRecognitionText(
-          "No face detected"
-        );
-
-        await delay(1000);
-
-        continue;
-      }
-
-      const bestMatch =
-        faceMatcher.findBestMatch(
-          result.descriptor
-        );
-
-      console.log(
-        bestMatch.toString()
-      );
-
-      if (
-        bestMatch.label ===
-        "AUTHORIZED"
-      ) {
-
-        setRecognitionText(
-          "AUTHORIZED FACE"
-        );
-
-        setEvent(
-          "Authorized face detected - Access granted"
-        );
-
-        await fetch(
-          "/unlock"
-        );
-
-        recognitionRunning = false;
-
-        document.getElementById(
-          "recognitionStatus"
-        ).innerText =
-          "ACCESS GRANTED";
-
-        document.getElementById(
-          "recognitionStatus"
-        ).className =
-          "value green";
-
-        await delay(5500);
-
-        if (!doorUnlockedLocal()) {
-
-          startRecognition();
-        }
-
-      } else {
-
-        setRecognitionText(
-          "UNKNOWN FACE"
-        );
-
-        setEvent(
-          "Unknown face - Access denied"
-        );
-
-        await fetch(
-          "/denied"
-        );
-
-        await delay(1500);
-      }
-
-    } catch(error) {
-
-      console.error(error);
-
-      setRecognitionText(
-        "Recognition error"
-      );
-
-      await delay(1000);
-    }
-  }
-}
-
-
-// =====================================================
-// MANUAL UNLOCK
-// =====================================================
-
-async function manualUnlock() {
-
-  await fetch(
-    "/unlock"
-  );
-
-  document.getElementById(
-    "doorStatus"
-  ).innerText =
-    "UNLOCKED";
-
-  document.getElementById(
-    "doorStatus"
-  ).className =
-    "value green";
-
-  setEvent(
-    "Manual unlock"
-  );
-}
-
-
-// =====================================================
-// MANUAL LOCK
-// =====================================================
-
-async function manualLock() {
-
-  await fetch(
-    "/lock"
-  );
-
-  document.getElementById(
-    "doorStatus"
-  ).innerText =
-    "LOCKED";
-
-  document.getElementById(
-    "doorStatus"
-  ).className =
-    "value blue";
-
-  setEvent(
-    "Door locked"
-  );
-}
-
-
-// =====================================================
-// LOCAL DOOR STATE
-// =====================================================
-
-function doorUnlockedLocal() {
-
-  return document.getElementById(
-    "doorStatus"
-  ).innerText ===
-  "UNLOCKED";
-}
-
-
-// =====================================================
-// UI
-// =====================================================
-
-function setRecognitionText(
-  text
-) {
-
-  document.getElementById(
-    "recognitionText"
-  ).innerText =
-    text;
-}
-
-function setEvent(
-  text
-) {
-
-  document.getElementById(
-    "lastEvent"
-  ).innerText =
-    text;
-
-  document.getElementById(
-    "cameraEvent"
-  ).innerText =
-    text;
+    el.textContent = text;
+    el.className =
+        active ? "value green" : "value red";
 }
 
 function delay(ms) {
-
-  return new Promise(
-    resolve =>
-      setTimeout(
-        resolve,
-        ms
-      )
-  );
+    return new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
 }
 
+// LOAD FACE MODELS
+async function loadModels() {
 
-// =====================================================
-// CAMERA REFRESH
-// =====================================================
-
-function refreshCamera() {
-
-  const img =
-    document.getElementById(
-      "camera"
+    setRecognitionText(
+        "Loading recognition models..."
     );
 
-  img.src =
-    "/capture?t=" +
-    Date.now();
+    if (typeof faceapi === "undefined") {
+        setRecognitionText(
+            "face-api.js unavailable"
+        );
+        return;
+    }
+
+    try {
+        await Promise.all([
+            faceapi.nets.tinyFaceDetector.loadFromUri(
+                MODEL_URL
+            ),
+            faceapi.nets.faceLandmark68Net.loadFromUri(
+                MODEL_URL
+            ),
+            faceapi.nets.faceRecognitionNet.loadFromUri(
+                MODEL_URL
+            )
+        ]);
+
+        modelsLoaded = true;
+
+        setRecognitionText(
+            "Face recognition ready"
+        );
+
+        loadSavedFace();
+
+    } catch (error) {
+        console.error(error);
+        setRecognitionText(
+            "Model loading failed"
+        );
+    }
 }
 
-setInterval(
-  refreshCamera,
-  1200
+// CAPTURE AN IMAGE FOR RECOGNITION
+async function getCameraImage() {
+
+    const response = await fetch(
+        "/capture?t=" + Date.now(),
+        {cache: "no-store"}
+    );
+
+    if (!response.ok) {
+        throw new Error("Camera unavailable");
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    try {
+        const image = new Image();
+
+        await new Promise((resolve, reject) => {
+            image.onload = resolve;
+            image.onerror = reject;
+            image.src = url;
+        });
+
+        return image;
+
+    } finally {
+        URL.revokeObjectURL(url);
+    }
+}
+
+// CREATE FACE DESCRIPTOR
+async function getFaceDescriptor() {
+
+    const image = await getCameraImage();
+
+    return await faceapi
+        .detectSingleFace(
+            image,
+            new faceapi.TinyFaceDetectorOptions({
+                inputSize: 224,
+                scoreThreshold: 0.5
+            })
+        )
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+}
+
+// REGISTER AUTHORIZED FACE
+async function registerFace() {
+
+    if (!modelsLoaded) {
+        setRecognitionText(
+            "Recognition models not ready"
+        );
+        return;
+    }
+
+    stopRecognition();
+
+    setRecognitionText(
+        "Look at the camera..."
+    );
+
+    try {
+        const result = await getFaceDescriptor();
+
+        if (!result) {
+            setRecognitionText(
+                "No face detected"
+            );
+            return;
+        }
+
+        const descriptor = result.descriptor;
+
+        localStorage.setItem(
+            "authorizedFace",
+            JSON.stringify(
+                Array.from(descriptor)
+            )
+        );
+
+        createMatcher(descriptor);
+
+        setRecognitionText(
+            "AUTHORIZED FACE REGISTERED"
+        );
+
+        setEvent(
+            "Authorized face captured"
+        );
+
+    } catch (error) {
+        console.error(error);
+
+        setRecognitionText(
+            "Face registration error"
+        );
+    }
+}
+
+// CREATE FACE MATCHER
+function createMatcher(descriptor) {
+
+    faceMatcher = new faceapi.FaceMatcher(
+        new faceapi.LabeledFaceDescriptors(
+            "AUTHORIZED",
+            [descriptor]
+        ),
+        0.55
+    );
+
+    const element = document.getElementById(
+        "authorizedStatus"
+    );
+
+    element.textContent = "REGISTERED";
+    element.className = "value green";
+}
+
+// LOAD SAVED FACE
+function loadSavedFace() {
+
+    try {
+        const saved = localStorage.getItem(
+            "authorizedFace"
+        );
+
+        if (!saved) {
+            return;
+        }
+
+        const values = JSON.parse(saved);
+
+        if (!Array.isArray(values)) {
+            return;
+        }
+
+        if (values.length !== 128) {
+            return;
+        }
+
+        createMatcher(
+            new Float32Array(values)
+        );
+
+        setEvent(
+            "Saved face descriptor loaded"
+        );
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// CLEAR REGISTERED FACE
+function clearRegisteredFace() {
+
+    stopRecognition();
+
+    localStorage.removeItem(
+        "authorizedFace"
+    );
+
+    faceMatcher = null;
+
+    const element = document.getElementById(
+        "authorizedStatus"
+    );
+
+    element.textContent = "NOT REGISTERED";
+    element.className = "value red";
+
+    setRecognitionText(
+        "Registered face cleared"
+    );
+
+    setEvent(
+        "Face descriptor removed"
+    );
+}
+
+// START RECOGNITION
+function startRecognition() {
+
+    if (!modelsLoaded) {
+        setRecognitionText(
+            "Models not ready"
+        );
+        return;
+    }
+
+    if (!faceMatcher) {
+        setRecognitionText(
+            "Register a face first"
+        );
+        return;
+    }
+
+    if (recognitionRunning) {
+        return;
+    }
+
+    recognitionRunning = true;
+
+    setRecognitionState(
+        "ACTIVE",
+        true
+    );
+
+    setRecognitionText("Scanning...");
+    setEvent("Recognition started");
+
+    recognitionTask = recognitionLoop();
+}
+
+// STOP RECOGNITION
+function stopRecognition() {
+
+    recognitionRunning = false;
+
+    setRecognitionState(
+        "STOPPED",
+        false
+    );
+}
+
+// RECOGNITION LOOP
+async function recognitionLoop() {
+
+    while (recognitionRunning) {
+
+        try {
+            const result =
+                await getFaceDescriptor();
+
+            if (!recognitionRunning) {
+                break;
+            }
+
+            if (!result) {
+                setRecognitionText(
+                    "No face detected"
+                );
+
+                await delay(800);
+                continue;
+            }
+
+            const match =
+                faceMatcher.findBestMatch(
+                    result.descriptor
+                );
+
+            if (match.label === "AUTHORIZED") {
+
+                setRecognitionText(
+                    "AUTHORIZED FACE"
+                );
+
+                setEvent(
+                    "Authorized face detected"
+                );
+
+                const response = await fetch(
+                    "/unlock",
+                    {
+                        method: "POST",
+                        cache: "no-store"
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unlock request failed"
+                    );
+                }
+
+                // Stop detection after
+                // successful recognition.
+                recognitionRunning = false;
+
+                setRecognitionState(
+                    "ACCESS GRANTED",
+                    true
+                );
+
+                break;
+
+            } else {
+
+                setRecognitionText(
+                    "UNKNOWN FACE"
+                );
+
+                // Avoid repeatedly triggering
+                // the buzzer for every frame.
+                if (
+                    Date.now() - lastDeniedAt >
+                    3000
+                ) {
+                    lastDeniedAt = Date.now();
+
+                    await fetch(
+                        "/denied",
+                        {
+                            method: "POST",
+                            cache: "no-store"
+                        }
+                    );
+
+                    setEvent(
+                        "Unknown face - Access denied"
+                    );
+                }
+
+                await delay(800);
+            }
+
+        } catch (error) {
+            console.error(error);
+
+            setRecognitionText(
+                "Recognition error"
+            );
+
+            await delay(1000);
+        }
+    }
+}
+
+// MANUAL UNLOCK
+async function manualUnlock() {
+
+    try {
+        const response = await fetch(
+            "/unlock",
+            {
+                method: "POST",
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Unlock failed"
+            );
+        }
+
+        setEvent("Manual unlock");
+
+        await updateStatus();
+
+    } catch (error) {
+        setEvent(error.message);
+    }
+}
+
+// MANUAL LOCK
+async function manualLock() {
+
+    try {
+        const response = await fetch(
+            "/lock",
+            {
+                method: "POST",
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Lock failed"
+            );
+        }
+
+        setEvent("Manual lock");
+
+        await updateStatus();
+
+    } catch (error) {
+        setEvent(error.message);
+    }
+}
+
+// GET DOOR STATUS
+async function updateStatus() {
+
+    try {
+        const response = await fetch(
+            "/status",
+            {cache: "no-store"}
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Status unavailable"
+            );
+        }
+
+        const data = await response.json();
+
+        const element = document.getElementById(
+            "doorStatus"
+        );
+
+        element.textContent = data.door;
+
+        element.className =
+            data.door === "UNLOCKED"
+                ? "value green"
+                : "value blue";
+
+        document.getElementById(
+            "connection"
+        ).textContent = "ONLINE";
+
+        // Show the latest actual
+        // device-reported event.
+        document.getElementById(
+            "lastEvent"
+        ).textContent = data.event;
+
+        document.getElementById(
+            "cameraEvent"
+        ).textContent = data.event;
+
+    } catch (error) {
+        document.getElementById(
+            "connection"
+        ).textContent = "OFFLINE";
+    }
+}
+
+// REFRESH CAMERA
+function refreshCamera() {
+
+    if (cameraBusy) {
+        return;
+    }
+
+    cameraBusy = true;
+
+    const image = document.getElementById(
+        "camera"
+    );
+
+    image.onload = function() {
+        cameraBusy = false;
+
+        document.getElementById(
+            "cameraState"
+        ).textContent = "Camera Online";
+    };
+
+    image.onerror = function() {
+        cameraBusy = false;
+
+        document.getElementById(
+            "cameraState"
+        ).textContent = "Camera unavailable";
+    };
+
+    image.src =
+        "/capture?t=" + Date.now();
+}
+
+// START BROWSER
+window.addEventListener(
+    "load",
+    function() {
+
+        loadModels();
+        updateStatus();
+
+        setInterval(
+            updateStatus,
+            1500
+        );
+
+        setInterval(
+            refreshCamera,
+            1800
+        );
+    }
 );
 
-
-// =====================================================
-// START
-// =====================================================
-
-window.onload =
-async function() {
-
-  await loadModels();
-
-  loadSavedFace();
-
-};
-
-</script>
-
-</body>
-
-</html>
+&lt;/script>
+&lt;/body>
+&lt;/html>
 )rawliteral";
 
-  server.send(
-    200,
-    "text/html",
-    html
-  );
+
+void handleRoot() {
+
+    server.send_P(
+        200,
+        "text/html",
+        dashboardHTML
+    );
 }
 
-// =======================================================
-// SETUP
-// =======================================================
+// [END 08]
+
+
+// [09] INITIALIZE CAMERA WIFI AND WEB SERVER
 
 void setup() {
 
-  Serial.begin(
-    115200
-  );
-
-  delay(1000);
-
-  Serial.println();
-  Serial.println(
-    "===================================="
-  );
-  Serial.println(
-    " ESP32-CAM SMART FACE ACCESS"
-  );
-  Serial.println(
-    "===================================="
-  );
-
-
-  // =====================================================
-  // BUZZER
-  // =====================================================
-
-  pinMode(
-    BUZZER_PIN,
-    OUTPUT
-  );
-
-  digitalWrite(
-    BUZZER_PIN,
-    LOW
-  );
-
-
-  // =====================================================
-  // OLED
-  // =====================================================
-
-  Wire.begin(
-    OLED_SDA,
-    OLED_SCL
-  );
-
-  oled.begin();
-
-  oled.setI2CAddress(
-    0x3C * 2
-  );
-
-  oledScreen(
-    "STARTING",
-    "ESP32-CAM",
-    "Please wait..."
-  );
-
-  delay(1000);
-
-
-  // =====================================================
-  // SERVO
-  // =====================================================
-
-  doorServo.setPeriodHertz(
-    50
-  );
-
-  doorServo.attach(
-    SERVO_PIN,
-    500,
-    2400
-  );
-
-  doorServo.write(
-    LOCK_POSITION
-  );
-
-
-  // =====================================================
-  // CAMERA
-  // =====================================================
-
-  oledScreen(
-    "CAMERA",
-    "Initializing...",
-    "Please wait"
-  );
-
-  if (!initCamera()) {
-
-    oledScreen(
-      "CAM ERROR",
-      "Camera failed",
-      "Check camera"
-    );
-
-    while (true) {
-
-      delay(1000);
-    }
-  }
-
-
-  // =====================================================
-  // WIFI
-  // =====================================================
-
-  oledScreen(
-    "WIFI",
-    "Connecting...",
-    "Please wait"
-  );
-
-  WiFi.begin(
-    ssid,
-    password
-  );
-
-  Serial.print(
-    "Connecting"
-  );
-
-  int attempts = 0;
-
-  while (
-    WiFi.status() != WL_CONNECTED &&
-    attempts < 30
-  ) {
+    Serial.begin(115200);
 
     delay(500);
 
-    Serial.print(
-      "."
+    Serial.println(
+        "Starting Face Recognition Access..."
     );
 
-    attempts++;
-  }
+    // Initialize buzzer.
 
-  Serial.println();
+    pinMode(
+        BUZZER_PIN,
+        OUTPUT
+    );
 
+    digitalWrite(
+        BUZZER_PIN,
+        LOW
+    );
 
-  if (
-    WiFi.status() ==
-    WL_CONNECTED
-  ) {
+    // Initialize OLED.
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+    oled.setI2CAddress(
+        0x3C * 2
+    );
+
+    oled.begin();
+
+    oledScreen(
+        "STARTING",
+        "Initializing",
+        "Please wait..."
+    );
+
+    // Initialize servo.
+
+    doorServo.setPeriodHertz(50);
+
+    doorServo.attach(
+        SERVO_PIN,
+        500,
+        2400
+    );
+
+    doorServo.write(
+        LOCK_POSITION
+    );
+
+    // Initialize camera.
+
+    cameraReady = initCamera();
+
+    if (!cameraReady) {
+
+        oledScreen(
+            "CAM ERROR",
+            "Camera failed",
+            "Check wiring"
+        );
+
+        while (true) {
+            delay(1000);
+        }
+    }
+
+    // Connect Wi-Fi.
+
+    WiFi.mode(WIFI_STA);
+
+    WiFi.begin(
+        ssid,
+        password
+    );
 
     Serial.println(
-      "WiFi connected"
+        "Connecting to Wi-Fi..."
     );
 
-    Serial.print(
-      "IP Address: "
+    unsigned long started = millis();
+
+    while (
+        WiFi.status() != WL_CONNECTED &amp;&amp;
+        millis() - started &lt; 30000UL
+    ) {
+
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println();
+
+    if (WiFi.status() == WL_CONNECTED) {
+
+        Serial.println(
+            "Wi-Fi connected."
+        );
+
+        Serial.print(
+            "Dashboard: http://"
+        );
+
+        Serial.println(
+            WiFi.localIP()
+        );
+
+    } else {
+
+        Serial.println(
+            "Wi-Fi connection failed."
+        );
+    }
+
+    // Register HTTP routes.
+
+    server.on(
+        "/",
+        HTTP_GET,
+        handleRoot
     );
+
+    server.on(
+        "/capture",
+        HTTP_GET,
+        handleCapture
+    );
+
+    server.on(
+        "/status",
+        HTTP_GET,
+        handleStatus
+    );
+
+    server.on(
+        "/unlock",
+        HTTP_POST,
+        handleUnlock
+    );
+
+    server.on(
+        "/lock",
+        HTTP_POST,
+        handleLock
+    );
+
+    server.on(
+        "/denied",
+        HTTP_POST,
+        handleDenied
+    );
+
+    server.begin();
 
     Serial.println(
-      WiFi.localIP()
+        "Web server started."
     );
 
     oledScreen(
-      "ONLINE",
-      "WiFi connected",
-      "Door locked"
+        "LOCKED",
+        "Door secured",
+        "Scan face..."
     );
-
-  } else {
-
-    oledScreen(
-      "WIFI ERROR",
-      "Connection failed",
-      "Check WiFi"
-    );
-  }
-
-
-  // =====================================================
-  // ROUTES
-  // =====================================================
-
-  server.on(
-    "/",
-    handleRoot
-  );
-
-  server.on(
-    "/capture",
-    handleCapture
-  );
-
-  server.on(
-    "/unlock",
-    handleUnlock
-  );
-
-  server.on(
-    "/lock",
-    handleLock
-  );
-
-  server.on(
-    "/denied",
-    handleDenied
-  );
-
-  server.on(
-    "/status",
-    handleStatus
-  );
-
-
-  // =====================================================
-  // SERVER
-  // =====================================================
-
-  server.begin();
-
-  Serial.println(
-    "Web server started"
-  );
-
-  Serial.print(
-    "Dashboard: http://"
-  );
-
-  Serial.println(
-    WiFi.localIP()
-  );
-
-
-  oledScreen(
-    "READY",
-    "Open dashboard",
-    "Door locked"
-  );
 }
 
-// =======================================================
-// LOOP
-// =======================================================
+// [END 09]
+
+
+// [10] AUTO RELOCK AND RUN SYSTEM
 
 void loop() {
 
-  server.handleClient();
+    server.handleClient();
 
-  if (
-    doorUnlocked &&
-    millis() - unlockTime >=
-    UNLOCK_TIME
-  ) {
+    if (
+        doorUnlocked &amp;&amp;
+        millis() - unlockTime >=
+        UNLOCK_TIME
+    ) {
 
-    lockDoor();
-  }
+        lockDoor();
+    }
 
-  delay(5);
+    delay(5);
 }
+
+// [END 10]
 </textarea>
 
+<!-- ==========================================
+     INTERACTIVE CODE EXPLORER JAVASCRIPT
+========================================== -->
 <script>
-const program=document.getElementById("esp32-program").value.trim();
-const lines=program.split("\n");
 
-const steps=[
-{title:"Load the libraries",search:'#include "esp_camera.h"',text:"The program loads the camera, Wi-Fi, web server, I²C, SH1106 OLED and ESP32 servo libraries."},
-{title:"Set OLED, servo and buzzer",search:"#define OLED_SDA 13",text:"OLED uses GPIO 13 and GPIO 14, the servo uses GPIO 2 and the buzzer uses GPIO 15."},
-{title:"Initialize the camera",search:"bool initCamera()",text:"This function configures the AI-Thinker ESP32-CAM pins, JPEG format and frame settings before starting the OV2640 camera."},
-{title:"Control door lock",search:"void unlockDoor()",text:"An authorized event moves the servo to 90 degrees, records the unlock time, updates the OLED and gives a short buzzer indication."},
-{title:"Handle denied access",search:"void accessDenied()",text:"Unknown-face access triggers three short buzzer beeps and shows DENIED on the OLED while the door remains locked."},
-{title:"Serve camera image",search:"void handleCapture()",text:"The ESP32-CAM captures a JPEG frame and sends it to the browser dashboard."},
-{title:"Build web dashboard",search:"void handleRoot()",text:"The ESP32 serves the browser dashboard used for camera viewing, face registration, recognition and manual door controls."},
-{title:"Start Wi-Fi and server",search:"WiFi.begin(",text:"The ESP32-CAM connects to Wi-Fi and starts the web server so the dashboard can be opened from its IP address."},
-{title:"Relock automatically",search:"millis() - unlockTime",text:"The loop checks the elapsed unlock time and returns the servo to the locked position after about 5 seconds."}
+/* READ COMPLETE CODE */
+
+const program = document
+    .getElementById("esp32-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+/* CODE EXPLANATION STEPS */
+
+const steps = [
+
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Loads the camera, Wi-Fi, HTTP server, " +
+            "I2C, SH1106 OLED and ESP32Servo libraries."
+    },
+
+    {
+        number: "02",
+        label: "CONFIGURE WIFI AND HARDWARE",
+        title: "Configure Hardware",
+        text:
+            "Defines Wi-Fi credentials, OLED pins, " +
+            "servo pin, buzzer pin, camera mapping " +
+            "and system variables."
+    },
+
+    {
+        number: "03",
+        label: "UPDATE OLED AND BUZZER",
+        title: "OLED and Buzzer",
+        text:
+            "Displays access states on the OLED " +
+            "and generates single or multiple " +
+            "active-buzzer alerts."
+    },
+
+    {
+        number: "04",
+        label: "CONTROL SERVO DOOR LOCK",
+        title: "Control Door Lock",
+        text:
+            "Commands the servo to unlock or lock, " +
+            "tracks the unlock time and handles " +
+            "access-denied indications."
+    },
+
+    {
+        number: "05",
+        label: "INITIALIZE CAMERA",
+        title: "Initialize Camera",
+        text:
+            "Configures AI-Thinker camera GPIOs, " +
+            "JPEG resolution and frame buffers."
+    },
+
+    {
+        number: "06",
+        label: "SERVE CAMERA IMAGES",
+        title: "Serve Camera Images",
+        text:
+            "Captures a JPEG image and sends " +
+            "it to the browser over HTTP."
+    },
+
+    {
+        number: "07",
+        label: "HANDLE ACCESS COMMANDS AND STATUS",
+        title: "Handle Access Commands",
+        text:
+            "Handles lock, unlock and denied " +
+            "commands and returns door state " +
+            "as JSON."
+    },
+
+    {
+        number: "08",
+        label: "CREATE FACE RECOGNITION DASHBOARD",
+        title: "Create Recognition Dashboard",
+        text:
+            "Builds the browser interface, " +
+            "loads face-api.js and performs " +
+            "face registration and recognition."
+    },
+
+    {
+        number: "09",
+        label: "INITIALIZE CAMERA WIFI AND WEB SERVER",
+        title: "Start System",
+        text:
+            "Initializes the buzzer, OLED, servo, " +
+            "camera, Wi-Fi and HTTP server routes."
+    },
+
+    {
+        number: "10",
+        label: "AUTO RELOCK AND RUN SYSTEM",
+        title: "Automatic Relock",
+        text:
+            "Continuously handles incoming requests " +
+            "and commands the door to relock " +
+            "after five seconds."
+    }
+
 ];
 
-function escapeHtml(text){
-    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+/* ESCAPE HTML */
+
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
-function displayCode(){
-    let output="";
-    lines.forEach(function(line,index){
-        output+='<span class="code-line" id="line-'+(index+1)+'"><span class="line-number">'+(index+1)+'</span><span>'+escapeHtml(line)+'</span></span>';
-    });
-    document.getElementById("code-lines").innerHTML=output;
-}
+/* DISPLAY CODE WITH LINE NUMBERS */
 
-function showStep(index){
-    const step=steps[index];
-    const buttons=document.querySelectorAll(".step");
-    buttons.forEach(function(button){button.classList.remove("active");});
-    buttons[index].classList.add("active");
+function displayCode() {
 
-    document.querySelectorAll(".code-line").forEach(function(line){line.classList.remove("selected");});
+    const container = document.getElementById(
+        "code-lines"
+    );
 
-    let foundLine=-1;
-    for(let i=0;i<lines.length;i++){
-        if(lines[i].includes(step.search)){foundLine=i;break;}
-    }
+    container.innerHTML = lines.map(
+        function(line, index) {
 
-    if(foundLine>=0){
-        for(let i=foundLine;i<Math.min(foundLine+12,lines.length);i++){
-            document.getElementById("line-"+(i+1)).classList.add("selected");
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
         }
-        const selectedLine=document.getElementById("line-"+(foundLine+1));
-        document.getElementById("code-body").scrollTo({top:selectedLine.offsetTop-20,behavior:"smooth"});
+    ).join("");
+}
+
+/* FIND EXACT CODE MARKERS */
+
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
+
+/* BUILD COMPLETE SECTION RANGES */
+
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "// [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "// [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid: start >= 0 && end >= start
+        };
+    }
+);
+
+/* CREATE STEP BUTTONS */
+
+function createSteps() {
+
+    const container = document.getElementById(
+        "steps-list"
+    );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button = document.createElement(
+                "button"
+            );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number = document.createElement(
+                "span"
+            );
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title = document.createElement(
+                "span"
+            );
+
+            title.textContent = step.title;
+
+            button.append(number, title);
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+/* HIGHLIGHT COMPLETE CODE SECTION */
+
+function showStep(index) {
+
+    document.querySelectorAll(".step").forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+            line.classList.remove("selected");
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation = document.getElementById(
+        "explanation"
+    );
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement(
+        "h3"
+    );
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement(
+        "p"
+    );
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching source-code markers not found.";
+
+        return;
     }
 
-    document.getElementById("explanation").innerHTML='<h3>'+(index+1)+'. '+step.title+'</h3><p>'+step.text+'</p>';
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element = document.getElementById(
+            "line-" + (i + 1)
+        );
+
+        if (element) {
+            element.classList.add("selected");
+        }
+    }
+
+    const firstLine = document.getElementById(
+        "line-" + (range.start + 1)
+    );
+
+    const codeBody = document.getElementById(
+        "code-body"
+    );
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+
+            behavior: "smooth"
+        });
+    }
 }
 
-function copyCode(){
-    navigator.clipboard.writeText(program).then(function(){
-        const button=document.querySelector(".copy-button");
-        button.innerText="Copied!";
-        setTimeout(function(){button.innerText="Copy Code";},1500);
-    });
+/* COPY COMPLETE ARDUINO SKETCH */
+
+async function copyCode() {
+
+    const button = document.querySelector(
+        ".code-top .copy-button"
+    );
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field = document.createElement(
+            "textarea"
+        );
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch (error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch (error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
+
+/* INITIALIZE EXPLORER */
 
 displayCode();
+createSteps();
 showStep(0);
+
 </script>
 
 </body>
