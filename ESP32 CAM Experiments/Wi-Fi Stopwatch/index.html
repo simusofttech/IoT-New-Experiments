@@ -1,23 +1,45 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Wi-Fi Stopwatch</title><style>
-*{box-sizing:border-box} html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}
 
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wi-Fi Stopwatch</title>
+
+<style>
+/* =========================================
+   GENERAL PAGE DESIGN
+========================================= */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.7;
+}
+
+/* =========================================
+   HEADER
+========================================= */
 .header {
-    background: #2563eb;
-    color: white;
     position: relative;
     display: flex;
     flex-direction: column;
     min-height: 230px;
     padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
     text-align: center;
 }
-
-/* COMPANY LOGO - TOP LEFT */
 
 .header-logo {
     position: absolute;
@@ -26,16 +48,13 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     width: 135px;
     max-height: 75px;
     height: auto;
-    object-fit: contain;
+    padding: 5px;
     background: white;
     border-radius: 5px;
-    padding: 5px;
+    object-fit: contain;
 }
 
-/* CENTER HEADING */
-
 .header-content {
-    text-align: center;
     margin: auto 0;
     padding: 35px 165px;
 }
@@ -50,59 +69,43 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     font-size: 17px;
 }
 
-/* BOTTOM BUTTON BAR */
-
 .header-buttons {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 15px;
     padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,.12);
 }
 
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
+.header-left-buttons,
 .header-right-buttons {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-/* BUTTON STYLE */
-
 .header-nav-btn {
     display: inline-flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     min-height: 38px;
     padding: 9px 14px;
     background: white;
     color: #1e3a8a;
     border: 1px solid #dbeafe;
     border-radius: 7px;
+    text-decoration: none;
     font-size: 13px;
     font-weight: bold;
-    text-decoration: none;
     white-space: nowrap;
-    transition: 0.25s ease;
+    transition: .25s ease;
 }
 
 .header-nav-btn:hover {
     background: #dbeafe;
     transform: translateY(-2px);
 }
-
-/* HOME ICON ONLY */
 
 .home-icon-btn {
     width: 40px;
@@ -120,28 +123,482 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
     stroke-linejoin: round;
 }
 
-/* TABLET */
+/* =========================================
+   NAVIGATION
+========================================= */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
 
-@media (max-width: 900px) {
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 100px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =========================================
+   EXPERIMENT THUMBNAIL
+========================================= */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* =========================================
+   COMPONENT CARDS
+========================================= */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* =========================================
+   TABLES
+========================================= */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* =========================================
+   NOTES AND CIRCUIT
+========================================= */
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* =========================================
+   WORKING FLOW
+========================================= */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-step {
+    padding: 5px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* =========================================
+   EXPLORE THE CODE
+========================================= */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    background: white;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    color: #1e293b;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line.selected,
+.code-line.selected:hover {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+
+/* =========================================
+   EXPLANATION PANEL
+========================================= */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* =========================================
+   EXPECTED OUTPUT
+========================================= */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* CENTER DASHBOARD IMAGE */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media(max-width:900px) {
     .header-content {
         padding: 65px 20px 35px;
     }
 }
 
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
     }
 
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media(max-width:600px) {
     .header-logo {
-        width: 95px;
-        max-height: 60px;
         top: 12px;
         left: 12px;
+        width: 95px;
+        max-height: 60px;
     }
 
     .header-content {
@@ -177,125 +634,32 @@ body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#2
         height: 36px;
         padding: 7px;
     }
-}
 
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
+    .container {
+        width: 92%;
     }
 
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
     }
 }
+</style>
+</head>
 
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
-nav a{color:#1e3a8a;text-decoration:none;font-weight:bold;font-size:14px}nav a:hover{color:#2563eb}
-.container{width:90%;max-width:1050px;margin:35px auto}.section{background:#fff;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}
-ul,ol{padding-left:24px}li{margin-bottom:8px}
-/* ======================
-   COMPONENTS
-====================== */
+<body>
 
-.components-grid{
-    display:grid;
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px, 1fr)
-    );
-
-    gap:20px;
-}
-
-
-.component-card{
-    background:white;
-
-    border:1px solid #e2e8f0;
-    border-radius:12px;
-
-    padding:20px;
-
-    text-align:center;
-
-    overflow:hidden;
-}
-
-
-.component-card img{
-    display:block;
-
-    width:100%;
-    max-width:180px;
-
-    height:150px;
-
-    object-fit:contain;
-
-    margin:0 auto 15px;
-
-    background:white;
-}
-
-
-.component-card h4{
-    margin:8px 0;
-
-    color:#1e3a8a;
-
-    font-size:17px;
-}
-
-
-.component-card p{
-    margin:0;
-
-    color:#475569;
-
-    font-size:14px;
-
-    line-height:1.5;
-}
-.component-icon{width:70px;height:70px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:#eff6ff;color:#2563eb;font-size:25px;font-weight:bold}.component-card h4{color:#1e3a8a;margin:0 0 6px}
-.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:#fff}tr:nth-child(even){background:#f8fafc}
-.note{margin-top:15px;padding:14px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
-
-   /* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
-}
-   
-.flow{text-align:center;color:#1e3a8a;font-size:17px;font-weight:bold;line-height:2}
-.code-panel{background:#0f172a;border-radius:12px;overflow:hidden}.code-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#2563eb;color:#fff}.code-top button{border:1px solid #fff;background:#fff;color:#2563eb;border-radius:7px;padding:7px 12px;font-weight:bold;cursor:pointer}
-pre{margin:0;padding:18px;overflow:auto;color:#dbeafe;background:#0f172a;font:13px/1.55 Consolas,monospace;max-height:560px}
-.result-box{padding:18px;background:#ecfdf5;border-left:5px solid #16a34a;border-radius:8px}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}footer strong{color:#fff}
-@media(max-width:700px){.header h1{font-size:28px}.container{width:92%}.section{padding:20px}.circuit{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
-
-.code-line{display:block;white-space:pre}.code-line.highlight{background:#334155;color:white}.code-steps{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.code-steps button{background:#eff6ff;color:#1e3a8a;border:1px solid #93c5fd;padding:10px;border-radius:7px;cursor:pointer}.explanation{background:#eff6ff;border-left:4px solid #2563eb;padding:12px;border-radius:6px}</style></head><body><header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
+<!-- =========================================
+     HEADER
+========================================= -->
+<header class="header">
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -303,32 +667,21 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Wi-Fi Stopwatch</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
 
-        <!-- LEFT: BACK AND HOME -->
-
         <div class="header-left-buttons">
-
-            <!-- BACK BUTTON -->
 
             <a
                 href="../index.html"
                 class="header-nav-btn"
-                title="Back to ESP32 Experiments"
             >
                 &#8592; Back
             </a>
-
-            <!-- HOME ICON ONLY -->
 
             <a
                 href="../../index.html"
@@ -336,11 +689,7 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
                 title="Home"
                 aria-label="Home"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -349,11 +698,7 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <!-- ARDUINO BUTTON -->
 
             <a
                 href="../../Arduino Experiments/index.html"
@@ -362,16 +707,12 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
                 Arduino
             </a>
 
-            <!-- ESP BUTTON -->
-
             <a
                 href="../index.html"
                 class="header-nav-btn"
             >
                 ESP
             </a>
-
-            <!-- RASPBERRY PI BUTTON -->
 
             <a
                 href="../../R-Pi Experiments/index.html"
@@ -383,52 +724,2354 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}foot
         </div>
 
     </div>
-
 </header>
-<nav><a href="../index.html">← ESP32 Experiments</a><a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#expected-output">Expected Output</a><a href="#result">Result</a><a href="#learn">What You Learn</a></nav>
+
+<!-- =========================================
+     NAVIGATION
+========================================= -->
+<nav>
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
+
 <main class="container">
-<section class="section" id="aim"><h2>Aim</h2><p>A Wi-Fi-enabled stopwatch with a 128×64 OLED, physical start/stop and reset buttons, and a browser dashboard showing minutes, seconds and hundredths.</p></section>
-<section class="section"><h2>About the Experiment</h2><p>A Wi-Fi-enabled stopwatch with a 128×64 OLED, physical start/stop and reset buttons, and a browser dashboard showing minutes, seconds and hundredths. The local OLED and Wi-Fi interface work with the same ESP32 controller.</p></section>
-<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32 Development Board.png" alt="ESP32 DevKitC V4"><h4>ESP32 DevKitC V4</h4><p>Controller and Wi-Fi</p></div><div class="component-card"><img src="OLED.png" alt="SSD1306 OLED Display"><h4>SSD1306 OLED Display</h4><p>Elapsed-time display</p></div><div class="component-card"><img src="Push Button.png" alt="Push Button (×2)"><h4>Push Button (×2)</h4><p>Start/stop and reset controls</p></div><div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Physical prototyping</p></div><div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Connections</p></div></div><div class="note">Breadboard and jumper wires are included for physical assembly. Wi-Fi and a USB data cable are required for programming and browser access.</div></section>
-<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><thead><tr><th>Component Pin</th><th>ESP32 Connection</th></tr></thead><tbody><tr><td>OLED VCC</td><td>3V3</td></tr><tr><td>OLED GND</td><td>GND</td></tr><tr><td>OLED SDA</td><td>GPIO21</td></tr><tr><td>OLED SCL</td><td>GPIO22</td></tr><tr><td>START/STOP Button pin 1</td><td>GPIO18</td></tr><tr><td>START/STOP Button pin 2</td><td>GND</td></tr><tr><td>RESET Button pin 1</td><td>GPIO19</td></tr><tr><td>RESET Button pin 2</td><td>GND</td></tr></tbody></table></div><div class="note">Use a common ground and 3.3 V-compatible ESP32 connections. Confirm the actual sensor/module markings before applying power.</div></section>
-<section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Wi-Fi Stopwatch Circuit.png" alt="Wi-Fi Stopwatch Circuit Diagram"></section>
-<section class="section" id="working"><h2>Working Principle</h2><div class="flow">Press START → ESP32 measures elapsed milliseconds → OLED + web dashboard → STOP / RESET</div></section>
-<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Install Adafruit GFX and Adafruit SSD1306 libraries.</li><li>Connect start/stop and reset buttons to GPIO18 and GPIO19, respectively.</li><li>Use the ESP32 web dashboard or the physical buttons.</li><li>Read elapsed time in minutes, seconds and hundredths.</li><li>Upload the sketch and open Serial Monitor at 115200 baud. Replace Wokwi-GUEST credentials when using real Wi-Fi.</li></ol></section>
-<section class="section" id="code"><h2>Explore the Code</h2><div class="code-panel"><div class="code-top"><strong>Arduino IDE — Wi-Fi Stopwatch</strong><button onclick="copyCode()">Copy Code</button></div><pre id="codeView"><span class="code-line" id="line1">  1  #include &lt;WiFi.h&gt;</span>
-<span class="code-line" id="line2">  2  #include &lt;WebServer.h&gt;</span>
-<span class="code-line" id="line3">  3  #include &lt;Wire.h&gt;</span>
-<span class="code-line" id="line4">  4  const char* ssid = "Wokwi-GUEST"; // Replace with your Wi-Fi</span>
-<span class="code-line" id="line5">  5  const char* password = "";</span>
-<span class="code-line" id="line6">  6  WebServer server(80);</span>
-<span class="code-line" id="line7">  7  #include &lt;Adafruit_GFX.h&gt;</span>
-<span class="code-line" id="line8">  8  #include &lt;Adafruit_SSD1306.h&gt;</span>
-<span class="code-line" id="line9">  9  #define START_STOP_BUTTON 18</span>
-<span class="code-line" id="line10"> 10  #define RESET_BUTTON 19</span>
-<span class="code-line" id="line11"> 11  Adafruit_SSD1306 display(128,64,&amp;Wire,-1);</span>
-<span class="code-line" id="line12"> 12  bool running=false,lastStart=HIGH,lastReset=HIGH;</span>
-<span class="code-line" id="line13"> 13  unsigned long startMillis=0,elapsedMillis=0;</span>
-<span class="code-line" id="line14"> 14  unsigned long elapsed(){return running?elapsedMillis+(millis()-startMillis):elapsedMillis;}</span>
-<span class="code-line" id="line15"> 15  String timeText(){unsigned long t=elapsed();char buf[24];</span>
-<span class="code-line" id="line16"> 16   snprintf(buf,sizeof(buf),"%02lu:%02lu.%02lu",t/60000,(t/1000)%60,(t/10)%100);return String(buf);}</span>
-<span class="code-line" id="line17"> 17  void toggle(){if(running){elapsedMillis=elapsed();running=false;}else{startMillis=millis();running=true;}}</span>
-<span class="code-line" id="line18"> 18  void resetWatch(){running=false;elapsedMillis=0;}</span>
-<span class="code-line" id="line19"> 19  void showOLED(){display.clearDisplay();display.setTextColor(SSD1306_WHITE);display.setTextSize(1);</span>
-<span class="code-line" id="line20"> 20   display.setCursor(8,5);display.print("WI-FI STOPWATCH");display.setTextSize(2);</span>
-<span class="code-line" id="line21"> 21   display.setCursor(3,26);display.print(timeText());display.setTextSize(1);</span>
-<span class="code-line" id="line22"> 22   display.setCursor(30,54);display.print(running?"RUNNING":"STOPPED");display.display();}</span>
-<span class="code-line" id="line23"> 23  void serveHome(){String h="&lt;meta name='viewport' content='width=device-width'&gt;&lt;h2&gt;Wi-Fi Stopwatch&lt;/h2&gt;&lt;h1&gt;"+timeText()+"&lt;/h1&gt;";</span>
-<span class="code-line" id="line24"> 24   h+="&lt;a href='/toggle'&gt;START / STOP&lt;/a&gt; | &lt;a href='/reset'&gt;RESET&lt;/a&gt;";</span>
-<span class="code-line" id="line25"> 25   h+="&lt;script&gt;setTimeout(()=&gt;location.reload(),250)&lt;/script&gt;";server.send(200,"text/html",h);}</span>
-<span class="code-line" id="line26"> 26  void goHome(){server.sendHeader("Location","/");server.send(303,"text/plain","");}</span>
-<span class="code-line" id="line27"> 27  void setup(){Serial.begin(115200);pinMode(START_STOP_BUTTON,INPUT_PULLUP);pinMode(RESET_BUTTON,INPUT_PULLUP);</span>
-<span class="code-line" id="line28"> 28   Wire.begin(21,22);if(!display.begin(SSD1306_SWITCHCAPVCC,0x3C)){Serial.println("OLED failed");while(true)delay(1000);}</span>
-<span class="code-line" id="line29"> 29   WiFi.begin(ssid,password);server.on("/",serveHome);server.on("/toggle",[]{toggle();goHome();});</span>
-<span class="code-line" id="line30"> 30   server.on("/reset",[]{resetWatch();goHome();});server.begin();showOLED();}</span>
-<span class="code-line" id="line31"> 31  void loop(){server.handleClient();bool s=digitalRead(START_STOP_BUTTON),r=digitalRead(RESET_BUTTON);</span>
-<span class="code-line" id="line32"> 32   if(lastStart==HIGH&amp;&amp;s==LOW){toggle();delay(35);}if(lastReset==HIGH&amp;&amp;r==LOW){resetWatch();delay(35);}</span>
-<span class="code-line" id="line33"> 33   lastStart=s;lastReset=r;static unsigned long lastDraw=0;</span>
-<span class="code-line" id="line34"> 34   if(millis()-lastDraw&gt;=50){lastDraw=millis();showOLED();}}</span></pre></div><h3>Step-by-Step Explanation</h3><div class="code-steps"><button onclick="explain(0)">Step 1</button><button onclick="explain(1)">Step 2</button><button onclick="explain(2)">Step 3</button><button onclick="explain(3)">Step 4</button></div><p class="explanation" id="explanation">Select a step to highlight the related code and read the explanation.</p><h3>Check Your Understanding</h3><p>Which pins carry I²C data and clock? What happens when Wi-Fi is disconnected? Which buttons or sensor inputs change the output?</p></section>
-<section class="section" id="expected-output"><h2>Expected Output</h2><p>OLED and browser show a running stopwatch with START/STOP and RESET functions.</p></section>
-<section class="section" id="result"><h2>Result</h2><div class="result-box">The Wi-Fi Stopwatch demonstrates sensor or timer control with local OLED feedback and Wi-Fi access.</div></section>
-<section class="section" id="learn"><h2>What You Learn</h2><ul><li>ESP32 GPIO and I²C interfacing</li><li>OLED display programming</li><li>Wi-Fi web-server basics</li><li>Practical embedded-system testing</li></ul></section></main><footer><strong>SimuSoft</strong> — SIMUDIY Exploration Kit</footer>
-<script>const rawCode="#include <WiFi.h>\n#include <WebServer.h>\n#include <Wire.h>\nconst char* ssid = \"Wokwi-GUEST\"; // Replace with your Wi-Fi\nconst char* password = \"\";\nWebServer server(80);\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n#define START_STOP_BUTTON 18\n#define RESET_BUTTON 19\nAdafruit_SSD1306 display(128,64,&Wire,-1);\nbool running=false,lastStart=HIGH,lastReset=HIGH;\nunsigned long startMillis=0,elapsedMillis=0;\nunsigned long elapsed(){return running?elapsedMillis+(millis()-startMillis):elapsedMillis;}\nString timeText(){unsigned long t=elapsed();char buf[24];\n snprintf(buf,sizeof(buf),\"%02lu:%02lu.%02lu\",t/60000,(t/1000)%60,(t/10)%100);return String(buf);}\nvoid toggle(){if(running){elapsedMillis=elapsed();running=false;}else{startMillis=millis();running=true;}}\nvoid resetWatch(){running=false;elapsedMillis=0;}\nvoid showOLED(){display.clearDisplay();display.setTextColor(SSD1306_WHITE);display.setTextSize(1);\n display.setCursor(8,5);display.print(\"WI-FI STOPWATCH\");display.setTextSize(2);\n display.setCursor(3,26);display.print(timeText());display.setTextSize(1);\n display.setCursor(30,54);display.print(running?\"RUNNING\":\"STOPPED\");display.display();}\nvoid serveHome(){String h=\"<meta name='viewport' content='width=device-width'><h2>Wi-Fi Stopwatch</h2><h1>\"+timeText()+\"</h1>\";\n h+=\"<a href='/toggle'>START / STOP</a> | <a href='/reset'>RESET</a>\";\n h+=\"<script>setTimeout(()=>location.reload(),250)</script>\";server.send(200,\"text/html\",h);}\nvoid goHome(){server.sendHeader(\"Location\",\"/\");server.send(303,\"text/plain\",\"\");}\nvoid setup(){Serial.begin(115200);pinMode(START_STOP_BUTTON,INPUT_PULLUP);pinMode(RESET_BUTTON,INPUT_PULLUP);\n Wire.begin(21,22);if(!display.begin(SSD1306_SWITCHCAPVCC,0x3C)){Serial.println(\"OLED failed\");while(true)delay(1000);}\n WiFi.begin(ssid,password);server.on(\"/\",serveHome);server.on(\"/toggle\",[]{toggle();goHome();});\n server.on(\"/reset\",[]{resetWatch();goHome();});server.begin();showOLED();}\nvoid loop(){server.handleClient();bool s=digitalRead(START_STOP_BUTTON),r=digitalRead(RESET_BUTTON);\n if(lastStart==HIGH&&s==LOW){toggle();delay(35);}if(lastReset==HIGH&&r==LOW){resetWatch();delay(35);}\n lastStart=s;lastReset=r;static unsigned long lastDraw=0;\n if(millis()-lastDraw>=50){lastDraw=millis();showOLED();}}";const steps=["Install Adafruit GFX and Adafruit SSD1306 libraries.","Connect start/stop and reset buttons to GPIO18 and GPIO19, respectively.","Use the ESP32 web dashboard or the physical buttons.","Read elapsed time in minutes, seconds and hundredths."];function copyCode(){navigator.clipboard.writeText(rawCode).then(()=>alert("Code copied!"))}function explain(i){document.querySelectorAll(".code-line").forEach(e=>e.classList.remove("highlight"));const lines=document.querySelectorAll(".code-line");let start=Math.floor(i*lines.length/steps.length),end=Math.floor((i+1)*lines.length/steps.length);for(let j=start;j<end;j++)lines[j].classList.add("highlight");lines[start]?.scrollIntoView({behavior:"smooth",block:"center"});document.getElementById("explanation").textContent=steps[i]}</script></body></html>
+
+<!-- =========================================
+     EXPERIMENT THUMBNAIL
+========================================= -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Wi-Fi Stopwatch.png"
+        alt="Wi-Fi Stopwatch Thumbnail"
+    >
+
+</section>
+
+<!-- =========================================
+     AIM
+========================================= -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To design and implement a Wi-Fi-enabled
+        digital stopwatch using an ESP32 DevKitC V4,
+        an SSD1306 OLED display and two push buttons.
+        The system measures elapsed time in minutes,
+        seconds and hundredths of a second
+        and supports Start, Stop and Reset operations
+        through physical buttons and a web dashboard.
+    </p>
+
+</section>
+
+<!-- =========================================
+     ABOUT
+========================================= -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Wi-Fi Stopwatch experiment demonstrates
+        precise elapsed-time measurement using
+        an ESP32 microcontroller.
+    </p>
+
+    <p>
+        The stopwatch uses the ESP32's internal
+        <code>millis()</code> timer to calculate
+        elapsed time without relying on
+        continuous blocking delays.
+    </p>
+
+    <p>
+        A 128×64 SSD1306 OLED shows the
+        elapsed time in MM:SS.hh format,
+        along with the current RUNNING
+        or STOPPED status.
+    </p>
+
+    <p>
+        Two physical buttons are provided.
+        The first button connected to GPIO18
+        starts or stops the stopwatch.
+        The second button connected to GPIO19
+        resets the stopwatch.
+    </p>
+
+    <p>
+        The ESP32 also operates as a Wi-Fi
+        web server. Users can view the stopwatch
+        and control it from a web browser
+        connected to the same network.
+    </p>
+
+    <h3>Stopwatch Controls</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Control</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Start</td>
+                    <td>Begins or resumes elapsed-time measurement</td>
+                </tr>
+                <tr>
+                    <td>Stop</td>
+                    <td>Pauses the elapsed-time measurement</td>
+                </tr>
+                <tr>
+                    <td>Reset</td>
+                    <td>Stops the stopwatch and clears time to 00:00.00</td>
+                </tr>
+                <tr>
+                    <td>Start/Stop Button</td>
+                    <td>Toggles stopwatch operation</td>
+                </tr>
+                <tr>
+                    <td>Reset Button</td>
+                    <td>Clears the elapsed time</td>
+                </tr>
+                <tr>
+                    <td>OLED</td>
+                    <td>Displays elapsed time and operating state</td>
+                </tr>
+                <tr>
+                    <td>Web Dashboard</td>
+                    <td>Displays stopwatch values and controls</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Time Format</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr><td>Minutes</td><td>02</td></tr>
+                <tr><td>Seconds</td><td>35</td></tr>
+                <tr><td>Hundredths</td><td>48</td></tr>
+                <tr><td>Complete Display</td><td>02:35.48</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Important:</strong>
+        The stopwatch shows hundredths of a second
+        based on the ESP32's millisecond clock.
+        Display updates and network communication
+        are not laboratory-grade timing measurements.
+        The accumulated time is not saved permanently
+        when the device is restarted.
+    </div>
+
+</section>
+
+<!-- =========================================
+     COMPONENTS REQUIRED
+========================================= -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="ESP32 Development Board.png"
+                alt="ESP32 DevKitC V4"
+            >
+
+            <h4>ESP32 DevKitC V4 (×1)</h4>
+
+            <p>
+                Main controller providing
+                timer functions and Wi-Fi.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="OLED.png"
+                alt="SSD1306 OLED Display"
+            >
+
+            <h4>SSD1306 OLED Display (×1)</h4>
+
+            <p>
+                Displays elapsed time
+                and stopwatch status.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Push Button.png"
+                alt="Push Button"
+            >
+
+            <h4>Push Button (×2)</h4>
+
+            <p>
+                One button controls Start/Stop,
+                and another controls Reset.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
+            <h4>Breadboard (×1)</h4>
+
+            <p>
+                Used for circuit assembly.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Used for wiring
+                the components.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Required Arduino Libraries:</strong>
+
+        <ul>
+            <li>WiFi.h</li>
+            <li>WebServer.h</li>
+            <li>Wire.h</li>
+            <li>Adafruit_GFX.h</li>
+            <li>Adafruit_SSD1306.h</li>
+        </ul>
+
+        <p>
+            Install the ESP32 board package,
+            Adafruit GFX and Adafruit SSD1306
+            libraries in Arduino IDE.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     CIRCUIT CONNECTIONS
+========================================= -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>SSD1306 OLED Display</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>OLED Pin</th>
+                    <th>ESP32 DevKitC V4 Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr><td>VCC</td><td>3V3</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>SDA</td><td>GPIO21</td></tr>
+                <tr><td>SCL</td><td>GPIO22</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Start/Stop Push Button</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Button Terminal</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>One terminal</td>
+                    <td>GPIO18</td>
+                </tr>
+                <tr>
+                    <td>Opposite terminal</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Reset Push Button</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Button Terminal</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>One terminal</td>
+                    <td>GPIO19</td>
+                </tr>
+                <tr>
+                    <td>Opposite terminal</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Configuration Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr><td>Controller</td><td>ESP32 DevKitC V4</td></tr>
+                <tr><td>OLED SDA</td><td>GPIO21</td></tr>
+                <tr><td>OLED SCL</td><td>GPIO22</td></tr>
+                <tr><td>OLED Address</td><td>0x3C</td></tr>
+                <tr><td>OLED Resolution</td><td>128×64</td></tr>
+                <tr><td>Start/Stop Button</td><td>GPIO18</td></tr>
+                <tr><td>Reset Button</td><td>GPIO19</td></tr>
+                <tr><td>Button Mode</td><td>INPUT_PULLUP</td></tr>
+                <tr><td>Debounce Interval</td><td>40 ms</td></tr>
+                <tr><td>OLED Refresh Interval</td><td>50 ms</td></tr>
+                <tr><td>Web Server</td><td>Port 80</td></tr>
+                <tr><td>Serial Monitor</td><td>115200 baud</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Hardware Precautions:</strong>
+
+        <p>
+            Use the correct terminals of
+            each four-pin tactile switch.
+            When pressed, the selected GPIO
+            must connect to GND.
+        </p>
+
+        <p>
+            The software uses INPUT_PULLUP,
+            so no external pull-up resistors
+            are required for the buttons.
+        </p>
+
+        <p>
+            Check the OLED module's supply
+            and I²C logic-level requirements
+            before connecting it to 3.3V.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     CIRCUIT DIAGRAM
+========================================= -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        src="Wi-Fi Stopwatch Circuit.png"
+        alt="Wi-Fi Stopwatch Circuit Diagram"
+        class="circuit-img"
+    >
+
+</section>
+
+<!-- =========================================
+     WORKING PRINCIPLE
+========================================= -->
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            ESP32 DevKitC V4 Starts
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Initialize OLED and Buttons
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Connect to Wi-Fi
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Start Web Dashboard
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Press Start/Stop or Dashboard START
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Record Starting Time Using millis()
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Calculate Elapsed Milliseconds
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Convert to Minutes, Seconds and Hundredths
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Update OLED and Web Dashboard
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Stop Button Pauses the Stopwatch
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Reset Button Clears Elapsed Time
+        </div>
+
+    </div>
+
+    <h3>Elapsed-Time Measurement</h3>
+
+    <p>
+        The stopwatch records the value
+        returned by <code>millis()</code>
+        when timing begins.
+    </p>
+
+    <p>
+        The difference between the current
+        millisecond value and the start value
+        determines the elapsed duration.
+    </p>
+
+    <h3>Start and Stop</h3>
+
+    <p>
+        When the stopwatch is stopped,
+        the elapsed time is stored.
+        Starting again continues from
+        the stored duration rather than zero.
+    </p>
+
+    <h3>Reset</h3>
+
+    <p>
+        Reset stops the stopwatch
+        and clears the elapsed time
+        to 00:00.00.
+    </p>
+
+    <h3>OLED Output</h3>
+
+    <p>
+        The SSD1306 OLED refreshes
+        approximately every 50 milliseconds,
+        showing the current formatted time
+        and operating status.
+    </p>
+
+    <h3>Wi-Fi Dashboard</h3>
+
+    <p>
+        The ESP32 web dashboard provides
+        START, STOP and RESET commands.
+        The dashboard periodically retrieves
+        the elapsed time through a
+        JSON status endpoint.
+    </p>
+
+</section>
+
+<!-- =========================================
+     PROCEDURE
+========================================= -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the ESP32 DevKitC V4, SSD1306 OLED, two push buttons, breadboard and jumper wires.</li>
+        <li>Connect OLED VCC to 3V3 and GND to GND.</li>
+        <li>Connect OLED SDA to GPIO21.</li>
+        <li>Connect OLED SCL to GPIO22.</li>
+        <li>Connect the Start/Stop button between GPIO18 and GND.</li>
+        <li>Connect the Reset button between GPIO19 and GND.</li>
+        <li>Verify the wiring and common ground.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Install the ESP32 board package.</li>
+        <li>Install Adafruit GFX and Adafruit SSD1306 libraries.</li>
+        <li>Select the appropriate ESP32 board configuration.</li>
+        <li>Create a new sketch named WiFi_Stopwatch.ino.</li>
+        <li>Copy the complete sketch from Explore the Code.</li>
+        <li>Replace the Wi-Fi placeholders with your network credentials.</li>
+        <li>Verify and upload the program.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Observe the initial OLED reading of 00:00.00.</li>
+        <li>Press the physical Start/Stop button to start timing.</li>
+        <li>Observe the elapsed time on the OLED.</li>
+        <li>Press the button again to stop the stopwatch.</li>
+        <li>Press it once more to resume timing.</li>
+        <li>Press the Reset button and verify the display returns to zero.</li>
+        <li>Note the ESP32 IP address in Serial Monitor.</li>
+        <li>Open the IP address in a browser on the same Wi-Fi network.</li>
+        <li>Test START, STOP and RESET using the dashboard.</li>
+        <li>Compare the OLED and dashboard time readings.</li>
+    </ol>
+
+</section>
+
+<!-- =========================================
+     EXPLORE THE CODE
+========================================= -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        ESP32 Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Click an explanation tab to highlight
+        the complete corresponding source-code
+        section in blue. Copy Code copies
+        the full Arduino sketch.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    WiFi_Stopwatch.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Select a topic to highlight
+                its complete program section
+                on the left.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: millis()</summary>
+
+                <p>
+                    millis() returns the number
+                    of milliseconds since the
+                    microcontroller started.
+                    It is used to measure
+                    elapsed stopwatch time.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Hundredths</summary>
+
+                <p>
+                    One hundredth of a second
+                    equals 10 milliseconds.
+                    Dividing the elapsed milliseconds
+                    by 10 converts them into hundredths.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: INPUT_PULLUP</summary>
+
+                <p>
+                    The buttons are normally HIGH.
+                    Pressing either button pulls
+                    its GPIO input LOW.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Wi-Fi Dashboard</summary>
+
+                <p>
+                    The ESP32 hosts a local web page.
+                    Browser controls send HTTP requests,
+                    and the status endpoint supplies
+                    the elapsed stopwatch time.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+
+                <ol>
+                    <li>Which GPIO controls Start/Stop?</li>
+                    <li>Which GPIO controls Reset?</li>
+                    <li>Which pins are used for OLED I²C?</li>
+                    <li>Which function measures elapsed milliseconds?</li>
+                    <li>What is the stopwatch display format?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO18; GPIO19;
+                    GPIO21 and GPIO22;
+                    millis(); MM:SS.hh.
+                </p>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Start the stopwatch with the physical
+        button, stop it through the browser
+        and reset it using the second
+        physical button.
+    </p>
+
+</section>
+
+<!-- =========================================
+     EXPECTED OUTPUT
+========================================= -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Serial Monitor — Startup</h3>
+
+    <div class="output-box">
+<pre>Starting Wi-Fi Stopwatch...
+
+OLED initialized.
+
+Connecting to Wi-Fi...
+
+Wi-Fi connected.
+
+Dashboard: http://192.168.x.x
+
+Web server started.
+
+Stopwatch ready.</pre>
+    </div>
+
+    <h3>Serial Monitor — Button Operation</h3>
+
+    <div class="output-box">
+<pre>Stopwatch STARTED
+
+Stopwatch STOPPED
+Elapsed: 00:12.45
+
+Stopwatch STARTED
+
+Stopwatch RESET</pre>
+    </div>
+
+    <h3>OLED Display — Initial</h3>
+
+    <div class="output-box">
+<pre>WI-FI STOPWATCH
+
+  00:00.00
+
+    STOPPED</pre>
+    </div>
+
+    <h3>OLED Display — Running</h3>
+
+    <div class="output-box">
+<pre>WI-FI STOPWATCH
+
+  00:12.45
+
+    RUNNING</pre>
+    </div>
+
+    <h3>OLED Display — Stopped</h3>
+
+    <div class="output-box">
+<pre>WI-FI STOPWATCH
+
+  00:12.45
+
+    STOPPED</pre>
+    </div>
+
+    <h3>Dashboard Functions</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dashboard Element</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Elapsed Time</td>
+                    <td>Displays MM:SS.hh</td>
+                </tr>
+                <tr>
+                    <td>START</td>
+                    <td>Starts or resumes timing</td>
+                </tr>
+                <tr>
+                    <td>STOP</td>
+                    <td>Pauses elapsed time</td>
+                </tr>
+                <tr>
+                    <td>RESET</td>
+                    <td>Clears time to 00:00.00</td>
+                </tr>
+                <tr>
+                    <td>Operating State</td>
+                    <td>RUNNING / STOPPED</td>
+                </tr>
+                <tr>
+                    <td>Device IP</td>
+                    <td>Displays the local IP address</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        These outputs are examples.
+        Actual elapsed times depend
+        on when the stopwatch is
+        started, stopped and reset.
+    </div>
+
+</section>
+
+<!-- =========================================
+     DASHBOARD
+========================================= -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="Wi-Fi Stopwatch Dashboard.png"
+            alt="Wi-Fi Stopwatch Dashboard"
+        >
+
+    </div>
+
+</section>
+
+<!-- =========================================
+     RESULT
+========================================= -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Wi-Fi Stopwatch experiment
+        demonstrates elapsed-time measurement
+        using an ESP32 DevKitC V4, an SSD1306
+        OLED display and two push buttons.
+    </p>
+
+    <p>
+        The system measures time in minutes,
+        seconds and hundredths of a second.
+        Users can start, stop, resume and reset
+        the stopwatch using physical buttons
+        or the Wi-Fi web dashboard.
+    </p>
+
+</section>
+
+<!-- =========================================
+     WHAT YOU LEARN
+========================================= -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using the ESP32 DevKitC V4.</li>
+        <li>Interfacing an SSD1306 OLED display.</li>
+        <li>Using GPIO21 and GPIO22 for I²C.</li>
+        <li>Reading digital inputs on GPIO18 and GPIO19.</li>
+        <li>Understanding INPUT_PULLUP.</li>
+        <li>Implementing button debouncing.</li>
+        <li>Measuring elapsed time using millis().</li>
+        <li>Converting milliseconds into time values.</li>
+        <li>Displaying minutes, seconds and hundredths.</li>
+        <li>Implementing Start, Stop, Resume and Reset.</li>
+        <li>Updating an OLED without blocking delays.</li>
+        <li>Connecting ESP32 to Wi-Fi.</li>
+        <li>Creating a local HTTP web server.</li>
+        <li>Designing an interactive stopwatch dashboard.</li>
+        <li>Sending commands from a browser.</li>
+        <li>Transmitting elapsed-time data as JSON.</li>
+        <li>Understanding timing precision and display refresh.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>Wi-Fi Stopwatch</div>
+</footer>
+
+<!-- =========================================
+     COMPLETE ESP32 ARDUINO PROGRAM
+     9 INTERACTIVE SECTIONS
+========================================= -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
+
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;Adafruit_GFX.h>
+#include &lt;Adafruit_SSD1306.h>
+
+// [END 01]
+
+
+// [02] CONFIGURE WIFI AND HARDWARE
+
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+#define OLED_SDA 21
+#define OLED_SCL 22
+#define OLED_ADDR 0x3C
+
+#define START_STOP_BUTTON 18
+#define RESET_BUTTON 19
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &amp;Wire,
+    -1
+);
+
+WebServer server(80);
+
+bool stopwatchRunning = false;
+bool oledReady = false;
+
+unsigned long startMillis = 0;
+unsigned long accumulatedMillis = 0;
+
+const unsigned long OLED_UPDATE_INTERVAL = 50UL;
+const unsigned long DEBOUNCE_INTERVAL = 40UL;
+
+unsigned long lastOLEDUpdate = 0;
+
+int previousStartReading = HIGH;
+int stableStartState = HIGH;
+unsigned long startDebounceTime = 0;
+
+int previousResetReading = HIGH;
+int stableResetState = HIGH;
+unsigned long resetDebounceTime = 0;
+
+// [END 02]
+
+
+// [03] CALCULATE AND FORMAT ELAPSED TIME
+
+unsigned long elapsedTime() {
+
+    if (stopwatchRunning) {
+
+        return accumulatedMillis +
+            (millis() - startMillis);
+    }
+
+    return accumulatedMillis;
+}
+
+
+String formatTime(
+    unsigned long milliseconds
+) {
+
+    unsigned long minutes =
+        milliseconds / 60000UL;
+
+    unsigned long seconds =
+        (milliseconds / 1000UL) % 60UL;
+
+    unsigned long hundredths =
+        (milliseconds / 10UL) % 100UL;
+
+    char buffer[24];
+
+    snprintf(
+        buffer,
+        sizeof(buffer),
+        "%02lu:%02lu.%02lu",
+        minutes,
+        seconds,
+        hundredths
+    );
+
+    return String(buffer);
+}
+
+// [END 03]
+
+
+// [04] START STOP AND RESET STOPWATCH
+
+void startWatch() {
+
+    if (stopwatchRunning) {
+        return;
+    }
+
+    startMillis = millis();
+
+    stopwatchRunning = true;
+
+    Serial.println(
+        "Stopwatch STARTED"
+    );
+}
+
+
+void stopWatch() {
+
+    if (!stopwatchRunning) {
+        return;
+    }
+
+    accumulatedMillis = elapsedTime();
+
+    stopwatchRunning = false;
+
+    Serial.println(
+        "Stopwatch STOPPED"
+    );
+
+    Serial.print(
+        "Elapsed: "
+    );
+
+    Serial.println(
+        formatTime(accumulatedMillis)
+    );
+}
+
+
+void toggleWatch() {
+
+    if (stopwatchRunning) {
+
+        stopWatch();
+
+    } else {
+
+        startWatch();
+    }
+}
+
+
+void resetWatch() {
+
+    stopwatchRunning = false;
+
+    accumulatedMillis = 0;
+    startMillis = millis();
+
+    Serial.println(
+        "Stopwatch RESET"
+    );
+}
+
+// [END 04]
+
+
+// [05] UPDATE OLED DISPLAY
+
+void updateOLED() {
+
+    if (!oledReady) {
+        return;
+    }
+
+    display.clearDisplay();
+
+    display.setTextColor(
+        SSD1306_WHITE
+    );
+
+    display.setTextSize(1);
+
+    display.setCursor(18, 5);
+
+    display.print(
+        "WI-FI STOPWATCH"
+    );
+
+    display.drawLine(
+        0,
+        17,
+        127,
+        17,
+        SSD1306_WHITE
+    );
+
+    String timeValue =
+        formatTime(elapsedTime());
+
+    display.setTextSize(2);
+
+    display.setCursor(2, 26);
+
+    display.print(
+        timeValue
+    );
+
+    display.setTextSize(1);
+
+    display.setCursor(37, 55);
+
+    display.print(
+        stopwatchRunning
+            ? "RUNNING"
+            : "STOPPED"
+    );
+
+    display.display();
+}
+
+// [END 05]
+
+
+// [06] CREATE WIFI WEB DASHBOARD
+
+const char dashboardHTML[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+
+&lt;head>
+&lt;meta charset="UTF-8">
+
+&lt;meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+&lt;title>Wi-Fi Stopwatch&lt;/title>
+
+&lt;style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: #0c172b;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    max-width: 760px;
+    margin: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin: 0 0 10px;
+    color: #bfdbfe;
+    font-size: 30px;
+}
+
+.header p {
+    margin: 0;
+    color: #94a3b8;
+}
+
+.card {
+    padding: 25px;
+    margin-bottom: 18px;
+    background: #17263d;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.stopwatch {
+    padding: 26px 10px;
+    background: #0b1325;
+    border-radius: 14px;
+    color: #93c5fd;
+    font-size: clamp(35px, 9vw, 72px);
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+}
+
+.status {
+    margin: 18px 0;
+    color: #4ade80;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns:
+        repeat(3, minmax(0,1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+button {
+    min-height: 48px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+.start {
+    background: #16a34a;
+}
+
+.stop {
+    background: #dc2626;
+}
+
+.reset {
+    background: #475569;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #334155;
+    text-align: left;
+}
+
+.info span {
+    color: #94a3b8;
+}
+
+.info strong {
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+.message {
+    min-height: 20px;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.note {
+    margin-top: 14px;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+@media(max-width:500px) {
+
+    body {
+        padding: 12px;
+    }
+
+    .card {
+        padding: 17px;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .controls {
+        gap: 7px;
+    }
+
+    button {
+        padding: 9px;
+        font-size: 12px;
+    }
+}
+&lt;/style>
+
+&lt;/head>
+
+&lt;body>
+
+&lt;div class="container">
+
+    &lt;div class="header">
+
+        &lt;h1>Wi-Fi Stopwatch&lt;/h1>
+
+        &lt;p>
+            Elapsed Time Monitoring and Control
+        &lt;/p>
+
+    &lt;/div>
+
+    &lt;div class="card">
+
+        &lt;h2>Digital Stopwatch&lt;/h2>
+
+        &lt;div
+            class="stopwatch"
+            id="time"
+        >
+            00:00.00
+        &lt;/div>
+
+        &lt;div
+            class="status"
+            id="status"
+        >
+            STOPPED
+        &lt;/div>
+
+        &lt;div class="controls">
+
+            &lt;button
+                class="start"
+                onclick="sendCommand('start')"
+            >
+                START
+            &lt;/button>
+
+            &lt;button
+                class="stop"
+                onclick="sendCommand('stop')"
+            >
+                STOP
+            &lt;/button>
+
+            &lt;button
+                class="reset"
+                onclick="sendCommand('reset')"
+            >
+                RESET
+            &lt;/button>
+
+        &lt;/div>
+
+        &lt;p
+            class="message"
+            id="message"
+        >
+            Ready
+        &lt;/p>
+
+    &lt;/div>
+
+    &lt;div class="card">
+
+        &lt;h2>System Information&lt;/h2>
+
+        &lt;div class="info">
+
+            &lt;span>Connection&lt;/span>
+
+            &lt;strong id="connection">
+                Checking
+            &lt;/strong>
+
+        &lt;/div>
+
+        &lt;div class="info">
+
+            &lt;span>Stopwatch State&lt;/span>
+
+            &lt;strong id="mode">
+                STOPPED
+            &lt;/strong>
+
+        &lt;/div>
+
+        &lt;div class="info">
+
+            &lt;span>IP Address&lt;/span>
+
+            &lt;strong id="ip">
+                Loading
+            &lt;/strong>
+
+        &lt;/div>
+
+        &lt;div class="info">
+
+            &lt;span>Time Format&lt;/span>
+
+            &lt;strong>
+                MM:SS.hh
+            &lt;/strong>
+
+        &lt;/div>
+
+        &lt;p class="note">
+            The physical buttons and browser
+            control the same stopwatch.
+        &lt;/p>
+
+    &lt;/div>
+
+&lt;/div>
+
+&lt;script>
+
+let busy = false;
+
+function formatTime(milliseconds) {
+
+    const totalHundredths = Math.floor(
+        milliseconds / 10
+    );
+
+    const hundredths =
+        totalHundredths % 100;
+
+    const totalSeconds = Math.floor(
+        totalHundredths / 100
+    );
+
+    const seconds =
+        totalSeconds % 60;
+
+    const minutes = Math.floor(
+        totalSeconds / 60
+    );
+
+    return String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0") +
+        "." +
+        String(hundredths).padStart(2, "0");
+}
+
+async function updateStatus() {
+
+    try {
+
+        const response = await fetch(
+            "/status",
+            {cache: "no-store"}
+        );
+
+        if (!response.ok) {
+            throw new Error("Status unavailable");
+        }
+
+        const data = await response.json();
+
+        document.getElementById(
+            "time"
+        ).textContent = formatTime(
+            data.elapsed
+        );
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            data.running
+                ? "RUNNING"
+                : "STOPPED";
+
+        document.getElementById(
+            "mode"
+        ).textContent =
+            data.running
+                ? "RUNNING"
+                : "STOPPED";
+
+        document.getElementById(
+            "ip"
+        ).textContent = data.ip;
+
+        document.getElementById(
+            "connection"
+        ).textContent = "CONNECTED";
+
+    } catch (error) {
+
+        document.getElementById(
+            "connection"
+        ).textContent = "OFFLINE";
+    }
+}
+
+async function sendCommand(action) {
+
+    if (busy) {
+        return;
+    }
+
+    busy = true;
+
+    document.querySelectorAll(
+        "button"
+    ).forEach(
+        button => button.disabled = true
+    );
+
+    try {
+
+        const response = await fetch(
+            "/command",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+                },
+                body:
+                    "action=" +
+                    encodeURIComponent(action),
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                await response.text()
+            );
+        }
+
+        document.getElementById(
+            "message"
+        ).textContent =
+            "Command successful: " + action;
+
+        await updateStatus();
+
+    } catch (error) {
+
+        document.getElementById(
+            "message"
+        ).textContent = error.message;
+
+    } finally {
+
+        busy = false;
+
+        document.querySelectorAll(
+            "button"
+        ).forEach(
+            button => button.disabled = false
+        );
+    }
+}
+
+updateStatus();
+
+setInterval(
+    updateStatus,
+    100
+);
+
+&lt;/script>
+
+&lt;/body>
+&lt;/html>
+)rawliteral";
+
+// [END 06]
+
+
+// [07] HANDLE WEB SERVER REQUESTS
+
+void sendDashboard() {
+
+    server.send_P(
+        200,
+        "text/html; charset=utf-8",
+        dashboardHTML
+    );
+}
+
+
+void sendStatus() {
+
+    String json = "{";
+
+    json += "\"elapsed\":";
+    json += String(elapsedTime());
+
+    json += ",\"running\":";
+    json += stopwatchRunning
+        ? "true"
+        : "false";
+
+    json += ",\"ip\":\"";
+    json += WiFi.localIP().toString();
+    json += "\"";
+
+    json += "}";
+
+    server.sendHeader(
+        "Cache-Control",
+        "no-store"
+    );
+
+    server.send(
+        200,
+        "application/json",
+        json
+    );
+}
+
+
+void handleCommand() {
+
+    if (!server.hasArg("action")) {
+
+        server.send(
+            400,
+            "text/plain",
+            "Missing action"
+        );
+
+        return;
+    }
+
+    String action = server.arg("action");
+
+    if (action == "start") {
+
+        startWatch();
+
+    } else if (action == "stop") {
+
+        stopWatch();
+
+    } else if (action == "reset") {
+
+        resetWatch();
+
+    } else {
+
+        server.send(
+            400,
+            "text/plain",
+            "Invalid command"
+        );
+
+        return;
+    }
+
+    updateOLED();
+
+    server.send(
+        200,
+        "text/plain",
+        "OK"
+    );
+}
+
+// [END 07]
+
+
+// [08] READ PHYSICAL BUTTONS
+
+void checkButtons() {
+
+    int startReading = digitalRead(
+        START_STOP_BUTTON
+    );
+
+    if (
+        startReading !=
+        previousStartReading
+    ) {
+
+        startDebounceTime = millis();
+    }
+
+    if (
+        millis() - startDebounceTime &gt;
+        DEBOUNCE_INTERVAL
+    ) {
+
+        if (
+            startReading !=
+            stableStartState
+        ) {
+
+            stableStartState = startReading;
+
+            if (stableStartState == LOW) {
+
+                toggleWatch();
+
+                updateOLED();
+            }
+        }
+    }
+
+    previousStartReading =
+        startReading;
+
+
+    int resetReading = digitalRead(
+        RESET_BUTTON
+    );
+
+    if (
+        resetReading !=
+        previousResetReading
+    ) {
+
+        resetDebounceTime = millis();
+    }
+
+    if (
+        millis() - resetDebounceTime &gt;
+        DEBOUNCE_INTERVAL
+    ) {
+
+        if (
+            resetReading !=
+            stableResetState
+        ) {
+
+            stableResetState = resetReading;
+
+            if (stableResetState == LOW) {
+
+                resetWatch();
+
+                updateOLED();
+            }
+        }
+    }
+
+    previousResetReading =
+        resetReading;
+}
+
+// [END 08]
+
+
+// [09] INITIALIZE AND RUN STOPWATCH
+
+void setup() {
+
+    Serial.begin(115200);
+
+    delay(500);
+
+    Serial.println(
+        "Starting Wi-Fi Stopwatch..."
+    );
+
+    pinMode(
+        START_STOP_BUTTON,
+        INPUT_PULLUP
+    );
+
+    pinMode(
+        RESET_BUTTON,
+        INPUT_PULLUP
+    );
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+    oledReady = display.begin(
+        SSD1306_SWITCHCAPVCC,
+        OLED_ADDR
+    );
+
+    if (!oledReady) {
+
+        Serial.println(
+            "OLED initialization failed."
+        );
+
+        while (true) {
+            delay(1000);
+        }
+    }
+
+    Serial.println(
+        "OLED initialized."
+    );
+
+    updateOLED();
+
+    WiFi.mode(WIFI_STA);
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+    Serial.println(
+        "Connecting to Wi-Fi..."
+    );
+
+    unsigned long connectStart = millis();
+
+    while (
+        WiFi.status() != WL_CONNECTED &amp;&amp;
+        millis() - connectStart &lt; 20000UL
+    ) {
+
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println();
+
+    if (WiFi.status() == WL_CONNECTED) {
+
+        Serial.println(
+            "Wi-Fi connected."
+        );
+
+        Serial.print(
+            "Dashboard: http://"
+        );
+
+        Serial.println(
+            WiFi.localIP()
+        );
+
+    } else {
+
+        Serial.println(
+            "Wi-Fi connection failed."
+        );
+
+        Serial.println(
+            "Local stopwatch is still available."
+        );
+    }
+
+    // Register HTTP routes.
+
+    server.on(
+        "/",
+        HTTP_GET,
+        sendDashboard
+    );
+
+    server.on(
+        "/status",
+        HTTP_GET,
+        sendStatus
+    );
+
+    server.on(
+        "/command",
+        HTTP_POST,
+        handleCommand
+    );
+
+    server.begin();
+
+    Serial.println(
+        "Web server started."
+    );
+
+    Serial.println(
+        "Stopwatch ready."
+    );
+
+    updateOLED();
+}
+
+
+void loop() {
+
+    if (WiFi.status() == WL_CONNECTED) {
+
+        server.handleClient();
+    }
+
+    checkButtons();
+
+    if (
+        millis() - lastOLEDUpdate &gt;=
+        OLED_UPDATE_INTERVAL
+    ) {
+
+        lastOLEDUpdate = millis();
+
+        updateOLED();
+    }
+
+    delay(2);
+}
+
+// [END 09]
+</textarea>
+
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
+<script>
+
+/* READ COMPLETE ARDUINO SKETCH */
+const program = document
+    .getElementById("esp32-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+/* EXPLANATION STEPS */
+const steps = [
+
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Loads Wi-Fi, web server, I2C, " +
+            "Adafruit GFX and SSD1306 " +
+            "display libraries."
+    },
+
+    {
+        number: "02",
+        label: "CONFIGURE WIFI AND HARDWARE",
+        title: "Configure Hardware",
+        text:
+            "Defines Wi-Fi credentials, " +
+            "OLED pins, push-button pins, " +
+            "timing variables and debounce settings."
+    },
+
+    {
+        number: "03",
+        label: "CALCULATE AND FORMAT ELAPSED TIME",
+        title: "Calculate Elapsed Time",
+        text:
+            "Calculates elapsed milliseconds " +
+            "and converts them into minutes, " +
+            "seconds and hundredths."
+    },
+
+    {
+        number: "04",
+        label: "START STOP AND RESET STOPWATCH",
+        title: "Control Stopwatch",
+        text:
+            "Implements Start, Stop, Resume " +
+            "and Reset operations while preserving " +
+            "elapsed time when paused."
+    },
+
+    {
+        number: "05",
+        label: "UPDATE OLED DISPLAY",
+        title: "Update OLED",
+        text:
+            "Shows the stopwatch title, " +
+            "formatted elapsed time and " +
+            "RUNNING or STOPPED status."
+    },
+
+    {
+        number: "06",
+        label: "CREATE WIFI WEB DASHBOARD",
+        title: "Create Web Dashboard",
+        text:
+            "Defines the complete HTML, CSS " +
+            "and JavaScript dashboard for " +
+            "remote stopwatch control."
+    },
+
+    {
+        number: "07",
+        label: "HANDLE WEB SERVER REQUESTS",
+        title: "Handle Browser Commands",
+        text:
+            "Handles Start, Stop and Reset " +
+            "commands and returns elapsed " +
+            "time and status as JSON."
+    },
+
+    {
+        number: "08",
+        label: "READ PHYSICAL BUTTONS",
+        title: "Read Push Buttons",
+        text:
+            "Reads GPIO18 and GPIO19, " +
+            "applies debounce logic and " +
+            "executes button commands."
+    },
+
+    {
+        number: "09",
+        label: "INITIALIZE AND RUN STOPWATCH",
+        title: "Initialize and Run",
+        text:
+            "Initializes OLED, buttons, Wi-Fi " +
+            "and web server, then continuously " +
+            "updates stopwatch operation."
+    }
+
+];
+
+/* ESCAPE SOURCE CODE */
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* DISPLAY SOURCE CODE WITH LINE NUMBERS */
+function displayCode() {
+
+    const container =
+        document.getElementById("code-lines");
+
+    container.innerHTML = lines.map(
+        function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+
+                '</span>'
+            );
+        }
+    ).join("");
+}
+
+/* IDENTIFY EXACT SECTION MARKERS */
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
+
+/* CREATE SOURCE-CODE RANGES */
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "// [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "// [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid: start >= 0 && end >= start
+        };
+    }
+);
+
+/* CREATE EXPLANATION BUTTONS */
+function createSteps() {
+
+    const container =
+        document.getElementById("steps-list");
+
+    steps.forEach(
+        function(step, index) {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement("span");
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title =
+                document.createElement("span");
+
+            title.textContent = step.title;
+
+            button.append(number, title);
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+/* HIGHLIGHT COMPLETE MATCHING CODE SECTION */
+function showStep(index) {
+
+    document.querySelectorAll(".step").forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+
+            line.classList.remove("selected");
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph =
+        document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching source-code markers not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
+
+        if (element) {
+
+            element.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+    const codeBody =
+        document.getElementById("code-body");
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+
+            behavior: "smooth"
+        });
+    }
+}
+
+/* COPY COMPLETE ARDUINO SKETCH */
+async function copyCode() {
+
+    const button =
+        document.querySelector(
+            ".code-top .copy-button"
+        );
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement("textarea");
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+
+            success =
+                document.execCommand("copy");
+
+        } catch (error) {
+
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch (error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
+}
+
+/* INITIALIZE EXPLORER */
+displayCode();
+createSteps();
+showStep(0);
+
+</script>
+
+</body>
+</html>
