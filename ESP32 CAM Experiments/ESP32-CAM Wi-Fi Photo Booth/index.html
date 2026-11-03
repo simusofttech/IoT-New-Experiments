@@ -7,1785 +7,3160 @@
 <title>ESP32-CAM Wi-Fi Photo Booth</title>
 
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  color:#222;
-  background:#f4f7fb;
-  line-height:1.7;
+/* ====================================
+   GENERAL PAGE STYLE
+==================================== */
+* {
+    box-sizing: border-box;
 }
-.header{
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  min-height:230px;
-  padding:25px 0 0;
-  text-align:center;
-  background:#2563eb;
-  color:white;
+
+html {
+    scroll-behavior: smooth;
 }
-.header-logo{
-  position:absolute;
-  top:15px;left:20px;
-  width:135px;
-  max-height:75px;
-  object-fit:contain;
-  padding:5px;
-  border-radius:5px;
-  background:white;
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #222;
+    line-height: 1.7;
 }
-.header-content{
-  text-align:center;
-  margin:auto 0;
-  padding:35px 165px;
+
+/* ====================================
+   HEADER
+==================================== */
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
+    text-align: center;
 }
-.header h1{margin:0 0 8px;font-size:34px}
-.header p{margin:0;font-size:17px}
-.header-buttons{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  padding:12px 25px;
-  background:rgba(0,0,0,.12);
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    object-fit: contain;
 }
+
+.header-content {
+    text-align: center;
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,0.12);
+}
+
 .header-left-buttons,
-.header-right-buttons{
-  display:flex;
-  align-items:center;
-  gap:10px;
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-.header-nav-btn{
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  min-height:38px;
-  padding:9px 14px;
-  border:1px solid #dbeafe;
-  border-radius:7px;
-  background:white;
-  color:#1e3a8a;
-  text-decoration:none;
-  font-size:13px;
-  font-weight:bold;
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
 }
-.header-nav-btn:hover{background:#dbeafe}
-.home-icon-btn{width:40px;height:38px;padding:8px}
-.home-icon-btn svg{
-  width:21px;height:21px;
-  stroke:currentColor;
-  fill:none;
-  stroke-width:2;
-  stroke-linecap:round;
-  stroke-linejoin:round;
+
+.header-nav-btn:hover {
+    background: #dbeafe;
 }
-nav{
-  position:sticky;
-  top:0;
-  z-index:20;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:16px;
-  padding:13px 15px;
-  border-bottom:1px solid #ddd;
-  background:white;
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
 }
-nav a{
-  color:#1e3a8a;
-  text-decoration:none;
-  font-size:14px;
-  font-weight:bold;
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
-nav a:hover{color:#2563eb}
-.container{
-  width:90%;
-  max-width:1050px;
-  margin:35px auto;
+
+/* ====================================
+   NAVIGATION
+==================================== */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
 }
-.section{
-  margin-bottom:24px;
-  padding:28px;
-  background:white;
-  border:1px solid #ddd;
-  border-radius:10px;
-  box-shadow:0 4px 12px rgba(0,0,0,.06);
-  scroll-margin-top:85px;
+
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
 }
-.section h2{
-  margin:0 0 18px;
-  padding-bottom:8px;
-  border-bottom:2px solid #dbeafe;
-  color:#1e3a8a;
-  font-size:25px;
+
+nav a:hover {
+    color: #2563eb;
 }
-.section h3{color:#1e3a8a}
-ul,ol{padding-left:24px}
-li{margin-bottom:8px}
-.project-thumbnail{text-align:center;padding:20px}
-.project-thumbnail img{
-  width:100%;
-  max-width:760px;
-  max-height:420px;
-  object-fit:contain;
-  border-radius:10px;
+
+/* ====================================
+   MAIN PAGE
+==================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
 }
-.components-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    scroll-margin-top: 100px;
 }
-.component-card{
-  padding:20px;
-  text-align:center;
-  background:white;
-  border:1px solid #e2e8f0;
-  border-radius:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,.04);
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
 }
-.component-card:hover{
-  box-shadow:0 6px 15px rgba(0,0,0,.08);
+
+.section h3 {
+    color: #1e3a8a;
 }
-.component-card img{
-  width:100%;
-  height:120px;
-  object-fit:contain;
-  margin-bottom:15px;
+
+ul, ol {
+    padding-left: 24px;
 }
-.component-card h4{
-  margin:0 0 8px;
-  color:#1e3a8a;
-  font-size:18px;
+
+li {
+    margin-bottom: 8px;
 }
-.component-card p{
-  margin:0;
-  color:#475569;
-  font-size:14px;
+
+/* ====================================
+   EXPERIMENT THUMBNAIL
+==================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
 }
-.table-wrap{overflow-x:auto}
-table{
-  width:100%;
-  min-width:620px;
-  border-collapse:collapse;
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
 }
-th,td{
-  padding:12px;
-  border:1px solid #ddd;
-  text-align:left;
+
+/* ====================================
+   COMPONENT CARDS
+==================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
 }
-th{background:#2563eb;color:white}
-tr:nth-child(even){background:#f8fafc}
-.note{
-  margin-top:15px;
-  padding:14px 16px;
-  background:#eff6ff;
-  border-left:5px solid #2563eb;
-  border-radius:6px;
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-.circuit-img{
-  display:block;
-  width:100%;
-  max-width:760px;
-  margin:20px auto 0;
-  border:1px solid #e2e8f0;
-  border-radius:10px;
-  background:#fff;
-  padding:10px;
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 135px;
+    margin: 0 auto 15px;
+    object-fit: contain;
 }
-.flow{
-  text-align:center;
-  font-size:18px;
-  font-weight:bold;
-  color:#1e3a8a;
-  line-height:2.2;
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
 }
-.flow-arrow{font-size:23px;color:#2563eb}
-.output-box{
-  margin:14px 0;
-  padding:15px;
-  border:1px solid #dbeafe;
-  border-radius:9px;
-  background:#f8fafc;
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
 }
-.output-box pre{
-  margin:0;
-  white-space:pre-wrap;
-  font:14px/1.8 Consolas,monospace;
+
+/* ====================================
+   TABLES
+==================================== */
+.table-wrap {
+    overflow-x: auto;
 }
-.eyebrow{
-  color:#2563eb;
-  font-size:13px;
-  font-weight:bold;
-  letter-spacing:.08em;
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
 }
-.lesson-title{
-  margin:0 0 8px!important;
-  padding:0!important;
-  border:0!important;
-  font-size:32px!important;
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
 }
-.intro{color:#526875;margin:0 0 22px}
-.code-layout{
-  display:grid;
-  grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);
-  gap:20px;
-  align-items:start;
+
+th {
+    background: #2563eb;
+    color: white;
 }
-.code-panel{
-  min-width:0;
-  overflow:hidden;
-  border:1px solid #bfdbfe;
-  border-radius:14px;
-  background:white;
+
+tr:nth-child(even) {
+    background: #f8fafc;
 }
-.code-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:15px 20px;
-  background:#2563eb;
-  color:white;
+
+/* ====================================
+   NOTES AND CIRCUIT
+==================================== */
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
 }
-.filename{font:bold 14px Consolas,monospace}
-.copy-button{
-  padding:9px 14px;
-  border:1px solid white;
-  border-radius:8px;
-  color:#2563eb;
-  background:white;
-  font-weight:bold;
-  cursor:pointer;
+
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
 }
-.code-body{
-  height:600px;
-  overflow:auto;
-  padding:16px 0;
+
+/* ====================================
+   WORKING FLOW
+==================================== */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
 }
-.code-line{
-  display:flex;
-  min-width:max-content;
-  min-height:24px;
-  padding-right:22px;
-  white-space:pre;
-  font:13px/24px Consolas,monospace;
-  color:#1e293b;
-  border-bottom:1px solid #f1f5f9;
+
+.flow-step {
+    padding: 5px 10px;
 }
-.code-line.selected{
-  background:#dbeafe;
-  box-shadow:inset 4px 0 #2563eb;
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
 }
-.line-number{
-  min-width:52px;
-  padding-right:15px;
-  color:#64748b;
-  text-align:right;
-  user-select:none;
+
+/* ====================================
+   EXPLORE THE CODE
+==================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
 }
-.guide{
-  min-width:0;
-  padding:22px;
-  border:1px solid #dce6e9;
-  border-radius:14px;
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
 }
-.guide h2{
-  margin:0 0 8px;
-  padding:0;
-  border:0;
-  font-size:21px;
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
 }
-.steps{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-  margin:16px 0;
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
 }
-.step{
-  min-height:64px;
-  padding:10px;
-  border:1px solid #dce6e9;
-  border-radius:9px;
-  background:white;
-  color:#1e3a8a;
-  text-align:left;
-  font-size:13px;
-  font-weight:bold;
-  cursor:pointer;
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.10);
 }
-.step:hover{background:#f8fbff}
-.step.active{
-  background:#eff6ff;
-  border-color:#60a5fa;
+
+.code-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
 }
-.explanation{
-  min-height:130px;
-  padding:16px;
-  border-radius:9px;
-  background:#eff6ff;
+
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
 }
-.explanation h3{
-  margin:0 0 7px;
-  color:#1e3a8a;
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
 }
-.explanation p{margin:0;color:#526875}
-.guide details{
-  margin-top:15px;
-  border-top:1px solid #dce6e9;
+
+.copy-button:hover {
+    background: #eff6ff;
 }
-.guide summary{
-  padding:13px 0;
-  color:#2563eb;
-  font-weight:bold;
-  cursor:pointer;
+
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
 }
-.tip{
-  margin-top:20px;
-  padding:14px;
-  background:#eff6ff;
-  border-radius:9px;
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    color: #1e293b;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
 }
-footer{
-  padding:25px;
-  text-align:center;
-  background:#0f172a;
-  color:#cbd5e1;
+
+.code-line.selected,
+.code-line.selected:hover {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
 }
-footer strong{color:white}
-@media(max-width:900px){
-  .header-content{padding:65px 20px 35px}
+
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
 }
-@media(max-width:850px){
-  .code-layout{grid-template-columns:1fr}
-  .code-body{height:450px}
+
+/* ====================================
+   CODE EXPLANATION PANEL
+==================================== */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
 }
-@media(max-width:600px){
-  .header-logo{width:95px;max-height:60px}
-  .header-content{padding:85px 12px 25px}
-  .header h1{font-size:25px}
-  .header-buttons{gap:5px;padding:10px 8px}
-  .header-nav-btn{font-size:11px;padding:8px 7px}
-  .container{width:94%}
-  .section{padding:20px}
-  .steps{grid-template-columns:1fr}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
 }
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    font-size: 17px;
+    color: #1e3a8a;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* ====================================
+   EXPECTED OUTPUT
+==================================== */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* CENTER DASHBOARD IMAGE */
+
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* ====================================
+   FOOTER
+==================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* ====================================
+   RESPONSIVE DESIGN
+==================================== */
+@media(max-width:900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media(max-width:600px) {
+    .header-logo {
+        top: 12px;
+        left: 12px;
+        width: 95px;
+        max-height: 60px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
+    }
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
+<!-- ====================================
+     HEADER
+==================================== -->
 <header class="header">
 
-  <img
-    class="header-logo"
-    src="../../Simusoft logo white background.jpeg"
-    alt="SimuSoft Company Logo"
-  >
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
 
-  <div class="header-content">
-    <h1>SIMUDIY Exploration Kit</h1>
-    <p>ESP32-CAM Wi-Fi Photo Booth</p>
-  </div>
-
-  <div class="header-buttons">
-
-    <div class="header-left-buttons">
-      <a class="header-nav-btn" href="../index.html">
-        &#8592; Back
-      </a>
-
-      <a
-        class="header-nav-btn home-icon-btn"
-        href="../../index.html"
-        aria-label="Home"
-      >
-        <svg viewBox="0 0 24 24">
-          <path d="M3 10.5L12 3l9 7.5"/>
-          <path d="M5 9.5V21h14V9.5"/>
-          <path d="M9 21v-7h6v7"/>
-        </svg>
-      </a>
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>ESP32-CAM Wi-Fi Photo Booth</p>
     </div>
 
-    <div class="header-right-buttons">
-      <a
-        class="header-nav-btn"
-        href="../../Arduino Experiments/index.html"
-      >Arduino</a>
+    <div class="header-buttons">
 
-      <a class="header-nav-btn" href="../index.html">ESP</a>
+        <div class="header-left-buttons">
+            <a href="../index.html" class="header-nav-btn">
+                &#8592; Back
+            </a>
 
-      <a
-        class="header-nav-btn"
-        href="../../R-Pi Experiments/index.html"
-      >R-Pi</a>
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="header-right-buttons">
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >Arduino</a>
+
+            <a href="../index.html" class="header-nav-btn">
+                ESP
+            </a>
+
+            <a
+                href="../../R-Pi Experiments/index.html"
+                class="header-nav-btn"
+            >R-Pi</a>
+        </div>
+
     </div>
-
-  </div>
 </header>
 
-<!-- NAVIGATION -->
+<!-- ====================================
+     NAVIGATION
+==================================== -->
 <nav>
-  <a href="../index.html">&#8592; ESP32 Experiments</a>
-  <a href="#aim">Aim</a>
-  <a href="#about">About</a>
-  <a href="#components">Components</a>
-  <a href="#connections">Connections</a>
-  <a href="#circuit">Circuit</a>
-  <a href="#working">Working</a>
-  <a href="#procedure">Procedure</a>
-  <a href="#code">Code</a>
-  <a href="#output">Output</a>
-  <a href="#result">Result</a>
-  <a href="#learn">Learn</a>
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
-<!-- EXPERIMENT THUMBNAIL -->
+<!-- ====================================
+     EXPERIMENT THUMBNAIL
+==================================== -->
 <section class="section project-thumbnail">
 
-  <img
-    src="../ESP32-CAM Wi-Fi Photo Booth.png"
-    alt="ESP32-CAM Wi-Fi Photo Booth Thumbnail"
-    onerror="
-      this.hidden=true;
-      document.getElementById('thumb-note').hidden=false;
-    "
-  >
-
-  <div id="thumb-note" class="note" hidden>
-    Experiment thumbnail pending:
-    ESP32-CAM Wi-Fi Photo Booth.png
-  </div>
+    <img
+        src="../ESP32-CAM Wi-Fi Photo Booth.png"
+        alt="ESP32-CAM Wi-Fi Photo Booth Thumbnail"
+    >
 
 </section>
 
-<!-- 1. AIM -->
+<!-- ====================================
+     1. AIM
+==================================== -->
 <section class="section" id="aim">
-  <h2>Aim</h2>
 
-  <p>
-    To build a Wi-Fi Photo Booth and time-lapse
-    image-capture system using an AI-Thinker ESP32-CAM,
-    a 1.3-inch SH1106 I²C OLED and a push button.
-  </p>
+    <h2>Aim</h2>
 
-  <p>
-    The system captures JPEG images every ten seconds
-    during a time-lapse session and displays operating
-    information through an OLED and browser dashboard.
-  </p>
+    <p>
+        To develop a Wi-Fi-based photo booth
+        using an AI-Thinker ESP32-CAM,
+        1.3-inch SH1106 OLED and push button
+        that captures JPEG images automatically
+        at 10-second intervals and provides
+        browser-based Start and Stop controls.
+    </p>
+
 </section>
 
-<!-- 2. ABOUT -->
+<!-- ====================================
+     2. ABOUT
+==================================== -->
 <section class="section" id="about">
-  <h2>About the Experiment</h2>
 
-  <p>
-    The ESP32-CAM uses an OV2640 camera to capture
-    digital images. Its built-in Wi-Fi interface
-    allows users on the local network to access
-    a browser-based photo booth dashboard.
-  </p>
+    <h2>About the Experiment</h2>
 
-  <p>
-    The dashboard displays camera snapshots,
-    photo count, capture status and Start/Stop
-    controls. The OLED shows connection status,
-    photograph count and time-lapse status.
-  </p>
+    <p>
+        The ESP32-CAM Wi-Fi Photo Booth
+        demonstrates wireless photography,
+        timed image capture, OLED status
+        monitoring and web-based control.
+    </p>
 
-  <p>
-    A push button connected to GPIO2 can be
-    used to start or stop time-lapse capture.
-    The first image is scheduled ten seconds
-    after starting.
-  </p>
+    <p>
+        The ESP32-CAM captures digital
+        photographs using its onboard camera
+        and provides a webpage accessible
+        over a local Wi-Fi network.
+    </p>
 
-  <div class="note">
-    <strong>Storage behavior:</strong>
-    Only the latest captured JPEG is retained
-    in RAM. The system does not maintain a
-    permanent historical photo gallery.
-  </div>
+    <p>
+        The browser dashboard displays
+        periodically refreshed camera snapshots,
+        timelapse status, total photographs
+        captured and Start/Stop controls.
+    </p>
+
+    <p>
+        A physical push button connected
+        to GPIO2 can also start and stop
+        automatic image capture.
+    </p>
+
+    <p>
+        The first photograph is captured
+        approximately 10 seconds after
+        starting the timelapse.
+        Additional photos are captured
+        at 10-second intervals while active.
+    </p>
+
+    <p>
+        The SH1106 OLED provides operating
+        status and photo-count information.
+    </p>
+
+    <h3>Image Storage</h3>
+
+    <p>
+        Only the latest successfully captured
+        JPEG is retained in RAM.
+        New photographs replace the previously
+        stored image.
+    </p>
+
+    <div class="note">
+        <strong>Important:</strong>
+        This program does not permanently
+        save every photo to a microSD card.
+        Captured image history is not
+        preserved after restarting the device.
+    </div>
+
+    <h3>Photo Booth Controls</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Start Timelapse</td>
+                    <td>Starts automatic image capture</td>
+                </tr>
+
+                <tr>
+                    <td>Stop Timelapse</td>
+                    <td>Stops automatic image capture</td>
+                </tr>
+
+                <tr>
+                    <td>Physical Button</td>
+                    <td>Toggles timelapse on or off</td>
+                </tr>
+
+                <tr>
+                    <td>Live Camera</td>
+                    <td>Shows periodically refreshed JPEG snapshots</td>
+                </tr>
+
+                <tr>
+                    <td>Photo Counter</td>
+                    <td>Displays successful timed captures</td>
+                </tr>
+
+                <tr>
+                    <td>Latest Photo</td>
+                    <td>Opens the most recent saved JPEG</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </section>
 
-<!-- 3. COMPONENTS -->
+<!-- ====================================
+     3. COMPONENTS
+==================================== -->
 <section class="section" id="components">
-  <h2>Components Required</h2>
 
-  <div class="components-grid">
+    <h2>Components Required</h2>
 
-    <div class="component-card">
-      <img src="ESP32-CAM.png" alt="AI-Thinker ESP32-CAM">
-      <h4>AI-Thinker ESP32-CAM (×1)</h4>
-      <p>Main camera and Wi-Fi controller.</p>
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img
+                src="ESP32-CAM.png"
+                alt="AI-Thinker ESP32-CAM"
+            >
+            <h4>AI-Thinker ESP32-CAM (×1)</h4>
+            <p>
+                Main controller with onboard
+                camera and Wi-Fi.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="OLED.png"
+                alt="SH1106 OLED Display"
+            >
+            <h4>1.3-inch SH1106 OLED (×1)</h4>
+            <p>
+                128×64 display for system status.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Push Button.png"
+                alt="Push Button"
+            >
+            <h4>Push Button (×1)</h4>
+            <p>
+                Controls automatic capture physically.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="USB-TTL Programmer.png"
+                alt="USB-to-TTL Programmer"
+            >
+            <h4>USB-to-TTL Programmer (×1)</h4>
+            <p>
+                Used for uploading the firmware.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+            <h4>Breadboard (×1)</h4>
+            <p>
+                Used to assemble circuit connections.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+            <h4>Jumper Wires</h4>
+            <p>
+                Used for wiring the components.
+            </p>
+        </div>
+
     </div>
 
-    <div class="component-card">
-      <img src="OLED.png" alt="SH1106 OLED">
-      <h4>1.3-inch SH1106 I²C OLED (×1)</h4>
-      <p>128×64 display for status and photo count.</p>
+    <div class="note">
+        <strong>Required Libraries:</strong>
+
+        <ul>
+            <li>esp_camera.h</li>
+            <li>WiFi.h</li>
+            <li>WebServer.h</li>
+            <li>Wire.h</li>
+            <li>U8g2lib.h</li>
+        </ul>
+
+        <p>
+            Install the ESP32 board package
+            and U8g2 library in Arduino IDE.
+        </p>
+
+        <p>
+            The camera is integrated into
+            the ESP32-CAM board. No additional
+            standalone camera is required.
+        </p>
     </div>
 
-    <div class="component-card">
-      <img src="Push Button.png" alt="Push Button">
-      <h4>Push Button (×1)</h4>
-      <p>Controls time-lapse capture.</p>
-    </div>
-
-    <div class="component-card">
-      <img
-        src="USB-TTL Programmer.png"
-        alt="USB-to-TTL Programmer"
-      >
-      <h4>USB-to-TTL Programmer (×1)</h4>
-      <p>Used to flash firmware onto the board.</p>
-    </div>
-
-    <div class="component-card">
-      <img src="Breadboard.png" alt="Breadboard">
-      <h4>Breadboard (×1)</h4>
-      <p>Used to assemble the button connections.</p>
-    </div>
-
-    <div class="component-card">
-      <img src="Jumper Wires.png" alt="Jumper Wires">
-      <h4>Jumper Wires</h4>
-      <p>Used for circuit connections.</p>
-    </div>
-
-  </div>
-
-  <div class="note">
-    The OV2640 is the camera already fitted to
-    the ESP32-CAM board. No separate additional
-    camera is required.
-  </div>
 </section>
 
-<!-- 4. CIRCUIT CONNECTIONS -->
+<!-- ====================================
+     4. CONNECTIONS
+==================================== -->
 <section class="section" id="connections">
-  <h2>Circuit Connections</h2>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Component</th>
-          <th>Pin</th>
-          <th>ESP32-CAM Connection</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>OLED</td>
-          <td>GND</td>
-          <td>GND</td>
-        </tr>
-        <tr>
-          <td>OLED</td>
-          <td>VCC</td>
-          <td>Supply rated for your OLED module</td>
-        </tr>
-        <tr>
-          <td>OLED</td>
-          <td>SCL</td>
-          <td>GPIO14</td>
-        </tr>
-        <tr>
-          <td>OLED</td>
-          <td>SDA</td>
-          <td>GPIO13</td>
-        </tr>
-        <tr>
-          <td>Push Button</td>
-          <td>One terminal</td>
-          <td>GPIO2</td>
-        </tr>
-        <tr>
-          <td>Push Button</td>
-          <td>Opposite terminal</td>
-          <td>GND</td>
-        </tr>
-        <tr>
-          <td>USB-to-TTL TX</td>
-          <td>TX</td>
-          <td>ESP32-CAM U0R / RX</td>
-        </tr>
-        <tr>
-          <td>USB-to-TTL RX</td>
-          <td>RX</td>
-          <td>ESP32-CAM U0T / TX</td>
-        </tr>
-        <tr>
-          <td>USB-to-TTL GND</td>
-          <td>GND</td>
-          <td>ESP32-CAM GND</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <h2>Circuit Connections</h2>
 
-  <div class="note">
-    <strong>Important:</strong>
-    The source document shows OLED VCC connected
-    to 5V. Check that the actual OLED breakout
-    supports 5V and that I²C signal levels
-    are safe for ESP32 GPIO.
+    <h3>SH1106 OLED to ESP32-CAM</h3>
 
-    GPIO2 is a boot-configuration pin.
-    Do not hold the button pressed while
-    restarting the ESP32-CAM.
-  </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>OLED Pin</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>VCC</td>
+                    <td>Supply voltage supported by OLED module</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO13</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO14</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Push Button</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Push Button Terminal</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>One terminal</td>
+                    <td>GPIO2</td>
+                </tr>
+
+                <tr>
+                    <td>Opposite terminal</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>USB-to-TTL Programmer</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Programmer Pin</th>
+                    <th>ESP32-CAM Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>TX</td>
+                    <td>U0R / RX</td>
+                </tr>
+
+                <tr>
+                    <td>RX</td>
+                    <td>U0T / TX</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Configuration Summary</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>OLED SDA</td>
+                    <td>GPIO13</td>
+                </tr>
+                <tr>
+                    <td>OLED SCL</td>
+                    <td>GPIO14</td>
+                </tr>
+                <tr>
+                    <td>Push Button</td>
+                    <td>GPIO2</td>
+                </tr>
+                <tr>
+                    <td>Camera</td>
+                    <td>Onboard camera</td>
+                </tr>
+                <tr>
+                    <td>Capture Interval</td>
+                    <td>10 seconds</td>
+                </tr>
+                <tr>
+                    <td>Image Format</td>
+                    <td>JPEG</td>
+                </tr>
+                <tr>
+                    <td>Web Server</td>
+                    <td>Port 80</td>
+                </tr>
+                <tr>
+                    <td>Serial Monitor</td>
+                    <td>115200 baud</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Hardware Precautions:</strong>
+
+        <p>
+            GPIO2 is an ESP32 boot-strapping pin.
+            Do not hold the button pressed during
+            startup, reset or firmware uploading.
+        </p>
+
+        <p>
+            Verify the OLED supply rating and
+            ensure I²C signal levels are compatible
+            with ESP32 3.3V GPIO.
+        </p>
+
+        <p>
+            Use a stable supply suitable for the
+            ESP32-CAM's camera and Wi-Fi current
+            requirements. The USB-to-TTL programmer
+            must use 3.3V UART logic levels.
+        </p>
+
+    </div>
+
 </section>
 
-<!-- 5. CIRCUIT DIAGRAM -->
+<!-- ====================================
+     5. CIRCUIT DIAGRAM
+==================================== -->
 <section class="section" id="circuit">
-  <h2>Circuit Diagram</h2>
 
-  <img
-    class="circuit-img"
-    src="ESP32-CAM Wi-Fi Photo Booth Circuit.png"
-    alt="ESP32-CAM Wi-Fi Photo Booth Circuit Diagram"
-    onerror="
-      this.hidden=true;
-      document.getElementById('circuit-note').hidden=false;
-    "
-  >
+    <h2>Circuit Diagram</h2>
 
-  <p class="note" id="circuit-note" hidden>
-    Circuit diagram image pending:
-    ESP32-CAM Wi-Fi Photo Booth Circuit.png
-  </p>
+    <img
+        src="ESP32-CAM Wi-Fi Photo Booth Circuit.png"
+        alt="ESP32-CAM Wi-Fi Photo Booth Circuit Diagram"
+        class="circuit-img"
+    >
+
 </section>
 
-<!-- 6. WORKING PRINCIPLE -->
+<!-- ====================================
+     6. WORKING
+==================================== -->
 <section class="section" id="working">
-  <h2>Working Principle</h2>
 
-  <div class="flow">
-    ESP32-CAM Starts
-    <div class="flow-arrow">↓</div>
-    Initialize Camera and OLED
-    <div class="flow-arrow">↓</div>
-    Connect to Wi-Fi
-    <div class="flow-arrow">↓</div>
-    Start Web Dashboard
-    <div class="flow-arrow">↓</div>
-    Press Start or Physical Push Button
-    <div class="flow-arrow">↓</div>
-    Wait 10 Seconds
-    <div class="flow-arrow">↓</div>
-    Capture JPEG Frame
-    <div class="flow-arrow">↓</div>
-    Store Latest Photo in RAM
-    <div class="flow-arrow">↓</div>
-    Increase Photo Counter
-    <div class="flow-arrow">↓</div>
-    Update OLED and Web Dashboard
-    <div class="flow-arrow">↓</div>
-    Repeat Until Stopped
-  </div>
+    <h2>Working Principle</h2>
 
-  <h3>Camera Capture</h3>
-  <p>
-    The esp_camera library initializes the OV2640
-    image sensor and captures JPEG frames.
-    The sketch uses VGA frame resolution.
-  </p>
+    <div class="flow">
+        <div class="flow-step">ESP32-CAM Starts</div>
+        <div class="flow-arrow">↓</div>
 
-  <h3>Timed Capture</h3>
-  <p>
-    The program uses millis() to schedule image
-    capture at ten-second intervals without
-    a continuous ten-second delay.
-  </p>
+        <div class="flow-step">Initialize OLED</div>
+        <div class="flow-arrow">↓</div>
 
-  <h3>OLED Status</h3>
-  <p>
-    The SH1106 display is updated after
-    changes to time-lapse state or
-    successful image captures.
-  </p>
+        <div class="flow-step">Initialize Camera</div>
+        <div class="flow-arrow">↓</div>
 
-  <h3>Web Dashboard</h3>
-  <p>
-    The browser communicates with the ESP32-CAM
-    using local HTTP routes for Start, Stop,
-    Status, Snapshot and Latest Photo.
-  </p>
+        <div class="flow-step">Connect to Wi-Fi</div>
+        <div class="flow-arrow">↓</div>
 
-  <h3>RAM Storage</h3>
-  <p>
-    Each new JPEG replaces the previously stored
-    latest image. It is not saved to a microSD
-    card or persistent storage.
-  </p>
+        <div class="flow-step">Start Web Server</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Open Photo Booth Dashboard</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Start Using Browser or Button</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Wait 10 Seconds</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Capture JPEG Image</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Replace Latest Photo in RAM</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Increase Photo Counter</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Update OLED and Dashboard</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Repeat Until Stopped</div>
+    </div>
+
+    <h3>Camera Initialization</h3>
+
+    <p>
+        The esp_camera library initializes
+        the onboard camera and configures
+        JPEG image capture.
+    </p>
+
+    <h3>Image Capture</h3>
+
+    <p>
+        The ESP32-CAM captures a JPEG frame
+        using esp_camera_fb_get().
+    </p>
+
+    <h3>Timelapse Scheduling</h3>
+
+    <p>
+        The millis() function schedules
+        image capture every 10 seconds
+        while timelapse mode is active.
+    </p>
+
+    <h3>Push Button</h3>
+
+    <p>
+        GPIO2 is configured using INPUT_PULLUP.
+        A valid press toggles the timelapse
+        operating state.
+    </p>
+
+    <h3>OLED Status</h3>
+
+    <p>
+        The SH1106 OLED displays the
+        current running or stopped condition
+        and total successful photograph count.
+    </p>
+
+    <h3>Web Dashboard</h3>
+
+    <p>
+        The dashboard provides Start and Stop
+        controls, periodic camera snapshots,
+        photo count and a link to the latest
+        successfully captured image.
+    </p>
+
 </section>
 
-<!-- 7. PROCEDURE -->
+<!-- ====================================
+     7. PROCEDURE
+==================================== -->
 <section class="section" id="procedure">
-  <h2>Procedure</h2>
 
-  <ol>
-    <li>Arrange the ESP32-CAM, SH1106 OLED, push button, breadboard, programmer and jumper wires.</li>
-    <li>Connect OLED SDA to GPIO13 and SCL to GPIO14.</li>
-    <li>Connect OLED GND to GND and VCC to its supported supply voltage.</li>
-    <li>Connect the push button between GPIO2 and GND.</li>
-    <li>Connect the USB-to-TTL programmer to the ESP32-CAM UART pins with correct voltage levels.</li>
-    <li>For flashing, connect GPIO0 to GND and reset the board.</li>
-    <li>Open Arduino IDE and install the ESP32 board package and U8g2 library.</li>
-    <li>Create a sketch named ESP32_CAM_WiFi_Photo_Booth.ino.</li>
-    <li>Copy the code from the Explore the Code section.</li>
-    <li>Replace YOUR_WIFI_NAME and YOUR_WIFI_PASSWORD with local Wi-Fi details.</li>
-    <li>Select the AI Thinker ESP32-CAM board configuration and correct port.</li>
-    <li>Compile and upload the firmware.</li>
-    <li>Disconnect GPIO0 from GND and restart the board.</li>
-    <li>Open Serial Monitor at 115200 baud.</li>
-    <li>Note the IP address displayed after Wi-Fi connects.</li>
-    <li>Open that IP address in a browser on the same network.</li>
-    <li>Press Start Timelapse.</li>
-    <li>Confirm that the first scheduled photo is captured after ten seconds.</li>
-    <li>Observe the OLED count and browser status.</li>
-    <li>Press Stop and confirm capture stops.</li>
-    <li>Test the physical push button after normal boot.</li>
-  </ol>
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the ESP32-CAM, SH1106 OLED, push button, USB-to-TTL programmer, breadboard and jumper wires.</li>
+        <li>Connect OLED SDA to GPIO13.</li>
+        <li>Connect OLED SCL to GPIO14.</li>
+        <li>Connect OLED GND to common ground.</li>
+        <li>Connect OLED VCC to its supported supply voltage.</li>
+        <li>Connect the push button between GPIO2 and GND.</li>
+        <li>Connect the USB-to-TTL programmer to the ESP32-CAM UART pins.</li>
+        <li>Use the appropriate ESP32-CAM programming setup and supply.</li>
+        <li>Connect GPIO0 to GND for flashing and reset the board.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Install the ESP32 board package.</li>
+        <li>Install the U8g2 library.</li>
+        <li>Select AI Thinker ESP32-CAM as the board.</li>
+        <li>Create a sketch named ESP32_CAM_WiFi_Photo_Booth.ino.</li>
+        <li>Copy the complete sketch from Explore the Code.</li>
+        <li>Enter the Wi-Fi SSID and password.</li>
+        <li>Verify and upload the sketch.</li>
+        <li>Disconnect GPIO0 from GND after uploading.</li>
+        <li>Restart the board in normal operating mode.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Wait for the Wi-Fi connection.</li>
+        <li>Note the IP address shown in Serial Monitor.</li>
+        <li>Open the IP address in a browser on the same network.</li>
+        <li>Observe the Photo Booth dashboard.</li>
+        <li>Press Start Timelapse.</li>
+        <li>Wait for the first scheduled photograph.</li>
+        <li>Observe the image counter and OLED.</li>
+        <li>Open the latest captured photograph.</li>
+        <li>Press Stop Timelapse.</li>
+        <li>Test the physical push button after normal boot.</li>
+    </ol>
+
 </section>
 
-<!-- 8. EXPLORE THE CODE -->
+<!-- ====================================
+     8. EXPLORE THE CODE
+==================================== -->
 <section class="section" id="code">
 
-  <p class="eyebrow">
-    ESP32-CAM EXPERIMENT · CODE REVIEW
-  </p>
+    <p class="eyebrow">
+        ESP32-CAM Experiment · Code Review
+    </p>
 
-  <h2 class="lesson-title">Explore the Code</h2>
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
 
-  <p class="intro">
-    Select any explanation to highlight its matching
-    code section. The Copy Code button copies
-    the complete sketch shown in this viewer.
-  </p>
+    <p class="intro">
+        Click any step to highlight its
+        complete corresponding source-code
+        section in blue. Copy Code copies
+        the full ESP32-CAM sketch.
+    </p>
 
-  <div class="code-layout">
+    <div class="code-layout">
 
-    <article class="code-panel">
-      <div class="code-top">
-        <span class="filename">
-          ESP32_CAM_WiFi_Photo_Booth.ino
-        </span>
+        <article class="code-panel">
 
-        <button
-          class="copy-button"
-          type="button"
-          onclick="copyCode()"
-        >
-          Copy Code
-        </button>
-      </div>
+            <div class="code-top">
 
-      <div class="code-body" id="code-body">
-        <code id="code-lines"></code>
-      </div>
-    </article>
+                <span class="filename">
+                    ESP32_CAM_WiFi_Photo_Booth.ino
+                </span>
 
-    <article class="guide">
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
 
-      <h2>Understand it step by step</h2>
+            </div>
 
-      <p>
-        Choose a step. The matching source
-        lines will be highlighted on the left.
-      </p>
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
 
-      <div class="steps" id="steps-list"></div>
+        </article>
 
-      <div
-        class="explanation"
-        id="explanation"
-        aria-live="polite"
-      ></div>
+        <article class="guide">
 
-      <details>
-        <summary>Explore More: I²C</summary>
-        <p>
-          The OLED uses GPIO13 for SDA and GPIO14
-          for SCL. The Wire library manages
-          communication with the display.
-        </p>
-      </details>
+            <h2>Understand it step by step</h2>
 
-      <details>
-        <summary>Explore More: Timelapse</summary>
-        <p>
-          CAPTURE_INTERVAL is 10000 milliseconds,
-          equivalent to ten seconds.
-        </p>
-      </details>
+            <p>
+                Select an explanation to highlight
+                the matching program section.
+            </p>
 
-      <details>
-        <summary>Explore More: Latest Photo</summary>
-        <p>
-          Only the newest JPEG is stored in RAM.
-          Earlier photographs are not archived.
-        </p>
-      </details>
+            <div
+                class="steps"
+                id="steps-list"
+            ></div>
 
-      <details>
-        <summary>Check Your Understanding</summary>
-        <ol>
-          <li>Which GPIO is OLED SDA?</li>
-          <li>Which GPIO is OLED SCL?</li>
-          <li>Which GPIO controls the button?</li>
-          <li>What is the capture interval?</li>
-          <li>Which HTTP route starts time-lapse capture?</li>
-          <li>Where is the latest image stored?</li>
-        </ol>
-        <p>
-          Answers: GPIO13, GPIO14, GPIO2,
-          10 seconds, /start, RAM.
-        </p>
-      </details>
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
 
-    </article>
+            <details>
+                <summary>Explore More: Camera</summary>
+                <p>
+                    The camera captures JPEG images,
+                    which can be displayed in a web
+                    browser or temporarily stored
+                    in device memory.
+                </p>
+            </details>
 
-  </div>
+            <details>
+                <summary>Explore More: I²C OLED</summary>
+                <p>
+                    The SH1106 display uses
+                    GPIO13 for SDA and GPIO14
+                    for SCL.
+                </p>
+            </details>
 
-  <p class="tip">
-    <strong>Try It:</strong>
-    Start the time-lapse, observe the first
-    image after ten seconds, and check
-    how the OLED and dashboard values change.
-  </p>
+            <details>
+                <summary>Explore More: Timelapse</summary>
+                <p>
+                    The capture interval is
+                    10000 milliseconds,
+                    equivalent to 10 seconds.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: RAM Storage</summary>
+                <p>
+                    The latest JPEG is retained
+                    in RAM. Earlier images are
+                    replaced and are not
+                    permanently archived.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+
+                <ol>
+                    <li>Which GPIO is connected to OLED SDA?</li>
+                    <li>Which GPIO is connected to OLED SCL?</li>
+                    <li>Which GPIO reads the push button?</li>
+                    <li>What is the image capture interval?</li>
+                    <li>Where is the latest photograph stored?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO13, GPIO14, GPIO2,
+                    10 seconds, RAM.
+                </p>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Start automatic capture using
+        the browser, observe the photo count,
+        then stop it using the physical button.
+    </p>
 
 </section>
 
-<!-- 9. EXPECTED OUTPUT -->
+<!-- ====================================
+     9. EXPECTED OUTPUT
+==================================== -->
 <section class="section" id="output">
-  <h2>Expected Output</h2>
 
-  <h3>Serial Monitor</h3>
-  <div class="output-box">
-<pre>Connecting to WiFi...
-WiFi connected!
-Open: http://192.168.x.x
-TIMELAPSE STARTED
-First photo in 10 seconds
-Photo captured: 1
-Photo captured: 2
-TIMELAPSE STOPPED</pre>
-  </div>
+    <h2>Expected Output</h2>
 
-  <h3>OLED Display</h3>
-  <div class="output-box">
-<pre>WiFi: CONNECTED
+    <h3>Serial Monitor</h3>
+
+    <div class="output-box">
+<pre>Starting ESP32-CAM Photo Booth...
+
+Camera initialized.
+
+Connecting to Wi-Fi...
+
+Wi-Fi connected.
+
+Dashboard URL:
+http://192.168.x.x
+
+Web server started.
+
+Timelapse STARTED
+
+Photo 1 captured
+
+Photo 2 captured
+
+Timelapse STOPPED</pre>
+    </div>
+
+    <h3>OLED Display — Running</h3>
+
+    <div class="output-box">
+<pre>PHOTO BOOTH
+
+WiFi: CONNECTED
+
 PHOTOS: 002
+
 STATUS: RUNNING</pre>
-  </div>
+    </div>
 
-  <h3>Web Dashboard</h3>
-  <p>
-    The browser displays a camera image,
-    Start and Stop controls, photo count,
-    time-lapse status, IP address
-    and the latest captured JPEG.
-  </p>
+    <h3>OLED Display — Stopped</h3>
 
-  <div class="note">
-    The exact IP address varies with
-    the local Wi-Fi network. Gallery
-    history is not persistent.
-  </div>
+    <div class="output-box">
+<pre>PHOTO BOOTH
+
+WiFi: CONNECTED
+
+PHOTOS: 002
+
+STATUS: STOPPED</pre>
+    </div>
+
+    <h3>Web Dashboard</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dashboard Element</th>
+                    <th>Expected Function</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Camera View</td>
+                    <td>Periodically refreshed JPEG snapshot</td>
+                </tr>
+
+                <tr>
+                    <td>Start Timelapse</td>
+                    <td>Starts automatic capture</td>
+                </tr>
+
+                <tr>
+                    <td>Stop Timelapse</td>
+                    <td>Stops automatic capture</td>
+                </tr>
+
+                <tr>
+                    <td>Status</td>
+                    <td>RUNNING / STOPPED</td>
+                </tr>
+
+                <tr>
+                    <td>Photo Count</td>
+                    <td>Number of successful timed captures</td>
+                </tr>
+
+                <tr>
+                    <td>Latest Photo</td>
+                    <td>Opens the newest saved JPEG</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        The IP address and photo count
+        shown here are examples.
+        Actual results depend on the
+        connected network and camera.
+    </div>
+
 </section>
 
-<!-- 10. RESULT -->
+<!-- ====================================
+     10. DASHBOARD
+     IMMEDIATELY AFTER OUTPUT
+==================================== -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="ESP32-CAM Wi-Fi Photo Booth Dashboard.png"
+            alt="ESP32-CAM Wi-Fi Photo Booth Dashboard"
+        >
+
+    </div>
+
+</section>
+
+<!-- ====================================
+     11. RESULT
+==================================== -->
 <section class="section" id="result">
-  <h2>Result</h2>
 
-  <p>
-    The ESP32-CAM Wi-Fi Photo Booth experiment
-    demonstrates wireless image capture,
-    time-lapse scheduling, push-button control,
-    OLED status display and a browser-based
-    camera dashboard.
-  </p>
+    <h2>Result</h2>
+
+    <p>
+        The ESP32-CAM Wi-Fi Photo Booth
+        demonstrates wireless image capture,
+        automatic 10-second timelapse
+        scheduling, push-button control,
+        OLED status monitoring and a
+        browser-based camera dashboard.
+    </p>
+
+    <p>
+        The system displays periodically
+        refreshed snapshots and retains
+        the latest successful JPEG in RAM.
+    </p>
+
 </section>
 
-<!-- 11. WHAT YOU LEARN -->
+<!-- ====================================
+     12. WHAT YOU LEARN
+==================================== -->
 <section class="section" id="learn">
-  <h2>What You Learn</h2>
-  <ul>
-    <li>Using the AI-Thinker ESP32-CAM module.</li>
-    <li>Capturing JPEG images with OV2640.</li>
-    <li>Connecting an SH1106 OLED through I²C.</li>
-    <li>Reading a push button using INPUT_PULLUP.</li>
-    <li>Scheduling repeated events using millis().</li>
-    <li>Connecting ESP32-CAM to Wi-Fi.</li>
-    <li>Creating browser-based HTTP controls.</li>
-    <li>Displaying camera images in a browser.</li>
-    <li>Updating photo count on an OLED.</li>
-    <li>Managing temporary JPEG image buffers.</li>
-    <li>Understanding RAM-only storage limitations.</li>
-  </ul>
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using the AI-Thinker ESP32-CAM.</li>
+        <li>Initializing an onboard camera.</li>
+        <li>Capturing JPEG photographs.</li>
+        <li>Understanding VGA and QVGA image resolution.</li>
+        <li>Using I²C with a SH1106 OLED.</li>
+        <li>Connecting OLED SDA and SCL to GPIO13 and GPIO14.</li>
+        <li>Reading a push button on GPIO2.</li>
+        <li>Using INPUT_PULLUP.</li>
+        <li>Implementing button debouncing.</li>
+        <li>Scheduling events using millis().</li>
+        <li>Connecting ESP32-CAM to Wi-Fi.</li>
+        <li>Creating an HTTP web server.</li>
+        <li>Building a photo booth dashboard.</li>
+        <li>Using browser Start and Stop commands.</li>
+        <li>Serving JPEG images through HTTP.</li>
+        <li>Returning system status as JSON.</li>
+        <li>Managing camera frame buffers.</li>
+        <li>Understanding temporary image storage.</li>
+    </ul>
+
 </section>
 
 </main>
 
+<!-- ====================================
+     FOOTER
+==================================== -->
 <footer>
-  <strong>SIMUDIY Exploration Kit</strong>
-  <div>ESP32-CAM Wi-Fi Photo Booth</div>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>ESP32-CAM Wi-Fi Photo Booth</div>
 </footer>
 
-<!-- ==================================================
-     COMPLETE CONSOLIDATED ESP32-CAM SKETCH
-     HTML-SAFE SOURCE: < IS ENCODED AS &lt;
-================================================== -->
-<textarea id="esp32-source" hidden>
+<!-- ====================================
+     COMPLETE ESP32-CAM PROGRAM
+     10 INTERACTIVE CODE SECTIONS
+==================================== -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
+
 #include "esp_camera.h"
-#include <WiFi.h>
-#include <WebServer.h>
-#include <Wire.h>
-#include <U8g2lib.h>
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;U8g2lib.h>
 
-// ================= WI-FI SETTINGS =================
-const char* ssid = "SimusoftMCD2";
-const char* password = "9860897222";
+// [END 01]
 
-// ================= OLED SETTINGS ===================
-#define OLED_SDA 13
-#define OLED_SCL 14
 
-U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
-  U8G2_R0, U8X8_PIN_NONE
-);
+// [02] CONFIGURE WIFI
 
-// ================= PHYSICAL BUTTON =================
-#define BUTTON_PIN 2
+const char* ssid = "YOUR_WIFI_NAME";
+const char* password = "YOUR_WIFI_PASSWORD";
 
-// ================= CAMERA PINS ======================
-#define PWDN_GPIO_NUM     32
-#define RESET_GPIO_NUM    -1
-#define XCLK_GPIO_NUM      0
-#define SIOD_GPIO_NUM     26
-#define SIOC_GPIO_NUM     27
-
-#define Y9_GPIO_NUM       35
-#define Y8_GPIO_NUM       34
-#define Y7_GPIO_NUM       39
-#define Y6_GPIO_NUM       36
-#define Y5_GPIO_NUM       21
-#define Y4_GPIO_NUM       19
-#define Y3_GPIO_NUM       18
-#define Y2_GPIO_NUM        5
-#define VSYNC_GPIO_NUM    25
-#define HREF_GPIO_NUM     23
-#define PCLK_GPIO_NUM     22
-
-// ================= TIMELAPSE ========================
 WebServer server(80);
 
-bool timelapseRunning = false;
+// [END 02]
+
+
+// [03] DEFINE HARDWARE AND TIMELAPSE SETTINGS
+
+#define OLED_SDA 13
+#define OLED_SCL 14
+#define BUTTON_PIN 2
+
+U8G2_SH1106_128X64_NONAME_F_HW_I2C oled(
+    U8G2_R0,
+    U8X8_PIN_NONE
+);
+
+// AI-Thinker camera pins
+
+#define PWDN_GPIO_NUM 32
+#define RESET_GPIO_NUM -1
+#define XCLK_GPIO_NUM 0
+
+#define SIOD_GPIO_NUM 26
+#define SIOC_GPIO_NUM 27
+
+#define Y9_GPIO_NUM 35
+#define Y8_GPIO_NUM 34
+#define Y7_GPIO_NUM 39
+#define Y6_GPIO_NUM 36
+#define Y5_GPIO_NUM 21
+#define Y4_GPIO_NUM 19
+#define Y3_GPIO_NUM 18
+#define Y2_GPIO_NUM 5
+
+#define VSYNC_GPIO_NUM 25
+#define HREF_GPIO_NUM 23
+#define PCLK_GPIO_NUM 22
+
+const unsigned long CAPTURE_INTERVAL = 10000UL;
+const unsigned long DEBOUNCE_DELAY = 50UL;
+
 bool cameraReady = false;
+bool timelapseRunning = false;
 
-const unsigned long captureInterval = 10000;
 unsigned long lastCaptureTime = 0;
-
-// Debouncing
-int lastButtonReading = HIGH;
-int stableButtonState = HIGH;
-unsigned long lastDebounceTime = 0;
-const unsigned long debounceDelay = 50;
-
-// Latest photo stored in RAM
-uint8_t* latestPhoto = nullptr;
-size_t latestPhotoLength = 0;
 unsigned long photoCount = 0;
 
-// ================= OLED STATUS =======================
-void showOLED(const char* line1, const char* line2) {
-  oled.clearBuffer();
-  oled.setFont(u8g2_font_6x12_tf);
-  oled.drawStr(0, 14, "ESP32-CAM PHOTO BOOTH");
-  oled.drawHLine(0, 19, 128);
-  oled.drawStr(0, 34, line1);
-  oled.drawStr(0, 49, line2);
-  oled.sendBuffer();
+uint8_t* latestPhoto = nullptr;
+size_t latestPhotoLength = 0;
+
+int lastButtonReading = HIGH;
+int stableButtonState = HIGH;
+
+unsigned long lastDebounceTime = 0;
+
+// [END 03]
+
+
+// [04] UPDATE OLED STATUS
+
+void showOLED() {
+
+    oled.clearBuffer();
+
+    oled.setFont(
+        u8g2_font_helvB12_tr
+    );
+
+    oled.drawStr(
+        8, 17, "PHOTO BOOTH"
+    );
+
+    oled.setFont(
+        u8g2_font_6x10_tr
+    );
+
+    oled.drawStr(
+        5,
+        32,
+        WiFi.status() == WL_CONNECTED
+            ? "WiFi: CONNECTED"
+            : "WiFi: OFFLINE"
+    );
+
+    char line[25];
+
+    snprintf(
+        line,
+        sizeof(line),
+        "PHOTOS: %03lu",
+        photoCount
+    );
+
+    oled.drawStr(
+        5, 45, line
+    );
+
+    oled.drawStr(
+        5,
+        59,
+        timelapseRunning
+            ? "STATUS: RUNNING"
+            : "STATUS: STOPPED"
+    );
+
+    oled.sendBuffer();
 }
 
-// ================= CAPTURE PHOTO ====================
+// [END 04]
+
+
+// [05] INITIALIZE CAMERA
+
+bool initCamera() {
+
+    camera_config_t config = {};
+
+    config.ledc_channel = LEDC_CHANNEL_0;
+    config.ledc_timer = LEDC_TIMER_0;
+
+    config.pin_d0 = Y2_GPIO_NUM;
+    config.pin_d1 = Y3_GPIO_NUM;
+    config.pin_d2 = Y4_GPIO_NUM;
+    config.pin_d3 = Y5_GPIO_NUM;
+    config.pin_d4 = Y6_GPIO_NUM;
+    config.pin_d5 = Y7_GPIO_NUM;
+    config.pin_d6 = Y8_GPIO_NUM;
+    config.pin_d7 = Y9_GPIO_NUM;
+
+    config.pin_xclk = XCLK_GPIO_NUM;
+    config.pin_pclk = PCLK_GPIO_NUM;
+
+    config.pin_vsync = VSYNC_GPIO_NUM;
+    config.pin_href = HREF_GPIO_NUM;
+
+    config.pin_sccb_sda = SIOD_GPIO_NUM;
+    config.pin_sccb_scl = SIOC_GPIO_NUM;
+
+    config.pin_pwdn = PWDN_GPIO_NUM;
+    config.pin_reset = RESET_GPIO_NUM;
+
+    config.xclk_freq_hz = 20000000;
+    config.pixel_format = PIXFORMAT_JPEG;
+
+    if (psramFound()) {
+
+        config.frame_size = FRAMESIZE_VGA;
+        config.jpeg_quality = 12;
+        config.fb_count = 2;
+
+        config.fb_location =
+            CAMERA_FB_IN_PSRAM;
+
+        config.grab_mode =
+            CAMERA_GRAB_LATEST;
+
+    } else {
+
+        config.frame_size = FRAMESIZE_QVGA;
+        config.jpeg_quality = 14;
+        config.fb_count = 1;
+
+        config.fb_location =
+            CAMERA_FB_IN_DRAM;
+
+        config.grab_mode =
+            CAMERA_GRAB_WHEN_EMPTY;
+    }
+
+    esp_err_t err = esp_camera_init(
+        &config
+    );
+
+    if (err != ESP_OK) {
+
+        Serial.printf(
+            "Camera initialization failed: 0x%x\n",
+            err
+        );
+
+        return false;
+    }
+
+    sensor_t* sensor =
+        esp_camera_sensor_get();
+
+    if (sensor != nullptr) {
+
+        // Adjust image orientation if required.
+        sensor->set_vflip(sensor, 1);
+        sensor->set_hmirror(sensor, 1);
+    }
+
+    Serial.println(
+        "Camera initialized."
+    );
+
+    return true;
+}
+
+// [END 05]
+
+
+// [06] CAPTURE AND STORE PHOTO
+
 bool capturePhoto() {
-  if (!cameraReady) {
-    Serial.println("Camera is not ready.");
-    return false;
-  }
 
-  camera_fb_t* fb = esp_camera_fb_get();
+    if (!cameraReady) {
 
-  if (!fb) {
-    Serial.println("Camera capture failed.");
-    return false;
-  }
+        Serial.println(
+            "Camera is not ready."
+        );
 
-  if (fb->format != PIXFORMAT_JPEG) {
-    Serial.println("Camera frame is not JPEG.");
+        return false;
+    }
+
+    camera_fb_t* fb =
+        esp_camera_fb_get();
+
+    if (!fb) {
+
+        Serial.println(
+            "Camera capture failed."
+        );
+
+        return false;
+    }
+
+    if (fb->format != PIXFORMAT_JPEG) {
+
+        esp_camera_fb_return(fb);
+
+        Serial.println(
+            "Invalid camera image format."
+        );
+
+        return false;
+    }
+
+    size_t newLength = fb->len;
+
+    uint8_t* newPhoto =
+        (uint8_t*)malloc(newLength);
+
+    if (!newPhoto) {
+
+        esp_camera_fb_return(fb);
+
+        Serial.println(
+            "Not enough memory for image."
+        );
+
+        return false;
+    }
+
+    memcpy(
+        newPhoto,
+        fb->buf,
+        newLength
+    );
+
     esp_camera_fb_return(fb);
-    return false;
-  }
 
-  // Allocate memory for the latest image before replacing it.
-  uint8_t* newPhoto = (uint8_t*)malloc(fb->len);
+    // Replace the previous image
+    // only after successful allocation.
 
-  if (!newPhoto) {
-    Serial.println("Not enough RAM to store photo.");
-    esp_camera_fb_return(fb);
-    return false;
-  }
+    if (latestPhoto != nullptr) {
+        free(latestPhoto);
+    }
 
-  memcpy(newPhoto, fb->buf, fb->len);
-  size_t newLength = fb->len;
+    latestPhoto = newPhoto;
+    latestPhotoLength = newLength;
 
-  esp_camera_fb_return(fb);
+    photoCount++;
 
-  if (latestPhoto != nullptr) {
-    free(latestPhoto);
-  }
+    Serial.printf(
+        "Photo %lu captured (%u bytes)\n",
+        photoCount,
+        (unsigned int)latestPhotoLength
+    );
 
-  latestPhoto = newPhoto;
-  latestPhotoLength = newLength;
-  photoCount++;
+    showOLED();
 
-  Serial.printf("Photo %lu captured (%u bytes)\n",
-                photoCount,
-                (unsigned int)latestPhotoLength);
-
-  showOLED("Timelapse: RUNNING", "Photo captured");
-
-  return true;
+    return true;
 }
 
-// ================= DASHBOARD HTML ====================
-const char dashboardHTML[] PROGMEM = R"rawliteral(
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ESP32-CAM Wi-Fi Photo Booth</title>
+// [END 06]
 
-<style>
-* { box-sizing: border-box; }
+
+// [07] CREATE WEB DASHBOARD
+
+const char dashboardHTML[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+
+&lt;head>
+&lt;meta charset="UTF-8">
+
+&lt;meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+&lt;title>Wi-Fi Photo Booth&lt;/title>
+
+&lt;style>
+* {
+    box-sizing: border-box;
+}
 
 body {
-  margin: 0;
-  padding: 16px;
-  background: #111827;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: center;
+    margin: 0;
+    padding: 20px;
+    background: #0b1424;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-h1 { font-size: 28px; }
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.header {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.header h1 {
+    margin-bottom: 8px;
+    font-size: 30px;
+    color: #93c5fd;
+}
+
+.header p {
+    color: #cbd5e1;
+}
 
 .card {
-  max-width: 920px;
-  margin: 22px auto;
-  padding: 22px;
-  background: #1f2937;
-  border-radius: 16px;
+    margin: 18px 0;
+    padding: 24px;
+    background: #17263d;
+    border: 1px solid #334b6d;
+    border-radius: 16px;
+    text-align: center;
 }
 
-#camera {
-  width: 100%;
-  max-width: 670px;
-  height: auto;
-  display: block;
-  margin: 20px auto;
-  background: #111827;
-  border-radius: 4px;
+.card h2 {
+    margin-top: 0;
+}
+
+.camera {
+    display: block;
+    width: 100%;
+    max-width: 680px;
+    min-height: 180px;
+    max-height: 450px;
+    margin: 18px auto;
+    background: #070e18;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
 }
 
 button {
-  border: none;
-  border-radius: 10px;
-  padding: 15px 24px;
-  margin: 7px;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+    min-height: 45px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
 }
 
-.start { background: #16a34a; }
-.stop { background: #dc2626; }
-
-#status {
-  font-size: 18px;
-  margin: 16px;
+.start {
+    background: #16a34a;
 }
 
-#photoCount {
-  color: #d1d5db;
-  font-size: 15px;
+.stop {
+    background: #dc2626;
+}
+
+button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.stat {
+    padding: 17px;
+    background: #213956;
+    border-radius: 10px;
+}
+
+.stat-label {
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
+.stat-value {
+    margin-top: 7px;
+    color: #93c5fd;
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.latest {
+    display: block;
+    margin: 15px auto;
+    color: #93c5fd;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.message {
+    min-height: 20px;
+    color: #cbd5e1;
+    font-size: 13px;
 }
 
 .note {
-  font-size: 16px;
-  line-height: 1.5;
+    color: #cbd5e1;
+    font-size: 13px;
 }
-</style>
-</head>
 
-<body>
-<h1>ESP32-CAM Wi-Fi Photo Booth</h1>
+@media(max-width:600px) {
 
-<div class="card">
-  <h2>Live Camera</h2>
-
-  <img id="camera" src="/snapshot" alt="Camera feed">
-
-  <div>
-    <button class="start" onclick="controlTimelapse('start')">
-      Start Timelapse
-    </button>
-
-    <button class="stop" onclick="controlTimelapse('stop')">
-      Stop Timelapse
-    </button>
-  </div>
-
-  <p id="status">Status: Loading...</p>
-  <p id="photoCount">Photos captured: 0</p>
-
-  <p class="note">
-    Captures one photo every 10 seconds while running.
-  </p>
-
-  <p>
-    <a href="/latest" target="_blank" style="color:#93c5fd">
-      View latest captured photo
-    </a>
-  </p>
-</div>
-
-<script>
-async function controlTimelapse(action) {
-  const status = document.getElementById('status');
-
-  try {
-    status.textContent = 'Sending command...';
-
-    const response = await fetch('/' + action, {
-      method: 'POST',
-      cache: 'no-store'
-    });
-
-    const message = await response.text();
-
-    if (!response.ok) {
-      throw new Error(message || 'Command failed');
+    body {
+        padding: 12px;
     }
 
-    status.textContent = 'Status: ' + message;
-    await updateStatus();
-  } catch (error) {
-    status.textContent = 'Control error: ' + error.message;
-  }
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .card {
+        padding: 17px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+&lt;/style>
+
+&lt;/head>
+
+&lt;body>
+
+&lt;div class="container">
+
+    &lt;div class="header">
+
+        &lt;h1>Wi-Fi Photo Booth&lt;/h1>
+
+        &lt;p>
+            Wireless Camera and Timelapse Control
+        &lt;/p>
+
+    &lt;/div>
+
+    &lt;div class="card">
+
+        &lt;h2>Camera Preview&lt;/h2>
+
+        &lt;img
+            id="camera"
+            class="camera"
+            src="/snapshot"
+            alt="Camera Preview"
+        >
+
+        &lt;div class="controls">
+
+            &lt;button
+                class="start"
+                onclick="sendCommand('start')"
+            >
+                START TIMELAPSE
+            &lt;/button>
+
+            &lt;button
+                class="stop"
+                onclick="sendCommand('stop')"
+            >
+                STOP TIMELAPSE
+            &lt;/button>
+
+        &lt;/div>
+
+        &lt;div class="stats">
+
+            &lt;div class="stat">
+
+                &lt;div class="stat-label">
+                    TIMELAPSE STATUS
+                &lt;/div>
+
+                &lt;div
+                    class="stat-value"
+                    id="status"
+                >
+                    LOADING
+                &lt;/div>
+
+            &lt;/div>
+
+            &lt;div class="stat">
+
+                &lt;div class="stat-label">
+                    PHOTOS CAPTURED
+                &lt;/div>
+
+                &lt;div
+                    class="stat-value"
+                    id="photo-count"
+                >
+                    0
+                &lt;/div>
+
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;a
+            class="latest"
+            href="/latest"
+            target="_blank"
+            rel="noopener"
+        >
+            View Latest Captured Photo
+        &lt;/a>
+
+        &lt;p class="note">
+            Images are captured every 10 seconds
+            while timelapse is running.
+        &lt;/p>
+
+        &lt;p class="note">
+            Only the latest captured image
+            is retained in device memory.
+        &lt;/p>
+
+        &lt;p id="message" class="message">
+            Ready
+        &lt;/p>
+
+    &lt;/div>
+
+&lt;/div>
+
+&lt;script>
+
+let busy = false;
+
+async function sendCommand(action) {
+
+    if (busy) return;
+
+    busy = true;
+
+    document.querySelectorAll("button").forEach(
+        button => button.disabled = true
+    );
+
+    document.getElementById(
+        "message"
+    ).textContent = "Sending command...";
+
+    try {
+
+        const response = await fetch(
+            "/" + action,
+            {
+                method: "POST",
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Command failed");
+        }
+
+        document.getElementById(
+            "message"
+        ).textContent = "Command successful";
+
+        await updateStatus();
+
+    } catch (error) {
+
+        document.getElementById(
+            "message"
+        ).textContent = "Connection error";
+
+    } finally {
+
+        busy = false;
+
+        document.querySelectorAll("button").forEach(
+            button => button.disabled = false
+        );
+    }
 }
 
 async function updateStatus() {
-  try {
-    const response = await fetch('/status', {
-      cache: 'no-store'
-    });
 
-    if (!response.ok) return;
+    try {
 
-    const data = await response.json();
+        const response = await fetch(
+            "/status",
+            {cache: "no-store"}
+        );
 
-    document.getElementById('status').textContent =
-      'Status: ' + (data.running ? 'RUNNING' : 'STOPPED');
+        if (!response.ok) {
+            throw new Error("Status unavailable");
+        }
 
-    document.getElementById('photoCount').textContent =
-      'Photos captured: ' + data.photos;
-  } catch (error) {
-    console.log('Status update failed');
-  }
+        const data = await response.json();
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            data.running ? "RUNNING" : "STOPPED";
+
+        document.getElementById(
+            "photo-count"
+        ).textContent = data.photos;
+
+    } catch (error) {
+
+        document.getElementById(
+            "message"
+        ).textContent = "Status unavailable";
+    }
 }
 
-// Refresh camera image periodically.
+let cameraBusy = false;
+
 function refreshCamera() {
-  const camera = document.getElementById('camera');
-  camera.src = '/snapshot?t=' + Date.now();
+
+    if (cameraBusy) return;
+
+    cameraBusy = true;
+
+    const image = document.getElementById(
+        "camera"
+    );
+
+    image.onload = function() {
+        cameraBusy = false;
+    };
+
+    image.onerror = function() {
+        cameraBusy = false;
+    };
+
+    image.src =
+        "/snapshot?t=" + Date.now();
 }
-
-document.getElementById('camera').onerror = function() {
-  setTimeout(refreshCamera, 1500);
-};
-
-setInterval(refreshCamera, 1500);
-setInterval(updateStatus, 2000);
 
 updateStatus();
-</script>
-</body>
-</html>
+
+setInterval(
+    updateStatus,
+    2000
+);
+
+setInterval(
+    refreshCamera,
+    1500
+);
+
+&lt;/script>
+
+&lt;/body>
+&lt;/html>
 )rawliteral";
 
-// ================= SEND STORED PHOTO =================
+// [END 07]
+
+
+// [08] SERVE IMAGES AND REGISTER WEB ROUTES
+
 void sendStoredPhoto() {
-  if (latestPhoto == nullptr || latestPhotoLength == 0) {
-    server.send(404, "text/plain", "No photo captured yet.");
-    return;
-  }
 
-  server.sendHeader("Cache-Control", "no-store");
-  server.setContentLength(latestPhotoLength);
-  server.send(200, "image/jpeg", "");
+    if (
+        latestPhoto == nullptr ||
+        latestPhotoLength == 0
+    ) {
 
-  server.client().write(latestPhoto, latestPhotoLength);
+        server.send(
+            404,
+            "text/plain",
+            "No photo captured yet."
+        );
+
+        return;
+    }
+
+    server.sendHeader(
+        "Cache-Control",
+        "no-store"
+    );
+
+    server.setContentLength(
+        latestPhotoLength
+    );
+
+    server.send(
+        200,
+        "image/jpeg",
+        ""
+    );
+
+    WiFiClient client = server.client();
+
+    client.write(
+        latestPhoto,
+        latestPhotoLength
+    );
 }
 
-// ================= LIVE SNAPSHOT =====================
+
 void handleSnapshot() {
-  if (!cameraReady) {
-    server.send(503, "text/plain", "Camera not ready.");
-    return;
-  }
 
-  camera_fb_t* fb = esp_camera_fb_get();
+    if (!cameraReady) {
 
-  if (!fb) {
-    server.send(500, "text/plain", "Snapshot failed.");
-    return;
-  }
+        server.send(
+            503,
+            "text/plain",
+            "Camera not ready."
+        );
 
-  if (fb->format != PIXFORMAT_JPEG) {
+        return;
+    }
+
+    camera_fb_t* fb =
+        esp_camera_fb_get();
+
+    if (!fb) {
+
+        server.send(
+            500,
+            "text/plain",
+            "Snapshot failed."
+        );
+
+        return;
+    }
+
+    if (fb->format != PIXFORMAT_JPEG) {
+
+        esp_camera_fb_return(fb);
+
+        server.send(
+            500,
+            "text/plain",
+            "Invalid image format."
+        );
+
+        return;
+    }
+
+    server.sendHeader(
+        "Cache-Control",
+        "no-store"
+    );
+
+    server.setContentLength(
+        fb->len
+    );
+
+    server.send(
+        200,
+        "image/jpeg",
+        ""
+    );
+
+    WiFiClient client = server.client();
+
+    client.write(
+        fb->buf,
+        fb->len
+    );
+
     esp_camera_fb_return(fb);
-    server.send(500, "text/plain", "Invalid camera image format.");
-    return;
-  }
-
-  size_t imageLength = fb->len;
-
-  server.sendHeader("Cache-Control", "no-store");
-  server.setContentLength(imageLength);
-  server.send(200, "image/jpeg", "");
-
-  server.client().write(fb->buf, imageLength);
-
-  esp_camera_fb_return(fb);
 }
 
-// ================= WEB SERVER =========================
-void setupWebServer() {
-  server.on("/", HTTP_GET, []() {
-    server.send_P(200, "text/html", dashboardHTML);
-  });
 
-  server.on("/start", HTTP_POST, []() {
+void startTimelapse() {
+
     timelapseRunning = true;
     lastCaptureTime = millis();
 
-    showOLED("Timelapse: RUNNING", "Waiting to capture");
+    Serial.println(
+        "Timelapse STARTED"
+    );
 
-    server.send(200, "text/plain", "RUNNING");
-    Serial.println("Dashboard: Timelapse START");
-  });
+    showOLED();
+}
 
-  server.on("/stop", HTTP_POST, []() {
+
+void stopTimelapse() {
+
     timelapseRunning = false;
 
-    showOLED("Timelapse: STOPPED", "Ready");
+    Serial.println(
+        "Timelapse STOPPED"
+    );
 
-    server.send(200, "text/plain", "STOPPED");
-    Serial.println("Dashboard: Timelapse STOP");
-  });
-
-  server.on("/status", HTTP_GET, []() {
-    String json = "{";
-    json += "\"running\":";
-    json += (timelapseRunning ? "true" : "false");
-    json += ",\"photos\":";
-    json += String(photoCount);
-    json += "}";
-
-    server.send(200, "application/json", json);
-  });
-
-  server.on("/snapshot", HTTP_GET, handleSnapshot);
-  server.on("/latest", HTTP_GET, sendStoredPhoto);
-
-  server.begin();
-  Serial.println("Web server started.");
+    showOLED();
 }
 
-// ================= PHYSICAL BUTTON ===================
-void checkButton() {
-  int reading = digitalRead(BUTTON_PIN);
 
-  if (reading != lastButtonReading) {
-    lastDebounceTime = millis();
-  }
+void setupWebServer() {
 
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    if (reading != stableButtonState) {
-      stableButtonState = reading;
+    server.on(
+        "/",
+        HTTP_GET,
+        []() {
 
-      // Button is connected between GPIO2 and GND.
-      if (stableButtonState == LOW) {
-        timelapseRunning = !timelapseRunning;
-
-        if (timelapseRunning) {
-          lastCaptureTime = millis();
-          Serial.println("Physical button: Timelapse START");
-          showOLED("Timelapse: RUNNING", "Physical button");
-        } else {
-          Serial.println("Physical button: Timelapse STOP");
-          showOLED("Timelapse: STOPPED", "Physical button");
+            server.send_P(
+                200,
+                "text/html",
+                dashboardHTML
+            );
         }
-      }
+    );
+
+    server.on(
+        "/start",
+        HTTP_POST,
+        []() {
+
+            startTimelapse();
+
+            server.send(
+                200,
+                "text/plain",
+                "RUNNING"
+            );
+        }
+    );
+
+    server.on(
+        "/stop",
+        HTTP_POST,
+        []() {
+
+            stopTimelapse();
+
+            server.send(
+                200,
+                "text/plain",
+                "STOPPED"
+            );
+        }
+    );
+
+    server.on(
+        "/status",
+        HTTP_GET,
+        []() {
+
+            String json = "{";
+
+            json += "\"running\":";
+
+            json += timelapseRunning
+                ? "true"
+                : "false";
+
+            json += ",";
+
+            json += "\"photos\":";
+            json += String(photoCount);
+
+            json += "}";
+
+            server.sendHeader(
+                "Cache-Control",
+                "no-store"
+            );
+
+            server.send(
+                200,
+                "application/json",
+                json
+            );
+        }
+    );
+
+    server.on(
+        "/snapshot",
+        HTTP_GET,
+        handleSnapshot
+    );
+
+    server.on(
+        "/latest",
+        HTTP_GET,
+        sendStoredPhoto
+    );
+
+    server.begin();
+
+    Serial.println(
+        "Web server started."
+    );
+}
+
+// [END 08]
+
+
+// [09] CHECK PHYSICAL PUSH BUTTON
+
+void checkButton() {
+
+    int reading = digitalRead(
+        BUTTON_PIN
+    );
+
+    if (reading != lastButtonReading) {
+
+        lastDebounceTime = millis();
     }
-  }
 
-  lastButtonReading = reading;
+    if (
+        millis() - lastDebounceTime >
+        DEBOUNCE_DELAY
+    ) {
+
+        if (reading != stableButtonState) {
+
+            stableButtonState = reading;
+
+            if (stableButtonState == LOW) {
+
+                if (timelapseRunning) {
+
+                    stopTimelapse();
+
+                    Serial.println(
+                        "Physical button: STOP"
+                    );
+
+                } else {
+
+                    startTimelapse();
+
+                    Serial.println(
+                        "Physical button: START"
+                    );
+                }
+            }
+        }
+    }
+
+    lastButtonReading = reading;
 }
 
-// ================= SETUP ==============================
+// [END 09]
+
+
+// [10] INITIALIZE SYSTEM AND RUN CAPTURE LOOP
+
 void setup() {
-  Serial.begin(115200);
-  delay(500);
 
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
+    Serial.begin(115200);
 
-  // OLED initialization
-  Wire.begin(OLED_SDA, OLED_SCL);
-  oled.begin();
-  showOLED("Starting...", "Please wait");
-
-  // Camera configuration
-  camera_config_t config;
-  config.ledc_channel = LEDC_CHANNEL_0;
-  config.ledc_timer = LEDC_TIMER_0;
-
-  config.pin_d0 = Y2_GPIO_NUM;
-  config.pin_d1 = Y3_GPIO_NUM;
-  config.pin_d2 = Y4_GPIO_NUM;
-  config.pin_d3 = Y5_GPIO_NUM;
-  config.pin_d4 = Y6_GPIO_NUM;
-  config.pin_d5 = Y7_GPIO_NUM;
-  config.pin_d6 = Y8_GPIO_NUM;
-  config.pin_d7 = Y9_GPIO_NUM;
-
-  config.pin_xclk = XCLK_GPIO_NUM;
-  config.pin_pclk = PCLK_GPIO_NUM;
-  config.pin_vsync = VSYNC_GPIO_NUM;
-  config.pin_href = HREF_GPIO_NUM;
-
-  config.pin_sccb_sda = SIOD_GPIO_NUM;
-  config.pin_sccb_scl = SIOC_GPIO_NUM;
-
-  config.pin_pwdn = PWDN_GPIO_NUM;
-  config.pin_reset = RESET_GPIO_NUM;
-
-  config.xclk_freq_hz = 20000000;
-  config.pixel_format = PIXFORMAT_JPEG;
-
-  if (psramFound()) {
-    config.frame_size = FRAMESIZE_VGA;
-    config.jpeg_quality = 12;
-    config.fb_count = 2;
-    config.grab_mode = CAMERA_GRAB_LATEST;
-    config.fb_location = CAMERA_FB_IN_PSRAM;
-  } else {
-    config.frame_size = FRAMESIZE_QVGA;
-    config.jpeg_quality = 14;
-    config.fb_count = 1;
-    config.grab_mode = CAMERA_GRAB_WHEN_EMPTY;
-    config.fb_location = CAMERA_FB_IN_DRAM;
-  }
-
-  esp_err_t err = esp_camera_init(&config);
-
-  if (err != ESP_OK) {
-    Serial.printf("Camera init failed: 0x%x\n", err);
-    showOLED("Camera error", "Check wiring");
-    cameraReady = false;
-    return;
-  }
-
-  cameraReady = true;
-
-  // ===== CAMERA ORIENTATION FIX =====
-  // Correct an upside-down camera image.
-  sensor_t* sensor = esp_camera_sensor_get();
-
-  if (sensor != nullptr) {
-    sensor->set_vflip(sensor, 1);
-    sensor->set_hmirror(sensor, 1);
-  }
-
-  Serial.println("Camera initialized with orientation correction.");
-
-  // Connect Wi-Fi
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-
-  showOLED("Connecting WiFi", "Please wait");
-
-  Serial.print("Connecting to Wi-Fi");
-
-  unsigned long wifiStart = millis();
-
-  while (WiFi.status() != WL_CONNECTED &&
-         millis() - wifiStart < 20000) {
     delay(500);
-    Serial.print(".");
-  }
 
-  Serial.println();
+    Serial.println(
+        "Starting ESP32-CAM Photo Booth..."
+    );
 
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("Wi-Fi connection failed. Check credentials.");
-    showOLED("WiFi failed", "Check credentials");
-    return;
-  }
+    pinMode(
+        BUTTON_PIN,
+        INPUT_PULLUP
+    );
 
-  Serial.println("Wi-Fi connected.");
-  Serial.print("Dashboard URL: http://");
-  Serial.println(WiFi.localIP());
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
 
-  showOLED("WiFi connected", "Dashboard ready");
+    oled.begin();
 
-  setupWebServer();
+    showOLED();
+
+    cameraReady = initCamera();
+
+    if (!cameraReady) {
+
+        Serial.println(
+            "Camera initialization failed."
+        );
+
+        while (true) {
+            delay(1000);
+        }
+    }
+
+    WiFi.mode(WIFI_STA);
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+    Serial.print(
+        "Connecting to Wi-Fi"
+    );
+
+    unsigned long started = millis();
+
+    while (
+        WiFi.status() != WL_CONNECTED &amp;&amp;
+        millis() - started &lt; 30000UL
+    ) {
+
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println();
+
+    if (WiFi.status() == WL_CONNECTED) {
+
+        Serial.println(
+            "Wi-Fi connected."
+        );
+
+        Serial.print(
+            "Dashboard URL: http://"
+        );
+
+        Serial.println(
+            WiFi.localIP()
+        );
+
+        setupWebServer();
+
+    } else {
+
+        Serial.println(
+            "Wi-Fi connection failed."
+        );
+    }
+
+    showOLED();
 }
 
-// ================= MAIN LOOP =========================
+
 void loop() {
-  if (WiFi.status() == WL_CONNECTED) {
-    server.handleClient();
-  }
 
-  checkButton();
+    if (WiFi.status() == WL_CONNECTED) {
 
-  if (timelapseRunning &&
-      cameraReady &&
-      millis() - lastCaptureTime >= captureInterval) {
-    lastCaptureTime = millis();
-    capturePhoto();
-  }
+        server.handleClient();
+    }
 
-  delay(2);
+    checkButton();
+
+    if (
+        timelapseRunning &&
+        cameraReady &&
+        millis() - lastCaptureTime >=
+        CAPTURE_INTERVAL
+    ) {
+
+        lastCaptureTime = millis();
+
+        capturePhoto();
+    }
+
+    delay(2);
 }
+
+// [END 10]
 </textarea>
 
-<!-- ==================================================
-     INTERACTIVE CODE EXPLORER JAVASCRIPT
-================================================== -->
+<!-- ====================================
+     INTERACTIVE CODE EXPLORER
+==================================== -->
 <script>
+
+/* READ COMPLETE PROGRAM */
+
 const program = document
-  .getElementById("esp32-source")
-  .value
-  .trim();
+    .getElementById("esp32-program")
+    .value
+    .trim();
 
 const lines = program.split("\n");
 
+/* CODE EXPLANATION STEPS */
+
 const steps = [
-  {
-    title: "Load libraries and Wi-Fi settings",
-    start: '#include "esp_camera.h"',
-    end: 'const char* password = "YOUR_WIFI_PASSWORD";',
-    text: "Loads camera, Wi-Fi, web server, I2C and OLED libraries. The Wi-Fi credentials must be configured."
-  },
-  {
-    title: "Configure OLED and push button",
-    start: "#define OLED_SDA 13",
-    end: ");",
-    text: "Assigns GPIO13 to SDA, GPIO14 to SCL and GPIO2 to the button. Creates the SH1106 OLED object."
-  },
-  {
-    title: "Configure timelapse timing",
-    start: "const unsigned long CAPTURE_INTERVAL = 10000UL;",
-    end: "unsigned long photoCount = 0;",
-    text: "The capture interval is 10 seconds. The Boolean variable tracks whether timed capture is running."
-  },
-  {
-    title: "Configure the camera pins",
-    start: "#define PWDN_GPIO_NUM 32",
-    end: "#define PCLK_GPIO_NUM 22",
-    text: "Defines the camera connections required by the AI-Thinker ESP32-CAM module."
-  },
-  {
-    title: "Initialize camera",
-    start: "bool initCamera() {",
-    end: "return true;",
-    text: "Creates camera configuration, selects JPEG and VGA resolution, and initializes the image sensor."
-  },
-  {
-    title: "Display OLED status",
-    start: "void showOLED() {",
-    end: "oled.sendBuffer();",
-    text: "Displays Wi-Fi connection state, photo count and whether time-lapse capture is running."
-  },
-  {
-    title: "Store the latest JPEG",
-    start: "bool saveLatestPhoto(",
-    end: "return true;",
-    text: "Allocates memory for the newest JPEG. After a successful allocation it replaces the previous image buffer."
-  },
-  {
-    title: "Capture a photograph",
-    start: "bool capturePhoto() {",
-    end: "return true;",
-    text: "Requests a frame, copies the JPEG into RAM, releases the camera frame, increments the count and updates the OLED."
-  },
-  {
-    title: "Create the browser dashboard",
-    start: "void handleRoot() {",
-    end: 'server.send(200, "text/html", html);',
-    text: "Builds and serves the browser interface containing the preview, Start/Stop buttons, current status and latest image."
-  },
-  {
-    title: "Serve camera snapshots",
-    start: "void handleSnapshot() {",
-    end: "esp_camera_fb_return(fb);",
-    text: "Captures a JPEG and sends its bytes to the connected browser using an HTTP response."
-  },
-  {
-    title: "Serve latest photo and status",
-    start: "void handleLatest() {",
-    end: "server.send(",
-    text: "Provides HTTP endpoints that allow the browser to request the latest photo and current operating information.",
-    endSearchFrom: "void handleStatus() {"
-  },
-  {
-    title: "Start and stop the timelapse",
-    start: "void startTimelapse() {",
-    end: "void handleStop() {",
-    text: "Schedules the first capture ten seconds after Start, updates the running state and handles browser Stop requests."
-  },
-  {
-    title: "Read and debounce the push button",
-    start: "void checkButton() {",
-    end: "lastReading = reading;",
-    text: "Checks whether the input remained stable for 50 ms and toggles the time-lapse state on a valid button press."
-  },
-  {
-    title: "Run the capture scheduler",
-    start: "void processTimelapse() {",
-    end: "void setup() {",
-    text: "Checks the next scheduled capture time and takes a photograph when the ten-second interval expires."
-  },
-  {
-    title: "Initialize hardware and server",
-    start: "void setup() {",
-    end: 'Serial.println(WiFi.localIP());',
-    text: "Configures the button, OLED, camera, Wi-Fi and HTTP routes, then prints the board's IP address."
-  },
-  {
-    title: "Repeat service loop",
-    start: "void loop() {",
-    end: "processTimelapse();",
-    text: "The main loop handles browser requests, checks the push button and processes scheduled captures."
-  }
+
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Loads the camera, Wi-Fi, HTTP server, " +
+            "I2C and SH1106 OLED libraries."
+    },
+
+    {
+        number: "02",
+        label: "CONFIGURE WIFI",
+        title: "Configure Wi-Fi",
+        text:
+            "Defines the Wi-Fi credentials " +
+            "and creates the HTTP server."
+    },
+
+    {
+        number: "03",
+        label: "DEFINE HARDWARE AND TIMELAPSE SETTINGS",
+        title: "Configure Hardware",
+        text:
+            "Defines OLED pins, push-button pin, " +
+            "camera pins, capture interval " +
+            "and memory variables."
+    },
+
+    {
+        number: "04",
+        label: "UPDATE OLED STATUS",
+        title: "Update OLED",
+        text:
+            "Displays the photo booth title, " +
+            "Wi-Fi status, total photo count " +
+            "and timelapse operating condition."
+    },
+
+    {
+        number: "05",
+        label: "INITIALIZE CAMERA",
+        title: "Initialize Camera",
+        text:
+            "Configures the onboard camera, " +
+            "selects JPEG capture settings " +
+            "and applies image orientation."
+    },
+
+    {
+        number: "06",
+        label: "CAPTURE AND STORE PHOTO",
+        title: "Capture Photo",
+        text:
+            "Captures a JPEG frame, copies it into " +
+            "RAM, replaces the previous image " +
+            "and increments the photograph count."
+    },
+
+    {
+        number: "07",
+        label: "CREATE WEB DASHBOARD",
+        title: "Create Dashboard",
+        text:
+            "Defines the full HTML, CSS and JavaScript " +
+            "dashboard with camera preview, " +
+            "Start/Stop controls and photo status."
+    },
+
+    {
+        number: "08",
+        label: "SERVE IMAGES AND REGISTER WEB ROUTES",
+        title: "Configure Web Server",
+        text:
+            "Serves JPEG images and registers " +
+            "dashboard, Start, Stop, Status, " +
+            "Snapshot and Latest Photo routes."
+    },
+
+    {
+        number: "09",
+        label: "CHECK PHYSICAL PUSH BUTTON",
+        title: "Read Push Button",
+        text:
+            "Uses debouncing to detect a valid " +
+            "button press and toggle the " +
+            "timelapse operating state."
+    },
+
+    {
+        number: "10",
+        label: "INITIALIZE SYSTEM AND RUN CAPTURE LOOP",
+        title: "Run Photo Booth",
+        text:
+            "Initializes the camera, OLED and Wi-Fi, " +
+            "starts the server and captures JPEG " +
+            "images at scheduled intervals."
+    }
+
 ];
 
+/* ESCAPE HTML */
+
 function escapeHtml(value) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
-function renderCode() {
-  const output = lines.map((line, index) => {
-    const n = index + 1;
+/* DISPLAY CODE WITH LINE NUMBERS */
 
-    return (
-      '<span class="code-line" id="line-' + n + '">' +
-      '<span class="line-number">' + n + '</span>' +
-      '<span>' + escapeHtml(line) + '</span>' +
-      '</span>'
+function displayCode() {
+
+    const container = document.getElementById(
+        "code-lines"
     );
-  }).join("");
 
-  document.getElementById("code-lines").innerHTML =
-    output;
+    container.innerHTML = lines.map(
+        function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+        }
+    ).join("");
 }
 
-function findMarker(marker, from = 0) {
-  return lines.findIndex(
-    (line, index) =>
-      index >= from &&
-      line.trim() === marker
-  );
+/* FIND EXACT SOURCE MARKERS */
+
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
 }
 
-function validateSteps() {
-  return steps.map((step) => {
-    const start = findMarker(step.start);
+/* GET COMPLETE SECTION RANGES */
 
-    let end;
+const ranges = steps.map(
+    function(step) {
 
-    if (step.endSearchFrom) {
-      const anchor = findMarker(
-        step.endSearchFrom,
-        start
-      );
+        const start = findMarker(
+            "// [" +
+            step.number +
+            "] " +
+            step.label
+        );
 
-      end = anchor < 0
-        ? -1
-        : findMarker(step.end, anchor);
-    } else {
-      end = start < 0
-        ? -1
-        : findMarker(step.end, start);
+        const end = findMarker(
+            "// [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid: start >= 0 && end >= start
+        };
     }
+);
 
-    return {
-      start,
-      end,
-      valid: start >= 0 && end >= start
-    };
-  });
-}
+/* CREATE STEP BUTTONS */
 
-const ranges = validateSteps();
+function createSteps() {
 
-function renderSteps() {
-  const holder = document.getElementById("steps-list");
-
-  steps.forEach((step, index) => {
-    const button = document.createElement("button");
-
-    button.type = "button";
-    button.className = "step";
-
-    button.textContent =
-      String(index + 1).padStart(2, "0") +
-      " · " + step.title;
-
-    button.addEventListener(
-      "click",
-      () => showStep(index)
+    const container = document.getElementById(
+        "steps-list"
     );
 
-    holder.appendChild(button);
-  });
+    steps.forEach(
+        function(step, index) {
+
+            const button = document.createElement(
+                "button"
+            );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number = document.createElement(
+                "span"
+            );
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const label = document.createElement(
+                "span"
+            );
+
+            label.textContent = step.title;
+
+            button.append(number, label);
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
 }
+
+/* HIGHLIGHT FULL MATCHING CODE SECTION */
 
 function showStep(index) {
-  document.querySelectorAll(".step")
-    .forEach((button, i) => {
-      button.classList.toggle(
-        "active",
-        i === index
-      );
-    });
 
-  document.querySelectorAll(".code-line")
-    .forEach((line) => {
-      line.classList.remove("selected");
-    });
+    document.querySelectorAll(".step").forEach(
+        function(button, i) {
 
-  const range = ranges[index];
-  const step = steps[index];
-
-  const explanation =
-    document.getElementById("explanation");
-
-  explanation.replaceChildren();
-
-  const heading = document.createElement("h3");
-  heading.textContent =
-    (index + 1) + ". " + step.title;
-
-  const paragraph = document.createElement("p");
-
-  if (!range.valid) {
-    paragraph.textContent =
-      "Code highlight marker not found. Check the source.";
-    explanation.append(heading, paragraph);
-    return;
-  }
-
-  for (
-    let line = range.start;
-    line <= range.end;
-    line++
-  ) {
-    const element = document.getElementById(
-      "line-" + (line + 1)
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
     );
 
-    if (element) {
-      element.classList.add("selected");
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+            line.classList.remove("selected");
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation = document.getElementById(
+        "explanation"
+    );
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement(
+        "h3"
+    );
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement(
+        "p"
+    );
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching code markers not found.";
+
+        return;
     }
-  }
 
-  paragraph.textContent = step.text;
-  explanation.append(heading, paragraph);
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
 
-  const target = document.getElementById(
-    "line-" + (range.start + 1)
-  );
+        const element = document.getElementById(
+            "line-" + (i + 1)
+        );
 
-  const panel = document.getElementById("code-body");
+        if (element) {
+            element.classList.add("selected");
+        }
+    }
 
-  if (target && panel) {
-    const offset =
-      target.getBoundingClientRect().top -
-      panel.getBoundingClientRect().top;
+    const firstLine = document.getElementById(
+        "line-" + (range.start + 1)
+    );
 
-    panel.scrollTo({
-      top: panel.scrollTop + offset - 20,
-      behavior: "smooth"
-    });
-  }
+    const codeBody = document.getElementById(
+        "code-body"
+    );
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+
+            behavior: "smooth"
+        });
+    }
 }
+
+/* COPY COMPLETE ESP32-CAM SKETCH */
 
 async function copyCode() {
-  const button = document.querySelector(
-    ".code-top .copy-button"
-  );
 
-  try {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(program);
-    } else {
-      const textarea = document.createElement("textarea");
+    const button = document.querySelector(
+        ".code-top .copy-button"
+    );
 
-      textarea.value = program;
-      textarea.style.position = "fixed";
-      textarea.style.opacity = "0";
+    function copied() {
 
-      document.body.appendChild(textarea);
-      textarea.select();
+        button.textContent = "Copied!";
 
-      if (!document.execCommand("copy")) {
-        throw new Error("Unable to copy code");
-      }
-
-      textarea.remove();
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
     }
 
-    button.textContent = "Copied!";
+    function fallback() {
 
-    setTimeout(() => {
-      button.textContent = "Copy Code";
-    }, 1500);
+        const field = document.createElement(
+            "textarea"
+        );
 
-  } catch (error) {
-    button.textContent = "Copy failed";
-  }
+        field.value = program;
+
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch (error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch (error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
 
-renderCode();
-renderSteps();
+/* INITIALIZE CODE EXPLORER */
+
+displayCode();
+createSteps();
 showStep(0);
+
 </script>
 
 </body>
