@@ -1,23 +1,2104 @@
+
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Wireless Force Measurement Display</title><style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;color:#1e293b;line-height:1.65}
-.header{background:#2563eb;color:white;text-align:center;padding:34px 20px 18px;position:relative}.header h1{margin:12px 0;font-size:32px}.header-logo{position:absolute;left:22px;top:18px;width:120px;background:white;padding:5px;border-radius:5px}.nav{display:flex;gap:12px;justify-content:center;margin-top:20px}.nav a{background:white;color:#1d4ed8;border-radius:7px;padding:7px 18px;text-decoration:none;font-weight:bold}
-main{max-width:1100px;margin:25px auto;padding:0 16px}section{background:white;border-radius:12px;padding:25px 30px;margin-bottom:22px;box-shadow:0 3px 16px #dbe4f0}h2{color:#1d4ed8;border-bottom:2px solid #dbeafe;padding-bottom:10px;margin-top:0}h3{color:#1e40af}
-.components{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}.component{border:1px solid #dbeafe;border-radius:10px;text-align:center;padding:14px;background:#f8fbff}.component img{width:100%;height:145px;object-fit:contain}.component strong,.component small{display:block}.component small{color:#64748b}
-table{width:100%;border-collapse:collapse}th,td{border:1px solid #cbd5e1;text-align:left;padding:11px}th{background:#dbeafe}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}
-.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.flow span{background:#dbeafe;color:#1e40af;border-radius:8px;padding:10px 13px;font-weight:bold}.flow b{color:#2563eb}
-li{margin:7px 0}.codebar{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;margin:12px 0}.codebar button,.explain button{background:#2563eb;color:white;border:0;border-radius:7px;padding:9px 13px;cursor:pointer}.codewrap{background:#0f172a;color:#e2e8f0;overflow:auto;border-radius:9px;max-height:620px;font:13px/1.7 Consolas,monospace}.code-line{display:flex;white-space:pre}.code-line.highlight{background:#1d4ed8}.ln{display:inline-block;min-width:46px;padding:0 10px;text-align:right;color:#94a3b8;border-right:1px solid #334155;margin-right:12px;user-select:none}.explain{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.note{background:#eff6ff;border-left:4px solid #2563eb;padding:12px;border-radius:6px}footer{text-align:center;color:#64748b;padding:24px}@media(max-width:680px){.header-logo{position:static;display:block;margin:auto}.header h1{font-size:25px}section{padding:20px}}
-</style></head><body><header class="header"><img class="header-logo" src="../Simusoft logo white background.jpeg" alt="Simusoft"><h1>Wireless Force Measurement Display</h1><p>Practical experiment guide</p><nav class="nav"><a href="../index.html">Back to Experiments</a><a href="../../index.html">Home</a></nav></header><main>
-<section><h2>Aim</h2><p>Measure relative applied force using an FSR402 voltage divider, display readings on OLED, indicate pressure with an LED and serve a live Wi-Fi dashboard.</p></section>
-<section><h2>About the Experiment</h2><p>Measure relative applied force using an FSR402 voltage divider, display readings on OLED, indicate pressure with an LED and serve a live Wi-Fi dashboard. Measurements are relative indicators rather than calibrated physical units. The dashboard works on the same local Wi-Fi network.</p></section>
-<section><h2>Components Required</h2><div class="components"><article class="component"><img src="ESP32 Development Board.png" alt="ESP32 Development Board" loading="lazy"><strong>ESP32 Development Board</strong><small>Quantity: 1</small></article><article class="component"><img src="FSR402 Force Sensor.png" alt="FSR402 Force Sensor" loading="lazy"><strong>FSR402 Force Sensor</strong><small>Quantity: 1</small></article><article class="component"><img src="10K Ohm Resistor.png" alt="10kΩ Resistor" loading="lazy"><strong>10kΩ Resistor</strong><small>Quantity: 1</small></article><article class="component"><img src="OLED.png" alt="128×64 I2C OLED Display" loading="lazy"><strong>128×64 I2C OLED Display</strong><small>Quantity: 1</small></article><article class="component"><img src="Red LED.png" alt="LED" loading="lazy"><strong>LED</strong><small>Quantity: 1</small></article><article class="component"><img src="220 Ohm Resistor.png" alt="220Ω Resistor" loading="lazy"><strong>220Ω Resistor</strong><small>Quantity: 1</small></article><article class="component"><img src="Jumper Wires.png" alt="Jumper Wires" loading="lazy"><strong>Jumper Wires</strong><small>Quantity: As required</small></article><article class="component"><img src="Breadboard.png" alt="Breadboard" loading="lazy"><strong>Breadboard</strong><small>Quantity: 1</small></article></div></section>
-<section><h2>Circuit Connections</h2><table><thead><tr><th>Component / Pin</th><th>Connection</th></tr></thead><tbody><tr><td>FSR402 terminal 1</td><td>3.3V</td></tr><tr><td>FSR402 terminal 2 / divider junction</td><td>GPIO 34</td></tr><tr><td>10kΩ resistor</td><td>GPIO 34 junction to GND</td></tr><tr><td>OLED VCC / GND</td><td>3.3V / GND</td></tr><tr><td>OLED SDA / SCL</td><td>GPIO 21 / GPIO 22</td></tr><tr><td>LED anode</td><td>GPIO 2 through 220Ω resistor</td></tr><tr><td>LED cathode</td><td>GND</td></tr></tbody></table></section>
-<section><h2>Circuit Diagram</h2><img class="circuit-img" src="Wireless Force Measurement Display Circuit.png" alt="Wireless Force Measurement Display circuit diagram"></section>
-<section><h2>Working Principle</h2><div class="flow"><span>Sensor Input</span><b>→</b><span>ESP32 ADC (GPIO 34)</span><b>→</b><span>Relative Percentage</span><b>→</b><span>OLED + LED</span><b>→</b><span>Wi-Fi Dashboard</span></div></section>
-<section><h2>Procedure</h2><ol><li>Connect one FSR402 terminal to 3.3V and the other to the GPIO 34 junction.</li><li>Connect a 10kΩ resistor between that junction and GND to make a voltage divider.</li><li>Connect the OLED using GPIO 21 (SDA) and GPIO 22 (SCL).</li><li>Connect the LED through a 220Ω resistor to GPIO 2, with cathode to GND.</li><li>Install ESP32 board support and U8g2, set Wi-Fi credentials and upload.</li><li>Open Serial Monitor at 115200 baud, visit the ESP32 IP address and apply different pressures to the FSR.</li></ol></section>
-<section><h2>Code</h2><h3>Explore the Code</h3><p>Replace the Wi-Fi placeholders before uploading. The code below is a working implementation of the SOP logic; sensor calibration may be needed for your hardware.</p><div class="codebar"><span>88 lines · Arduino IDE (ESP32)</span><button id="copy" onclick="copyCode()">Copy Code</button></div><div class="codewrap" id="code"><div class="code-line" id="line-1"><span class="ln">1</span><span>#include &lt;WiFi.h&gt;</span></div><div class="code-line" id="line-2"><span class="ln">2</span><span>#include &lt;WebServer.h&gt;</span></div><div class="code-line" id="line-3"><span class="ln">3</span><span>#include &lt;Wire.h&gt;</span></div><div class="code-line" id="line-4"><span class="ln">4</span><span>#include &lt;U8g2lib.h&gt;</span></div><div class="code-line" id="line-5"><span class="ln">5</span><span> </span></div><div class="code-line" id="line-6"><span class="ln">6</span><span>const char* WIFI_SSID = &quot;YOUR_WIFI_NAME&quot;;</span></div><div class="code-line" id="line-7"><span class="ln">7</span><span>const char* WIFI_PASSWORD = &quot;YOUR_WIFI_PASSWORD&quot;;</span></div><div class="code-line" id="line-8"><span class="ln">8</span><span>const int SENSOR_PIN = 34;</span></div><div class="code-line" id="line-9"><span class="ln">9</span><span>const int OUTPUT_PIN = 2;</span></div><div class="code-line" id="line-10"><span class="ln">10</span><span>WebServer server(80);</span></div><div class="code-line" id="line-11"><span class="ln">11</span><span>U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE);</span></div><div class="code-line" id="line-12"><span class="ln">12</span><span>int rawValue = 0;</span></div><div class="code-line" id="line-13"><span class="ln">13</span><span>int percent = 0;</span></div><div class="code-line" id="line-14"><span class="ln">14</span><span>String statusText = &quot;LOW&quot;;</span></div><div class="code-line" id="line-15"><span class="ln">15</span><span> </span></div><div class="code-line" id="line-16"><span class="ln">16</span><span>void updateSensor() {</span></div><div class="code-line" id="line-17"><span class="ln">17</span><span>  long total = 0;</span></div><div class="code-line" id="line-18"><span class="ln">18</span><span>  for (int i = 0; i &lt; 10; i++) {</span></div><div class="code-line" id="line-19"><span class="ln">19</span><span>    total += analogRead(SENSOR_PIN);</span></div><div class="code-line" id="line-20"><span class="ln">20</span><span>    delay(2);</span></div><div class="code-line" id="line-21"><span class="ln">21</span><span>  }</span></div><div class="code-line" id="line-22"><span class="ln">22</span><span>  rawValue = total / 10;</span></div><div class="code-line" id="line-23"><span class="ln">23</span><span>  percent = constrain(map(rawValue, 0, 4095, 0, 100), 0, 100);</span></div><div class="code-line" id="line-24"><span class="ln">24</span><span>  if (percent &lt; 25) statusText = &quot;LOW&quot;;</span></div><div class="code-line" id="line-25"><span class="ln">25</span><span>  else if (percent &lt; 60) statusText = &quot;MEDIUM&quot;;</span></div><div class="code-line" id="line-26"><span class="ln">26</span><span>  else statusText = &quot;HIGH&quot;;</span></div><div class="code-line" id="line-27"><span class="ln">27</span><span>  digitalWrite(OUTPUT_PIN, percent &gt;= 25 ? HIGH : LOW);</span></div><div class="code-line" id="line-28"><span class="ln">28</span><span>}</span></div><div class="code-line" id="line-29"><span class="ln">29</span><span>void updateOLED() {</span></div><div class="code-line" id="line-30"><span class="ln">30</span><span>  oled.clearBuffer();</span></div><div class="code-line" id="line-31"><span class="ln">31</span><span>  oled.setFont(u8g2_font_6x10_tr);</span></div><div class="code-line" id="line-32"><span class="ln">32</span><span>  oled.drawStr(0, 12, &quot;FORCE METER&quot;);</span></div><div class="code-line" id="line-33"><span class="ln">33</span><span>  oled.setFont(u8g2_font_logisoso24_tr);</span></div><div class="code-line" id="line-34"><span class="ln">34</span><span>  String value = String(percent) + &quot;%&quot;;</span></div><div class="code-line" id="line-35"><span class="ln">35</span><span>  oled.drawStr(0, 44, value.c_str());</span></div><div class="code-line" id="line-36"><span class="ln">36</span><span>  oled.setFont(u8g2_font_6x10_tr);</span></div><div class="code-line" id="line-37"><span class="ln">37</span><span>  oled.drawStr(0, 60, statusText.c_str());</span></div><div class="code-line" id="line-38"><span class="ln">38</span><span>  oled.sendBuffer();</span></div><div class="code-line" id="line-39"><span class="ln">39</span><span>}</span></div><div class="code-line" id="line-40"><span class="ln">40</span><span>void handleRoot() {</span></div><div class="code-line" id="line-41"><span class="ln">41</span><span>  String page = R&quot;rawliteral(</span></div><div class="code-line" id="line-42"><span class="ln">42</span><span>&lt;!doctype html&gt;&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;</span></div><div class="code-line" id="line-43"><span class="ln">43</span><span>&lt;title&gt;Wireless Force Measurement Display&lt;/title&gt;&lt;style&gt;body{font-family:Arial;background:#eff6ff;text-align:center;padding:24px}</span></div><div class="code-line" id="line-44"><span class="ln">44</span><span>main{max-width:560px;margin:auto;background:white;padding:30px;border-radius:18px;box-shadow:0 8px 30px #cbd5e1}</span></div><div class="code-line" id="line-45"><span class="ln">45</span><span>h1{color:#1d4ed8}strong{font-size:48px;color:#1d4ed8}.meter{background:#dbeafe;border-radius:20px;height:22px;overflow:hidden}</span></div><div class="code-line" id="line-46"><span class="ln">46</span><span>#bar{background:#2563eb;height:100%;width:0%}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;main&gt;</span></div><div class="code-line" id="line-47"><span class="ln">47</span><span>&lt;h1&gt;Wireless Force Measurement Display&lt;/h1&gt;&lt;strong id=&quot;pct&quot;&gt;--%&lt;/strong&gt;&lt;p id=&quot;status&quot;&gt;Connecting...&lt;/p&gt;</span></div><div class="code-line" id="line-48"><span class="ln">48</span><span>&lt;div class=&quot;meter&quot;&gt;&lt;div id=&quot;bar&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;p&gt;ADC Value: &lt;span id=&quot;raw&quot;&gt;--&lt;/span&gt;&lt;/p&gt;</span></div><div class="code-line" id="line-49"><span class="ln">49</span><span>&lt;p&gt;Device IP: &lt;span id=&quot;ip&quot;&gt;--&lt;/span&gt;&lt;/p&gt;&lt;/main&gt;</span></div><div class="code-line" id="line-50"><span class="ln">50</span><span>&lt;script&gt;async function refresh(){try{let r=await fetch('/data');let d=await r.json();</span></div><div class="code-line" id="line-51"><span class="ln">51</span><span>document.getElementById('pct').textContent=d.percent+'%';</span></div><div class="code-line" id="line-52"><span class="ln">52</span><span>document.getElementById('status').textContent=d.status;</span></div><div class="code-line" id="line-53"><span class="ln">53</span><span>document.getElementById('bar').style.width=d.percent+'%';</span></div><div class="code-line" id="line-54"><span class="ln">54</span><span>document.getElementById('raw').textContent=d.raw;</span></div><div class="code-line" id="line-55"><span class="ln">55</span><span>document.getElementById('ip').textContent=d.ip;}catch(e){}}</span></div><div class="code-line" id="line-56"><span class="ln">56</span><span>refresh();setInterval(refresh,1000);&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</span></div><div class="code-line" id="line-57"><span class="ln">57</span><span>)rawliteral&quot;;</span></div><div class="code-line" id="line-58"><span class="ln">58</span><span>  server.send(200, &quot;text/html&quot;, page);</span></div><div class="code-line" id="line-59"><span class="ln">59</span><span>}</span></div><div class="code-line" id="line-60"><span class="ln">60</span><span>void handleData() {</span></div><div class="code-line" id="line-61"><span class="ln">61</span><span>  String json = &quot;{\&quot;raw\&quot;:&quot; + String(rawValue) +</span></div><div class="code-line" id="line-62"><span class="ln">62</span><span>    &quot;,\&quot;percent\&quot;:&quot; + String(percent) +</span></div><div class="code-line" id="line-63"><span class="ln">63</span><span>    &quot;,\&quot;status\&quot;:\&quot;&quot; + statusText +</span></div><div class="code-line" id="line-64"><span class="ln">64</span><span>    &quot;\&quot;,\&quot;ip\&quot;:\&quot;&quot; + WiFi.localIP().toString() + &quot;\&quot;}&quot;;</span></div><div class="code-line" id="line-65"><span class="ln">65</span><span>  server.send(200, &quot;application/json&quot;, json);</span></div><div class="code-line" id="line-66"><span class="ln">66</span><span>}</span></div><div class="code-line" id="line-67"><span class="ln">67</span><span>void setup() {</span></div><div class="code-line" id="line-68"><span class="ln">68</span><span>  Serial.begin(115200);</span></div><div class="code-line" id="line-69"><span class="ln">69</span><span>  pinMode(OUTPUT_PIN, OUTPUT);</span></div><div class="code-line" id="line-70"><span class="ln">70</span><span>  analogReadResolution(12);</span></div><div class="code-line" id="line-71"><span class="ln">71</span><span>  Wire.begin(21, 22);</span></div><div class="code-line" id="line-72"><span class="ln">72</span><span>  oled.begin();</span></div><div class="code-line" id="line-73"><span class="ln">73</span><span>  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);</span></div><div class="code-line" id="line-74"><span class="ln">74</span><span>  Serial.print(&quot;Connecting to Wi-Fi&quot;);</span></div><div class="code-line" id="line-75"><span class="ln">75</span><span>  while (WiFi.status() != WL_CONNECTED) { delay(500); Serial.print(&quot;.&quot;); }</span></div><div class="code-line" id="line-76"><span class="ln">76</span><span>  Serial.println();</span></div><div class="code-line" id="line-77"><span class="ln">77</span><span>  Serial.print(&quot;IP Address: &quot;);</span></div><div class="code-line" id="line-78"><span class="ln">78</span><span>  Serial.println(WiFi.localIP());</span></div><div class="code-line" id="line-79"><span class="ln">79</span><span>  server.on(&quot;/&quot;, handleRoot);</span></div><div class="code-line" id="line-80"><span class="ln">80</span><span>  server.on(&quot;/data&quot;, handleData);</span></div><div class="code-line" id="line-81"><span class="ln">81</span><span>  server.begin();</span></div><div class="code-line" id="line-82"><span class="ln">82</span><span>}</span></div><div class="code-line" id="line-83"><span class="ln">83</span><span>void loop() {</span></div><div class="code-line" id="line-84"><span class="ln">84</span><span>  updateSensor();</span></div><div class="code-line" id="line-85"><span class="ln">85</span><span>  updateOLED();</span></div><div class="code-line" id="line-86"><span class="ln">86</span><span>  server.handleClient();</span></div><div class="code-line" id="line-87"><span class="ln">87</span><span>  delay(100);</span></div><div class="code-line" id="line-88"><span class="ln">88</span><span>}</span></div></div><div class="explain"><button onclick="focusCode(1,19)">Libraries &amp; Pins</button><button onclick="focusCode(20,48)">Sensor &amp; OLED</button><button onclick="focusCode(49,88)">Web Dashboard</button><button onclick="focusCode(62,88)">Setup &amp; Loop</button></div><p id="explanation" class="note">Select a code section to highlight and study it.</p><h3>Check Your Understanding</h3><details><summary>Why is GPIO 34 used?</summary><p>GPIO 34 is an input-only ADC pin suitable for reading the analog sensor voltage.</p></details><details><summary>Why must the phone and ESP32 use the same Wi-Fi?</summary><p>The ESP32 hosts a local dashboard accessible through its LAN IP address.</p></details><details><summary>How is the output controlled?</summary><p>The ESP32 compares the relative percentage against the experiment's status thresholds.</p></details></section>
-<section><h2>Expected Output</h2><p>OLED and browser show relative force (0–100%) and ADC readings. LOW (0–24%) LED off; MEDIUM (25–59%) and HIGH (60–100%) LED on.</p></section>
-<section><h2>Result</h2><p>The experiment demonstrates local sensor monitoring, status classification, output control and browser-based visualization.</p></section>
-<section><h2>What You Learn</h2><p>FSR voltage dividers, ESP32 ADC, relative calibration, threshold classification, I2C and web visualization.</p></section></main><footer>Simusoft · Experiments</footer>
-<script>const source="#include <WiFi.h>\n#include <WebServer.h>\n#include <Wire.h>\n#include <U8g2lib.h>\n\nconst char* WIFI_SSID = \"YOUR_WIFI_NAME\";\nconst char* WIFI_PASSWORD = \"YOUR_WIFI_PASSWORD\";\nconst int SENSOR_PIN = 34;\nconst int OUTPUT_PIN = 2;\nWebServer server(80);\nU8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE);\nint rawValue = 0;\nint percent = 0;\nString statusText = \"LOW\";\n\nvoid updateSensor() {\n  long total = 0;\n  for (int i = 0; i < 10; i++) {\n    total += analogRead(SENSOR_PIN);\n    delay(2);\n  }\n  rawValue = total / 10;\n  percent = constrain(map(rawValue, 0, 4095, 0, 100), 0, 100);\n  if (percent < 25) statusText = \"LOW\";\n  else if (percent < 60) statusText = \"MEDIUM\";\n  else statusText = \"HIGH\";\n  digitalWrite(OUTPUT_PIN, percent >= 25 ? HIGH : LOW);\n}\nvoid updateOLED() {\n  oled.clearBuffer();\n  oled.setFont(u8g2_font_6x10_tr);\n  oled.drawStr(0, 12, \"FORCE METER\");\n  oled.setFont(u8g2_font_logisoso24_tr);\n  String value = String(percent) + \"%\";\n  oled.drawStr(0, 44, value.c_str());\n  oled.setFont(u8g2_font_6x10_tr);\n  oled.drawStr(0, 60, statusText.c_str());\n  oled.sendBuffer();\n}\nvoid handleRoot() {\n  String page = R\"rawliteral(\n<!doctype html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Wireless Force Measurement Display</title><style>body{font-family:Arial;background:#eff6ff;text-align:center;padding:24px}\nmain{max-width:560px;margin:auto;background:white;padding:30px;border-radius:18px;box-shadow:0 8px 30px #cbd5e1}\nh1{color:#1d4ed8}strong{font-size:48px;color:#1d4ed8}.meter{background:#dbeafe;border-radius:20px;height:22px;overflow:hidden}\n#bar{background:#2563eb;height:100%;width:0%}</style></head><body><main>\n<h1>Wireless Force Measurement Display</h1><strong id=\"pct\">--%</strong><p id=\"status\">Connecting...</p>\n<div class=\"meter\"><div id=\"bar\"></div></div><p>ADC Value: <span id=\"raw\">--</span></p>\n<p>Device IP: <span id=\"ip\">--</span></p></main>\n<script>async function refresh(){try{let r=await fetch('/data');let d=await r.json();\ndocument.getElementById('pct').textContent=d.percent+'%';\ndocument.getElementById('status').textContent=d.status;\ndocument.getElementById('bar').style.width=d.percent+'%';\ndocument.getElementById('raw').textContent=d.raw;\ndocument.getElementById('ip').textContent=d.ip;}catch(e){}}\nrefresh();setInterval(refresh,1000);</script></body></html>\n)rawliteral\";\n  server.send(200, \"text/html\", page);\n}\nvoid handleData() {\n  String json = \"{\\\"raw\\\":\" + String(rawValue) +\n    \",\\\"percent\\\":\" + String(percent) +\n    \",\\\"status\\\":\\\"\" + statusText +\n    \"\\\",\\\"ip\\\":\\\"\" + WiFi.localIP().toString() + \"\\\"}\";\n  server.send(200, \"application/json\", json);\n}\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(OUTPUT_PIN, OUTPUT);\n  analogReadResolution(12);\n  Wire.begin(21, 22);\n  oled.begin();\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  Serial.print(\"Connecting to Wi-Fi\");\n  while (WiFi.status() != WL_CONNECTED) { delay(500); Serial.print(\".\"); }\n  Serial.println();\n  Serial.print(\"IP Address: \");\n  Serial.println(WiFi.localIP());\n  server.on(\"/\", handleRoot);\n  server.on(\"/data\", handleData);\n  server.begin();\n}\nvoid loop() {\n  updateSensor();\n  updateOLED();\n  server.handleClient();\n  delay(100);\n}";async function copyCode(){try{await navigator.clipboard.writeText(source);document.getElementById('copy').textContent='Copied!'}catch(e){let t=document.createElement('textarea');t.value=source;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}}function focusCode(a,b){document.querySelectorAll('.code-line').forEach(x=>x.classList.remove('highlight'));for(let i=a;i<=b;i++){let e=document.getElementById('line-'+i);if(e)e.classList.add('highlight')}document.getElementById('line-'+a)?.scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('explanation').textContent='Highlighted lines '+a+'–'+b+': inspect the relevant program logic and the associated input/output behavior.'}</script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Wireless Force Measurement Display</title>
+
+<style>
+/* ===== GENERAL DESIGN ===== */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f7fb;color:#222;font-family:Arial,Helvetica,sans-serif;line-height:1.7}
+
+/* ===== HEADER ===== */
+.header{position:relative;display:flex;flex-direction:column;min-height:230px;padding:25px 0 0;background:#2563eb;color:white;text-align:center}
+.header-logo{position:absolute;top:15px;left:20px;width:135px;max-height:75px;height:auto;object-fit:contain;background:white;padding:5px;border-radius:5px}
+.header-content{margin:auto 0;padding:35px 165px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+.header-buttons{width:100%;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 25px;background:rgba(0,0,0,.12)}
+.header-left-buttons,.header-right-buttons{display:flex;align-items:center;gap:10px}
+.header-nav-btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;background:white;color:#1e3a8a;border:1px solid #dbeafe;border-radius:7px;text-decoration:none;font-size:13px;font-weight:bold;white-space:nowrap}
+.header-nav-btn:hover{background:#dbeafe}
+.home-icon-btn{width:40px;height:38px;padding:8px}
+.home-icon-btn svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ===== NAVIGATION ===== */
+nav{position:sticky;top:0;z-index:20;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;padding:13px 15px;background:white;border-bottom:1px solid #ddd}
+nav a{color:#1e3a8a;text-decoration:none;font-size:14px;font-weight:bold}
+nav a:hover{color:#2563eb}
+
+/* ===== SECTIONS ===== */
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{margin-bottom:24px;padding:28px;background:white;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);scroll-margin-top:100px}
+.section h2{margin:0 0 18px;padding-bottom:8px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe}
+.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+
+/* ===== THUMBNAIL ===== */
+.project-thumbnail{text-align:center;padding:20px}
+.project-thumbnail img{display:block;width:100%;max-width:760px;max-height:420px;height:auto;object-fit:contain;margin:0 auto;border-radius:10px}
+
+/* ===== COMPONENTS ===== */
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.component-card{padding:20px;text-align:center;background:white;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{display:block;width:100%;max-width:180px;height:140px;object-fit:contain;margin:0 auto 15px}
+.component-card h4{margin:0 0 8px;color:#1e3a8a;font-size:17px}
+.component-card p{margin:0;color:#475569;font-size:14px}
+
+/* ===== TABLES AND NOTES ===== */
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:600px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px 16px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.circuit-img{display:block;width:100%;max-width:760px;height:auto;object-fit:contain;margin:20px auto;padding:10px;background:white;border:1px solid #e2e8f0;border-radius:10px}
+
+/* ===== WORKING FLOW ===== */
+.flow{text-align:center;color:#1e3a8a;font-size:18px;font-weight:bold;line-height:2}
+.flow-step{padding:5px 10px}
+.flow-arrow{color:#2563eb;font-size:22px}
+
+/* ===== EXPLORE THE CODE ===== */
+.eyebrow{margin:0 0 4px;color:#2563eb;font-size:13px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase}
+.lesson-title{margin:0 0 8px!important;padding:0!important;border:0!important;color:#1e3a8a!important;font-size:32px!important}
+.intro{margin:0 0 22px;color:#526875}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{min-width:0;overflow:hidden;background:white;border:1px solid #bfdbfe;border-radius:14px;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
+.filename{font:bold 14px Consolas,Monaco,monospace;overflow-wrap:anywhere}
+.copy-button{min-height:40px;padding:8px 14px;background:white;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;font-weight:bold;cursor:pointer}
+.copy-button:hover{background:#eff6ff}
+.code-body{height:600px;overflow:auto;padding:16px 0;background:white}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:20px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
+.code-line.selected,.code-line.selected:hover{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{min-width:52px;padding-right:15px;color:#64748b;text-align:right;user-select:none}
+
+/* ===== CODE GUIDE ===== */
+.guide{min-width:0;padding:22px;background:white;border:1px solid #dce6e9;border-radius:14px}
+.guide h2{margin:0 0 8px;padding:0;border:0;font-size:21px}
+.guide>p{color:#526875}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{display:flex;align-items:center;gap:8px;min-height:65px;padding:10px;background:white;color:#1e3a8a;border:1px solid #dce6e9;border-radius:9px;text-align:left;font-size:13px;font-weight:bold;cursor:pointer}
+.step:hover{border-color:#60a5fa}
+.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{flex-shrink:0;color:#2563eb;font-size:12px}
+.explanation{min-height:130px;padding:16px;background:#eff6ff;border-radius:9px}
+.explanation h3{margin:0 0 7px;color:#1e3a8a;font-size:17px}
+.explanation p{margin:0;color:#526875}
+.guide details{margin-top:15px;border-top:1px solid #dce6e9}
+.guide summary{padding:13px 0;color:#2563eb;font-weight:bold;cursor:pointer}
+.tip{margin-top:20px;padding:14px 17px;background:#eff6ff;border-radius:9px}
+
+/* ===== EXPECTED OUTPUT ===== */
+.output-box{margin:15px 0;padding:16px;background:#f8fafc;border:1px solid #dbeafe;border-radius:9px}
+.output-box pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.8 Consolas,Monaco,monospace}
+
+/* CENTER DASHBOARD IMAGE */
+.dashboard-image{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    padding:20px;
+}
+.dashboard-image img{
+    display:block;
+    width:100%;
+    max-width:550px;
+    height:auto;
+    margin:0 auto;
+    object-fit:contain;
+    border-radius:10px;
+}
+
+/* ===== FOOTER ===== */
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}
+footer strong{color:white}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+    .header-content{padding:65px 20px 35px}
+}
+@media(max-width:850px){
+    .code-layout{grid-template-columns:1fr}
+    .code-body{height:450px}
+}
+@media(max-width:600px){
+    .header-logo{top:12px;left:12px;width:95px;max-height:60px}
+    .header-content{padding:85px 12px 25px}
+    .header h1{font-size:25px}
+    .header p{font-size:15px}
+    .header-buttons{padding:10px 8px;gap:8px}
+    .header-left-buttons,.header-right-buttons{gap:5px}
+    .header-nav-btn{min-height:36px;padding:8px 7px;font-size:11px}
+    .home-icon-btn{width:36px;height:36px;padding:7px}
+    .container{width:92%}
+    .section{padding:20px}
+    .steps{grid-template-columns:1fr}
+    nav{gap:11px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Wireless Force Measurement Display</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a href="../index.html" class="header-nav-btn">
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+            <a href="../../Arduino Experiments/index.html" class="header-nav-btn">Arduino</a>
+            <a href="../index.html" class="header-nav-btn">ESP</a>
+            <a href="../../R-Pi Experiments/index.html" class="header-nav-btn">R-Pi</a>
+        </div>
+
+    </div>
+</header>
+
+<!-- ===== NAVIGATION ===== -->
+<nav>
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
+
+<main class="container">
+
+<!-- ===== THUMBNAIL ===== -->
+<section class="section project-thumbnail">
+    <img
+        src="../Wireless Force Measurement.png"
+        alt="Wireless Force Measurement Display Thumbnail"
+    >
+</section>
+
+<!-- ===== AIM ===== -->
+<section class="section" id="aim">
+    <h2>Aim</h2>
+
+    <p>
+        To develop a wireless force measurement
+        experiment using an ESP32 development board,
+        FSR402 Force Sensitive Resistor, SSD1306 OLED
+        and red LED. The system measures relative
+        force through a voltage-divider circuit,
+        classifies the reading into LOW, MEDIUM
+        and HIGH levels, and displays information
+        on an OLED and Wi-Fi dashboard.
+    </p>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="section" id="about">
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Wireless Force Measurement Display
+        demonstrates force-sensitive resistance,
+        analog voltage measurement, ADC conversion,
+        LED indication, OLED interfacing and
+        wireless data monitoring.
+    </p>
+
+    <p>
+        The FSR402 changes its electrical resistance
+        when pressure is applied to its sensing area.
+        A 10kΩ fixed resistor forms a voltage divider
+        with the FSR402.
+    </p>
+
+    <p>
+        The voltage-divider output is connected to
+        GPIO34 of the ESP32. As applied force
+        increases, the FSR402 resistance typically
+        decreases, causing the voltage at GPIO34
+        to increase in the specified divider arrangement.
+    </p>
+
+    <p>
+        The ESP32 measures this voltage using
+        its 12-bit ADC. Ten readings are averaged
+        and mapped to an approximate relative
+        percentage from 0 to 100%.
+    </p>
+
+    <p>
+        The system displays the calculated
+        percentage and a LOW, MEDIUM or HIGH
+        classification on the SSD1306 OLED.
+        A red LED connected to GPIO2 activates
+        when the mapped percentage reaches 25%.
+    </p>
+
+    <p>
+        The ESP32 also connects to Wi-Fi and
+        provides an HTTP dashboard displaying
+        sensor percentage, ADC value,
+        force classification and LED state.
+    </p>
+
+    <h3>Force Classification</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Force Classification</th>
+                    <th>Relative Percentage</th>
+                    <th>Red LED</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>LOW</td>
+                    <td>0–24%</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>MEDIUM</td>
+                    <td>25–59%</td>
+                    <td>ON</td>
+                </tr>
+                <tr>
+                    <td>HIGH</td>
+                    <td>60–100%</td>
+                    <td>ON</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Controller</td><td>ESP32 Development Board</td></tr>
+                <tr><td>Force Sensor</td><td>FSR402</td></tr>
+                <tr><td>Fixed Resistor</td><td>10kΩ</td></tr>
+                <tr><td>Analog Input</td><td>GPIO34</td></tr>
+                <tr><td>LED Output</td><td>GPIO2</td></tr>
+                <tr><td>LED Resistor</td><td>220Ω</td></tr>
+                <tr><td>OLED</td><td>SSD1306 128×64</td></tr>
+                <tr><td>OLED SDA</td><td>GPIO21</td></tr>
+                <tr><td>OLED SCL</td><td>GPIO22</td></tr>
+                <tr><td>ADC Resolution</td><td>12-bit</td></tr>
+                <tr><td>Web Server</td><td>Port 80</td></tr>
+                <tr><td>Serial Monitor</td><td>115200 baud</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Important:</strong>
+        <p>
+            The displayed percentage is a relative
+            value calculated from the ADC output.
+            It does not directly represent force
+            in newtons, kilograms or grams.
+            Accurate force measurement requires
+            calibration of the FSR402 and
+            consideration of its nonlinear response.
+        </p>
+    </div>
+</section>
+
+<!-- ===== COMPONENTS ===== -->
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="ESP32 Development Board.png" alt="ESP32 Development Board">
+            <h4>ESP32 Development Board (×1)</h4>
+            <p>Main microcontroller for sensing and Wi-Fi communication.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="FSR402 Force Sensor.png" alt="FSR402 Force Sensor">
+            <h4>FSR402 Force Sensor (×1)</h4>
+            <p>Changes resistance according to applied force.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="10K Ohm Resistor.png" alt="10k Ohm Resistor">
+            <h4>10kΩ Resistor (×1)</h4>
+            <p>Forms the voltage divider with the FSR402.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="OLED.png" alt="SSD1306 OLED Display">
+            <h4>SSD1306 OLED Display (×1)</h4>
+            <p>Displays relative force percentage and classification.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Red LED.png" alt="Red LED">
+            <h4>Red LED (×1)</h4>
+            <p>Indicates MEDIUM and HIGH force classifications.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="220 Ohm Resistor.png" alt="220 Ohm Resistor">
+            <h4>220Ω Resistor (×1)</h4>
+            <p>Limits current through the red LED.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Used to assemble the force-sensing circuit.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used to connect the hardware components.</p>
+        </div>
+
+    </div>
+
+    <div class="note">
+        <strong>Required Arduino Libraries:</strong>
+        <ul>
+            <li>WiFi.h</li>
+            <li>WebServer.h</li>
+            <li>Wire.h</li>
+            <li>U8g2lib.h</li>
+        </ul>
+        <p>
+            Install the ESP32 board support
+            package and U8g2 library in Arduino IDE.
+        </p>
+    </div>
+</section>
+
+<!-- ===== CONNECTIONS ===== -->
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <h3>FSR402 Voltage Divider</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>FSR402 Terminal 1</td>
+                    <td>3.3V</td>
+                </tr>
+                <tr>
+                    <td>FSR402 Terminal 2</td>
+                    <td>GPIO34 divider junction</td>
+                </tr>
+                <tr>
+                    <td>10kΩ Resistor — One End</td>
+                    <td>GPIO34 divider junction</td>
+                </tr>
+                <tr>
+                    <td>10kΩ Resistor — Other End</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>SSD1306 OLED Display</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>OLED Pin</th>
+                    <th>ESP32 Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>VCC</td><td>3V3</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>SDA</td><td>GPIO21</td></tr>
+                <tr><td>SCL</td><td>GPIO22</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Red LED and Current-Limiting Resistor</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GPIO2</td>
+                    <td>One end of 220Ω resistor</td>
+                </tr>
+                <tr>
+                    <td>Other end of 220Ω resistor</td>
+                    <td>Red LED anode (+)</td>
+                </tr>
+                <tr>
+                    <td>Red LED cathode (−)</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Configuration Summary</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>FSR402 Signal</td><td>GPIO34</td></tr>
+                <tr><td>Voltage-Divider Resistor</td><td>10kΩ</td></tr>
+                <tr><td>LED Signal</td><td>GPIO2</td></tr>
+                <tr><td>LED Resistor</td><td>220Ω</td></tr>
+                <tr><td>OLED SDA</td><td>GPIO21</td></tr>
+                <tr><td>OLED SCL</td><td>GPIO22</td></tr>
+                <tr><td>OLED I²C Address</td><td>0x3C, module-dependent</td></tr>
+                <tr><td>LOW</td><td>Below 25%</td></tr>
+                <tr><td>MEDIUM</td><td>25% to below 60%</td></tr>
+                <tr><td>HIGH</td><td>60% and above</td></tr>
+                <tr><td>LED ON</td><td>25% and above</td></tr>
+                <tr><td>Serial Monitor</td><td>115200 baud</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Hardware Precautions:</strong>
+
+        <p>
+            GPIO34 is an ADC1 input-only pin,
+            making it suitable for analog measurement
+            while Wi-Fi is enabled.
+        </p>
+
+        <p>
+            The divider must use 3.3V and GND;
+            do not apply a voltage exceeding
+            the ESP32 input limit to GPIO34.
+        </p>
+
+        <p>
+            Install the 220Ω resistor
+            in series with the red LED.
+            GPIO2 is a boot-strapping pin,
+            so verify the LED connection does
+            not interfere with board startup.
+        </p>
+
+        <p>
+            Avoid applying excessive force
+            or sharp objects directly
+            to the FSR402 sensing area.
+        </p>
+    </div>
+</section>
+
+<!-- ===== CIRCUIT DIAGRAM ===== -->
+<section class="section" id="circuit">
+    <h2>Circuit Diagram</h2>
+    <img
+        class="circuit-img"
+        src="WIRELESS FORCE MEASUREMENT DISPLAY Circuit.png"
+        alt="Wireless Force Measurement Display Circuit Diagram"
+    >
+</section>
+
+<!-- ===== WORKING PRINCIPLE ===== -->
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        <div class="flow-step">Apply Force to the FSR402</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">FSR Resistance Changes</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Voltage Divider Output Changes</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">GPIO34 Reads Analog Voltage</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">ESP32 Averages Ten ADC Readings</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Map Reading to Relative Percentage</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Classify LOW, MEDIUM or HIGH</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Update OLED Display</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Control Red LED</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Update Wi-Fi Dashboard</div>
+    </div>
+
+    <h3>Force-Sensitive Resistance</h3>
+    <p>
+        The FSR402 changes resistance
+        when force is applied to
+        its sensing surface.
+    </p>
+
+    <h3>Voltage Divider</h3>
+    <p>
+        The FSR402 and 10kΩ resistor
+        convert resistance variation
+        into a measurable voltage
+        at GPIO34.
+    </p>
+
+    <h3>ADC Conversion</h3>
+    <p>
+        The ESP32 converts the analog
+        voltage into a digital reading.
+        The program averages ten ADC
+        measurements and maps the result
+        to a relative percentage.
+    </p>
+
+    <h3>Force Classification</h3>
+    <p>
+        The mapped percentage is classified
+        into LOW, MEDIUM or HIGH.
+        The classification thresholds
+        follow the supplied experiment.
+    </p>
+
+    <h3>LED Indication</h3>
+    <p>
+        The LED is OFF for LOW.
+        It turns ON from the MEDIUM
+        threshold of 25%.
+    </p>
+
+    <h3>OLED and Wi-Fi Monitoring</h3>
+    <p>
+        The OLED provides local
+        force indication.
+        The browser dashboard shows
+        the same relative percentage
+        and classification over Wi-Fi.
+    </p>
+</section>
+
+<!-- ===== PROCEDURE ===== -->
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the ESP32 development board, FSR402, 10kΩ resistor, OLED, red LED, 220Ω resistor, breadboard and jumper wires.</li>
+        <li>Connect FSR402 terminal 1 to 3.3V.</li>
+        <li>Connect FSR402 terminal 2 to the GPIO34 junction.</li>
+        <li>Connect one end of the 10kΩ resistor to the same GPIO34 junction.</li>
+        <li>Connect the other end of the 10kΩ resistor to GND.</li>
+        <li>Connect OLED VCC to 3V3 and GND to GND.</li>
+        <li>Connect OLED SDA to GPIO21.</li>
+        <li>Connect OLED SCL to GPIO22.</li>
+        <li>Connect GPIO2 to the red LED anode through the 220Ω resistor.</li>
+        <li>Connect the red LED cathode to GND.</li>
+        <li>Check the common ground and divider wiring.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Install the ESP32 board package and U8g2 library.</li>
+        <li>Select the appropriate ESP32 board configuration.</li>
+        <li>Create a sketch named Wireless_Force_Measurement_Display.ino.</li>
+        <li>Copy the complete sketch from Explore the Code.</li>
+        <li>Replace the Wi-Fi SSID and password placeholders.</li>
+        <li>Verify and upload the sketch.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Note the ESP32 local IP address.</li>
+        <li>Open the IP address in a browser on the same network.</li>
+        <li>Observe the initial force percentage on the OLED and dashboard.</li>
+        <li>Apply gentle pressure to the FSR402.</li>
+        <li>Gradually increase the pressure and observe the readings.</li>
+        <li>Check the LOW, MEDIUM and HIGH classifications.</li>
+        <li>Verify the red LED turns ON at the configured 25% threshold.</li>
+        <li>Release the FSR402 and observe the sensor reading decrease.</li>
+        <li>Calibrate ADC thresholds if necessary for the actual FSR402.</li>
+    </ol>
+</section>
+
+<!-- ===== EXPLORE THE CODE ===== -->
+<section class="section" id="code">
+
+    <p class="eyebrow">ESP32 Experiment · Code Review</p>
+
+    <h2 class="lesson-title">Explore the Code</h2>
+
+    <p class="intro">
+        Select a topic to highlight
+        its complete matching source-code
+        section. Copy Code copies
+        the full Arduino sketch.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+                <span class="filename">
+                    Wireless_Force_Measurement_Display.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Click an explanation tab
+                to highlight its actual
+                matching code section.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: FSR402</summary>
+                <p>
+                    The FSR402 is a
+                    Force Sensitive Resistor.
+                    Its resistance typically
+                    decreases with increasing
+                    applied force.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Voltage Divider</summary>
+                <p>
+                    The FSR402 and 10kΩ resistor
+                    produce an analog voltage
+                    that changes with
+                    sensor resistance.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: ADC</summary>
+                <p>
+                    GPIO34 is an ADC1 input.
+                    The ESP32 reads the
+                    analog divider voltage
+                    as a digital value.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Calibration</summary>
+                <p>
+                    FSR sensors are nonlinear.
+                    For force values in
+                    physical units, establish
+                    a calibration relationship
+                    using known loads.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Wi-Fi Dashboard</summary>
+                <p>
+                    The ESP32 hosts a dashboard
+                    and a JSON endpoint.
+                    A browser refreshes the
+                    sensor information
+                    approximately once per second.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+                <ol>
+                    <li>Which GPIO reads the FSR402 voltage divider?</li>
+                    <li>What is the fixed divider resistor value?</li>
+                    <li>Which GPIO controls the LED?</li>
+                    <li>Which GPIO pins connect to the OLED?</li>
+                    <li>At what percentage does the LED turn ON?</li>
+                    <li>Does the percentage directly represent force in newtons?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO34; 10kΩ; GPIO2;
+                    GPIO21 and GPIO22;
+                    25%; no.
+                </p>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Apply different pressures to
+        the FSR402 and compare the
+        raw ADC reading, relative
+        percentage, OLED classification
+        and LED state.
+    </p>
+</section>
+
+<!-- ===== EXPECTED OUTPUT ===== -->
+<section class="section" id="output">
+    <h2>Expected Output</h2>
+
+    <h3>Serial Monitor — Startup</h3>
+    <div class="output-box">
+<pre>Starting Wireless Force Measurement Display...
+
+OLED initialized.
+
+Connecting to Wi-Fi...
+
+Wi-Fi connected.
+
+IP Address: 192.168.x.x
+
+Web server started.
+
+Force monitoring started.</pre>
+    </div>
+
+    <h3>Serial Monitor — Example Readings</h3>
+    <div class="output-box">
+<pre>ADC: 819 | Force: 20% | LOW | LED OFF
+
+ADC: 1843 | Force: 45% | MEDIUM | LED ON
+
+ADC: 3071 | Force: 75% | HIGH | LED ON</pre>
+    </div>
+
+    <h3>OLED Display — LOW</h3>
+    <div class="output-box">
+<pre>FORCE METER
+
+20%
+
+LOW</pre>
+    </div>
+
+    <h3>OLED Display — MEDIUM</h3>
+    <div class="output-box">
+<pre>FORCE METER
+
+45%
+
+MEDIUM</pre>
+    </div>
+
+    <h3>OLED Display — HIGH</h3>
+    <div class="output-box">
+<pre>FORCE METER
+
+75%
+
+HIGH</pre>
+    </div>
+
+    <h3>Dashboard Functions</h3>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dashboard Element</th>
+                    <th>Expected Output</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Force Percentage</td>
+                    <td>Relative 0–100% indication</td>
+                </tr>
+                <tr>
+                    <td>Classification</td>
+                    <td>LOW / MEDIUM / HIGH</td>
+                </tr>
+                <tr>
+                    <td>Progress Bar</td>
+                    <td>Updates according to mapped ADC percentage</td>
+                </tr>
+                <tr>
+                    <td>ADC Value</td>
+                    <td>Raw averaged ADC reading</td>
+                </tr>
+                <tr>
+                    <td>Red LED</td>
+                    <td>ON / OFF</td>
+                </tr>
+                <tr>
+                    <td>Device IP</td>
+                    <td>ESP32 local network address</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        The ADC values and percentages
+        above are illustrative.
+        Actual readings depend on
+        the applied load, FSR402
+        characteristics and ADC behavior.
+    </div>
+</section>
+
+<!-- ===== DASHBOARD ===== -->
+<section class="section" id="dashboard">
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+        <img
+            src="WIRELESS FORCE MEASUREMENT DISPLAY Dashboard.png"
+            alt="Wireless Force Measurement Display Dashboard"
+        >
+    </div>
+</section>
+
+<!-- ===== RESULT ===== -->
+<section class="section" id="result">
+    <h2>Result</h2>
+
+    <p>
+        The Wireless Force Measurement Display
+        experiment demonstrates relative
+        force monitoring using an FSR402,
+        10kΩ voltage divider and ESP32 ADC.
+    </p>
+
+    <p>
+        The program classifies
+        the ADC-based percentage as
+        LOW, MEDIUM or HIGH, displays
+        the value on the SSD1306 OLED,
+        and activates the red LED
+        at 25% or above.
+    </p>
+
+    <p>
+        The Wi-Fi dashboard provides
+        remote observation of the
+        relative force percentage
+        and current operating status.
+    </p>
+</section>
+
+<!-- ===== WHAT YOU LEARN ===== -->
+<section class="section" id="learn">
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Understanding Force Sensitive Resistors.</li>
+        <li>Interfacing the FSR402 with an ESP32.</li>
+        <li>Constructing a 10kΩ voltage divider.</li>
+        <li>Reading analog voltage through GPIO34.</li>
+        <li>Using the ESP32 ADC1 peripheral.</li>
+        <li>Understanding 12-bit ADC readings.</li>
+        <li>Averaging multiple ADC samples.</li>
+        <li>Mapping ADC readings to percentages.</li>
+        <li>Understanding sensor calibration and nonlinearity.</li>
+        <li>Classifying LOW, MEDIUM and HIGH values.</li>
+        <li>Controlling an LED using GPIO2.</li>
+        <li>Using a 220Ω current-limiting resistor.</li>
+        <li>Interfacing a 128×64 SSD1306 OLED.</li>
+        <li>Using GPIO21 and GPIO22 for I²C.</li>
+        <li>Connecting an ESP32 to Wi-Fi.</li>
+        <li>Creating an HTTP web server.</li>
+        <li>Displaying live sensor values in a browser.</li>
+        <li>Sending sensor information using JSON.</li>
+    </ul>
+</section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>Wireless Force Measurement Display</div>
+</footer>
+
+<!-- =========================================
+     COMPLETE ARDUINO SKETCH
+     8 MARKER-BASED CODE SECTIONS
+========================================= -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
+
+#include &lt;WiFi.h>
+#include &lt;WebServer.h>
+#include &lt;Wire.h>
+#include &lt;U8g2lib.h>
+
+// [END 01]
+
+
+// [02] CONFIGURE WIFI AND HARDWARE
+
+const char* WIFI_SSID =
+    "YOUR_WIFI_NAME";
+
+const char* WIFI_PASSWORD =
+    "YOUR_WIFI_PASSWORD";
+
+#define FSR_PIN 34
+#define LED_PIN 2
+
+#define OLED_SDA 21
+#define OLED_SCL 22
+
+WebServer server(80);
+
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(
+    U8G2_R0,
+    U8X8_PIN_NONE
+);
+
+int rawValue = 0;
+int percent = 0;
+
+String statusText = "LOW";
+bool ledActive = false;
+
+const int LOW_LIMIT = 25;
+const int HIGH_LIMIT = 60;
+
+unsigned long lastUpdate = 0;
+
+const unsigned long UPDATE_INTERVAL =
+    200UL;
+
+// The percentage is a relative ADC
+// indication, not calibrated force.
+
+// [END 02]
+
+
+// [03] READ FSR SENSOR AND CONTROL LED
+
+void updateSensor() {
+
+    long total = 0;
+
+    for (int i = 0; i &lt; 10; i++) {
+
+        total += analogRead(
+            FSR_PIN
+        );
+
+        delay(2);
+    }
+
+    rawValue = total / 10;
+
+    percent = constrain(
+        map(
+            rawValue,
+            0,
+            4095,
+            0,
+            100
+        ),
+        0,
+        100
+    );
+
+    if (percent &lt; LOW_LIMIT) {
+
+        statusText = "LOW";
+
+    } else if (percent &lt; HIGH_LIMIT) {
+
+        statusText = "MEDIUM";
+
+    } else {
+
+        statusText = "HIGH";
+    }
+
+    ledActive =
+        percent &gt;= LOW_LIMIT;
+
+    digitalWrite(
+        LED_PIN,
+        ledActive ? HIGH : LOW
+    );
+
+    Serial.print("ADC: ");
+    Serial.print(rawValue);
+
+    Serial.print(" | Force: ");
+    Serial.print(percent);
+
+    Serial.print("% | ");
+    Serial.print(statusText);
+
+    Serial.print(" | LED ");
+    Serial.println(
+        ledActive ? "ON" : "OFF"
+    );
+}
+
+// [END 03]
+
+
+// [04] UPDATE OLED DISPLAY
+
+void updateOLED() {
+
+    oled.clearBuffer();
+
+    oled.setFont(
+        u8g2_font_6x10_tr
+    );
+
+    oled.drawStr(
+        0,
+        12,
+        "FORCE METER"
+    );
+
+    oled.setFont(
+        u8g2_font_logisoso24_tr
+    );
+
+    String value =
+        String(percent) + "%";
+
+    oled.drawStr(
+        0,
+        44,
+        value.c_str()
+    );
+
+    oled.setFont(
+        u8g2_font_6x10_tr
+    );
+
+    oled.drawStr(
+        0,
+        60,
+        statusText.c_str()
+    );
+
+    oled.sendBuffer();
+}
+
+// [END 04]
+
+
+// [05] CREATE WIFI WEB DASHBOARD
+
+const char dashboardHTML[] PROGMEM = R"rawliteral(
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+&lt;head>
+&lt;meta charset="UTF-8">
+&lt;meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+&lt;title>Wireless Force Measurement Display&lt;/title>
+
+&lt;style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: #0c172b;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    max-width: 760px;
+    margin: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    margin: 0 0 10px;
+    color: #bfdbfe;
+    font-size: 28px;
+}
+
+.header p {
+    margin: 0;
+    color: #94a3b8;
+}
+
+.card {
+    padding: 25px;
+    margin-bottom: 18px;
+    background: #17263d;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.percentage {
+    font-size: 65px;
+    color: #93c5fd;
+    font-weight: bold;
+}
+
+.level {
+    margin: 15px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.low {
+    color: #4ade80;
+}
+
+.medium {
+    color: #facc15;
+}
+
+.high {
+    color: #f87171;
+}
+
+.meter {
+    width: 100%;
+    height: 25px;
+    overflow: hidden;
+    background: #0b1325;
+    border-radius: 20px;
+}
+
+.meter-bar {
+    width: 0%;
+    height: 100%;
+    background: #2563eb;
+    transition: width .3s ease;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #334155;
+    text-align: left;
+}
+
+.info span {
+    color: #94a3b8;
+}
+
+.info strong {
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+.note {
+    margin-top: 15px;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+@media(max-width:500px) {
+
+    body {
+        padding: 12px;
+    }
+
+    .card {
+        padding: 17px;
+    }
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .percentage {
+        font-size: 50px;
+    }
+}
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+
+&lt;div class="container">
+
+    &lt;div class="header">
+
+        &lt;h1>
+            Wireless Force Measurement Display
+        &lt;/h1>
+
+        &lt;p>
+            Real-Time Relative Force Monitoring
+        &lt;/p>
+
+    &lt;/div>
+
+    &lt;div class="card">
+
+        &lt;h2>Relative Force Indication&lt;/h2>
+
+        &lt;div
+            class="percentage"
+            id="percentage"
+        >
+            --%
+        &lt;/div>
+
+        &lt;div
+            class="level"
+            id="level"
+        >
+            Connecting...
+        &lt;/div>
+
+        &lt;div class="meter">
+
+            &lt;div
+                class="meter-bar"
+                id="bar"
+            >&lt;/div>
+
+        &lt;/div>
+
+        &lt;p class="note">
+            Relative ADC percentage,
+            not calibrated force in newtons.
+        &lt;/p>
+
+    &lt;/div>
+
+    &lt;div class="card">
+
+        &lt;h2>System Information&lt;/h2>
+
+        &lt;div class="info">
+            &lt;span>Connection&lt;/span>
+            &lt;strong id="connection">
+                Checking
+            &lt;/strong>
+        &lt;/div>
+
+        &lt;div class="info">
+            &lt;span>ADC Value&lt;/span>
+            &lt;strong id="raw">--&lt;/strong>
+        &lt;/div>
+
+        &lt;div class="info">
+            &lt;span>Classification&lt;/span>
+            &lt;strong id="status">--&lt;/strong>
+        &lt;/div>
+
+        &lt;div class="info">
+            &lt;span>Red LED&lt;/span>
+            &lt;strong id="led">OFF&lt;/strong>
+        &lt;/div>
+
+        &lt;div class="info">
+            &lt;span>Device IP&lt;/span>
+            &lt;strong id="ip">Loading&lt;/strong>
+        &lt;/div>
+
+    &lt;/div>
+
+&lt;/div>
+
+&lt;script>
+
+async function refreshData() {
+
+    try {
+
+        const response = await fetch(
+            "/data",
+            {cache: "no-store"}
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Data unavailable"
+            );
+        }
+
+        const data = await response.json();
+
+        document.getElementById(
+            "percentage"
+        ).textContent =
+            data.percent + "%";
+
+        const level =
+            document.getElementById(
+                "level"
+            );
+
+        level.textContent =
+            data.status;
+
+        level.className =
+            "level " +
+            data.status.toLowerCase();
+
+        document.getElementById(
+            "bar"
+        ).style.width =
+            data.percent + "%";
+
+        document.getElementById(
+            "raw"
+        ).textContent =
+            data.raw;
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            data.status;
+
+        document.getElementById(
+            "led"
+        ).textContent =
+            data.led ? "ON" : "OFF";
+
+        document.getElementById(
+            "ip"
+        ).textContent =
+            data.ip;
+
+        document.getElementById(
+            "connection"
+        ).textContent =
+            "CONNECTED";
+
+    } catch (error) {
+
+        document.getElementById(
+            "connection"
+        ).textContent =
+            "OFFLINE";
+    }
+}
+
+refreshData();
+
+setInterval(
+    refreshData,
+    1000
+);
+
+&lt;/script>
+
+&lt;/body>
+&lt;/html>
+)rawliteral";
+
+
+void handleRoot() {
+
+    server.send_P(
+        200,
+        "text/html; charset=utf-8",
+        dashboardHTML
+    );
+}
+
+// [END 05]
+
+
+// [06] SEND FORCE DATA AS JSON
+
+void handleData() {
+
+    String json = "{";
+
+    json += "\"raw\":";
+    json += String(rawValue);
+
+    json += ",\"percent\":";
+    json += String(percent);
+
+    json += ",\"status\":\"";
+    json += statusText;
+    json += "\"";
+
+    json += ",\"led\":";
+    json += ledActive
+        ? "true"
+        : "false";
+
+    json += ",\"ip\":\"";
+    json += WiFi.localIP().toString();
+    json += "\"";
+
+    json += "}";
+
+    server.sendHeader(
+        "Cache-Control",
+        "no-store"
+    );
+
+    server.send(
+        200,
+        "application/json",
+        json
+    );
+}
+
+// [END 06]
+
+
+// [07] INITIALIZE ESP32 OLED AND WIFI
+
+void setup() {
+
+    Serial.begin(115200);
+
+    delay(500);
+
+    Serial.println(
+        "Starting Wireless Force Measurement Display..."
+    );
+
+    pinMode(
+        FSR_PIN,
+        INPUT
+    );
+
+    pinMode(
+        LED_PIN,
+        OUTPUT
+    );
+
+    digitalWrite(
+        LED_PIN,
+        LOW
+    );
+
+    analogReadResolution(12);
+
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
+    );
+
+    oled.setI2CAddress(
+        0x3C * 2
+    );
+
+    oled.begin();
+
+    Serial.println(
+        "OLED initialized."
+    );
+
+    WiFi.mode(
+        WIFI_STA
+    );
+
+    WiFi.begin(
+        WIFI_SSID,
+        WIFI_PASSWORD
+    );
+
+    Serial.println(
+        "Connecting to Wi-Fi..."
+    );
+
+    unsigned long started = millis();
+
+    while (
+        WiFi.status() != WL_CONNECTED &amp;&amp;
+        millis() - started &lt; 20000UL
+    ) {
+
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println();
+
+    if (
+        WiFi.status() == WL_CONNECTED
+    ) {
+
+        Serial.println(
+            "Wi-Fi connected."
+        );
+
+        Serial.print(
+            "IP Address: "
+        );
+
+        Serial.println(
+            WiFi.localIP()
+        );
+
+    } else {
+
+        Serial.println(
+            "Wi-Fi connection failed."
+        );
+
+        Serial.println(
+            "Local monitoring remains available."
+        );
+    }
+
+    server.on(
+        "/",
+        HTTP_GET,
+        handleRoot
+    );
+
+    server.on(
+        "/data",
+        HTTP_GET,
+        handleData
+    );
+
+    server.begin();
+
+    Serial.println(
+        "Web server started."
+    );
+
+    Serial.println(
+        "Force monitoring started."
+    );
+}
+
+// [END 07]
+
+
+// [08] MONITOR FORCE CONTINUOUSLY
+
+void loop() {
+
+    if (
+        WiFi.status() == WL_CONNECTED
+    ) {
+
+        server.handleClient();
+    }
+
+    if (
+        millis() - lastUpdate &gt;=
+        UPDATE_INTERVAL
+    ) {
+
+        lastUpdate = millis();
+
+        updateSensor();
+
+        updateOLED();
+    }
+
+    delay(2);
+}
+
+// [END 08]
+</textarea>
+
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
+<script>
+
+/* READ THE COMPLETE ARDUINO SKETCH */
+const program = document
+    .getElementById("esp32-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+/* CODE EXPLANATION STEPS */
+const steps = [
+
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Loads Wi-Fi, WebServer, Wire " +
+            "and U8g2 OLED libraries."
+    },
+
+    {
+        number: "02",
+        label: "CONFIGURE WIFI AND HARDWARE",
+        title: "Configure Hardware",
+        text:
+            "Defines Wi-Fi credentials, FSR402 " +
+            "GPIO34, LED GPIO2, OLED pins " +
+            "and classification thresholds."
+    },
+
+    {
+        number: "03",
+        label: "READ FSR SENSOR AND CONTROL LED",
+        title: "Read Force Sensor",
+        text:
+            "Averages ten analog readings, " +
+            "maps the ADC result to a percentage, " +
+            "classifies LOW, MEDIUM or HIGH, " +
+            "and controls the LED."
+    },
+
+    {
+        number: "04",
+        label: "UPDATE OLED DISPLAY",
+        title: "Update OLED",
+        text:
+            "Displays FORCE METER, the " +
+            "relative force percentage " +
+            "and current classification."
+    },
+
+    {
+        number: "05",
+        label: "CREATE WIFI WEB DASHBOARD",
+        title: "Create Web Dashboard",
+        text:
+            "Defines the complete HTML, " +
+            "CSS and JavaScript dashboard " +
+            "for wireless force monitoring."
+    },
+
+    {
+        number: "06",
+        label: "SEND FORCE DATA AS JSON",
+        title: "Send Force Data",
+        text:
+            "Returns the averaged ADC reading, " +
+            "relative percentage, classification, " +
+            "LED state and device IP as JSON."
+    },
+
+    {
+        number: "07",
+        label: "INITIALIZE ESP32 OLED AND WIFI",
+        title: "Initialize System",
+        text:
+            "Initializes the FSR input, LED, " +
+            "OLED, Wi-Fi connection " +
+            "and web server routes."
+    },
+
+    {
+        number: "08",
+        label: "MONITOR FORCE CONTINUOUSLY",
+        title: "Monitor Continuously",
+        text:
+            "Handles browser requests and " +
+            "periodically updates FSR readings, " +
+            "LED state and OLED display."
+    }
+];
+
+/* ESCAPE SOURCE CODE BEFORE DISPLAY */
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* DISPLAY FULL SOURCE CODE */
+function displayCode() {
+
+    const container =
+        document.getElementById("code-lines");
+
+    container.innerHTML = lines.map(
+        function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) +
+                '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+                '</span>'
+            );
+        }
+    ).join("");
+}
+
+/* FIND EXACT CODE MARKERS */
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
+
+/* IDENTIFY EACH EXACT CODE RANGE */
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "// [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "// [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid: start >= 0 && end >= start
+        };
+    }
+);
+
+/* CREATE INTERACTIVE BUTTONS */
+function createSteps() {
+
+    const container =
+        document.getElementById(
+            "steps-list"
+        );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement(
+                    "span"
+                );
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+            title.textContent = step.title;
+
+            button.append(
+                number,
+                title
+            );
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+/* HIGHLIGHT THE MATCHING CODE SECTION */
+function showStep(index) {
+
+    document.querySelectorAll(
+        ".step"
+    ).forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(
+        ".code-line"
+    ).forEach(
+        function(line) {
+
+            line.classList.remove(
+                "selected"
+            );
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById(
+            "explanation"
+        );
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) +
+        ". " +
+        step.title;
+
+    const paragraph =
+        document.createElement("p");
+
+    paragraph.textContent =
+        step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching source-code markers not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
+
+        if (element) {
+            element.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+    const codeBody =
+        document.getElementById(
+            "code-body"
+        );
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+            behavior: "smooth"
+        });
+    }
+}
+
+/* COPY THE COMPLETE ARDUINO SKETCH */
+async function copyCode() {
+
+    const button =
+        document.querySelector(
+            ".code-top .copy-button"
+        );
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent =
+                    "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement(
+                "textarea"
+            );
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+            success =
+                document.execCommand("copy");
+        } catch (error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch (error) {
+            fallback();
+        }
+
+    } else {
+        fallback();
+    }
+}
+
+/* INITIALIZE CODE EXPLORER */
+displayCode();
+createSteps();
+showStep(0);
+
+</script>
+
+</body>
+</html>
