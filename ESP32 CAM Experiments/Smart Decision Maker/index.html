@@ -1,1097 +1,153 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Smart Decision Maker</title>
 
-
 <style>
+/* GENERAL */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f7fb;color:#222;font:16px/1.7 Arial,Helvetica,sans-serif}
 
-/* =========================
-   BASIC PAGE STYLE
-========================= */
+/* HEADER */
+.header{background:#2563eb;color:white;position:relative;display:flex;flex-direction:column;min-height:230px;padding:25px 0 0;text-align:center}
+.header-logo{position:absolute;top:15px;left:20px;width:135px;max-height:75px;height:auto;object-fit:contain;background:white;border-radius:5px;padding:5px}
+.header-content{margin:auto 0;padding:35px 165px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+.header-buttons{width:100%;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 25px;background:rgba(0,0,0,.12)}
+.header-left-buttons,.header-right-buttons{display:flex;align-items:center;gap:10px}
+.header-nav-btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;background:white;color:#1e3a8a;border:1px solid #dbeafe;border-radius:7px;font-size:13px;font-weight:bold;text-decoration:none;white-space:nowrap}
+.header-nav-btn:hover{background:#dbeafe}
+.home-icon-btn{width:40px;height:38px;padding:8px}
+.home-icon-btn svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-*{
-    box-sizing:border-box;
-}
+/* NAVIGATION */
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}
+nav a{color:#1e3a8a;text-decoration:none;font-size:14px;font-weight:bold}
+nav a:hover{color:#2563eb}
 
-html{
-    scroll-behavior:smooth;
-}
+/* CONTENT */
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{background:white;padding:28px;margin-bottom:24px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);scroll-margin-top:100px}
+.section h2{margin:0 0 18px;padding-bottom:8px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe}
+.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
 
-body{
+/* THUMBNAIL */
+.project-thumbnail{text-align:center;padding:20px}
+.project-thumbnail img{display:block;width:100%;max-width:760px;max-height:420px;height:auto;object-fit:contain;margin:0 auto;border-radius:10px}
 
-    margin:0;
+/* COMPONENTS */
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.component-card{background:white;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{display:block;width:100%;max-width:180px;height:140px;object-fit:contain;margin:0 auto 15px}
+.component-card h4{margin:0 0 8px;color:#1e3a8a;font-size:17px}
+.component-card p{margin:0;color:#475569;font-size:14px}
 
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
+/* TABLES */
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:600px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
 
-    background:#f4f7fb;
+/* NOTES, IMAGES AND FLOW */
+.note{margin-top:15px;padding:14px 16px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.circuit-img{display:block;width:100%;max-width:760px;height:auto;object-fit:contain;margin:20px auto;padding:10px;background:white;border:1px solid #e2e8f0;border-radius:10px}
+.flow{text-align:center;color:#1e3a8a;font-size:18px;font-weight:bold;line-height:2}
+.flow-step{padding:5px 10px}
+.flow-arrow{color:#2563eb;font-size:22px}
+.output-box{margin:15px 0;padding:16px;background:#f8fafc;border:1px solid #dbeafe;border-radius:9px}
+.output-box pre{margin:0;white-space:pre-wrap;font:14px/1.8 Consolas,Monaco,monospace}
 
-    color:#222;
+/* EXPLORE THE CODE */
+.eyebrow{margin:0 0 4px;color:#2563eb;font-size:13px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase}
+.lesson-title{margin:0 0 8px!important;padding:0!important;border:0!important;color:#1e3a8a!important;font-size:32px!important}
+.intro{margin:0 0 22px;color:#526875}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{min-width:0;overflow:hidden;background:white;border:1px solid #bfdbfe;border-radius:14px;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
+.filename{font:bold 14px Consolas,Monaco,monospace;overflow-wrap:anywhere}
+.copy-button{min-height:40px;padding:8px 14px;background:white;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;font-weight:bold;cursor:pointer}
+.copy-button:hover{background:#eff6ff}
+.code-body{height:600px;padding:16px 0;overflow:auto;background:white}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:20px;white-space:pre;color:#1e293b;font:13px/24px Consolas,Monaco,monospace;border-bottom:1px solid #f1f5f9}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{min-width:52px;padding-right:15px;text-align:right;color:#64748b;user-select:none}
 
-    line-height:1.7;
-}
+/* EXPLANATION GUIDE */
+.guide{min-width:0;padding:22px;background:white;border:1px solid #dce6e9;border-radius:14px}
+.guide h2{margin:0 0 8px;padding:0;border:0;font-size:21px}
+.guide>p{color:#526875}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{display:flex;align-items:center;gap:8px;min-height:65px;padding:10px;background:white;color:#1e3a8a;border:1px solid #dce6e9;border-radius:9px;text-align:left;font-size:13px;font-weight:bold;cursor:pointer}
+.step:hover{border-color:#60a5fa}
+.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
+.explanation{min-height:130px;padding:16px;background:#eff6ff;border-radius:9px}
+.explanation h3{margin:0 0 7px;color:#1e3a8a;font-size:17px}
+.explanation p{margin:0;color:#526875}
+.guide details{margin-top:15px;border-top:1px solid #dce6e9}
+.guide summary{padding:13px 0;color:#2563eb;font-weight:bold;cursor:pointer}
+.tip{margin-top:20px;padding:14px 17px;background:#eff6ff;border-radius:9px}
 
-
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
-.header {
-    background: #2563eb;
-    color: white;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 230px;
-    padding: 25px 0 0;
-    text-align: center;
-}
-
-/* COMPANY LOGO - TOP LEFT */
-
-.header-logo {
-    position: absolute;
-    top: 15px;
-    left: 20px;
-    width: 135px;
-    max-height: 75px;
-    height: auto;
-    object-fit: contain;
-    background: white;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-/* CENTER HEADING */
-
-.header-content {
-    text-align: center;
-    margin: auto 0;
-    padding: 35px 165px;
-}
-
-.header h1 {
-    margin: 0 0 8px;
-    font-size: 34px;
-}
-
-.header p {
-    margin: 0;
-    font-size: 17px;
-}
-
-/* BOTTOM BUTTON BAR */
-
-.header-buttons {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
-}
-
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
-.header-right-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* BUTTON STYLE */
-
-.header-nav-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 38px;
-    padding: 9px 14px;
-    background: white;
-    color: #1e3a8a;
-    border: 1px solid #dbeafe;
-    border-radius: 7px;
-    font-size: 13px;
-    font-weight: bold;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: 0.25s ease;
-}
-
-.header-nav-btn:hover {
-    background: #dbeafe;
-    transform: translateY(-2px);
-}
-
-/* HOME ICON ONLY */
-
-.home-icon-btn {
-    width: 40px;
-    height: 38px;
-    padding: 8px;
-}
-
-.home-icon-btn svg {
-    width: 21px;
-    height: 21px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-/* TABLET */
-
-@media (max-width: 900px) {
-    .header-content {
-        padding: 65px 20px 35px;
-    }
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
-    }
-
-    .header-logo {
-        width: 95px;
-        max-height: 60px;
-        top: 12px;
-        left: 12px;
-    }
-
-    .header-content {
-        padding: 85px 12px 25px;
-    }
-
-    .header h1 {
-        font-size: 25px;
-    }
-
-    .header p {
-        font-size: 15px;
-    }
-
-    .header-buttons {
-        padding: 10px 8px;
-        gap: 8px;
-    }
-
-    .header-left-buttons,
-    .header-right-buttons {
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 8px 7px;
-        font-size: 11px;
-        min-height: 36px;
-    }
-
-    .home-icon-btn {
-        width: 36px;
-        height: 36px;
-        padding: 7px;
-    }
-}
-
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
-    }
-
-    .project-thumbnail img {
-        max-height: 280px;
-    }
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-nav{
-
+/* CENTER DASHBOARD IMAGE */
+.dashboard-image{
     display:flex;
-
     justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:18px;
-
-    padding:13px 15px;
-
-    background:white;
-
-    border-bottom:1px solid #ddd;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:20;
-}
-
-
-nav a{
-
-    text-decoration:none;
-
-    color:#1e3a8a;
-
-    font-size:14px;
-
-    font-weight:bold;
-}
-
-
-nav a:hover{
-
-    color:#2563eb;
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-
-    width:90%;
-
-    max-width:1050px;
-
-    margin:35px auto;
-}
-
-
-.section{
-
-    background:white;
-
-    margin-bottom:24px;
-
-    padding:28px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    box-shadow:
-    0 4px 12px
-    rgba(0,0,0,.06);
-}
-
-
-.section h2{
-
-    margin-top:0;
-
-    margin-bottom:18px;
-
-    color:#1e3a8a;
-
-    font-size:25px;
-
-    border-bottom:
-    2px solid #dbeafe;
-
-    padding-bottom:8px;
-}
-
-
-.section h3{
-
-    color:#1e3a8a;
-}
-
-
-ul,
-ol{
-
-    padding-left:24px;
-}
-
-
-li{
-
-    margin-bottom:8px;
-}
-
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px,1fr)
-    );
-
-    gap:20px;
-}
-
-
-.component-card{
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
+    align-items:center;
+    width:100%;
     padding:20px;
-
-    text-align:center;
-
-    background:white;
-
-    box-shadow:
-    0 2px 8px
-    rgba(0,0,0,.04);
 }
-
-
-.component-card img{
-
-    width:100%;
-
-    height:120px;
-
-    object-fit:contain;
-
-    margin-bottom:15px;
-}
-
-
-.component-card h4{
-
-    color:#1e3a8a;
-
-    margin:0 0 8px;
-
-    font-size:18px;
-}
-
-
-.component-card p{
-
-    color:#475569;
-
-    font-size:14px;
-
-    margin:0;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-
-    overflow-x:auto;
-}
-
-
-table{
-
-    width:100%;
-
-    min-width:620px;
-
-    border-collapse:collapse;
-}
-
-
-th,
-td{
-
-    padding:12px;
-
-    border:1px solid #ddd;
-
-    text-align:left;
-}
-
-
-th{
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-tr:nth-child(even){
-
-    background:#f8fafc;
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-.note{
-
-    margin-top:15px;
-
-    padding:14px;
-
-    background:#eff6ff;
-
-    border-left:
-    5px solid #2563eb;
-
-    border-radius:6px;
-}
-
-
-/* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
+.dashboard-image img{
     display:block;
-
     width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
+    max-width:550px;
+    height:auto;
+    margin:0 auto;
+    object-fit:contain;
     border-radius:10px;
-
-    background:white;
-
-    padding:10px;
 }
 
+/* FOOTER */
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}
+footer strong{color:white}
 
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-
-    text-align:center;
-
-    color:#1e3a8a;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    line-height:2;
+/* RESPONSIVE */
+@media(max-width:900px){
+    .header-content{padding:65px 20px 35px}
 }
-
-
-/* =========================
-   SENSOR CARDS
-========================= */
-
-.sensor-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(3,1fr);
-
-    gap:16px;
-}
-
-
-.sensor-box{
-
-    text-align:center;
-
-    padding:20px;
-
-    border-radius:12px;
-
-    border:1px solid #bfdbfe;
-
-    background:#f8fbff;
-}
-
-
-.sensor-box h3{
-
-    margin-top:0;
-
-    color:#1e3a8a;
-}
-
-
-.sensor-value{
-
-    font-size:26px;
-
-    color:#2563eb;
-
-    font-weight:bold;
-}
-
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-
-    color:#142e3a;
-}
-
-
-.eyebrow{
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    letter-spacing:.08em;
-
-    text-transform:uppercase;
-
-    margin:0 0 4px;
-}
-
-
-.lesson-title{
-
-    font-size:32px !important;
-
-    margin:0 0 8px !important;
-
-    color:#1e3a8a !important;
-
-    border:0 !important;
-
-    padding:0 !important;
-}
-
-
-.intro{
-
-    color:#526875;
-
-    margin:0 0 22px;
-}
-
-
-/* CODE + EXPLANATION */
-
-.code-layout{
-
-    display:grid;
-
-    grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-
-    gap:20px;
-
-    align-items:start;
-}
-
-
-/* =========================
-   CODE PANEL
-========================= */
-
-.code-panel{
-
-    background:white;
-
-    border:1px solid #bfdbfe;
-
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 4px 14px
-    rgba(37,99,235,.10);
-}
-
-
-.code-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    padding:15px 20px;
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-.filename{
-
-    color:white;
-
-    font:
-    bold 14px/1.4
-    Consolas,
-    Monaco,
-    monospace;
-}
-
-
-.copy-button{
-
-    border:1px solid white;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:8px;
-
-    padding:8px 14px;
-
-    min-height:40px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-
-.copy-button:hover{
-
-    background:#eff6ff;
-}
-
-
-.code-body{
-
-    height:600px;
-
-    overflow:auto;
-
-    background:white;
-
-    padding:16px 0;
-}
-
-
-.code-line{
-
-    display:flex;
-
-    min-width:max-content;
-
-    min-height:24px;
-
-    padding-right:22px;
-
-    white-space:pre;
-
-    font:
-    13px/24px
-    Consolas,
-    Monaco,
-    monospace;
-
-    color:#1e293b;
-
-    border-bottom:
-    1px solid #f1f5f9;
-}
-
-
-.code-line:hover{
-
-    background:#f8fbff;
-}
-
-
-.code-line.selected{
-
-    background:#dbeafe;
-
-    box-shadow:
-    inset 4px 0 #2563eb;
-}
-
-
-.line-number{
-
-    user-select:none;
-
-    min-width:52px;
-
-    text-align:right;
-
-    padding-right:15px;
-
-    color:#64748b;
-}
-
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-
-    background:white;
-
-    border:1px solid #dce6e9;
-
-    border-radius:14px;
-
-    padding:22px;
-}
-
-
-.guide h2{
-
-    border:0;
-
-    padding:0;
-
-    margin:0 0 8px;
-
-    font-size:21px;
-}
-
-
-.guide > p{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.steps{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-    gap:8px;
-
-    margin:16px 0;
-}
-
-
-.step{
-
-    border:1px solid #dce6e9;
-
-    border-radius:9px;
-
-    padding:10px;
-
-    min-height:65px;
-
-    background:white;
-
-    text-align:left;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
-}
-
-
-.step:hover{
-
-    border-color:#60a5fa;
-
-    background:#f8fbff;
-}
-
-
-.step.active{
-
-    background:#eff6ff;
-
-    border-color:#60a5fa;
-
-    color:#1e3a8a;
-}
-
-
-.step-number{
-
-    color:#2563eb;
-
-    font-size:12px;
-
-    flex-shrink:0;
-}
-
-
-.explanation{
-
-    background:#eff6ff;
-
-    border-radius:9px;
-
-    padding:16px;
-
-    min-height:130px;
-}
-
-
-.explanation h3{
-
-    font-size:17px;
-
-    margin:0 0 7px;
-
-    color:#1e3a8a;
-}
-
-
-.explanation p{
-
-    margin:0;
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide details{
-
-    border-top:
-    1px solid #dce6e9;
-
-    margin-top:15px;
-}
-
-
-.guide summary{
-
-    cursor:pointer;
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    padding:13px 0;
-}
-
-
-.guide details p,
-.guide details li{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide code{
-
-    background:#e5ecf4;
-
-    padding:2px 4px;
-
-    border-radius:4px;
-}
-
-
-.tip{
-
-    background:#eff6ff;
-
-    color:#234e87;
-
-    padding:14px 17px;
-
-    border-radius:9px;
-
-    margin-top:20px;
-
-    font-size:14px;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-
-    text-align:center;
-
-    padding:25px 20px;
-
-    background:#0f172a;
-
-    color:#cbd5e1;
-
-    font-size:14px;
-}
-
-
-footer strong{
-
-    color:white;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
 @media(max-width:850px){
-
-    .code-layout{
-
-        grid-template-columns:1fr;
-    }
-
-    .code-body{
-
-        height:450px;
-    }
-
-    .sensor-grid{
-
-        grid-template-columns:1fr;
-    }
-
+    .code-layout{grid-template-columns:1fr}
+    .code-body{height:450px}
 }
-
-
 @media(max-width:600px){
-
-    .header{
-
-        padding:35px 15px;
-    }
-
-    .header h1{
-
-        font-size:28px;
-    }
-
-    .container{
-
-        width:92%;
-    }
-
-    .section{
-
-        padding:21px 18px;
-    }
-
-    .steps{
-
-        grid-template-columns:1fr;
-    }
-
+    .header{padding:15px 0 0}
+    .header-logo{top:12px;left:12px;width:95px;max-height:60px}
+    .header-content{padding:85px 12px 25px}
+    .header h1{font-size:25px}
+    .header p{font-size:15px}
+    .header-buttons{padding:10px 8px;gap:8px}
+    .header-left-buttons,.header-right-buttons{gap:5px}
+    .header-nav-btn{min-height:36px;padding:8px 7px;font-size:11px}
+    .home-icon-btn{width:36px;height:36px;padding:7px}
+    .container{width:92%}
+    .section{padding:20px}
+    .steps{grid-template-columns:1fr}
+    nav{gap:11px}
 }
-
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================
-     HEADER
-========================= -->
-
-
+<!-- HEADER -->
 <header class="header">
-
-    <!-- COMPANY LOGO - TOP LEFT -->
 
     <img
         src="../../Simusoft logo white background.jpeg"
@@ -1099,32 +155,18 @@ footer strong{
         class="header-logo"
     >
 
-    <!-- CENTER TITLE -->
-
     <div class="header-content">
         <h1>SIMUDIY Exploration Kit</h1>
         <p>Smart Decision Maker</p>
     </div>
 
-    <!-- BOTTOM BUTTON BAR -->
-
     <div class="header-buttons">
-
-        <!-- LEFT: BACK AND HOME -->
 
         <div class="header-left-buttons">
 
-            <!-- BACK BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-                title="Back to ESP32 Experiments"
-            >
+            <a href="../index.html" class="header-nav-btn">
                 &#8592; Back
             </a>
-
-            <!-- HOME ICON ONLY -->
 
             <a
                 href="../../index.html"
@@ -1132,11 +174,7 @@ footer strong{
                 title="Home"
                 aria-label="Home"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5"/>
                     <path d="M5 9.5V21h14V9.5"/>
                     <path d="M9 21v-7h6v7"/>
@@ -1145,370 +183,1488 @@ footer strong{
 
         </div>
 
-        <!-- RIGHT: ARDUINO, ESP, R-PI -->
-
         <div class="header-right-buttons">
-
-            <!-- ARDUINO BUTTON -->
-
-            <a
-                href="../../Arduino Experiments/index.html"
-                class="header-nav-btn"
-            >
-                Arduino
-            </a>
-
-            <!-- ESP BUTTON -->
-
-            <a
-                href="../index.html"
-                class="header-nav-btn"
-            >
-                ESP
-            </a>
-
-            <!-- RASPBERRY PI BUTTON -->
-
-            <a
-                href="../../R-Pi Experiments/index.html"
-                class="header-nav-btn"
-            >
-                R-Pi
-            </a>
-
+            <a href="../../Arduino Experiments/index.html" class="header-nav-btn">Arduino</a>
+            <a href="../index.html" class="header-nav-btn">ESP</a>
+            <a href="../../R-Pi Experiments/index.html" class="header-nav-btn">R-Pi</a>
         </div>
 
     </div>
 
 </header>
 
-
-
-<!-- =========================
-     NAVIGATION
-========================= -->
-
+<!-- NAVIGATION -->
 <nav>
-
-    <a href="../index.html">
-        ← ESP32 Experiments
-    </a>
-
-    <a href="#aim">
-        Aim
-    </a>
-
-    <a href="#components">
-        Components
-    </a>
-
-    <a href="#connections">
-        Connections
-    </a>
-
-    <a href="#circuit">
-        Circuit
-    </a>
-
-    <a href="#working">
-        Working
-    </a>
-
-    <a href="#procedure">
-        Procedure
-    </a>
-
-    <a href="#code">
-        Code
-    </a>
-
-    <a href="#result">
-        Result
-    </a>
-
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
+<main class="container">
+
+<!-- THUMBNAIL -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Smart Decision Maker.png"
+        alt="Smart Decision Maker Thumbnail"
+    >
+
+</section>
+
+<!-- AIM -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To develop a Smart Decision Maker
+        using an ESP32 development board,
+        SSD1306 OLED display, three push
+        buttons and two indicator LEDs.
+        The system allows users to browse
+        a predefined list of activities,
+        shortlist preferred activities
+        and randomly choose one from
+        the shortlisted options.
+    </p>
+
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Smart Decision Maker is an
+        interactive ESP32-based experiment
+        demonstrating digital input handling,
+        OLED interfacing, selection logic,
+        random number generation and
+        visual output indications.
+    </p>
+
+    <p>
+        Six activities are stored in
+        the program:
+        Study, Exercise, Read a book,
+        Take a break, Learn coding,
+        and Go for a walk.
+    </p>
+
+    <p>
+        Three push buttons control
+        the experiment. NEXT browses
+        the activity list, SELECT
+        adds an activity to the shortlist,
+        and DECIDE randomly chooses
+        one of the shortlisted activities.
+    </p>
+
+    <p>
+        The red LED provides feedback
+        when an activity is added
+        to the shortlist. The green
+        LED activates when a decision
+        is successfully generated.
+    </p>
+
+    <h3>Button Functions</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Button</th>
+                    <th>GPIO</th>
+                    <th>Function</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>NEXT</td>
+                    <td>GPIO18</td>
+                    <td>Displays the next activity</td>
+                </tr>
+                <tr>
+                    <td>SELECT</td>
+                    <td>GPIO19</td>
+                    <td>Adds the displayed activity to the shortlist</td>
+                </tr>
+                <tr>
+                    <td>DECIDE</td>
+                    <td>GPIO23</td>
+                    <td>Randomly selects one shortlisted activity</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Activity List</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>Study</td></tr>
+                <tr><td>2</td><td>Exercise</td></tr>
+                <tr><td>3</td><td>Read a book</td></tr>
+                <tr><td>4</td><td>Take a break</td></tr>
+                <tr><td>5</td><td>Learn coding</td></tr>
+                <tr><td>6</td><td>Go for a walk</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Selection Logic:</strong>
+        The same activity cannot be
+        shortlisted more than once.
+        If no activity is shortlisted,
+        pressing DECIDE displays
+        a message asking the user
+        to select an option first.
+    </div>
+
+</section>
+
+<!-- COMPONENTS -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img src="ESP32 Development Board.png" alt="ESP32 Development Board">
+            <h4>ESP32 Development Board (×1)</h4>
+            <p>Main controller that processes button inputs and decisions.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="OLED.png" alt="SSD1306 OLED Display">
+            <h4>SSD1306 OLED Display (×1)</h4>
+            <p>Displays activities, selection messages and the final decision.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Push Button.png" alt="Push Button">
+            <h4>Push Button (×3)</h4>
+            <p>NEXT, SELECT and DECIDE input controls.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Green LED.png" alt="Green LED">
+            <h4>Green LED (×1)</h4>
+            <p>Indicates a successfully generated decision.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Red LED.png" alt="Red LED">
+            <h4>Red LED (×1)</h4>
+            <p>Indicates that an activity has been shortlisted.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="220 ohm resistor.png" alt="220 Ohm Resistor">
+            <h4>220Ω Resistor (×2)</h4>
+            <p>Provides current limiting for the two LEDs.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Jumper Wires.png" alt="Jumper Wires">
+            <h4>Jumper Wires</h4>
+            <p>Used to connect all experiment components.</p>
+        </div>
+
+        <div class="component-card">
+            <img src="Breadboard.png" alt="Breadboard">
+            <h4>Breadboard (×1)</h4>
+            <p>Used for prototyping the circuit.</p>
+        </div>
+
+    </div>
+
+    <div class="note">
+        <strong>Required Arduino Libraries:</strong>
+        <ul>
+            <li>Arduino.h</li>
+            <li>Wire.h</li>
+            <li>U8g2lib.h</li>
+        </ul>
+
+        <p>
+            Install the ESP32 board package
+            and U8g2 library in Arduino IDE.
+            No additional Wi-Fi library
+            is required for the supplied experiment.
+        </p>
+    </div>
+
+</section>
+
+<!-- CONNECTIONS -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>SSD1306 OLED Display</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>OLED Pin</th><th>ESP32 Connection</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>VCC</td><td>3V3</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>SDA</td><td>GPIO21</td></tr>
+                <tr><td>SCL</td><td>GPIO22</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Push Buttons</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Button</th><th>Terminal 1</th><th>Terminal 2</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>NEXT</td><td>GPIO18</td><td>GND</td></tr>
+                <tr><td>SELECT</td><td>GPIO19</td><td>GND</td></tr>
+                <tr><td>DECIDE</td><td>GPIO23</td><td>GND</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>LED Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Component</th><th>Connection</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GPIO25</td>
+                    <td>220Ω resistor → Green LED anode (+)</td>
+                </tr>
+                <tr>
+                    <td>Green LED cathode (−)</td>
+                    <td>GND</td>
+                </tr>
+                <tr>
+                    <td>GPIO26</td>
+                    <td>220Ω resistor → Red LED anode (+)</td>
+                </tr>
+                <tr>
+                    <td>Red LED cathode (−)</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>GPIO Configuration</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Function</th><th>Pin / Setting</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>NEXT Button</td><td>GPIO18, INPUT_PULLUP</td></tr>
+                <tr><td>SELECT Button</td><td>GPIO19, INPUT_PULLUP</td></tr>
+                <tr><td>DECIDE Button</td><td>GPIO23, INPUT_PULLUP</td></tr>
+                <tr><td>Green LED</td><td>GPIO25, OUTPUT</td></tr>
+                <tr><td>Red LED</td><td>GPIO26, OUTPUT</td></tr>
+                <tr><td>OLED SDA</td><td>GPIO21</td></tr>
+                <tr><td>OLED SCL</td><td>GPIO22</td></tr>
+                <tr><td>Button Debounce</td><td>60 ms</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Hardware Precautions:</strong>
+        Connect each LED with its own
+        220Ω series resistor. The buttons
+        use internal pull-up resistors,
+        so each button should connect
+        the corresponding GPIO to GND
+        when pressed. Confirm that the
+        OLED module supports 3.3V operation.
+    </div>
+
+</section>
+
+<!-- CIRCUIT -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="Smart Decision Maker Circuit.png"
+        alt="Smart Decision Maker Circuit Diagram"
+    >
+
+</section>
+
+<!-- WORKING -->
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">ESP32 Starts</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Initialize OLED, Buttons and LEDs</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Display First Activity</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Press NEXT to Browse Activities</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Press SELECT to Shortlist an Activity</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Red LED Indicates Selection</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Press DECIDE</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">ESP32 Randomly Chooses a Shortlisted Activity</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Display Final Decision on OLED</div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">Green LED Indicates Decision Completed</div>
+
+    </div>
+
+    <h3>Activity Browsing</h3>
+
+    <p>
+        The program stores six predefined
+        activities in an array. Every
+        NEXT button press advances the
+        current activity index.
+        After the last activity,
+        browsing returns to the first.
+    </p>
+
+    <h3>Activity Shortlisting</h3>
+
+    <p>
+        Pressing SELECT marks the
+        displayed activity as selected.
+        A boolean array prevents
+        duplicate selections.
+    </p>
+
+    <h3>Random Decision</h3>
+
+    <p>
+        When DECIDE is pressed,
+        the ESP32 generates a random
+        index within the number of
+        shortlisted activities and
+        locates the matching choice.
+    </p>
+
+    <h3>LED Feedback</h3>
+
+    <p>
+        The red LED indicates successful
+        shortlisting. The green LED
+        turns on when the ESP32
+        successfully makes a decision.
+    </p>
+
+    <h3>OLED Feedback</h3>
+
+    <p>
+        The OLED displays the current
+        activity, the selection status,
+        feedback messages and the
+        final randomly chosen activity.
+    </p>
+
+</section>
+
+<!-- PROCEDURE -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the ESP32 development board, OLED, three push buttons, two LEDs, two 220Ω resistors, breadboard and jumper wires.</li>
+        <li>Connect OLED VCC to 3V3 and GND to GND.</li>
+        <li>Connect OLED SDA to GPIO21.</li>
+        <li>Connect OLED SCL to GPIO22.</li>
+        <li>Connect NEXT button between GPIO18 and GND.</li>
+        <li>Connect SELECT button between GPIO19 and GND.</li>
+        <li>Connect DECIDE button between GPIO23 and GND.</li>
+        <li>Connect GPIO25 to the green LED through a 220Ω resistor.</li>
+        <li>Connect GPIO26 to the red LED through a 220Ω resistor.</li>
+        <li>Connect both LED cathodes to GND.</li>
+        <li>Verify wiring and common ground.</li>
+        <li>Open Arduino IDE.</li>
+        <li>Install ESP32 board support and the U8g2 library.</li>
+        <li>Select the appropriate ESP32 development board.</li>
+        <li>Create a new sketch named Smart_Decision_Maker.ino.</li>
+        <li>Copy the complete program from Explore the Code.</li>
+        <li>Verify and upload the sketch.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Observe the first activity on the OLED.</li>
+        <li>Press NEXT to cycle through the six activities.</li>
+        <li>Press SELECT to shortlist an activity.</li>
+        <li>Observe the red LED and selection message.</li>
+        <li>Shortlist two or more different activities.</li>
+        <li>Press DECIDE to select one randomly.</li>
+        <li>Observe the final decision and green LED.</li>
+        <li>Repeat the experiment with different shortlisted activities.</li>
+    </ol>
+
+</section>
+
+<!-- EXPLORE THE CODE -->
+<section class="section" id="code">
+
+    <p class="eyebrow">ESP32 Experiment · Code Review</p>
+
+    <h2 class="lesson-title">Explore the Code</h2>
+
+    <p class="intro">
+        Click each explanation tab to highlight
+        the corresponding section of the Arduino
+        program. Copy Code copies the full sketch.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+                <span class="filename">
+                    Smart_Decision_Maker.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Select a topic to highlight
+                its complete source-code section.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: INPUT_PULLUP</summary>
+                <p>
+                    Each push button uses the
+                    ESP32 internal pull-up.
+                    The input reads HIGH normally
+                    and LOW when pressed.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Arrays</summary>
+                <p>
+                    The options array stores
+                    six activities. The picked
+                    array records which activities
+                    have been shortlisted.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Random Selection</summary>
+                <p>
+                    The random() function generates
+                    an index into the shortlisted
+                    activities. The sketch then
+                    finds and displays that choice.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Button Debouncing</summary>
+                <p>
+                    The code uses a 60-millisecond
+                    interval to reduce repeated
+                    actions caused by mechanical
+                    button contact bounce.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+
+                <ol>
+                    <li>Which GPIO controls NEXT?</li>
+                    <li>Which GPIO controls SELECT?</li>
+                    <li>Which GPIO controls DECIDE?</li>
+                    <li>How many activities are stored?</li>
+                    <li>What happens when no activity is shortlisted?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO18; GPIO19; GPIO23;
+                    six activities; the OLED
+                    displays "Select options first".
+                </p>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Shortlist Study, Exercise and
+        Learn coding. Press DECIDE several
+        times and observe which of the
+        shortlisted activities is chosen.
+    </p>
+
+</section>
+
+<!-- EXPECTED OUTPUT -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Initial OLED Display</h3>
+
+    <div class="output-box">
+<pre>SMART DECISION
+
+Study
+
+NEXT / SELECT / DECIDE</pre>
+    </div>
+
+    <h3>After Pressing NEXT</h3>
+
+    <div class="output-box">
+<pre>SMART DECISION
+
+Exercise
+
+NEXT / SELECT / DECIDE</pre>
+    </div>
+
+    <h3>After Pressing SELECT</h3>
+
+    <div class="output-box">
+<pre>SMART DECISION
+
+Option added!</pre>
+    </div>
+
+    <h3>When an Activity Is Already Selected</h3>
+
+    <div class="output-box">
+<pre>SMART DECISION
+
+Already selected!</pre>
+    </div>
+
+    <h3>When DECIDE Is Pressed Without Selections</h3>
+
+    <div class="output-box">
+<pre>SMART DECISION
+
+Select options first</pre>
+    </div>
+
+    <h3>After a Random Decision</h3>
+
+    <div class="output-box">
+<pre>SMART DECISION
+
+DECISION:
+Exercise</pre>
+    </div>
+
+    <h3>LED Operation</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>Red LED</th>
+                    <th>Green LED</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>System starts</td>
+                    <td>OFF</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>Activity shortlisted</td>
+                    <td>ON</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>NEXT pressed</td>
+                    <td>OFF</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>Successful decision</td>
+                    <td>Previous state retained</td>
+                    <td>ON</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        The selected activity varies
+        because the program makes
+        a pseudorandom choice from
+        the shortlisted options.
+    </div>
+
+</section>
+
+<!-- DASHBOARD -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="Smart Decision Maker Dashboard.png"
+            alt="Smart Decision Maker Dashboard"
+        >
+
+    </div>
+
+    <p>
+        This image section is reserved for
+        the experiment's dashboard or output
+        screenshot. The supplied Arduino sketch
+        operates through the OLED and buttons;
+        it does not host a Wi-Fi dashboard.
+    </p>
+
+</section>
+
+<!-- RESULT -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Smart Decision Maker experiment
+        demonstrates button-controlled
+        activity browsing, shortlisting
+        and pseudorandom decision making
+        using an ESP32 development board.
+    </p>
+
+    <p>
+        The SSD1306 OLED displays activity
+        choices and final decisions,
+        while red and green LEDs
+        indicate shortlist and
+        decision operations.
+    </p>
+
+</section>
+
+<!-- WHAT YOU LEARN -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using an ESP32 development board.</li>
+        <li>Interfacing an SSD1306 OLED display.</li>
+        <li>Using GPIO21 and GPIO22 for I²C.</li>
+        <li>Reading three push-button inputs.</li>
+        <li>Understanding INPUT_PULLUP.</li>
+        <li>Implementing button debouncing.</li>
+        <li>Using arrays to store predefined activities.</li>
+        <li>Using boolean arrays for shortlisting.</li>
+        <li>Preventing duplicate selections.</li>
+        <li>Using conditional statements.</li>
+        <li>Using loops to locate shortlisted choices.</li>
+        <li>Generating pseudorandom numbers.</li>
+        <li>Controlling green and red LEDs.</li>
+        <li>Using 220Ω current-limiting resistors.</li>
+        <li>Displaying dynamic text on an OLED.</li>
+        <li>Developing interactive embedded applications.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>Smart Decision Maker</div>
+</footer>
+
+<!-- ======================================
+     COMPLETE ARDUINO SKETCH
+     EIGHT INTERACTIVE SECTIONS
+====================================== -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
+
+#include &lt;Arduino.h>
+#include &lt;Wire.h>
+#include &lt;U8g2lib.h>
+
+// [END 01]
 
 
-<main class="container"><section class="section project-thumbnail"><img src="../Smart Decision Maker.png" alt="Smart Decision Maker thumbnail"></section><section class="section" id="aim"><h2>Aim</h2><p>Browse activities, shortlist choices and randomly select one using three buttons.</p></section><section class="section"><h2>About the Experiment</h2><p>Browse activities, shortlist choices and randomly select one using three buttons.</p></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="ESP32 Development Board.png" alt="ESP32 Development Board"><h4>ESP32 Development Board</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="OLED.png" alt="OLED"><h4>OLED</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Push Button.png" alt="Push Button"><h4>Push Button</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Green LED.png" alt="Green LED"><h4>Green LED</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Red LED.png" alt="Red LED"><h4>Red LED</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="220 ohm resistor.png" alt="220 ohm resistor"><h4>220 ohm resistor</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Required experiment component.</p></div>
-<div class="component-card"><img src="Breadboard.png" alt="Breadboard"><h4>Breadboard</h4><p>Required experiment component.</p></div></div></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><tr><th>Component</th><th>Connection</th></tr><tr><td>OLED SDA</td><td>GPIO21</td></tr><tr><td>OLED SCL</td><td>GPIO22</td></tr><tr><td>NEXT button</td><td>GPIO18 to GND</td></tr><tr><td>SELECT button</td><td>GPIO19 to GND</td></tr><tr><td>DECIDE button</td><td>GPIO23 to GND</td></tr><tr><td>Green LED</td><td>GPIO25 through 220 Ω</td></tr><tr><td>Red LED</td><td>GPIO26 through 220 Ω</td></tr><tr><td>All grounds</td><td>Common GND</td></tr></table></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Smart Decision Maker Circuit.png" alt="Smart Decision Maker circuit diagram"></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">Browse activities, shortlist choices and randomly select one using three buttons. The controller reads inputs, processes them in the sketch and updates outputs.</div></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Verify the components and assemble the circuit using the connection table.</li><li>Install the ESP32 board support and required Arduino libraries.</li><li>Open the sketch, check board and GPIO assignments and configure credentials where applicable.</li><li>Compile and upload the program; open Serial Monitor at 115200 baud.</li><li>Test each input and verify the display and outputs.</li></ol></section><section class="section" id="code"><div class="code-lesson"><p class="eyebrow">ESP32 Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Smart Decision Maker · Select a step to understand the program.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">Smart_Decision_Maker.ino</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><article class="guide"><h2>Understand it step by step</h2><p>Choose a step. The matching section of code will light up on the left.</p><div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load libraries</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configure hardware</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Initialize system</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Run experiment</button></div><div id="explanation" class="note"></div><details><summary>Check Your Understanding</summary><p>Which pins and libraries are used in this experiment? Review the highlighted source code.</p></details></article></div></div></section><section class="section"><h2>Expected Output</h2><p>OLED displays activity choices, red LED signals shortlisted items, and green LED lights after a random selection.</p></section><section class="section" id="result"><h2>Result</h2><p>The experiment demonstrates sensor/input processing, display feedback and controller output.</p></section><section class="section"><h2>What You Learn</h2><p>GPIO interfacing, digital inputs and outputs, embedded programming and real-time feedback.</p></section></main><footer><strong>ESP32 Experiment</strong><br>Smart Decision Maker</footer><script type="text/plain" id="esp32-program">
-#include <Arduino.h>
-#include <Wire.h>
-#include <U8g2lib.h>
-U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0,U8X8_PIN_NONE);
-const int NEXT=18, SELECT=19, DECIDE=23, GREEN=25, RED=26;
-const char* options[]={"Study","Exercise","Read a book","Take a break","Learn coding","Go for a walk"};
-const int COUNT=6;
-bool picked[COUNT]={false};
-int current=0, count=0;
-bool lastN=HIGH,lastS=HIGH,lastD=HIGH;
-unsigned long lastPress=0;
-void screen(const String &msg="") {
- oled.clearBuffer(); oled.setFont(u8g2_font_6x10_tf);
- oled.drawStr(0,12,"SMART DECISION");
- if(msg.length()) oled.drawStr(0,30,msg.c_str());
- else { oled.drawStr(0,30,options[current]); oled.drawStr(0,46,picked[current]?"[ADDED]":"NEXT / SELECT / DECIDE"); }
- oled.sendBuffer();
-}
-void setup(){
- Serial.begin(115200); Wire.begin(21,22); oled.begin();
- pinMode(NEXT,INPUT_PULLUP);pinMode(SELECT,INPUT_PULLUP);pinMode(DECIDE,INPUT_PULLUP);
- pinMode(GREEN,OUTPUT);pinMode(RED,OUTPUT);randomSeed(micros());screen();
-}
-void loop(){
- bool n=digitalRead(NEXT),s=digitalRead(SELECT),d=digitalRead(DECIDE);
- if(millis()-lastPress>60){
-  if(lastN && !n){current=(current+1)%COUNT;digitalWrite(GREEN,LOW);screen();lastPress=millis();}
-  else if(lastS && !s){if(!picked[current]){picked[current]=true;count++;digitalWrite(RED,HIGH);Serial.println(options[current]);screen("Option added!");}else screen("Already selected!");digitalWrite(GREEN,LOW);lastPress=millis();}
-  else if(lastD && !d){if(count==0)screen("Select options first");else{int choice=random(count);for(int i=0;i<COUNT;i++)if(picked[i] && choice--==0){screen(String("DECISION: ")+options[i]);Serial.println(options[i]);break;}digitalWrite(GREEN,HIGH);}lastPress=millis();}
- }
- lastN=n;lastS=s;lastD=d;
-}
-</script><script>
+// [02] CONFIGURE HARDWARE AND ACTIVITIES
 
+#define NEXT_BUTTON 18
+#define SELECT_BUTTON 19
+#define DECIDE_BUTTON 23
 
-const program =
+#define GREEN_LED 25
+#define RED_LED 26
 
-document
+#define OLED_SDA 21
+#define OLED_SCL 22
 
-.getElementById(
-    "esp32-program"
-)
-
-.textContent
-
-.trim();
-
-
-const lines =
-
-program.split(
-    "\n"
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(
+    U8G2_R0,
+    U8X8_PIN_NONE
 );
 
+const char* options[] = {
+    "Study",
+    "Exercise",
+    "Read a book",
+    "Take a break",
+    "Learn coding",
+    "Go for a walk"
+};
 
-/* =========================
-   CODE STEPS
-========================= */
+const int COUNT = 6;
 
-const steps = [{title:"Load libraries",search:"#include",text:"Load the required libraries for this experiment."},{title:"Configure hardware",search:"const ",text:"Review pin assignments, constants and device configuration."},{title:"Initialize system",search:"void setup",text:"Initialize the ESP32 and connected modules."},{title:"Run experiment",search:"void loop",text:"Run the main experiment logic repeatedly."}];
+bool picked[COUNT] = {false};
+
+int current = 0;
+int selectedCount = 0;
+
+bool lastNext = HIGH;
+bool lastSelect = HIGH;
+bool lastDecide = HIGH;
+
+unsigned long lastPress = 0;
+
+const unsigned long DEBOUNCE_TIME = 60;
+
+// [END 02]
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+// [03] DISPLAY ACTIVITIES ON OLED
 
-function escapeHtml(text)
-{
+void showScreen(
+    const String &amp;message = ""
+) {
 
-    return text
+    oled.clearBuffer();
 
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-
-    .replace(
-        /</g,
-        "&lt;"
-    )
-
-    .replace(
-        />/g,
-        "&gt;"
+    oled.setFont(
+        u8g2_font_6x10_tf
     );
 
-}
-
-
-/* =========================
-   DISPLAY CODE
-========================= */
-
-function displayCode()
-{
-
-    let output = "";
-
-
-    lines.forEach(
-
-        function(
-            line,
-            index
-        )
-        {
-
-            output +=
-
-            '<span class="code-line" ' +
-
-            'id="line-' +
-
-            (index + 1) +
-
-            '">' +
-
-            '<span class="line-number">' +
-
-            (index + 1) +
-
-            '</span>' +
-
-            '<span>' +
-
-            escapeHtml(line) +
-
-            '</span>' +
-
-            '</span>';
-
-        }
-
+    oled.drawStr(
+        0, 12,
+        "SMART DECISION"
     );
 
+    if (message.length() &gt; 0) {
 
-    document
+        oled.drawStr(
+            0, 30,
+            message.c_str()
+        );
 
-    .getElementById(
-        "code-lines"
-    )
+    } else {
 
-    .innerHTML =
-    output;
+        oled.drawStr(
+            0, 30,
+            options[current]
+        );
 
-}
-
-
-/* =========================
-   SHOW STEP
-========================= */
-
-function showStep(index)
-{
-    const step = steps[index];
-    document.querySelectorAll(".step").forEach(function(button, i) {
-        button.classList.toggle("active", i === index);
-    });
-    document.querySelectorAll(".code-line").forEach(function(line) {
-        line.classList.remove("selected");
-    });
-
-    // Find the matching source statement. Use the first non-comment
-    // occurrence, and never highlight an unrelated fixed 12-line range.
-    let foundLine = lines.findIndex(function(line) {
-        return line.trim().startsWith(step.search.trim());
-    });
-    if (foundLine < 0) {
-        foundLine = lines.findIndex(function(line) {
-            return line.includes(step.search);
-        });
+        oled.drawStr(
+            0, 46,
+            picked[current]
+                ? "[ADDED]"
+                : "NEXT / SELECT / DECIDE"
+        );
     }
 
-    if (foundLine >= 0) {
-        let lastLine = foundLine;
-        // Extend across a declaration or a brace-delimited code block.
-        let depth = 0;
-        let blockStarted = false;
-        for (let i = foundLine; i < lines.length; i++) {
-            const current = lines[i];
-            for (const ch of current) {
-                if (ch === "{") { depth++; blockStarted = true; }
-                if (ch === "}") { depth--; }
-            }
-            lastLine = i;
-            if (blockStarted && depth <= 0) break;
-            if (!blockStarted && i > foundLine && current.trim() === "") {
-                lastLine = i - 1;
+    oled.sendBuffer();
+}
+
+// [END 03]
+
+
+// [04] BROWSE NEXT ACTIVITY
+
+void nextActivity() {
+
+    current =
+        (current + 1) % COUNT;
+
+    digitalWrite(
+        GREEN_LED,
+        LOW
+    );
+
+    digitalWrite(
+        RED_LED,
+        LOW
+    );
+
+    showScreen();
+
+    Serial.print(
+        "Current activity: "
+    );
+
+    Serial.println(
+        options[current]
+    );
+}
+
+// [END 04]
+
+
+// [05] SHORTLIST SELECTED ACTIVITY
+
+void selectActivity() {
+
+    digitalWrite(
+        GREEN_LED,
+        LOW
+    );
+
+    if (!picked[current]) {
+
+        picked[current] = true;
+
+        selectedCount++;
+
+        digitalWrite(
+            RED_LED,
+            HIGH
+        );
+
+        Serial.print(
+            "Option added: "
+        );
+
+        Serial.println(
+            options[current]
+        );
+
+        showScreen(
+            "Option added!"
+        );
+
+    } else {
+
+        showScreen(
+            "Already selected!"
+        );
+    }
+}
+
+// [END 05]
+
+
+// [06] GENERATE RANDOM DECISION
+
+void makeDecision() {
+
+    if (selectedCount == 0) {
+
+        digitalWrite(
+            GREEN_LED,
+            LOW
+        );
+
+        showScreen(
+            "Select options first"
+        );
+
+        Serial.println(
+            "No activities selected."
+        );
+
+        return;
+    }
+
+    int choice =
+        random(selectedCount);
+
+    for (int i = 0; i &lt; COUNT; i++) {
+
+        if (picked[i]) {
+
+            if (choice == 0) {
+
+                String decision =
+                    options[i];
+
+                oled.clearBuffer();
+
+                oled.setFont(
+                    u8g2_font_6x10_tf
+                );
+
+                oled.drawStr(
+                    0, 12,
+                    "SMART DECISION"
+                );
+
+                oled.drawStr(
+                    0, 29,
+                    "DECISION:"
+                );
+
+                oled.drawStr(
+                    0, 47,
+                    decision.c_str()
+                );
+
+                oled.sendBuffer();
+
+                Serial.print(
+                    "Decision: "
+                );
+
+                Serial.println(
+                    decision
+                );
+
                 break;
             }
-            if (i - foundLine >= 35) break;
-        }
-        for (let i = foundLine; i <= lastLine; i++) {
-            document.getElementById("line-" + (i + 1))?.classList.add("selected");
-        }
-        const selectedLine = document.getElementById("line-" + (foundLine + 1));
-        const codeBody = document.getElementById("code-body");
-        if (selectedLine && codeBody) {
-            codeBody.scrollTo({
-                top: selectedLine.offsetTop - codeBody.offsetTop - 20,
-                behavior: "smooth"
-            });
+
+            choice--;
         }
     }
-    document.getElementById("explanation").innerHTML =
-        "<h3>" + (index + 1) + ". " + step.title + "</h3>" +
-        "<p>" + step.text + "</p>";
+
+    digitalWrite(
+        GREEN_LED,
+        HIGH
+    );
 }
 
-
-/* =========================
-   COPY CODE
-========================= */
-
-function copyCode()
-{
-
-    navigator
-
-    .clipboard
-
-    .writeText(
-        program
-    )
-
-    .then(
-
-        function()
-        {
-
-            const button =
-
-            document
-
-            .querySelector(
-                ".copy-button"
-            );
+// [END 06]
 
 
-            button.innerText =
-            "Copied!";
+// [07] INITIALIZE HARDWARE
 
+void setup() {
 
-            setTimeout(
+    Serial.begin(115200);
 
-                function()
-                {
-
-                    button.innerText =
-                    "Copy Code";
-
-                },
-
-                1500
-
-            );
-
-        }
-
+    Wire.begin(
+        OLED_SDA,
+        OLED_SCL
     );
 
+    oled.begin();
+
+    pinMode(
+        NEXT_BUTTON,
+        INPUT_PULLUP
+    );
+
+    pinMode(
+        SELECT_BUTTON,
+        INPUT_PULLUP
+    );
+
+    pinMode(
+        DECIDE_BUTTON,
+        INPUT_PULLUP
+    );
+
+    pinMode(
+        GREEN_LED,
+        OUTPUT
+    );
+
+    pinMode(
+        RED_LED,
+        OUTPUT
+    );
+
+    digitalWrite(
+        GREEN_LED,
+        LOW
+    );
+
+    digitalWrite(
+        RED_LED,
+        LOW
+    );
+
+    randomSeed(
+        micros()
+    );
+
+    showScreen();
+
+    Serial.println(
+        "Smart Decision Maker Ready"
+    );
 }
 
+// [END 07]
 
-/* =========================
-   START
-========================= */
 
+// [08] HANDLE BUTTON INPUTS
+
+void loop() {
+
+    bool nextState =
+        digitalRead(NEXT_BUTTON);
+
+    bool selectState =
+        digitalRead(SELECT_BUTTON);
+
+    bool decideState =
+        digitalRead(DECIDE_BUTTON);
+
+    if (
+        millis() - lastPress &gt;
+        DEBOUNCE_TIME
+    ) {
+
+        if (
+            lastNext == HIGH &amp;&amp;
+            nextState == LOW
+        ) {
+
+            nextActivity();
+
+            lastPress = millis();
+
+        } else if (
+            lastSelect == HIGH &amp;&amp;
+            selectState == LOW
+        ) {
+
+            selectActivity();
+
+            lastPress = millis();
+
+        } else if (
+            lastDecide == HIGH &amp;&amp;
+            decideState == LOW
+        ) {
+
+            makeDecision();
+
+            lastPress = millis();
+        }
+    }
+
+    lastNext = nextState;
+    lastSelect = selectState;
+    lastDecide = decideState;
+
+    delay(2);
+}
+
+// [END 08]
+</textarea>
+
+<!-- ======================================
+     INTERACTIVE CODE EXPLORER
+====================================== -->
+<script>
+
+/* READ COMPLETE ARDUINO PROGRAM */
+const program = document
+    .getElementById("esp32-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+/* EXPLANATION STEPS */
+const steps = [
+    {
+        number:"01",
+        label:"LOAD LIBRARIES",
+        title:"Load Libraries",
+        text:"Loads Arduino core functions, I2C communication and the U8g2 OLED display library."
+    },
+    {
+        number:"02",
+        label:"CONFIGURE HARDWARE AND ACTIVITIES",
+        title:"Configure Hardware",
+        text:"Defines the button pins, LED pins, OLED pins, activity list, selection array and timing variables."
+    },
+    {
+        number:"03",
+        label:"DISPLAY ACTIVITIES ON OLED",
+        title:"Display Activities",
+        text:"Displays the current activity and selection status on the OLED screen."
+    },
+    {
+        number:"04",
+        label:"BROWSE NEXT ACTIVITY",
+        title:"Browse Activities",
+        text:"Advances to the next activity and updates the OLED and LEDs."
+    },
+    {
+        number:"05",
+        label:"SHORTLIST SELECTED ACTIVITY",
+        title:"Shortlist Activity",
+        text:"Adds the current activity to the shortlist, prevents duplicates and activates the red LED."
+    },
+    {
+        number:"06",
+        label:"GENERATE RANDOM DECISION",
+        title:"Generate Decision",
+        text:"Randomly chooses one of the shortlisted activities, displays it and activates the green LED."
+    },
+    {
+        number:"07",
+        label:"INITIALIZE HARDWARE",
+        title:"Initialize System",
+        text:"Initializes Serial, I2C, the OLED, button inputs, LED outputs and the random generator."
+    },
+    {
+        number:"08",
+        label:"HANDLE BUTTON INPUTS",
+        title:"Process Buttons",
+        text:"Reads NEXT, SELECT and DECIDE buttons, detects presses and calls the matching functions."
+    }
+];
+
+/* ESCAPE CODE TEXT */
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* RENDER COMPLETE CODE */
+function displayCode() {
+
+    const container =
+        document.getElementById("code-lines");
+
+    container.innerHTML = lines.map(
+        function(line,index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+                '<span class="line-number">' +
+                (index + 1) + '</span>' +
+                '<span>' + escapeHtml(line) +
+                '</span></span>'
+            );
+        }
+    ).join("");
+}
+
+/* IDENTIFY EXACT SECTION MARKERS */
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
+
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "// [" + step.number + "] " + step.label
+        );
+
+        const end = findMarker(
+            "// [END " + step.number + "]"
+        );
+
+        return {
+            start:start,
+            end:end,
+            valid:start >= 0 && end >= start
+        };
+    }
+);
+
+/* CREATE INTERACTIVE TABS */
+function createSteps() {
+
+    const container =
+        document.getElementById("steps-list");
+
+    steps.forEach(
+        function(step,index) {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement("span");
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title =
+                document.createElement("span");
+
+            title.textContent = step.title;
+
+            button.append(number,title);
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+/* HIGHLIGHT MATCHING PROGRAM SECTION */
+function showStep(index) {
+
+    document.querySelectorAll(".step").forEach(
+        function(button,i) {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+            line.classList.remove("selected");
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph =
+        document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading,paragraph);
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching source-code markers not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
+
+        if (element) {
+            element.classList.add("selected");
+        }
+    }
+
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+    const codeBody =
+        document.getElementById("code-body");
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+            behavior:"smooth"
+        });
+    }
+}
+
+/* COPY ENTIRE SKETCH */
+async function copyCode() {
+
+    const button =
+        document.querySelector(".copy-button");
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement("textarea");
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch(error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+            await navigator.clipboard.writeText(
+                program
+            );
+            copied();
+        } catch(error) {
+            fallback();
+        }
+
+    } else {
+        fallback();
+    }
+}
+
+/* INITIALIZE */
 displayCode();
-
+createSteps();
 showStep(0);
 
+</script>
 
-</script></body></html>
+</body>
+</html>
