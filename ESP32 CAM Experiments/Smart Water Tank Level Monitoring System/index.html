@@ -1,3 +1,2120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Smart Water Tank Level Monitoring System</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f7fb;color:#222;font:16px/1.7 Arial,Helvetica,sans-serif}
+
+/* HEADER */
+.header{background:#2563eb;color:#fff;position:relative;display:flex;flex-direction:column;min-height:230px;padding:25px 0 0;text-align:center}
+.header-logo{position:absolute;top:15px;left:20px;width:135px;max-height:75px;height:auto;object-fit:contain;background:#fff;border-radius:5px;padding:5px}
+.header-content{text-align:center;margin:auto 0;padding:35px 165px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+.header-buttons{width:100%;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 25px;background:rgba(0,0,0,.12)}
+.header-left-buttons,.header-right-buttons{display:flex;align-items:center;gap:10px}
+.header-nav-btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;background:#fff;color:#1e3a8a;border:1px solid #dbeafe;border-radius:7px;font-size:13px;font-weight:bold;text-decoration:none;white-space:nowrap;transition:.25s}
+.header-nav-btn:hover{background:#dbeafe;transform:translateY(-2px)}
+.home-icon-btn{width:40px;height:38px;padding:8px}
+.home-icon-btn svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* NAVIGATION */
+nav{position:sticky;top:0;z-index:20;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;padding:13px 15px;background:#fff;border-bottom:1px solid #ddd}
+nav a{color:#1e3a8a;text-decoration:none;font-size:14px;font-weight:bold}
+nav a:hover{color:#2563eb}
+
+/* MAIN SECTIONS */
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{background:#fff;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);scroll-margin-top:100px}
+.section h2{margin:0 0 18px;padding-bottom:8px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe}
+.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+
+/* THUMBNAIL */
+.project-thumbnail{text-align:center;padding:20px}
+.project-thumbnail img{display:block;width:100%;max-width:760px;max-height:420px;height:auto;object-fit:contain;margin:0 auto;border-radius:10px}
+
+/* COMPONENTS */
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.component-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{display:block;width:100%;max-width:180px;height:140px;object-fit:contain;margin:0 auto 15px}
+.component-card h4{margin:0 0 8px;color:#1e3a8a;font-size:17px}
+.component-card p{margin:0;color:#475569;font-size:14px}
+
+/* TABLES */
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:600px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:#fff}
+tr:nth-child(even){background:#f8fafc}
+
+/* NOTES AND IMAGES */
+.note{margin-top:15px;padding:14px 16px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+.circuit-img{display:block;width:100%;max-width:760px;height:auto;object-fit:contain;margin:20px auto;padding:10px;background:#fff;border:1px solid #e2e8f0;border-radius:10px}
+.flow{text-align:center;color:#1e3a8a;font-size:18px;font-weight:bold;line-height:2}
+.flow-step{padding:5px 10px}
+.flow-arrow{color:#2563eb;font-size:22px}
+.output-box{margin:15px 0;padding:16px;background:#f8fafc;border:1px solid #dbeafe;border-radius:9px}
+.output-box pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.8 Consolas,Monaco,monospace}
+
+/* CODE EXPLORER */
+.eyebrow{margin:0 0 4px;color:#2563eb;font-size:13px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase}
+.lesson-title{margin:0 0 8px!important;padding:0!important;border:0!important;color:#1e3a8a!important;font-size:32px!important}
+.intro{margin:0 0 22px;color:#526875}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{min-width:0;overflow:hidden;background:#fff;border:1px solid #bfdbfe;border-radius:14px;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:#fff}
+.filename{font:bold 14px Consolas,Monaco,monospace;overflow-wrap:anywhere}
+.copy-button{min-height:40px;padding:8px 14px;background:#fff;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;font-weight:bold;cursor:pointer}
+.copy-button:hover{background:#eff6ff}
+.code-body{height:600px;padding:16px 0;overflow:auto;background:#fff}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:20px;white-space:pre;color:#1e293b;font:13px/24px Consolas,Monaco,monospace;border-bottom:1px solid #f1f5f9}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{min-width:52px;padding-right:15px;text-align:right;color:#64748b;user-select:none}
+
+/* EXPLANATION GUIDE */
+.guide{min-width:0;padding:22px;background:#fff;border:1px solid #dce6e9;border-radius:14px}
+.guide h2{margin:0 0 8px;padding:0;border:0;font-size:21px}
+.guide>p{color:#526875}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{display:flex;align-items:center;gap:8px;min-height:65px;padding:10px;background:#fff;color:#1e3a8a;border:1px solid #dce6e9;border-radius:9px;text-align:left;font-size:13px;font-weight:bold;cursor:pointer}
+.step:hover{border-color:#60a5fa}
+.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
+.explanation{min-height:130px;padding:16px;background:#eff6ff;border-radius:9px}
+.explanation h3{margin:0 0 7px;color:#1e3a8a;font-size:17px}
+.explanation p{margin:0;color:#526875}
+.guide details{margin-top:15px;border-top:1px solid #dce6e9}
+.guide summary{padding:13px 0;color:#2563eb;font-weight:bold;cursor:pointer}
+.tip{margin-top:20px;padding:14px 17px;background:#eff6ff;border-radius:9px}
+
+/* CENTER DASHBOARD IMAGE */
+.dashboard-image{display:flex;justify-content:center;align-items:center;width:100%;padding:20px}
+.dashboard-image img{display:block;width:100%;max-width:550px;height:auto;margin:0 auto;object-fit:contain;border-radius:10px}
+
+/* FOOTER */
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}
+footer strong{color:#fff}
+
+/* RESPONSIVE */
+@media(max-width:900px){.header-content{padding:65px 20px 35px}}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr}.code-body{height:450px}}
+@media(max-width:600px){
+.header{padding:15px 0 0}
+.header-logo{top:12px;left:12px;width:95px;max-height:60px}
+.header-content{padding:85px 12px 25px}
+.header h1{font-size:25px}
+.header p{font-size:15px}
+.header-buttons{padding:10px 8px;gap:8px}
+.header-left-buttons,.header-right-buttons{gap:5px}
+.header-nav-btn{min-height:36px;padding:8px 7px;font-size:11px}
+.home-icon-btn{width:36px;height:36px;padding:7px}
+.container{width:92%}
+.section{padding:20px}
+.steps{grid-template-columns:1fr}
+nav{gap:11px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Smart Water Tank Level Monitoring System</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a href="../index.html" class="header-nav-btn">
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+            <a href="../../Arduino Experiments/index.html" class="header-nav-btn">Arduino</a>
+            <a href="../index.html" class="header-nav-btn">ESP</a>
+            <a href="../../R-Pi Experiments/index.html" class="header-nav-btn">R-Pi</a>
+        </div>
+
+    </div>
+</header>
+
+<!-- NAVIGATION -->
+<nav>
+    <a href="../index.html">&#8592; ESP32 Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
+
+<main class="container">
+
+<!-- THUMBNAIL -->
+<section class="section project-thumbnail">
+    <img
+        src="../Smart Water Tank Level Monitoring System.png"
+        alt="Smart Water Tank Level Monitoring System Thumbnail"
+    >
+</section>
+
+<!-- AIM -->
+<section class="section" id="aim">
+    <h2>Aim</h2>
+
+    <p>
+        To develop a smart water tank level
+        monitoring system using an ESP32
+        development board and HC-SR04
+        ultrasonic sensor, and to display
+        the water level on a local
+        Wi-Fi dashboard.
+    </p>
+
+    <p>
+        The experiment also demonstrates
+        Telegram notification and buzzer
+        alerts when the water level
+        becomes nearly empty or full.
+    </p>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Smart Water Tank Level Monitoring
+        System measures the distance between
+        an ultrasonic sensor mounted at the
+        top of a tank and the water surface.
+    </p>
+
+    <p>
+        The ESP32 calculates the approximate
+        filling percentage based on a
+        configured reference distance.
+        The result is classified into
+        EMPTY, NORMAL and FULL states.
+    </p>
+
+    <p>
+        A local Wi-Fi dashboard displays
+        the estimated water percentage,
+        measured distance, tank visualization
+        and current water-level status.
+    </p>
+
+    <p>
+        On entering the EMPTY or FULL
+        state, the system activates
+        a buzzer briefly and attempts
+        to send a Telegram notification
+        to the configured recipient.
+    </p>
+
+    <p>
+        The system provides monitoring
+        and notification only.
+        It does not control a pump
+        or automatically fill or
+        drain the water tank.
+    </p>
+
+    <h3>Water-Level Classification</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Water Percentage</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>EMPTY</td>
+                    <td>10% or below</td>
+                    <td>Buzzer alert and Telegram notification attempt</td>
+                </tr>
+                <tr>
+                    <td>NORMAL</td>
+                    <td>Above 10% and below 90%</td>
+                    <td>Continue monitoring</td>
+                </tr>
+                <tr>
+                    <td>FULL</td>
+                    <td>90% or above</td>
+                    <td>Buzzer alert and Telegram notification attempt</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Controller</td><td>ESP32 Development Board</td></tr>
+                <tr><td>Sensor</td><td>HC-SR04 Ultrasonic</td></tr>
+                <tr><td>Trigger</td><td>GPIO5</td></tr>
+                <tr><td>Echo</td><td>GPIO18 with level shifting</td></tr>
+                <tr><td>Buzzer</td><td>GPIO19</td></tr>
+                <tr><td>Example Reference Height</td><td>100 cm</td></tr>
+                <tr><td>EMPTY Threshold</td><td>10%</td></tr>
+                <tr><td>FULL Threshold</td><td>90%</td></tr>
+                <tr><td>Reading Interval</td><td>2000 ms</td></tr>
+                <tr><td>Dashboard Port</td><td>80</td></tr>
+                <tr><td>Serial Monitor</td><td>115200 baud</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Measurement Note:</strong>
+        The 100 cm reference height
+        is an example only.
+        Measure the actual distance
+        from the ultrasonic sensor face
+        to the reference empty-water
+        level. Tank geometry, sensor
+        mounting height, dead zone
+        and water turbulence affect
+        measurement accuracy.
+    </div>
+</section>
+
+<!-- COMPONENTS -->
+<section class="section" id="components">
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img
+                src="ESP32 Development Board.png"
+                alt="ESP32 Development Board"
+            >
+            <h4>ESP32 Development Board (×1)</h4>
+            <p>Main microcontroller providing sensing, Wi-Fi and Telegram communication.</p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="HC-SR04 Sensor.png"
+                alt="HC-SR04 Ultrasonic Sensor"
+            >
+            <h4>HC-SR04 Ultrasonic Sensor (×1)</h4>
+            <p>Measures the distance between the sensor and the water surface.</p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Buzzer.png"
+                alt="Active Buzzer"
+            >
+            <h4>Active Buzzer (×1)</h4>
+            <p>Provides an audible alert when the tank enters EMPTY or FULL.</p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+            <h4>Breadboard (×1)</h4>
+            <p>Used to assemble the low-voltage control circuit.</p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+            <h4>Jumper Wires</h4>
+            <p>Connect the ultrasonic sensor, buzzer and controller.</p>
+        </div>
+
+    </div>
+
+    <div class="note">
+        <strong>Mandatory Voltage Protection:</strong>
+        A suitable 5V-to-3.3V logic-level
+        shifter is required on the HC-SR04
+        ECHO line. The uploaded source did
+        not contain an image for this part,
+        so no unverified component PNG
+        has been added.
+
+        <p>
+            <strong>Arduino Libraries:</strong>
+            WiFi.h, WiFiClientSecure.h,
+            HTTPClient.h and WebServer.h
+            are included with the supported
+            ESP32 Arduino core.
+        </p>
+    </div>
+</section>
+
+<!-- CONNECTIONS -->
+<section class="section" id="connections">
+    <h2>Circuit Connections</h2>
+
+    <h3>HC-SR04 Ultrasonic Sensor</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Sensor Pin</th>
+                    <th>ESP32 Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>VCC</td><td>Compatible 5V / VIN supply</td></tr>
+                <tr><td>GND</td><td>GND</td></tr>
+                <tr><td>TRIG</td><td>GPIO5</td></tr>
+                <tr><td>ECHO</td><td>GPIO18 through 5V-to-3.3V level shifter</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Active Buzzer</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Buzzer Terminal</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Positive / Signal</td>
+                    <td>GPIO19, through a driver if required</td>
+                </tr>
+                <tr>
+                    <td>Negative / GND</td>
+                    <td>GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Electrical Safety:</strong>
+
+        <p>
+            Do not directly connect
+            the 5V HC-SR04 ECHO output
+            to ESP32 GPIO18.
+        </p>
+
+        <p>
+            Use a properly rated logic-level
+            shifter, maintain common ground,
+            and check the active buzzer's
+            voltage and current requirements.
+        </p>
+
+        <p>
+            GPIO5 also has boot-strapping
+            considerations on the ESP32.
+            Verify reliable startup with
+            the connected sensor.
+        </p>
+
+        <p>
+            Keep the ultrasonic module
+            away from splashes and condensation.
+            Standard HC-SR04 modules are
+            not waterproof.
+        </p>
+    </div>
+</section>
+
+<!-- CIRCUIT DIAGRAM -->
+<section class="section" id="circuit">
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="Smart Water Tank Level Monitoring System Circuit.png"
+        alt="Smart Water Tank Level Monitoring System Circuit Diagram"
+    >
+</section>
+
+<!-- WORKING PRINCIPLE -->
+<section class="section" id="working">
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+        <div class="flow-step">Initialize ESP32 and Wi-Fi</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Send Ultrasonic Trigger Pulse</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Measure Echo Pulse Duration</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Calculate Water-Surface Distance</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Calculate Tank Filling Percentage</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Determine EMPTY / NORMAL / FULL</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Update Local Web Dashboard</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Detect Entry Into EMPTY or FULL State</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">Activate Buzzer and Attempt Telegram Alert</div>
+    </div>
+
+    <h3>Ultrasonic Distance Measurement</h3>
+
+    <p>
+        The ESP32 sends a short trigger
+        pulse to the HC-SR04.
+        The sensor returns an ECHO
+        pulse whose duration relates
+        to the measured distance.
+    </p>
+
+    <h3>Distance Calculation</h3>
+
+    <p>
+        Distance is estimated by multiplying
+        echo duration by the approximate
+        speed of sound and dividing
+        by two for the outgoing and
+        returning ultrasonic path.
+    </p>
+
+    <h3>Water Percentage</h3>
+
+    <p>
+        The program subtracts measured
+        distance from the configured
+        reference tank height, then
+        converts the result to a percentage.
+    </p>
+
+    <h3>Status Classification</h3>
+
+    <p>
+        The percentage is classified as
+        EMPTY at 10% or below,
+        FULL at 90% or above,
+        and NORMAL between those
+        thresholds.
+    </p>
+
+    <h3>Telegram Alert</h3>
+
+    <p>
+        When the state changes to EMPTY
+        or FULL, the ESP32 attempts
+        to send an appropriate Telegram
+        message using the configured
+        bot credentials.
+    </p>
+
+    <h3>Buzzer Alert</h3>
+
+    <p>
+        The active buzzer is activated
+        briefly on entry into
+        an alert condition.
+    </p>
+
+    <h3>Dashboard Visualization</h3>
+
+    <p>
+        The ESP32 serves a web dashboard
+        showing estimated filling percentage,
+        distance, a graphical water-level
+        indicator and current tank status.
+    </p>
+</section>
+
+<!-- PROCEDURE -->
+<section class="section" id="procedure">
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the ESP32, HC-SR04, buzzer, breadboard, jumper wires and suitable ECHO logic-level shifter.</li>
+        <li>Mount the ultrasonic sensor above the water surface in a splash-protected location.</li>
+        <li>Connect HC-SR04 VCC to its compatible 5V supply.</li>
+        <li>Connect HC-SR04 GND to common GND.</li>
+        <li>Connect HC-SR04 TRIG to GPIO5.</li>
+        <li>Connect HC-SR04 ECHO to GPIO18 through the level shifter.</li>
+        <li>Connect the active buzzer signal to GPIO19 using a driver if required.</li>
+        <li>Connect buzzer GND to common ground.</li>
+        <li>Verify the wiring and voltage levels before powering the ESP32.</li>
+        <li>Install the ESP32 board package in Arduino IDE.</li>
+        <li>Copy the complete sketch from Explore the Code.</li>
+        <li>Enter your Wi-Fi credentials in the sketch.</li>
+        <li>Configure the Telegram bot token and recipient chat ID privately.</li>
+        <li>Replace the example 100 cm tank reference height with the measured value.</li>
+        <li>Verify and upload the Arduino sketch.</li>
+        <li>Open Serial Monitor at 115200 baud.</li>
+        <li>Note the ESP32 dashboard IP address.</li>
+        <li>Open the IP address in a browser on the same Wi-Fi network.</li>
+        <li>Observe the water percentage, distance and tank visualization.</li>
+        <li>Safely test EMPTY, NORMAL and FULL conditions.</li>
+        <li>Verify the buzzer and Telegram notification attempts at the EMPTY and FULL boundaries.</li>
+    </ol>
+</section>
+
+<!-- EXPLORE THE CODE -->
+<section class="section" id="code">
+
+    <p class="eyebrow">ESP32 Experiment · Code Review</p>
+
+    <h2 class="lesson-title">Explore the Code</h2>
+
+    <p class="intro">
+        Select a topic to highlight
+        the complete matching section
+        of the Arduino sketch.
+        Copy Code copies the full program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+                <span class="filename">
+                    Smart_Water_Tank_Level_Monitoring.ino
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Click any tab to highlight
+                its exact corresponding
+                source-code section.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: Ultrasonic Sensing</summary>
+                <p>
+                    The HC-SR04 estimates distance
+                    from the echo pulse duration
+                    after an ultrasonic burst.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Water Percentage</summary>
+                <p>
+                    The program maps the water
+                    surface distance to a
+                    percentage using the configured
+                    tank reference height.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Telegram</summary>
+                <p>
+                    The ESP32 sends an HTTPS
+                    request to the Telegram
+                    Bot API when an alert
+                    state is entered.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: State Changes</summary>
+                <p>
+                    Comparing the current status
+                    with the previous valid
+                    status prevents an alert
+                    from repeating on every
+                    measurement cycle.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Sensor Safety</summary>
+                <p>
+                    The HC-SR04 ECHO signal
+                    commonly operates at 5V.
+                    The ESP32 GPIO requires
+                    compatible 3.3V logic.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+
+                <ol>
+                    <li>Which GPIO triggers the HC-SR04?</li>
+                    <li>Which GPIO receives ECHO?</li>
+                    <li>Why is an ECHO level shifter required?</li>
+                    <li>When is the tank classified EMPTY?</li>
+                    <li>When is it classified FULL?</li>
+                    <li>Does the system operate a water pump?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO5; GPIO18;
+                    to protect the 3.3V ESP32;
+                    10% or below;
+                    90% or above; no.
+                </p>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Change the simulated water-surface
+        distance gradually and compare
+        the measured distance, water percentage,
+        dashboard graphics and alert status.
+    </p>
+</section>
+
+<!-- EXPECTED OUTPUT -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Serial Monitor — Startup</h3>
+
+    <div class="output-box">
+<pre>Starting Smart Water Tank Monitor...
+
+Connecting to Wi-Fi...
+
+Wi-Fi connected.
+
+Dashboard IP: http://192.168.x.x
+
+Web server started.
+Water tank monitoring started.</pre>
+    </div>
+
+    <h3>Example Water-Level Readings</h3>
+
+    <div class="output-box">
+<pre>Distance: 95.0 cm | Level: 5.0% | EMPTY
+
+Distance: 50.0 cm | Level: 50.0% | NORMAL
+
+Distance: 5.0 cm | Level: 95.0% | FULL</pre>
+    </div>
+
+    <h3>Telegram — EMPTY Alert</h3>
+
+    <div class="output-box">
+<pre>WATER TANK EMPTY!
+Please START water filling.</pre>
+    </div>
+
+    <h3>Telegram — FULL Alert</h3>
+
+    <div class="output-box">
+<pre>WATER TANK FULL!
+Please STOP water filling.</pre>
+    </div>
+
+    <h3>Dashboard Functions</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dashboard Element</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Water Level</td>
+                    <td>Estimated percentage</td>
+                </tr>
+                <tr>
+                    <td>Distance</td>
+                    <td>Ultrasonic measurement in centimeters</td>
+                </tr>
+                <tr>
+                    <td>Tank Visualization</td>
+                    <td>Water graphic changes with percentage</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td>EMPTY / NORMAL / FULL</td>
+                </tr>
+                <tr>
+                    <td>Guidance</td>
+                    <td>Start filling / Normal / Stop filling</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        The values shown above are examples
+        for a 100 cm reference height.
+        The 5 cm reading may be too close
+        for reliable measurement with
+        some HC-SR04 installations.
+    </div>
+</section>
+
+<!-- DASHBOARD -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+        <img
+            src="Smart Water Tank Level Monitoring System Dashboard.png"
+            alt="Smart Water Tank Level Monitoring System Dashboard"
+        >
+    </div>
+
+</section>
+
+<!-- RESULT -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Smart Water Tank Level Monitoring
+        System demonstrates ultrasonic
+        distance measurement, estimated
+        water-level calculation, Wi-Fi
+        dashboard monitoring and
+        Telegram-based status alerts.
+    </p>
+
+    <p>
+        The ESP32 classifies the
+        estimated percentage as
+        EMPTY, NORMAL or FULL and
+        activates alert functions
+        when entering the EMPTY
+        or FULL condition.
+    </p>
+
+    <p>
+        The experiment provides monitoring
+        and notification without automatic
+        pump control.
+    </p>
+</section>
+
+<!-- WHAT YOU LEARN -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Interfacing the HC-SR04 ultrasonic sensor.</li>
+        <li>Understanding ultrasonic distance measurement.</li>
+        <li>Using GPIO5 for TRIG and GPIO18 for ECHO.</li>
+        <li>Understanding 5V-to-3.3V logic-level conversion.</li>
+        <li>Using pulseIn() to measure echo duration.</li>
+        <li>Converting distance to estimated tank percentage.</li>
+        <li>Implementing EMPTY, NORMAL and FULL classifications.</li>
+        <li>Using an active buzzer for audible alerts.</li>
+        <li>Connecting an ESP32 to Wi-Fi.</li>
+        <li>Creating a local HTTP dashboard.</li>
+        <li>Displaying a graphical water-level indicator.</li>
+        <li>Sending JSON data to a browser.</li>
+        <li>Understanding Telegram Bot API messaging.</li>
+        <li>Detecting status changes to limit repeated alerts.</li>
+        <li>Understanding ultrasonic sensing limitations.</li>
+        <li>Developing an IoT monitoring and notification experiment.</li>
+    </ul>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>Smart Water Tank Level Monitoring System</div>
+</footer>
+
+<!-- ======================================
+     COMPLETE ARDUINO SKETCH
+     10 INTERACTIVE SECTIONS
+====================================== -->
+<textarea id="esp32-program" hidden>
+// [01] LOAD LIBRARIES
+
+#include &lt;WiFi.h>
+#include &lt;WiFiClientSecure.h>
+#include &lt;HTTPClient.h>
+#include &lt;WebServer.h>
+
+// [END 01]
+
+
+// [02] CONFIGURE WIFI TELEGRAM AND HARDWARE
+
+const char* WIFI_SSID =
+    "YOUR_WIFI_NAME";
+
+const char* WIFI_PASSWORD =
+    "YOUR_WIFI_PASSWORD";
+
+const char* BOT_TOKEN =
+    "YOUR_BOT_TOKEN";
+
+const char* CHAT_ID =
+    "YOUR_CHAT_ID";
+
+#define TRIG_PIN 5
+#define ECHO_PIN 18
+#define BUZZER_PIN 19
+
+// IMPORTANT: HC-SR04 ECHO is 5V.
+// Use a 5V-to-3.3V logic-level shifter.
+
+const float TANK_HEIGHT_CM = 100.0f;
+
+const float EMPTY_LEVEL_PERCENT = 10.0f;
+const float FULL_LEVEL_PERCENT = 90.0f;
+
+const unsigned long READ_INTERVAL = 2000UL;
+
+WebServer server(80);
+
+float distanceCm = 0.0f;
+float waterPercent = 0.0f;
+
+String tankStatus = "WAITING";
+String lastAlertStatus = "WAITING";
+
+bool sensorValid = false;
+bool measurementReady = false;
+
+unsigned long lastReadTime = 0;
+
+// [END 02]
+
+
+// [03] ENCODE TELEGRAM MESSAGE
+
+String urlEncode(const String &amp;text) {
+
+    String encoded = "";
+    char hex[4];
+
+    for (
+        size_t i = 0;
+        i &lt; text.length();
+        i++
+    ) {
+
+        unsigned char c = text[i];
+
+        if (
+            (c &gt;= 'A' &amp;&amp; c &lt;= 'Z') ||
+            (c &gt;= 'a' &amp;&amp; c &lt;= 'z') ||
+            (c &gt;= '0' &amp;&amp; c &lt;= '9') ||
+            c == '-' ||
+            c == '_' ||
+            c == '.' ||
+            c == '~'
+        ) {
+
+            encoded += char(c);
+
+        } else {
+
+            snprintf(
+                hex,
+                sizeof(hex),
+                "%%%02X",
+                c
+            );
+
+            encoded += hex;
+        }
+    }
+
+    return encoded;
+}
+
+// [END 03]
+
+
+// [04] SEND TELEGRAM ALERT
+
+bool sendTelegramMessage(
+    const String &amp;message
+) {
+
+    if (
+        WiFi.status() != WL_CONNECTED ||
+        String(BOT_TOKEN) == "YOUR_BOT_TOKEN" ||
+        String(CHAT_ID) == "YOUR_CHAT_ID"
+    ) {
+
+        Serial.println(
+            "Telegram not configured or Wi-Fi offline."
+        );
+
+        return false;
+    }
+
+    WiFiClientSecure client;
+
+    // Educational demonstration only.
+    // Replace with validated TLS certificates
+    // before use beyond a controlled lab.
+
+    client.setInsecure();
+
+    HTTPClient http;
+
+    http.setTimeout(5000);
+
+    String url =
+        "https://api.telegram.org/bot" +
+        String(BOT_TOKEN) +
+        "/sendMessage";
+
+    if (!http.begin(client, url)) {
+
+        Serial.println(
+            "Telegram HTTPS initialization failed."
+        );
+
+        return false;
+    }
+
+    http.addHeader(
+        "Content-Type",
+        "application/x-www-form-urlencoded"
+    );
+
+    String body =
+        "chat_id=" +
+        urlEncode(String(CHAT_ID)) +
+        "&amp;text=" +
+        urlEncode(message);
+
+    int status = http.POST(body);
+
+    http.end();
+
+    Serial.print(
+        "Telegram HTTP status: "
+    );
+
+    Serial.println(status);
+
+    return status == 200;
+}
+
+// [END 04]
+
+
+// [05] MEASURE ULTRASONIC DISTANCE
+
+float readDistanceCm() {
+
+    digitalWrite(
+        TRIG_PIN,
+        LOW
+    );
+
+    delayMicroseconds(3);
+
+    digitalWrite(
+        TRIG_PIN,
+        HIGH
+    );
+
+    delayMicroseconds(10);
+
+    digitalWrite(
+        TRIG_PIN,
+        LOW
+    );
+
+    unsigned long duration =
+        pulseIn(
+            ECHO_PIN,
+            HIGH,
+            30000UL
+        );
+
+    if (duration == 0) {
+
+        return -1.0f;
+    }
+
+    float distance =
+        duration * 0.0343f / 2.0f;
+
+    return distance;
+}
+
+// [END 05]
+
+
+// [06] CALCULATE WATER LEVEL AND STATUS
+
+void calculateWaterLevel() {
+
+    float distance =
+        readDistanceCm();
+
+    if (
+        distance &lt; 0 ||
+        distance &gt; TANK_HEIGHT_CM
+    ) {
+
+        sensorValid = false;
+        tankStatus = "SENSOR ERROR";
+
+        Serial.println(
+            "Invalid ultrasonic reading."
+        );
+
+        return;
+    }
+
+    sensorValid = true;
+    measurementReady = true;
+
+    distanceCm = distance;
+
+    waterPercent = constrain(
+        (
+            TANK_HEIGHT_CM - distanceCm
+        ) * 100.0f / TANK_HEIGHT_CM,
+        0.0f,
+        100.0f
+    );
+
+    if (
+        waterPercent &lt;=
+        EMPTY_LEVEL_PERCENT
+    ) {
+
+        tankStatus = "EMPTY";
+
+    } else if (
+        waterPercent &gt;=
+        FULL_LEVEL_PERCENT
+    ) {
+
+        tankStatus = "FULL";
+
+    } else {
+
+        tankStatus = "NORMAL";
+    }
+
+    Serial.print("Distance: ");
+    Serial.print(distanceCm, 1);
+
+    Serial.print(" cm | Level: ");
+    Serial.print(waterPercent, 1);
+
+    Serial.print("% | ");
+    Serial.println(tankStatus);
+}
+
+// [END 06]
+
+
+// [07] HANDLE STATE CHANGE ALERTS
+
+void checkAlert() {
+
+    if (!sensorValid) {
+
+        return;
+    }
+
+    // Do not repeat notifications
+    // every 2 seconds in the same state.
+
+    if (
+        tankStatus == lastAlertStatus
+    ) {
+
+        return;
+    }
+
+    lastAlertStatus = tankStatus;
+
+    if (tankStatus == "NORMAL") {
+
+        Serial.println(
+            "Water level is normal."
+        );
+
+        return;
+    }
+
+    String message;
+
+    if (tankStatus == "EMPTY") {
+
+        message =
+            "WATER TANK EMPTY! "
+            "Please START water filling.";
+
+    } else if (tankStatus == "FULL") {
+
+        message =
+            "WATER TANK FULL! "
+            "Please STOP water filling.";
+
+    } else {
+
+        return;
+    }
+
+    digitalWrite(
+        BUZZER_PIN,
+        HIGH
+    );
+
+    delay(250);
+
+    digitalWrite(
+        BUZZER_PIN,
+        LOW
+    );
+
+    Serial.println(message);
+
+    bool sent =
+        sendTelegramMessage(message);
+
+    Serial.println(
+        sent
+            ? "Telegram alert sent."
+            : "Telegram alert not delivered."
+    );
+}
+
+// [END 07]
+
+
+// [08] CREATE WIFI DASHBOARD
+
+const char dashboardHTML[] PROGMEM = R"PAGE(
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+
+&lt;head>
+&lt;meta charset="UTF-8">
+&lt;meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+&lt;title>Smart Water Tank Dashboard&lt;/title>
+
+&lt;style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 22px;
+    background: #edf4fa;
+    color: #203040;
+    font: 16px Arial, sans-serif;
+}
+
+main {
+    max-width: 850px;
+    margin: auto;
+}
+
+header {
+    text-align: center;
+}
+
+header h1 {
+    color: #1e3a8a;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(210px,1fr));
+    gap: 16px;
+}
+
+.card {
+    padding: 22px;
+    margin: 14px 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px #d7e0e9;
+}
+
+.value {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.bar {
+    height: 18px;
+    background: #dce7f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#fill {
+    width: 0%;
+    height: 100%;
+    background: #2196f3;
+    transition: width .4s;
+}
+
+.tank {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 110px;
+    height: 180px;
+    margin: auto;
+    border: 4px solid #7892a7;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#water {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 0%;
+    background: #2196f3;
+    color: white;
+    transition: height .4s;
+}
+
+.status {
+    text-align: center;
+}
+
+.note {
+    color: #475569;
+}
+
+@media(max-width:500px) {
+
+    body {
+        padding: 12px;
+    }
+}
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+&lt;main>
+
+    &lt;header>
+        &lt;h1>Smart Water Tank&lt;/h1>
+        &lt;p>
+            Live Monitoring Dashboard
+        &lt;/p>
+    &lt;/header>
+
+    &lt;div class="grid">
+
+        &lt;div class="card">
+
+            &lt;h3>Water Level&lt;/h3>
+
+            &lt;div
+                class="value"
+                id="level"
+            >
+                --%
+            &lt;/div>
+
+            &lt;div class="bar">
+
+                &lt;div
+                    id="fill"
+                >&lt;/div>
+
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="card">
+
+            &lt;h3>Sensor Distance&lt;/h3>
+
+            &lt;div
+                class="value"
+                id="distance"
+            >
+                --
+            &lt;/div>
+
+            &lt;p>Centimeters&lt;/p>
+
+        &lt;/div>
+
+    &lt;/div>
+
+    &lt;div
+        class="card"
+        style="text-align:center"
+    >
+
+        &lt;h3>Tank Visualization&lt;/h3>
+
+        &lt;div class="tank">
+
+            &lt;div id="water">
+                0%
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;h2
+            class="status"
+            id="status"
+        >
+            Connecting...
+        &lt;/h2>
+
+        &lt;p id="advice">
+            Waiting for sensor data
+        &lt;/p>
+
+    &lt;/div>
+
+    &lt;div class="card">
+
+        &lt;h3>Telegram Notifications&lt;/h3>
+
+        &lt;p>
+            EMPTY: Start water filling.
+        &lt;/p>
+
+        &lt;p>
+            FULL: Stop water filling.
+        &lt;/p>
+
+        &lt;p class="note">
+            Notifications require Wi-Fi
+            and valid Telegram credentials.
+        &lt;/p>
+
+    &lt;/div>
+
+&lt;/main>
+
+&lt;script>
+
+async function refresh() {
+
+    try {
+
+        const response = await fetch(
+            "/data",
+            {cache: "no-store"}
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Data unavailable"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        if (!data.valid) {
+
+            document.getElementById(
+                "level"
+            ).textContent = "--%";
+
+            document.getElementById(
+                "distance"
+            ).textContent = "--";
+
+            document.getElementById(
+                "status"
+            ).textContent = data.status;
+
+            document.getElementById(
+                "advice"
+            ).textContent =
+                "Check sensor and wiring.";
+
+            return;
+        }
+
+        const level =
+            Number(data.level);
+
+        document.getElementById(
+            "level"
+        ).textContent =
+            level.toFixed(1) + "%";
+
+        document.getElementById(
+            "distance"
+        ).textContent =
+            Number(data.distance).toFixed(1);
+
+        document.getElementById(
+            "fill"
+        ).style.width =
+            level + "%";
+
+        document.getElementById(
+            "water"
+        ).style.height =
+            level + "%";
+
+        document.getElementById(
+            "water"
+        ).textContent =
+            Math.round(level) + "%";
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            data.status;
+
+        document.getElementById(
+            "advice"
+        ).textContent =
+            data.status === "EMPTY"
+                ? "Please START water filling"
+                : data.status === "FULL"
+                    ? "Please STOP water filling"
+                    : "Water level is normal";
+
+    } catch (error) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "Connection error";
+    }
+}
+
+refresh();
+
+setInterval(
+    refresh,
+    2000
+);
+
+&lt;/script>
+&lt;/body>
+&lt;/html>
+)PAGE";
+
+
+void handleRoot() {
+
+    server.send_P(
+        200,
+        "text/html; charset=utf-8",
+        dashboardHTML
+    );
+}
+
+// [END 08]
+
+
+// [09] SEND WATER LEVEL DATA AS JSON
+
+void handleData() {
+
+    String json = "{";
+
+    json += "\"valid\":";
+    json += sensorValid ? "true" : "false";
+
+    json += ",\"level\":";
+    json += String(waterPercent, 1);
+
+    json += ",\"distance\":";
+    json += String(distanceCm, 1);
+
+    json += ",\"status\":\"";
+    json += tankStatus;
+    json += "\"";
+
+    json += "}";
+
+    server.sendHeader(
+        "Cache-Control",
+        "no-store"
+    );
+
+    server.send(
+        200,
+        "application/json",
+        json
+    );
+}
+
+// [END 09]
+
+
+// [10] INITIALIZE AND MONITOR THE TANK
+
+void setup() {
+
+    Serial.begin(115200);
+
+    Serial.println(
+        "Starting Smart Water Tank Monitor..."
+    );
+
+    pinMode(
+        TRIG_PIN,
+        OUTPUT
+    );
+
+    pinMode(
+        ECHO_PIN,
+        INPUT
+    );
+
+    pinMode(
+        BUZZER_PIN,
+        OUTPUT
+    );
+
+    digitalWrite(
+        TRIG_PIN,
+        LOW
+    );
+
+    digitalWrite(
+        BUZZER_PIN,
+        LOW
+    );
+
+    WiFi.mode(WIFI_STA);
+
+    WiFi.begin(
+        WIFI_SSID,
+        WIFI_PASSWORD
+    );
+
+    Serial.println(
+        "Connecting to Wi-Fi..."
+    );
+
+    unsigned long started =
+        millis();
+
+    while (
+        WiFi.status() != WL_CONNECTED &amp;&amp;
+        millis() - started &lt; 20000UL
+    ) {
+
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println();
+
+    if (
+        WiFi.status() == WL_CONNECTED
+    ) {
+
+        Serial.println(
+            "Wi-Fi connected."
+        );
+
+        Serial.print(
+            "Dashboard IP: http://"
+        );
+
+        Serial.println(
+            WiFi.localIP()
+        );
+
+    } else {
+
+        Serial.println(
+            "Wi-Fi not connected."
+        );
+    }
+
+    server.on(
+        "/",
+        HTTP_GET,
+        handleRoot
+    );
+
+    server.on(
+        "/data",
+        HTTP_GET,
+        handleData
+    );
+
+    server.begin();
+
+    Serial.println(
+        "Web server started."
+    );
+
+    calculateWaterLevel();
+
+    checkAlert();
+
+    Serial.println(
+        "Water tank monitoring started."
+    );
+}
+
+
+void loop() {
+
+    if (
+        WiFi.status() == WL_CONNECTED
+    ) {
+
+        server.handleClient();
+    }
+
+    if (
+        millis() - lastReadTime &gt;=
+        READ_INTERVAL
+    ) {
+
+        lastReadTime = millis();
+
+        calculateWaterLevel();
+
+        checkAlert();
+    }
+
+    delay(2);
+}
+
+// [END 10]
+</textarea>
+
+<!-- ======================================
+     INTERACTIVE CODE EXPLORER
+====================================== -->
+<script>
+
+const program = document
+    .getElementById("esp32-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+const steps = [
+    {
+        number:"01",
+        label:"LOAD LIBRARIES",
+        title:"Load Libraries",
+        text:"Loads ESP32 Wi-Fi, HTTPS, HTTP client and local web-server libraries."
+    },
+    {
+        number:"02",
+        label:"CONFIGURE WIFI TELEGRAM AND HARDWARE",
+        title:"Configure Hardware",
+        text:"Defines Wi-Fi and Telegram credentials, HC-SR04 pins, buzzer pin, tank reference height and alert thresholds."
+    },
+    {
+        number:"03",
+        label:"ENCODE TELEGRAM MESSAGE",
+        title:"Encode Telegram Message",
+        text:"Converts message characters into a suitable format for an HTTP form request."
+    },
+    {
+        number:"04",
+        label:"SEND TELEGRAM ALERT",
+        title:"Send Telegram Alert",
+        text:"Uses an HTTPS POST request to attempt delivery of a Telegram Bot API notification."
+    },
+    {
+        number:"05",
+        label:"MEASURE ULTRASONIC DISTANCE",
+        title:"Measure Distance",
+        text:"Triggers the HC-SR04, measures the ECHO pulse and calculates distance in centimeters."
+    },
+    {
+        number:"06",
+        label:"CALCULATE WATER LEVEL AND STATUS",
+        title:"Calculate Water Level",
+        text:"Converts distance into filling percentage, validates the measurement and classifies EMPTY, NORMAL or FULL."
+    },
+    {
+        number:"07",
+        label:"HANDLE STATE CHANGE ALERTS",
+        title:"Handle Alerts",
+        text:"Detects status transitions, activates the buzzer and attempts a Telegram notification for EMPTY or FULL."
+    },
+    {
+        number:"08",
+        label:"CREATE WIFI DASHBOARD",
+        title:"Create Web Dashboard",
+        text:"Defines the complete HTML, CSS and JavaScript dashboard for monitoring the tank."
+    },
+    {
+        number:"09",
+        label:"SEND WATER LEVEL DATA AS JSON",
+        title:"Send Live Data",
+        text:"Returns the latest water-level percentage, distance, sensor validity and tank status to the browser."
+    },
+    {
+        number:"10",
+        label:"INITIALIZE AND MONITOR THE TANK",
+        title:"Initialize and Monitor",
+        text:"Initializes the sensor and buzzer, connects to Wi-Fi, starts the web server and repeatedly updates measurements."
+    }
+];
+
+function escapeHtml(value) {
+    return value
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+}
+
+function displayCode() {
+
+    const container =
+        document.getElementById("code-lines");
+
+    container.innerHTML = lines.map(
+        function(line,index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index+1) + '">' +
+                '<span class="line-number">' +
+                (index+1) + '</span>' +
+                '<span>' + escapeHtml(line) +
+                '</span></span>'
+            );
+        }
+    ).join("");
+}
+
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
+
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "// [" + step.number + "] " + step.label
+        );
+
+        const end = findMarker(
+            "// [END " + step.number + "]"
+        );
+
+        return {
+            start:start,
+            end:end,
+            valid:start >= 0 && end >= start
+        };
+    }
+);
+
+function createSteps() {
+
+    const container =
+        document.getElementById("steps-list");
+
+    steps.forEach(
+        function(step,index) {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement("span");
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title =
+                document.createElement("span");
+
+            title.textContent = step.title;
+
+            button.append(number,title);
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+function showStep(index) {
+
+    document.querySelectorAll(".step").forEach(
+        function(button,i) {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+            line.classList.remove("selected");
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement("h3");
+
+    heading.textContent =
+        (index+1) + ". " + step.title;
+
+    const paragraph =
+        document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(heading,paragraph);
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching source-code markers not found.";
+
+        return;
+    }
+
+    for (
+        let i=range.start;
+        i<=range.end;
+        i++
+    ) {
+
+        const element =
+            document.getElementById(
+                "line-" + (i+1)
+            );
+
+        if (element) {
+            element.classList.add("selected");
+        }
+    }
+
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start+1)
+        );
+
+    const codeBody =
+        document.getElementById("code-body");
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top:codeBody.scrollTop+offset-20,
+            behavior:"smooth"
+        });
+    }
+}
+
+async function copyCode() {
+
+    const button =
+        document.querySelector(".copy-button");
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement("textarea");
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch(error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+            await navigator.clipboard.writeText(
+                program
+            );
+            copied();
+        } catch(error) {
+            fallback();
+        }
+
+    } else {
+        fallback();
+    }
+}
+
+displayCode();
+createSteps();
+showStep(0);
+
+</script>
+
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="en">
 
