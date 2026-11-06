@@ -1,424 +1,2215 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Object Detection System</title>
+
 <style>
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
-.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
-.header h1{margin:0 0 8px;font-size:34px;}
-.header p{margin:0;font-size:17px;}
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
-.container{width:90%;max-width:1050px;margin:35px auto;}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
-.section h3{color:#1e3a8a;} ul,ol{padding-left:24px;} li{margin-bottom:8px;}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
-.component-card p{color:#475569;font-size:14px;margin:0;}
-.table-wrap{overflow-x:auto;} table{width:100%;min-width:620px;border-collapse:collapse;} th,td{padding:12px;border:1px solid #ddd;text-align:left;} th{background:#2563eb;color:white;} tr:nth-child(even){background:#f8fafc;}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px;}
-.code-lesson{color:#142e3a;} .eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
-.lesson-title{font-size:32px !important;margin:0 0 8px !important;color:#1e3a8a !important;border:0 !important;padding:0 !important;}
-.intro{color:#526875;margin:0 0 22px;}
-.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
-.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
-.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
-.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
-.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
-.copy-button:hover{background:#eff6ff;}
-.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
-.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
-.code-line:hover{background:#f8fbff;} .code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
-.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
-.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;} .guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;} .guide>p{color:#526875;font-size:15px;}
-.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
-.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
-.step:hover{border-color:#60a5fa;background:#f8fbff;} .step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;} .step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
-.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;} .explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;} .explanation p{margin:0;color:#526875;font-size:15px;}
-.guide details{border-top:1px solid #dce6e9;margin-top:15px;} .guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;} .guide details p,.guide details li{color:#526875;font-size:15px;} .guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
-.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;} footer strong{color:white;}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f7fb;color:#222;font:16px/1.7 Arial,Helvetica,sans-serif}
+
+/* HEADER */
+.header{position:relative;display:flex;flex-direction:column;min-height:230px;padding:25px 0 0;background:#2563eb;color:white;text-align:center}
+.header-logo{position:absolute;top:15px;left:20px;width:135px;max-height:75px;height:auto;padding:5px;background:white;border-radius:5px;object-fit:contain}
+.header-content{margin:auto 0;padding:35px 165px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+.header-buttons{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 25px;background:rgba(0,0,0,.12)}
+.header-left-buttons,.header-right-buttons{display:flex;align-items:center;gap:10px}
+.header-nav-btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;background:white;color:#1e3a8a;border:1px solid #dbeafe;border-radius:7px;font-size:13px;font-weight:bold;text-decoration:none;white-space:nowrap}
+.header-nav-btn:hover{background:#dbeafe}
+.home-icon-btn{width:40px;height:38px;padding:8px}
+.home-icon-btn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* NAVIGATION */
+nav{position:sticky;top:0;z-index:20;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;padding:13px 15px;background:white;border-bottom:1px solid #ddd}
+nav a{color:#1e3a8a;text-decoration:none;font-size:14px;font-weight:bold}
+nav a:hover{color:#2563eb}
+
+/* MAIN CONTENT */
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{margin-bottom:24px;padding:28px;background:white;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);scroll-margin-top:100px}
+.section h2{margin:0 0 18px;padding-bottom:8px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe}
+.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+
+/* THUMBNAIL */
+.project-thumbnail{text-align:center;padding:20px}
+.project-thumbnail img{display:block;width:100%;max-width:760px;max-height:420px;height:auto;margin:0 auto;object-fit:contain;border-radius:10px}
+
+/* COMPONENT CARDS */
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.component-card{padding:20px;background:white;border:1px solid #e2e8f0;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{display:block;width:100%;max-width:180px;height:140px;margin:0 auto 15px;object-fit:contain}
+.component-card h4{margin:0 0 8px;color:#1e3a8a;font-size:17px}
+.component-card p{margin:0;color:#475569;font-size:14px}
+
+/* TABLES */
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:600px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px 16px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+
+/* CIRCUIT AND WORKING */
+.circuit-img{display:block;width:100%;max-width:760px;height:auto;margin:20px auto;padding:10px;border:1px solid #e2e8f0;border-radius:10px;object-fit:contain}
+.flow{text-align:center;color:#1e3a8a;font-size:18px;font-weight:bold;line-height:2}
+.flow-step{padding:5px 10px}
+.flow-arrow{color:#2563eb;font-size:22px}
+
+/* CODE EXPLORER */
+.eyebrow{margin:0 0 4px;color:#2563eb;font-size:13px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase}
+.lesson-title{margin:0 0 8px!important;padding:0!important;border:0!important;color:#1e3a8a!important;font-size:32px!important}
+.intro{margin:0 0 22px;color:#526875}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{min-width:0;overflow:hidden;background:white;border:1px solid #bfdbfe;border-radius:14px;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
+.filename{font:bold 14px Consolas,Monaco,monospace;overflow-wrap:anywhere}
+.copy-button{min-height:40px;padding:8px 14px;background:white;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;font-weight:bold;cursor:pointer}
+.copy-button:hover{background:#eff6ff}
+.code-body{height:600px;padding:16px 0;overflow:auto;background:white}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:20px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{min-width:52px;padding-right:15px;color:#64748b;text-align:right;user-select:none}
+
+/* CODE EXPLANATION */
+.guide{min-width:0;padding:22px;background:white;border:1px solid #dce6e9;border-radius:14px}
+.guide h2{margin:0 0 8px;padding:0;border:0;font-size:21px}
+.guide>p{color:#526875}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{display:flex;align-items:center;gap:8px;min-height:65px;padding:10px;background:white;color:#1e3a8a;border:1px solid #dce6e9;border-radius:9px;font-size:13px;font-weight:bold;text-align:left;cursor:pointer}
+.step:hover{border-color:#60a5fa}
+.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
+.explanation{min-height:130px;padding:16px;background:#eff6ff;border-radius:9px}
+.explanation h3{margin:0 0 7px;color:#1e3a8a;font-size:17px}
+.explanation p{margin:0;color:#526875}
+.guide details{margin-top:15px;border-top:1px solid #dce6e9}
+.guide summary{padding:13px 0;color:#2563eb;font-weight:bold;cursor:pointer}
+.tip{margin-top:20px;padding:14px 17px;background:#eff6ff;border-radius:9px}
+
+/* EXPECTED OUTPUT */
+.output-box{margin:15px 0;padding:16px;background:#f8fafc;border:1px solid #dbeafe;border-radius:9px}
+.output-box pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.8 Consolas,Monaco,monospace}
+
+/* DASHBOARD IMAGE */
+.dashboard-image{display:flex;justify-content:center;align-items:center;width:100%;padding:20px}
+.dashboard-image img{display:block;width:100%;max-width:550px;height:auto;margin:0 auto;object-fit:contain;border-radius:10px}
+
+/* FOOTER */
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}
+footer strong{color:white}
+
+/* RESPONSIVE */
+@media(max-width:900px){.header-content{padding:65px 20px 35px}}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr}.code-body{height:450px}}
+@media(max-width:600px){
+.header{padding:15px 0 0}
+.header-logo{top:12px;left:12px;width:95px;max-height:60px}
+.header-content{padding:85px 12px 25px}
+.header h1{font-size:25px}
+.header p{font-size:15px}
+.header-buttons{padding:10px 8px;gap:8px}
+.header-left-buttons,.header-right-buttons{gap:5px}
+.header-nav-btn{min-height:36px;padding:8px 7px;font-size:11px}
+.home-icon-btn{width:36px;height:36px;padding:7px}
+.container{width:92%}
+.section{padding:20px}
+.steps{grid-template-columns:1fr}
+nav{gap:11px}
+}
 </style>
 </head>
-<body>
-<header class="header"><h1>Raspberry Pi Experiment</h1><p>AI Object Detection System</p></header>
 
+<body>
+
+<!-- HEADER -->
+<header class="header">
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>AI Object Detection System</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a href="../index.html" class="header-nav-btn">
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a href="../../Arduino Experiments/index.html"
+               class="header-nav-btn">Arduino</a>
+
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">ESP</a>
+
+            <a href="../index.html"
+               class="header-nav-btn">R-Pi</a>
+
+        </div>
+
+    </div>
+</header>
+
+<!-- NAVIGATION -->
 <nav>
-<a href="../index.html">← R-Pi Experiments</a>
-<a href="#aim">Aim</a>
-<a href="#components">Components</a>
-<a href="#connections">Connections</a>
-<a href="#circuit">Circuit</a>
-<a href="#working">Working</a>
-<a href="#procedure">Procedure</a>
-<a href="#code">Code</a>
-<a href="#result">Result</a>
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
-<section class="section" id="aim">
-<h2>Aim</h2>
-<p>To build a Raspberry Pi based real-time AI object detection and counting system using a USB camera, OpenCV, YOLO11n and a Flask web dashboard.</p>
-</section>
-
-<section class="section">
-<h2>About the Experiment</h2>
-<p>The Raspberry Pi 4 receives live video from a USB camera and uses OpenCV to capture frames.</p>
-<p>A pretrained YOLO11n model detects supported object classes, displays bounding boxes and confidence values, and updates object counts.</p>
-<p>A Flask web dashboard displays the live camera, current object, confidence, total detections and a live object-count graph.</p>
-</section>
-
-<section class="section" id="components">
-<h2>Components Required</h2>
-<div class="components-grid">
-<div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B (×1)"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs OpenCV, YOLO11n and the Flask dashboard.</p></div>
-<div class="component-card"><img src="USB Camera.png" alt="USB Camera / Webcam (×1)"><h4>USB Camera / Webcam (×1)</h4><p>Provides the live video for object detection.</p></div>
-<div class="component-card"><img src="Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply (×1)"><h4>Raspberry Pi Power Supply (×1)</h4><p>Provides power to the Raspberry Pi.</p></div>
-</div>
-</section>
-
-<section class="section" id="connections">
-<h2>Circuit Connections</h2>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Component</th><th>Connection</th><th>Raspberry Pi Connection</th></tr></thead>
-<tbody>
-<tr><td>USB Camera</td><td>USB</td><td>Any Raspberry Pi USB port</td></tr>
-</tbody>
-</table>
-</div>
-</section>
-
-<!-- =========================
-     CIRCUIT
-========================= -->
-
-<section
-class="section"
-id="circuit">
-
-    <h2>
-        Circuit Diagram
-    </h2>
+<!-- EXPERIMENT THUMBNAIL -->
+<section class="section project-thumbnail">
 
     <img
-    class="circuit-img"
-    src="AI Object Detection System Circuit.png"
-    alt="AI Object Detection System Circuit">
+        src="../AI Object Detection System.png"
+        alt="AI Object Detection System Thumbnail"
+    >
 
 </section>
 
+<!-- AIM -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To develop a Raspberry Pi-based
+        real-time AI Object Detection
+        System using a Raspberry Pi 4
+        Model B, USB camera, OpenCV,
+        a pretrained YOLO11n model
+        and a Flask web dashboard.
+    </p>
+
+    <p>
+        The experiment detects supported
+        object classes, displays bounding
+        boxes and confidence values,
+        counts detection events
+        and visualizes results
+        through a live dashboard.
+    </p>
+
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The AI Object Detection System
+        demonstrates computer vision,
+        neural-network inference,
+        real-time image processing
+        and browser-based monitoring
+        using Raspberry Pi 4.
+    </p>
+
+    <p>
+        A USB camera captures video frames.
+        OpenCV retrieves the images
+        and passes them to a pretrained
+        YOLO11n model for object detection.
+    </p>
+
+    <p>
+        YOLO11n identifies objects
+        belonging to the categories
+        supported by its trained weights.
+        For every detected object,
+        the system provides a class label,
+        confidence value and bounding box.
+    </p>
+
+    <p>
+        The program counts detection events
+        by object class. A two-second
+        interval prevents the same class
+        from incrementing the counter
+        on every video frame.
+    </p>
+
+    <p>
+        A Flask web server displays
+        the camera feed, current object,
+        detection confidence, total
+        event count and a live bar graph
+        of counts grouped by class.
+    </p>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+                <tr>
+                    <td>Camera</td>
+                    <td>USB Webcam</td>
+                </tr>
+                <tr>
+                    <td>Camera Device</td>
+                    <td>/dev/video0</td>
+                </tr>
+                <tr>
+                    <td>Model</td>
+                    <td>YOLO11n</td>
+                </tr>
+                <tr>
+                    <td>Model File</td>
+                    <td>yolo11n.pt</td>
+                </tr>
+                <tr>
+                    <td>Confidence Threshold</td>
+                    <td>0.65</td>
+                </tr>
+                <tr>
+                    <td>YOLO Image Size</td>
+                    <td>320 pixels</td>
+                </tr>
+                <tr>
+                    <td>Camera Resolution</td>
+                    <td>640 × 480</td>
+                </tr>
+                <tr>
+                    <td>JPEG Quality</td>
+                    <td>80</td>
+                </tr>
+                <tr>
+                    <td>Class Count Interval</td>
+                    <td>2 seconds</td>
+                </tr>
+                <tr>
+                    <td>Dashboard Framework</td>
+                    <td>Flask</td>
+                </tr>
+                <tr>
+                    <td>Dashboard Port</td>
+                    <td>5000</td>
+                </tr>
+                <tr>
+                    <td>Graph Refresh Interval</td>
+                    <td>1 second</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Object Detection and Counting</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Image Capture</td>
+                    <td>USB camera captures live frames</td>
+                </tr>
+                <tr>
+                    <td>AI Inference</td>
+                    <td>YOLO11n processes the frame</td>
+                </tr>
+                <tr>
+                    <td>Confidence Filter</td>
+                    <td>Accept detections with confidence of at least 0.65</td>
+                </tr>
+                <tr>
+                    <td>Bounding Box</td>
+                    <td>Draw class label and detection box</td>
+                </tr>
+                <tr>
+                    <td>Event Counter</td>
+                    <td>Count the same class no more than once every 2 seconds</td>
+                </tr>
+                <tr>
+                    <td>Dashboard</td>
+                    <td>Display live video, counts and graph</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Important:</strong>
+        The system performs event-style
+        object counting, not unique-object
+        tracking. A continuously visible
+        object may be counted again
+        after the two-second interval.
+        Individual objects are not assigned
+        tracking IDs.
+    </div>
+
+</section>
+
+<!-- COMPONENTS -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
+            >
+
+            <h4>Raspberry Pi 4 Model B (×1)</h4>
+
+            <p>
+                Runs OpenCV, YOLO11n inference,
+                object counting and
+                the Flask dashboard.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="USB Camera.png"
+                alt="USB Camera"
+            >
+
+            <h4>USB Camera / Webcam (×1)</h4>
+
+            <p>
+                Captures the live video
+                used for AI object detection.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi Power Supply.png"
+                alt="Raspberry Pi Power Supply"
+            >
+
+            <h4>Raspberry Pi Power Supply (×1)</h4>
+
+            <p>
+                Supplies regulated
+                power to the Raspberry Pi.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Software Requirements:</strong>
+
+        <ul>
+            <li>Raspberry Pi OS</li>
+            <li>Python 3</li>
+            <li>OpenCV</li>
+            <li>Ultralytics YOLO</li>
+            <li>PyTorch and Torchvision as required by the installed Ultralytics version</li>
+            <li>Flask</li>
+        </ul>
+
+        <p>
+            The model file
+            <code>yolo11n.pt</code>
+            must be accessible from
+            the program's working directory,
+            or MODEL_PATH must be updated.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- CONNECTIONS -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>USB Camera</td>
+                    <td>USB connector</td>
+                    <td>Available Raspberry Pi USB port</td>
+                </tr>
+                <tr>
+                    <td>Raspberry Pi Power Supply</td>
+                    <td>Power connector</td>
+                    <td>Raspberry Pi USB-C power input</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Connection Note:</strong>
+        The USB camera connects directly
+        to the Raspberry Pi. No GPIO
+        sensor connections are required
+        for this experiment.
+    </div>
+
+</section>
+
+<!-- CIRCUIT -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="AI Object Detection System Circuit.png"
+        alt="AI Object Detection System Circuit Diagram"
+    >
+
+</section>
+
+<!-- WORKING -->
 <section class="section" id="working">
-<h2>Working Principle</h2>
-<div class="flow">USB Camera<br>↓<br>Raspberry Pi 4<br>↓<br>OpenCV<br>↓<br>YOLO11n<br>↓<br>Object Detection + Confidence<br>↓<br>Object Counting<br>↓<br>Flask Dashboard + Live Graph</div>
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            USB Camera Captures Live Video
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Raspberry Pi Receives Video Frames
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            OpenCV Processes Camera Frames
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            YOLO11n Runs AI Inference
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Detect Objects and Confidence Scores
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Draw Bounding Boxes
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Apply Two-Second Per-Class Count Interval
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Update Object Counters
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Flask Streams Annotated Video
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Dashboard Displays Counts and Live Graph
+        </div>
+
+    </div>
+
+    <h3>Image Acquisition</h3>
+
+    <p>
+        OpenCV captures video frames
+        from the USB camera connected
+        to the Raspberry Pi.
+    </p>
+
+    <h3>YOLO Inference</h3>
+
+    <p>
+        Each frame is processed using
+        the pretrained YOLO11n model
+        with a configured inference
+        size of 320 pixels.
+    </p>
+
+    <h3>Object Identification</h3>
+
+    <p>
+        YOLO returns detection results
+        containing object labels,
+        confidence values and
+        bounding-box coordinates.
+    </p>
+
+    <h3>Event Counting</h3>
+
+    <p>
+        A dictionary tracks the most recent
+        counted time for each detected class.
+        The count increases only after
+        the two-second interval
+        for that class has elapsed.
+    </p>
+
+    <h3>Live Video Stream</h3>
+
+    <p>
+        OpenCV encodes the annotated
+        images into JPEG frames.
+        Flask streams them to the
+        browser in MJPEG format.
+    </p>
+
+    <h3>Live Graph</h3>
+
+    <p>
+        The Flask dashboard requests
+        the current count data as JSON.
+        JavaScript generates a bar
+        for each recorded object class.
+    </p>
+
 </section>
 
+<!-- PROCEDURE -->
 <section class="section" id="procedure">
-<h2>Procedure</h2>
-<ol><li>Connect the USB camera to any Raspberry Pi USB port.</li><li>Power the Raspberry Pi using the Raspberry Pi power supply.</li><li>Confirm that the camera is available as <code>/dev/video0</code>.</li><li>Create and activate the Python virtual environment.</li><li>Install OpenCV, PyTorch, Torchvision, Ultralytics and Flask.</li><li>Place <code>yolo11n.pt</code> in the project folder.</li><li>Save the program as <code>pi_yolo_web.py</code>.</li><li>Run <code>python pi_yolo_web.py</code>.</li><li>Open the Raspberry Pi IP address on port 5000 in a browser.</li><li>Place supported objects in front of the camera and observe detections and counts.</li></ol>
+
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the Raspberry Pi 4 Model B, USB webcam and Raspberry Pi power supply.</li>
+        <li>Connect the USB camera to a Raspberry Pi USB port.</li>
+        <li>Connect the approved Raspberry Pi power supply.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Check camera availability using <code>ls /dev/video*</code>.</li>
+        <li>Confirm that the desired camera device is <code>/dev/video0</code>.</li>
+        <li>Open a terminal and create a Python virtual environment.</li>
+        <li>Activate the environment.</li>
+        <li>Install Flask, OpenCV and Ultralytics with compatible dependencies.</li>
+        <li>Place <code>yolo11n.pt</code> in the experiment directory.</li>
+        <li>Save the complete Python code as <code>pi_yolo_web.py</code>.</li>
+        <li>Run <code>python pi_yolo_web.py</code>.</li>
+        <li>Observe the model-loading messages.</li>
+        <li>Confirm that the USB camera opens successfully.</li>
+        <li>Run <code>hostname -I</code> to identify the Raspberry Pi network address.</li>
+        <li>Open <code>http://RASPBERRY_PI_IP:5000</code> in a browser on the same network.</li>
+        <li>Observe the live camera feed.</li>
+        <li>Place supported objects in front of the camera.</li>
+        <li>Verify the object labels, bounding boxes and confidence values.</li>
+        <li>Observe the total detection-event count.</li>
+        <li>Check the class-wise count graph.</li>
+        <li>Stop the Python program using Ctrl+C.</li>
+    </ol>
+
 </section>
 
-<!-- =========================================
-     EXPLORE THE CODE
-========================================= -->
-
+<!-- EXPLORE THE CODE -->
 <section class="section" id="code">
-<div class="code-lesson">
 
-<p class="eyebrow">
-    Raspberry Pi Experiment · Code Review
-</p>
+    <p class="eyebrow">
+        Raspberry Pi Experiment · Code Review
+    </p>
 
-<h2 class="lesson-title">
-    Explore the Code
-</h2>
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
 
-<p class="intro">
-    AI Object Detection System · Select a step to see
-    what each part of the Python program does.
-</p>
+    <p class="intro">
+        Click each explanation tab to highlight
+        its matching Python source section.
+        Copy Code copies the entire Python script.
+    </p>
 
-<div class="code-layout">
+    <div class="code-layout">
 
-<article class="code-panel">
+        <article class="code-panel">
 
-<div class="code-top">
+            <div class="code-top">
 
-    <span class="filename">
-        pi_yolo_web.py
-    </span>
+                <span class="filename">
+                    pi_yolo_web.py
+                </span>
 
-    <button
-    class="copy-button"
-    onclick="copyCode()">
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
 
-        Copy Code
+            </div>
 
-    </button>
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
 
-</div>
+        </article>
 
-<div
-class="code-body"
-id="code-body">
+        <article class="guide">
 
-<code id="code-lines"></code>
+            <h2>Understand it step by step</h2>
 
-</div>
+            <p>
+                Select a tab to highlight
+                the matching code lines.
+            </p>
 
-</article>
+            <div class="steps" id="steps-list"></div>
 
-<article class="guide">
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
 
-<h2>
-    Understand it step by step
-</h2>
+            <details>
+                <summary>Explore More: YOLO11n</summary>
+                <p>
+                    YOLO11n is a small YOLO
+                    object-detection model.
+                    The pretrained weights
+                    recognize the classes
+                    included in its training.
+                </p>
+            </details>
 
-<p>
-    Choose a step.
-    The matching code will light up on the left.
-</p>
+            <details>
+                <summary>Explore More: Confidence</summary>
+                <p>
+                    The program uses a
+                    confidence threshold of 0.65
+                    to filter detections.
+                </p>
+            </details>
 
-<div class="steps">
-<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load the libraries</button>
-<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set detection settings</button>
-<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Load YOLO11n</button>
-<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Open USB camera</button>
-<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Capture camera frames</button>
-<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Run YOLO detection</button>
-<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Count objects</button>
-<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Serve live video</button>
-<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Start Flask server</button>
-</div>
+            <details>
+                <summary>Explore More: Object Counting</summary>
+                <p>
+                    The program counts detection
+                    events separately by class.
+                    It does not assign tracking
+                    IDs or count unique
+                    individual objects.
+                </p>
+            </details>
 
-<div
-class="explanation"
-id="explanation">
+            <details>
+                <summary>Explore More: Flask</summary>
+                <p>
+                    Flask serves the web
+                    dashboard, MJPEG video
+                    feed and JSON endpoint.
+                </p>
+            </details>
 
-<h3>
-    1. Load the libraries
-</h3>
+            <details>
+                <summary>Check Your Understanding</summary>
 
-<p>
-    The program imports Flask, YOLO, OpenCV, threading, time and collections.
-</p>
+                <ol>
+                    <li>Which device captures images?</li>
+                    <li>Which AI model performs detection?</li>
+                    <li>What is the confidence threshold?</li>
+                    <li>What is the inference image size?</li>
+                    <li>What is the class-count interval?</li>
+                    <li>Which port hosts the dashboard?</li>
+                </ol>
 
-</div>
+                <p>
+                    <strong>Answers:</strong>
+                    USB camera; YOLO11n;
+                    0.65; 320 pixels;
+                    two seconds; port 5000.
+                </p>
 
-<details>
-<summary>
-    Explore more: system operation
-</summary>
-<p>The configured confidence threshold is 0.65 and YOLO input size is 320. Object counting is event-style counting, not unique-object tracking.</p>
-</details>
+            </details>
 
-<details>
-<summary>
-    Check your understanding
-</summary>
-<ul>
-<li>Which camera device is used? <strong>/dev/video0</strong></li><li>Which AI model is used? <strong>YOLO11n</strong></li><li>What confidence threshold is configured? <strong>0.65</strong></li><li>Which port serves the dashboard? <strong>5000</strong></li>
-</ul>
-</details>
+        </article>
 
-</article>
-</div>
+    </div>
 
-<p class="tip">
-<strong>Try it:</strong>
-Run <code>python pi_yolo_web.py</code>, open the Raspberry Pi IP address on port 5000 and place different objects in front of the USB camera.
-</p>
+    <p class="tip">
+        <strong>Try It:</strong>
+        Place different supported objects
+        in front of the USB camera.
+        Observe their labels, confidence,
+        event counts and live graph
+        on the dashboard.
+    </p>
 
-</div>
 </section>
 
-<section class="section">
-<h2>Expected Output</h2>
-<p>The live USB camera feed appears on the dashboard with YOLO bounding boxes.</p>
-<p>The dashboard displays the currently detected object and its confidence.</p>
-<p>Detected object classes are counted and displayed in a live graph.</p>
-<p>The Flask dashboard is available on port 5000.</p>
+<!-- EXPECTED OUTPUT -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Terminal — Startup</h3>
+
+    <div class="output-box">
+<pre>======================================
+Loading YOLO11n...
+======================================
+YOLO11n loaded successfully
+
+Opening USB camera...
+USB camera opened successfully
+
+Camera thread started
+YOLO detection thread started
+
+======================================
+ AI OBJECT DETECTION SYSTEM
+======================================
+
+Camera : USB Camera
+Device : /dev/video0
+Model  : YOLO11n
+YOLO Size : 320
+Confidence : 0.65
+
+Dashboard:
+http://RASPBERRY_PI_IP:5000
+
+Press CTRL+C to stop</pre>
+    </div>
+
+    <h3>Example Detection Messages</h3>
+
+    <div class="output-box">
+<pre>Detected: person | Confidence: 0.86 | Count: 1
+
+Detected: bottle | Confidence: 0.91 | Count: 1
+
+Detected: person | Confidence: 0.88 | Count: 2</pre>
+    </div>
+
+    <h3>Expected Dashboard Information</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dashboard Element</th>
+                    <th>Expected Information</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Live Camera</td>
+                    <td>USB camera with YOLO bounding boxes</td>
+                </tr>
+                <tr>
+                    <td>AI Model</td>
+                    <td>YOLO11n</td>
+                </tr>
+                <tr>
+                    <td>Current Object</td>
+                    <td>Highest-confidence detected class</td>
+                </tr>
+                <tr>
+                    <td>Confidence</td>
+                    <td>Detection confidence percentage</td>
+                </tr>
+                <tr>
+                    <td>Total Count</td>
+                    <td>Recorded detection events</td>
+                </tr>
+                <tr>
+                    <td>Live Graph</td>
+                    <td>Event counts grouped by object class</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        Detection labels and confidence
+        values depend on the available
+        objects, lighting, camera angle
+        and AI model behavior.
+    </div>
+
 </section>
 
+<!-- DASHBOARD -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="AI Object Detection System Dashboard.png"
+            alt="AI Object Detection System Dashboard"
+        >
+
+    </div>
+
+</section>
+
+<!-- RESULT -->
 <section class="section" id="result">
-<h2>Result</h2>
-<p>The AI Object Detection System successfully performs real-time YOLO11n object detection and event-style object counting on Raspberry Pi 4 and displays the results through a Flask web dashboard.</p>
+
+    <h2>Result</h2>
+
+    <p>
+        The AI Object Detection System
+        demonstrates real-time object
+        detection using Raspberry Pi 4,
+        OpenCV and a pretrained YOLO11n model.
+    </p>
+
+    <p>
+        The program detects supported
+        object classes, provides confidence
+        scores, draws bounding boxes
+        and maintains class-wise
+        detection-event counters.
+    </p>
+
+    <p>
+        A Flask web dashboard displays
+        the annotated camera feed,
+        current detection, confidence,
+        total event count and live
+        object-count graph.
+    </p>
+
 </section>
 
-<section class="section">
-<h2>What You Learn</h2>
-<ul><li>Using a USB camera with OpenCV on Raspberry Pi.</li><li>Running a pretrained YOLO11n model locally.</li><li>Applying confidence filtering and bounding boxes.</li><li>Implementing event-style object counting.</li><li>Building a Flask live video and data dashboard.</li></ul>
+<!-- WHAT YOU LEARN -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using Raspberry Pi 4 for computer vision.</li>
+        <li>Connecting a USB camera.</li>
+        <li>Capturing live video using OpenCV.</li>
+        <li>Understanding YOLO11n object detection.</li>
+        <li>Loading pretrained AI model weights.</li>
+        <li>Configuring the confidence threshold.</li>
+        <li>Setting inference image size.</li>
+        <li>Detecting object class labels.</li>
+        <li>Reading detection confidence values.</li>
+        <li>Drawing bounding boxes.</li>
+        <li>Counting class-wise detection events.</li>
+        <li>Using time-based counting intervals.</li>
+        <li>Using Python threading.</li>
+        <li>Encoding images as JPEG.</li>
+        <li>Streaming MJPEG video through Flask.</li>
+        <li>Creating JSON API endpoints.</li>
+        <li>Building a real-time monitoring dashboard.</li>
+        <li>Visualizing object counts using bar graphs.</li>
+    </ul>
+
 </section>
 
 </main>
 
+<!-- FOOTER -->
 <footer>
-<strong>R-Pi Experiment</strong>
-<br>
-AI Object Detection System
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>AI Object Detection System</div>
 </footer>
 
-<script>
-const program="from flask import Flask, Response, jsonify\nfrom ultralytics import YOLO\nimport cv2\nimport threading\nimport time\nfrom collections import defaultdict\napp = Flask(__name__)\n# \n=============================================\n===============\n# SETTINGS\n# \n=============================================\n===============\nMODEL_PATH = \"yolo11n.pt\"\nCAMERA_DEVICE = \"/dev/video0\"\nCONFIDENCE = 0.65\nCAMERA_WIDTH = 640\nCAMERA_HEIGHT = 480\n# Smaller YOLO input for Raspberry Pi processing\nYOLO_SIZE = 320\nJPEG_QUALITY = 80\n# \n=============================================\n===============\n# LOAD YOLO\n# \n=============================================\n===============\nprint(\"\")\nprint(\"======================================\")\nprint(\"Loading YOLO11n...\")\nprint(\"======================================\")\nmodel = YOLO(MODEL_PATH)\nprint(\"YOLO11n loaded successfully\")\n# \n=============================================\n===============\n# OPEN USB CAMERA\n# \n=============================================\n===============\nprint(\"\")\nprint(\"Opening USB camera...\")\ncamera = cv2.VideoCapture(CAMERA_DEVICE)\ncamera.set(\ncv2.CAP_PROP_FRAME_WIDTH,\nCAMERA_WIDTH\n)\ncamera.set(\ncv2.CAP_PROP_FRAME_HEIGHT,\nCAMERA_HEIGHT\n)\ncamera.set(cv2.CAP_PROP_BUFFERSIZE,\n1\n)\nif not camera.isOpened():\nprint(\"ERROR: USB camera cannot be opened\")\nexit()\nprint(\"USB camera opened successfully\")\n# \n=============================================\n===============\n# SHARED VARIABLES\n# \n=============================================\n===============\nlock = threading.Lock()\nlatest_frame = None\noutput_frame = None\ncamera_running = True\n# \n=============================================\n===============\n# OBJECT COUNTS\n# \n=============================================\n===============\nobject_counts = defaultdict(int)\ntotal_detections = 0\nlast_detection_time = {}\ncurrent_object = \"None\"\ncurrent_confidence = 0.0\n# \n=============================================\n===============\n# CAMERA THREAD\n# \n=============================================\n===============\ndef camera_thread():\nglobal latest_frame\nglobal output_frame\nprint(\"Camera thread started\")\nwhile camera_running:\nret, frame = camera.read()\nif not ret:\nprint(\"Camera frame read failed\")\ntime.sleep(0.1)\ncontinue\n# Store latest camera frame\nwith lock:\nlatest_frame = frame.copy()\n# Show raw camera immediately\nif output_frame is None:\nsuccess, jpeg = cv2.imencode(\n\".jpg\",\nframe,\n[\ncv2.IMWRITE_JPEG_QUALITY,\nJPEG_QUALITY\n]\n)\nif success:\noutput_frame = jpeg.tobytes()\n# \n=============================================\n===============\n# YOLO DETECTION THREAD\n# \n=============================================\n===============\ndef detection_thread():\nglobal output_frame\nglobal total_detections\nglobal current_object\nglobal current_confidence\nprint(\"YOLO detection thread started\")\nwhile camera_running:\n# Get latest camera frame\nwith lock:\nif latest_frame is None:\nframe = None\nelse:\nframe = latest_frame.copy()\nif frame is None:\ntime.sleep(0.05)\ncontinue\ntry:\n# ------------------------------------------------\n# YOLO DETECTION\n# ------------------------------------------------\nresults = model.predict(\nsource=frame,\nconf=CONFIDENCE,\nimgsz=YOLO_SIZE,\nverbose=False\n)\nresult = results[0]\n# ------------------------------------------------\n# DRAW DETECTIONS\n# ------------------------------------------------\nannotated_frame = result.plot()\n# ------------------------------------------------\n# FIND DETECTIONS\n# ------------------------------------------------\nbest_object = \"None\"\nbest_confidence = 0.0\nif (\nresult.boxes is not None\nand len(result.boxes) > 0\n):\nfor box in result.boxes:\nclass_id = int(\nbox.cls[0]\n)\nconfidence = float(\nbox.conf[0]\n)\nclass_name = model.names[\nclass_id\n]\n# Find highest confidence object\nif confidence > best_confidence:\nbest_confidence = confidence\nbest_object = class_name\n# --------------------------------------\n# COUNT OBJECT\n# --------------------------------------\ncurrent_time = time.time()\nlast_time = last_detection_time.get(\nclass_name,\n0\n)\n# Count same class once every 2 seconds\nif (\ncurrent_time - last_time\n>= 2\n):\nobject_counts[\nclass_name\n] += 1\ntotal_detections += 1\nlast_detection_time[\nclass_name\n] = current_time\nprint(\n\"Detected:\",\nclass_name,\n\"| Confidence:\",\nf\"{confidence:.2f}\",\n\"| Count:\",\nobject_counts[\nclass_name\n]\n)\n# ----------------------------------------------\n# UPDATE CURRENT DETECTION\n# ----------------------------------------------\ncurrent_object = best_object\ncurrent_confidence = best_confidence\n# ----------------------------------------------\n# ENCODE IMAGE\n# ----------------------------------------------\nsuccess, jpeg = cv2.imencode(\n\".jpg\",\nannotated_frame,\n[\ncv2.IMWRITE_JPEG_QUALITY,\nJPEG_QUALITY\n]\n)\nif success:\nwith lock:\noutput_frame = jpeg.tobytes()\nexcept Exception as e:\nprint(\n\"YOLO error:\",\ne\n)\ntime.sleep(0.2)\n# \n=============================================\n===============\n# VIDEO STREAM\n# \n=============================================\n===============\ndef generate_frames():\nglobal output_frame\nwhile True:\nwith lock:\nframe = output_frame\nif frame is None:\ntime.sleep(0.05)\ncontinue\nyield (\nb\"--frame\\r\\n\"\nb\"Content-Type: image/jpeg\\r\\n\\r\\n\"\n+ frame\n+ b\"\\r\\n\"\n)\n# \n=============================================\n===============\n# DASHBOARD\n# \n=============================================\n===============\n@app.route(\"/\")\ndef index():\nreturn \"\"\"\n<!DOCTYPE html>\n<html>\n<head>\n<title>AI Object Detection Dashboard</title>\n<meta name=\"viewport\"\ncontent=\"width=device-width, initial-scale=1\">\n<style>\n* {\nbox-sizing: border-box;\n}\nbody {\nmargin: 0;\nbackground:\nlinear-gradient(\n135deg,\n#07141c,\n#102b38\n);\ncolor: white;\nfont-family: Arial, sans-serif;\n}\n.header {\ntext-align: center;padding: 22px;\nbackground:\nrgba(0,0,0,0.25); }\n.header h1 {\nmargin: 0;\nfont\n-size: 28px;\n}\n.status {\nmargin\n-top: 8px;\ncolor: #55efc4;\nfont\n-weight: bold;\n}\n.main {\nwidth: 94%;\nmax\n-width: 1200px;\nmargin: auto; }\n/* CAMERA */\n.camera\n-box {\nmargin\n-top: 22px;\nbackground: #000;\nborder\n-radius: 18px;\noverflow: hidden;\nbox\n-shadow:\n0 10px 30px\nrgba(0,0,0,0.5);\nborder: 2px solid #244b5c; }\n.camera\n-box img {\nwidth: 100%;\nheight: auto;\nmin\n-height: 300px;\ndisplay: block;\nobject\n-fit: contain;\n}\n/* CARDS */\n.cards {\ndisplay: grid;\ngrid\n-template\n-columns:\nrepeat(\nauto\n-fit,\nminmax(200px, 1fr)\n);\ngap: 18px;\nmargin\n-top: 20px;\n}\n.card {\nbackground: #172d38;\npadding: 20px;\nborder\n-radius: 15px;\ntext\n-align: center;\n}\n.card\n-icon {\nfont\n-size: 27px;\n}\n.card\n-title {\nmargin\n-top: 8px;\ncolor: #b8c7ce; }\n.card\n-value {\nmargin\n-top: 8px;\nfont\n-size: 24px;\nfont\n-weight: bold;\n}\n/* GRAPH */\n.graph\n-box {\nmargin\n-top: 25px;\nbackground: #172d38;\npadding: 25px;\nborder\n-radius: 18px;\n}\n.graph\n-box h2 {\ntext\n-align: center;\nmargin\n-top: 0;\n}\n.bar\n-row {\ndisplay: flex;\nalign\n-items: center;\nmargin: 15px 0; }\n.bar\n-label {\nwidth: 100px;\nfont\n-weight: bold;\n}\n.bar\n-container {\nflex: 1;\nheight: 30px;\nbackground: #263f4b;\nborder\n-radius: 8px;\noverflow: hidden; }\n.bar {\nheight: 100%;\nbackground:\nlinear\n-gradient(\n90deg,\n#00cec9,\n#0984e3\n);\ntransition:\nwidth 0.5s ease; }\n.bar\n-count {\nwidth: 60px;\ntext\n-align: right;\nfont\n-weight: bold;\n}\n.empty {\ntext\n-align: center;\ncolor: #9fb0b8;\npadding: 20px; }\n.footer {\ntext\n-align: center;\npadding: 30px;color: #9fb0b8; }\n</style>\n</head>\n<body>\n<div class=\"header\">\n<h1>\nAI Object Detection Dashboard\n</h1>\n<div class=\"status\">\nLIVE \n— USB CAMERA\n</div>\n</div>\n<div class=\"main\">\n<!-- LIVE CAMERA --\n>\n<div class=\"camera\n-box\">\n<img\nsrc=\"/video_feed\"\nalt=\"Live USB Camera\" >\n</div>\n<!-- INFORMATION --\n>\n<div class=\"cards\">\n<div class=\"card\">\n<div class=\"card\n-icon\">\nCamera\n</div>\n<div class=\"card\n-title\">\nCamera\n</div>\n<div class=\"card\n-value\">\nUSB Camera\n</div>\n</div>\n<div class=\"card\">\n<div class=\"card\n-icon\">\nAI\n</div>\n<div class=\"card\n-title\">\nAI Model\n</div>\n<div class=\"card\n-value\"\n>\nYOLO11n\n</div>\n</div>\n<div class=\"card\">\n<div class=\"card\n-icon\">\nObject\n</div>\n<div class=\"card\n-title\">\nCurrent Object\n</div>\n<div\nclass=\"card\n-value\"\nid=\"object\">\nNone\n</div>\n</div>\n<div class=\"card\">\n<div class=\"card\n-icon\">\nConfidence\n</div>\n<div class=\"card\n-title\">\nConfidence\n</div>\n<div\nclass=\"card\n-value\"\nid=\"confidence\">\n0%\n</div>\n</div>\n<div class=\"card\">\n<div class=\"card\n-icon\">\nCount\n</div>\n<div class=\"card\n-title\">\nTotal Count\n</div>\n<div\nclass=\"card\n-value\"\nid=\"total\"> 0\n</div>\n</div>\n</div> <!-- GRAPH --\n>\n<div class=\"graph\n-box\">\n<h2>\nObject Detection Count\n</h2>\n<div id=\"graph\">\n<div class=\"empty\">\nWaiting for object detection...\n</div>\n</div>\n</div>\n</div>\n<div class=\"footer\">\nRaspberry Pi 4 •\nUSB Camera •\nYOLO11n\n</div>\n<script>\nfunction updateDashboard() {\nfetch(\"/data\")\n.then(\nresponse =>\nresponse.json() )\n.then(\ndata => {\n/* CURRENT OBJECT */\ndocument.getElementById(\n\"object\").innerText =\ndata.current_object;\n/* CONFIDENCE */\ndocument.getElementById(\n\"confidence\"\n).innerText =\n(\ndata.current_confidence * 100\n).toFixed(1) + \"%\";\n/* TOTAL */\ndocument.getElementById(\n\"total\"\n).innerText =\ndata.total;\n/* GRAPH */\nconst graph =\ndocument.getElementById(\n\"graph\"\n);\nconst counts =\ndata.counts;\nconst names =\nObject.keys(counts);\nif (\nnames.length === 0\n) {\ngraph.innerHTML =\n'<div class=\"empty\">' +\n'Waiting for object detection...' +\n'</div>';\nreturn;\n}\nlet maxCount = 1;\nnames.forEach(\nname => {\nif (\ncounts[name] > maxCount\n) {\nmaxCount =\ncounts[name];\n}\n});\nlet html = \"\";\nnames.forEach(\nname => {\nconst count =\ncounts[name];\nconst width =\n(\ncount / maxCount\n) * 100;\nhtml += `\n<div class=\"bar-row\">\n<div class=\"bar-label\">\n${name}\n</div>\n<div class=\"bar-container\">\n<div\nclass=\"bar\"\nstyle=\"width:${width}%\">\n</div>\n</div>\n<div class=\"bar-count\">\n${count}\n</div>\n</div>\n`;\n});\ngraph.innerHTML =\nhtml;\n})\n.catch(\nerror =>\nconsole.log(error)\n);\n}\n/* Update every second */\nsetInterval(\nupdateDashboard,\n1000\n);\n/* First update */\nupdateDashboard();\n</script>\n</body>\n</html>\n\"\"\"\n# \n=============================================\n===============\n# VIDEO ROUTE\n# \n=============================================\n===============\n@app.route(\"/video_feed\")\ndef video_feed():\nreturn Response(\ngenerate_frames(),\nmimetype=\n\"multipart/x-mixed-replace; boundary=frame\"\n)\n# \n=============================================\n===============\n# DATA ROUTE\n# \n=============================================\n===============\n@app.route(\"/data\")\ndef data():\nwith lock:\ncounts = dict(\nobject_counts\n)\ntotal = total_detections\nobj = current_object\nconf = current_confidence\nreturn jsonify({\n\"counts\": counts,\n\"total\": total,\n\"current_object\": obj,\n\"current_confidence\": conf\n})\n# \n=============================================\n===============\n# START THREADS\n# \n=============================================\n===============\ncamera_worker = threading.Thread(\ntarget=camera_thread,\ndaemon=True\n)\ncamera_worker.start()\ndetection_worker = threading.Thread(\ntarget=detection_thread,\ndaemon=True\n)\ndetection_worker.start()\n# \n=============================================\n===============\n# START SERVER\n# \n=============================================\n===============\nprint(\"\")\nprint(\"======================================\")\nprint(\" AI OBJECT DETECTION SYSTEM\")\nprint(\"======================================\")\nprint(\"\")\nprint(\"Camera : USB Camera\")\nprint(\"Device : /dev/video0\")\nprint(\"Model : YOLO11n\")\nprint(\"YOLO Size :\", YOLO_SIZE)\nprint(\"Confidence :\", CONFIDENCE)\nprint(\"\")\nprint(\"Dashboard:\")\nprint(\"http://192.168.1.166:5000\")\nprint(\"\")\nprint(\"======================================\")\nprint(\"Press CTRL+C to stop\")\nprint(\"======================================\")\nprint(\"\")\napp.run(\nhost=\"0.0.0.0\",\nport=5000,\nthreaded=True\n)";
-const lines=program.split("\n");
-const steps=[
-    {
-        title:"Load the libraries",
-        start:"from flask import Flask",
-        end:"app = Flask(__name__)",
-        text:"The program imports Flask, YOLO, OpenCV, threading, time and collections."
-    },
-    {
-        title:"Set detection settings",
-        start:'MODEL_PATH = "yolo11n.pt"',
-        end:"JPEG_QUALITY = 80",
-        text:"The YOLO11n model, camera device, confidence threshold, image size and JPEG quality are configured."
-    },
-    {
-        title:"Load YOLO11n",
-        start:'print("Loading YOLO11n...")',
-        end:'print("YOLO11n loaded successfully")',
-        text:"The pretrained YOLO11n model is loaded for object detection."
-    },
-    {
-        title:"Open USB camera",
-        start:'print("Opening USB camera...")',
-        end:'print("USB camera opened successfully")',
-        text:"OpenCV opens /dev/video0 and configures the 640 × 480 camera stream."
-    },
-    {
-        title:"Capture camera frames",
-        start:"def camera_thread():",
-        end:"output_frame = jpeg.tobytes()",
-        text:"A camera thread continuously reads and stores the latest frame."
-    },
-    {
-        title:"Run YOLO detection",
-        start:"def detection_thread():",
-        end:"time.sleep(0.2)",
-        text:"A separate thread analyzes frames, identifies objects and finds the highest-confidence detection."
-    },
-    {
-        title:"Count objects",
-        start:"# COUNT OBJECT",
-        end:"] = current_time",
-        text:"Detected classes are counted using a two-second interval to avoid counting the same class every frame."
-    },
-    {
-        title:"Serve live video",
-        start:"def generate_frames():",
-        end:'+ b"\\r\\n"',
-        text:"JPEG frames are streamed to the browser as an MJPEG video feed."
-    },
-    {
-        title:"Start Flask server",
-        start:'print(" AI OBJECT DETECTION SYSTEM")',
-        end:"threaded=True",
-        text:"The dashboard server starts on port 5000 and can be opened from another device on the same network."
+<!-- ======================================
+     COMPLETE PYTHON PROGRAM
+     9 INTERACTIVE CODE SECTIONS
+====================================== -->
+<textarea id="python-program" hidden>
+# [01] LOAD LIBRARIES
+
+from flask import Flask, Response, jsonify
+from ultralytics import YOLO
+import cv2
+import threading
+import time
+import socket
+from collections import defaultdict
+
+# [END 01]
+
+
+# [02] CONFIGURE DETECTION SETTINGS
+
+MODEL_PATH = "yolo11n.pt"
+CAMERA_DEVICE = "/dev/video0"
+
+CONFIDENCE = 0.65
+CAMERA_WIDTH = 640
+CAMERA_HEIGHT = 480
+
+YOLO_SIZE = 320
+JPEG_QUALITY = 80
+
+COUNT_INTERVAL = 2.0
+
+app = Flask(__name__)
+
+lock = threading.Lock()
+
+camera_running = True
+latest_frame = None
+output_frame = None
+
+object_counts = defaultdict(int)
+total_detections = 0
+
+last_detection_time = {}
+
+current_object = "None"
+current_confidence = 0.0
+
+# [END 02]
+
+
+# [03] LOAD YOLO11N MODEL
+
+print("")
+print("======================================")
+print("Loading YOLO11n...")
+print("======================================")
+
+model = YOLO(MODEL_PATH)
+
+print("YOLO11n loaded successfully")
+
+# [END 03]
+
+
+# [04] OPEN USB CAMERA
+
+print("")
+print("Opening USB camera...")
+
+camera = cv2.VideoCapture(
+    CAMERA_DEVICE
+)
+
+camera.set(
+    cv2.CAP_PROP_FRAME_WIDTH,
+    CAMERA_WIDTH
+)
+
+camera.set(
+    cv2.CAP_PROP_FRAME_HEIGHT,
+    CAMERA_HEIGHT
+)
+
+camera.set(
+    cv2.CAP_PROP_BUFFERSIZE,
+    1
+)
+
+if not camera.isOpened():
+
+    raise RuntimeError(
+        "USB camera cannot be opened"
+    )
+
+print("USB camera opened successfully")
+
+# [END 04]
+
+
+# [05] CAPTURE CAMERA FRAMES
+
+def camera_thread():
+
+    global latest_frame
+    global output_frame
+
+    print("Camera thread started")
+
+    while camera_running:
+
+        ret, frame = camera.read()
+
+        if not ret:
+
+            print("Camera frame read failed")
+            time.sleep(0.1)
+            continue
+
+        with lock:
+
+            latest_frame = frame.copy()
+
+            if output_frame is None:
+
+                success, jpeg = cv2.imencode(
+                    ".jpg",
+                    frame,
+                    [
+                        cv2.IMWRITE_JPEG_QUALITY,
+                        JPEG_QUALITY
+                    ]
+                )
+
+                if success:
+                    output_frame = jpeg.tobytes()
+
+        time.sleep(0.01)
+
+# [END 05]
+
+
+# [06] RUN YOLO OBJECT DETECTION
+
+def detection_thread():
+
+    global output_frame
+    global total_detections
+    global current_object
+    global current_confidence
+
+    print("YOLO detection thread started")
+
+    while camera_running:
+
+        with lock:
+
+            frame = (
+                latest_frame.copy()
+                if latest_frame is not None
+                else None
+            )
+
+        if frame is None:
+
+            time.sleep(0.05)
+            continue
+
+        try:
+
+            results = model.predict(
+                source=frame,
+                conf=CONFIDENCE,
+                imgsz=YOLO_SIZE,
+                verbose=False
+            )
+
+            result = results[0]
+
+            annotated_frame = result.plot()
+
+            best_object = "None"
+            best_confidence = 0.0
+
+            detections = []
+
+            if (
+                result.boxes is not None
+                and len(result.boxes) &gt; 0
+            ):
+
+                for box in result.boxes:
+
+                    class_id = int(
+                        box.cls[0]
+                    )
+
+                    confidence = float(
+                        box.conf[0]
+                    )
+
+                    class_name = model.names[
+                        class_id
+                    ]
+
+                    detections.append(
+                        (class_name, confidence)
+                    )
+
+                    if confidence &gt; best_confidence:
+
+                        best_confidence = confidence
+                        best_object = class_name
+
+            # [07] COUNT OBJECT EVENTS
+
+            current_time = time.monotonic()
+
+            # Count one event per class
+            # every two seconds.
+
+            # Avoid duplicate increments
+            # for multiple boxes of the
+            # same class in one frame.
+            unique_classes = {}
+
+            for class_name, confidence in detections:
+
+                unique_classes[class_name] = max(
+                    confidence,
+                    unique_classes.get(
+                        class_name, 0.0
+                    )
+                )
+
+            with lock:
+
+                for class_name, confidence in (
+                    unique_classes.items()
+                ):
+
+                    last_time = (
+                        last_detection_time.get(
+                            class_name,
+                            -COUNT_INTERVAL
+                        )
+                    )
+
+                    if (
+                        current_time - last_time
+                        &gt;= COUNT_INTERVAL
+                    ):
+
+                        object_counts[class_name] += 1
+
+                        total_detections += 1
+
+                        last_detection_time[
+                            class_name
+                        ] = current_time
+
+                        print(
+                            "Detected:",
+                            class_name,
+                            "| Confidence:",
+                            f"{confidence:.2f}",
+                            "| Count:",
+                            object_counts[class_name]
+                        )
+
+                current_object = best_object
+
+                current_confidence = (
+                    best_confidence
+                )
+
+            # [END 07]
+
+            success, jpeg = cv2.imencode(
+                ".jpg",
+                annotated_frame,
+                [
+                    cv2.IMWRITE_JPEG_QUALITY,
+                    JPEG_QUALITY
+                ]
+            )
+
+            if success:
+
+                with lock:
+                    output_frame = jpeg.tobytes()
+
+        except Exception as error:
+
+            print(
+                "YOLO error:",
+                error
+            )
+
+        time.sleep(0.2)
+
+# [END 06]
+
+
+# [08] CREATE FLASK DASHBOARD
+
+def generate_frames():
+
+    while camera_running:
+
+        with lock:
+
+            frame = output_frame
+
+        if frame is None:
+
+            time.sleep(0.05)
+            continue
+
+        yield (
+            b"--frame\r\n"
+            b"Content-Type: image/jpeg\r\n\r\n"
+            + frame
+            + b"\r\n"
+        )
+
+        time.sleep(0.03)
+
+
+@app.route("/")
+def index():
+
+    return """
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+
+&lt;head>
+&lt;meta charset="UTF-8">
+&lt;meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+&lt;title>AI Object Detection Dashboard&lt;/title>
+
+&lt;style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(
+        135deg,
+        #07141c,
+        #102b38
+    );
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    text-align: center;
+    padding: 22px;
+    background: rgba(0,0,0,.25);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.status {
+    margin-top: 8px;
+    color: #55efc4;
+    font-weight: bold;
+}
+
+.main {
+    width: 94%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.camera-box {
+    margin-top: 22px;
+    background: black;
+    border: 2px solid #244b5c;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.camera-box img {
+    display: block;
+    width: 100%;
+    min-height: 240px;
+    object-fit: contain;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(190px,1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.card {
+    padding: 20px;
+    background: #172d38;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.card-icon {
+    font-size: 26px;
+}
+
+.card-title {
+    margin-top: 8px;
+    color: #b8c7ce;
+}
+
+.card-value {
+    margin-top: 8px;
+    font-size: 24px;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.graph-box {
+    margin-top: 25px;
+    padding: 25px;
+    background: #172d38;
+    border-radius: 18px;
+}
+
+.graph-box h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.bar-label {
+    width: 120px;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.bar-container {
+    flex: 1;
+    height: 30px;
+    background: #263f4b;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    background: linear-gradient(
+        90deg,#00cec9,#0984e3
+    );
+}
+
+.bar-count {
+    min-width: 45px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.empty {
+    padding: 20px;
+    color: #9fb0b8;
+    text-align: center;
+}
+
+.footer {
+    padding: 30px;
+    color: #9fb0b8;
+    text-align: center;
+}
+
+@media(max-width:500px) {
+
+    .header h1 {
+        font-size: 23px;
     }
+
+    .bar-label {
+        width: 85px;
+        font-size: 13px;
+    }
+}
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+
+&lt;div class="header">
+
+    &lt;h1>
+        AI Object Detection Dashboard
+    &lt;/h1>
+
+    &lt;div class="status">
+        LIVE - USB CAMERA
+    &lt;/div>
+
+&lt;/div>
+
+&lt;div class="main">
+
+    &lt;div class="camera-box">
+
+        &lt;img
+            src="/video_feed"
+            alt="Live USB Camera"
+        >
+
+    &lt;/div>
+
+    &lt;div class="cards">
+
+        &lt;div class="card">
+
+            &lt;div class="card-icon">
+                Camera
+            &lt;/div>
+
+            &lt;div class="card-title">
+                Camera
+            &lt;/div>
+
+            &lt;div class="card-value">
+                USB Camera
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="card">
+
+            &lt;div class="card-icon">
+                AI
+            &lt;/div>
+
+            &lt;div class="card-title">
+                AI Model
+            &lt;/div>
+
+            &lt;div class="card-value">
+                YOLO11n
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="card">
+
+            &lt;div class="card-icon">
+                Object
+            &lt;/div>
+
+            &lt;div class="card-title">
+                Current Object
+            &lt;/div>
+
+            &lt;div
+                class="card-value"
+                id="object"
+            >
+                None
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="card">
+
+            &lt;div class="card-icon">
+                Confidence
+            &lt;/div>
+
+            &lt;div class="card-title">
+                Confidence
+            &lt;/div>
+
+            &lt;div
+                class="card-value"
+                id="confidence"
+            >
+                0%
+            &lt;/div>
+
+        &lt;/div>
+
+        &lt;div class="card">
+
+            &lt;div class="card-icon">
+                Count
+            &lt;/div>
+
+            &lt;div class="card-title">
+                Total Count
+            &lt;/div>
+
+            &lt;div
+                class="card-value"
+                id="total"
+            >
+                0
+            &lt;/div>
+
+        &lt;/div>
+
+    &lt;/div>
+
+    &lt;div class="graph-box">
+
+        &lt;h2>
+            Object Detection Count
+        &lt;/h2>
+
+        &lt;div id="graph">
+
+            &lt;div class="empty">
+                Waiting for object detection...
+            &lt;/div>
+
+        &lt;/div>
+
+    &lt;/div>
+
+&lt;/div>
+
+&lt;div class="footer">
+    Raspberry Pi 4 | USB Camera | YOLO11n
+&lt;/div>
+
+&lt;script>
+
+async function updateDashboard() {
+
+    try {
+
+        const response = await fetch(
+            "/data",
+            {cache:"no-store"}
+        );
+
+        if (!response.ok) {
+            throw new Error("Data unavailable");
+        }
+
+        const data = await response.json();
+
+        document.getElementById(
+            "object"
+        ).textContent =
+            data.current_object;
+
+        document.getElementById(
+            "confidence"
+        ).textContent =
+            (
+                data.current_confidence * 100
+            ).toFixed(1) + "%";
+
+        document.getElementById(
+            "total"
+        ).textContent =
+            data.total;
+
+        const graph =
+            document.getElementById("graph");
+
+        const counts = data.counts;
+        const names = Object.keys(counts);
+
+        graph.replaceChildren();
+
+        if (names.length === 0) {
+
+            const empty =
+                document.createElement("div");
+
+            empty.className = "empty";
+            empty.textContent =
+                "Waiting for object detection...";
+
+            graph.appendChild(empty);
+            return;
+        }
+
+        const maxCount = Math.max(
+            1,
+            ...Object.values(counts)
+        );
+
+        names.forEach(function(name) {
+
+            const count = counts[name];
+
+            const row =
+                document.createElement("div");
+
+            row.className = "bar-row";
+
+            const label =
+                document.createElement("div");
+
+            label.className = "bar-label";
+            label.textContent = name;
+
+            const container =
+                document.createElement("div");
+
+            container.className =
+                "bar-container";
+
+            const bar =
+                document.createElement("div");
+
+            bar.className = "bar";
+
+            bar.style.width =
+                (count / maxCount * 100) + "%";
+
+            container.appendChild(bar);
+
+            const number =
+                document.createElement("div");
+
+            number.className = "bar-count";
+            number.textContent = count;
+
+            row.append(
+                label,
+                container,
+                number
+            );
+
+            graph.appendChild(row);
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard update failed:",
+            error
+        );
+    }
+}
+
+updateDashboard();
+
+setInterval(
+    updateDashboard,
+    1000
+);
+
+&lt;/script>
+
+&lt;/body>
+&lt;/html>
+"""
+
+
+@app.route("/video_feed")
+def video_feed():
+
+    return Response(
+        generate_frames(),
+        mimetype=(
+            "multipart/x-mixed-replace; "
+            "boundary=frame"
+        )
+    )
+
+
+@app.route("/data")
+def data():
+
+    with lock:
+
+        counts = dict(object_counts)
+
+        total = total_detections
+        obj = current_object
+        conf = current_confidence
+
+    return jsonify({
+        "counts": counts,
+        "total": total,
+        "current_object": obj,
+        "current_confidence": conf
+    })
+
+# [END 08]
+
+
+# [09] START SYSTEM AND FLASK SERVER
+
+def get_local_ip():
+
+    sock = socket.socket(
+        socket.AF_INET,
+        socket.SOCK_DGRAM
+    )
+
+    try:
+
+        sock.connect(("192.0.2.1", 80))
+        return sock.getsockname()[0]
+
+    except OSError:
+
+        return "RASPBERRY_PI_IP"
+
+    finally:
+
+        sock.close()
+
+
+if __name__ == "__main__":
+
+    camera_worker = threading.Thread(
+        target=camera_thread,
+        daemon=True
+    )
+
+    camera_worker.start()
+
+    detection_worker = threading.Thread(
+        target=detection_thread,
+        daemon=True
+    )
+
+    detection_worker.start()
+
+    print("")
+    print("======================================")
+    print(" AI OBJECT DETECTION SYSTEM")
+    print("======================================")
+    print("")
+    print("Camera : USB Camera")
+    print("Device :", CAMERA_DEVICE)
+    print("Model  : YOLO11n")
+    print("YOLO Size :", YOLO_SIZE)
+    print("Confidence :", CONFIDENCE)
+    print("")
+    print("Dashboard:")
+    print(
+        f"http://{get_local_ip()}:5000"
+    )
+    print("")
+    print("Press CTRL+C to stop")
+    print("======================================")
+
+    try:
+
+        app.run(
+            host="0.0.0.0",
+            port=5000,
+            threaded=True,
+            debug=False
+        )
+
+    except KeyboardInterrupt:
+
+        print("Stopping system...")
+
+    finally:
+
+        camera_running = False
+
+        camera_worker.join(timeout=2.0)
+
+        detection_worker.join(timeout=2.0)
+
+        camera.release()
+
+        print("Camera released.")
+        print("System stopped.")
+
+# [END 09]
+</textarea>
+
+<!-- INTERACTIVE CODE EXPLORER -->
+<script>
+
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+const steps = [
+
+    {
+        number:"01",
+        label:"LOAD LIBRARIES",
+        title:"Load Libraries",
+        text:"Imports Flask, YOLO, OpenCV, threading, time, socket and collections."
+    },
+
+    {
+        number:"02",
+        label:"CONFIGURE DETECTION SETTINGS",
+        title:"Configure Detection Settings",
+        text:"Defines the model filename, USB camera, confidence threshold, image size, JPEG quality and shared event-count variables."
+    },
+
+    {
+        number:"03",
+        label:"LOAD YOLO11N MODEL",
+        title:"Load YOLO11n",
+        text:"Loads the pretrained YOLO11n model using the Ultralytics library."
+    },
+
+    {
+        number:"04",
+        label:"OPEN USB CAMERA",
+        title:"Open USB Camera",
+        text:"Opens /dev/video0 through OpenCV and configures a 640 by 480 camera stream."
+    },
+
+    {
+        number:"05",
+        label:"CAPTURE CAMERA FRAMES",
+        title:"Capture Camera Frames",
+        text:"A background thread continuously captures frames and stores the latest image."
+    },
+
+    {
+        number:"06",
+        label:"RUN YOLO OBJECT DETECTION",
+        title:"Run YOLO Detection",
+        text:"Runs YOLO11n inference, draws bounding boxes and identifies the highest-confidence object."
+    },
+
+    {
+        number:"07",
+        label:"COUNT OBJECT EVENTS",
+        title:"Count Object Events",
+        text:"Updates class-wise detection counts using a two-second interval for each class."
+    },
+
+    {
+        number:"08",
+        label:"CREATE FLASK DASHBOARD",
+        title:"Create Flask Dashboard",
+        text:"Defines the browser dashboard, MJPEG live video stream, JSON endpoint and class-count graph."
+    },
+
+    {
+        number:"09",
+        label:"START SYSTEM AND FLASK SERVER",
+        title:"Start Flask Server",
+        text:"Starts the camera and detection threads, hosts the dashboard on port 5000 and releases resources when the application stops."
+    }
+
 ];
 
-function escapeHtml(text){
-    return text
+function escapeHtml(value) {
+
+    return value
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;");
 }
 
-function displayCode(){
-    let output="";
-    lines.forEach(function(line,index){
-        output +=
-        '<span class="code-line" id="line-'+(index+1)+'">' +
-        '<span class="line-number">'+(index+1)+'</span>' +
-        '<span>'+escapeHtml(line)+'</span>' +
-        '</span>';
-    });
-    document.getElementById("code-lines").innerHTML=output;
-}
+function displayCode() {
 
-function findLine(searchText,startIndex=0){
-    for(let i=startIndex;i<lines.length;i++){
-        if(lines[i].includes(searchText)){
-            return i;
+    const container =
+        document.getElementById("code-lines");
+
+    container.innerHTML = lines.map(
+        function(line,index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index+1) + '">' +
+                '<span class="line-number">' +
+                (index+1) + '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span></span>'
+            );
         }
-    }
-    return -1;
+    ).join("");
 }
 
-function showStep(index){
-    const step=steps[index];
+function findMarker(marker) {
 
-    const buttons=document.querySelectorAll(".step");
-    buttons.forEach(function(button){
-        button.classList.remove("active");
-    });
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
 
-    if(buttons[index]){
-        buttons[index].classList.add("active");
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "# [" + step.number + "] " + step.label
+        );
+
+        const end = findMarker(
+            "# [END " + step.number + "]"
+        );
+
+        return {
+            start:start,
+            end:end,
+            valid:start>=0 && end>=start
+        };
     }
+);
 
-    document.querySelectorAll(".code-line").forEach(function(line){
-        line.classList.remove("selected");
-    });
+function createSteps() {
 
-    const startLine=findLine(step.start);
+    const container =
+        document.getElementById("steps-list");
 
-    if(startLine===-1){
-        console.warn("Start marker not found:",step.start);
+    steps.forEach(
+        function(step,index) {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement("span");
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title =
+                document.createElement("span");
+
+            title.textContent = step.title;
+
+            button.append(number,title);
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+function showStep(index) {
+
+    document.querySelectorAll(".step").forEach(
+        function(button,i) {
+            button.classList.toggle(
+                "active",i===index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+            line.classList.remove("selected");
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement("h3");
+
+    heading.textContent =
+        (index+1) + ". " + step.title;
+
+    const paragraph =
+        document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,paragraph
+    );
+
+    if(!range.valid) {
+
+        paragraph.textContent =
+            "Matching code markers not found.";
+
         return;
     }
 
-    let endLine=findLine(step.end,startLine);
+    for(let i=range.start;i<=range.end;i++) {
 
-    if(endLine===-1){
-        endLine=startLine;
-    }
+        const element =
+            document.getElementById(
+                "line-" + (i+1)
+            );
 
-    for(let i=startLine;i<=endLine;i++){
-        const line=document.getElementById("line-"+(i+1));
-        if(line){
-            line.classList.add("selected");
+        if(element) {
+            element.classList.add("selected");
         }
     }
 
-    const selectedLine=document.getElementById("line-"+(startLine+1));
-    const codeBody=document.getElementById("code-body");
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start+1)
+        );
 
-    if(selectedLine && codeBody){
+    const codeBody =
+        document.getElementById("code-body");
+
+    if(firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
         codeBody.scrollTo({
-            top:selectedLine.offsetTop-codeBody.offsetTop-20,
+            top:codeBody.scrollTop+offset-20,
             behavior:"smooth"
         });
     }
-
-    document.getElementById("explanation").innerHTML =
-        "<h3>"+(index+1)+". "+step.title+"</h3>" +
-        "<p>"+step.text+"</p>";
 }
 
-function copyCode(){
-    navigator.clipboard.writeText(program).then(function(){
-        const button=document.querySelector(".copy-button");
-        button.innerText="Copied!";
-        setTimeout(function(){
-            button.innerText="Copy Code";
-        },1500);
-    });
+async function copyCode() {
+
+    const button =
+        document.querySelector(".copy-button");
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement("textarea");
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch(error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if(success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if(
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(program);
+            copied();
+
+        } catch(error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
 
 displayCode();
+createSteps();
 showStep(0);
+
 </script>
 
 </body>
