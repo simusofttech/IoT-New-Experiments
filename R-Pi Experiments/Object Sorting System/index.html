@@ -1,113 +1,1188 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Object Sorting System</title>
+
 <style>
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
-.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
-.header h1{margin:0 0 8px;font-size:34px;}
-.header p{margin:0;font-size:17px;}
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
-.container{width:90%;max-width:1050px;margin:35px auto;}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
-.section h3{color:#1e3a8a;} ul,ol{padding-left:24px;} li{margin-bottom:8px;}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
-.component-card p{color:#475569;font-size:14px;margin:0;}
-.table-wrap{overflow-x:auto;} table{width:100%;min-width:620px;border-collapse:collapse;} th,td{padding:12px;border:1px solid #ddd;text-align:left;} th{background:#2563eb;color:white;} tr:nth-child(even){background:#f8fafc;}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px;}
-.code-lesson{color:#142e3a;} .eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
-.lesson-title{font-size:32px !important;margin:0 0 8px !important;color:#1e3a8a !important;border:0 !important;padding:0 !important;}
-.intro{color:#526875;margin:0 0 22px;}
-.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
-.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
-.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
-.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
-.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
-.copy-button:hover{background:#eff6ff;}
-.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
-.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
-.code-line:hover{background:#f8fbff;} .code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
-.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
-.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;} .guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;} .guide>p{color:#526875;font-size:15px;}
-.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
-.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
-.step:hover{border-color:#60a5fa;background:#f8fbff;} .step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;} .step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
-.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;} .explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;} .explanation p{margin:0;color:#526875;font-size:15px;}
-.guide details{border-top:1px solid #dce6e9;margin-top:15px;} .guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;} .guide details p,.guide details li{color:#526875;font-size:15px;} .guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
-.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;} footer strong{color:white;}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+/* =====================================
+   GENERAL
+===================================== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font: 16px/1.7 Arial, Helvetica, sans-serif;
+}
+
+/* =====================================
+   HEADER
+===================================== */
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
+    text-align: center;
+}
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    object-fit: contain;
+}
+
+.header-content {
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0, 0, 0, .12);
+}
+
+.header-left-buttons,
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-nav-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+}
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* =====================================
+   NAVIGATION
+===================================== */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+    scroll-margin-top: 100px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =====================================
+   THUMBNAIL
+===================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* =====================================
+   COMPONENTS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+/* =====================================
+   CIRCUIT DIAGRAM
+===================================== */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* =====================================
+   WORKING FLOW
+===================================== */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-step {
+    padding: 5px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* =====================================
+   CODE EXPLORER
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, .10);
+}
+
+.code-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+
+/* =====================================
+   CODE EXPLANATION
+===================================== */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* =====================================
+   EXPECTED OUTPUT
+===================================== */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* =====================================
+   DASHBOARD IMAGE
+===================================== */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+@media(max-width:900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media(max-width:600px) {
+    .header {
+        padding: 15px 0 0;
+    }
+
+    .header-logo {
+        top: 12px;
+        left: 12px;
+        width: 95px;
+        max-height: 60px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
+    }
+}
 </style>
 </head>
+
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
-    <h1>Object Sorting System</h1>
-    <p>Raspberry Pi computer-vision experiment</p>
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Object Sorting System</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a href="../index.html" class="header-nav-btn">
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >
+                Arduino
+            </a>
+
+            <a
+                href="../../ESP32 CAM Experiments/index.html"
+                class="header-nav-btn"
+            >
+                ESP
+            </a>
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                R-Pi
+            </a>
+
+        </div>
+
+    </div>
+
 </header>
 
+<!-- =====================================
+     NAVIGATION
+===================================== -->
 <nav>
-    <a href="../index.html">← R-Pi Experiments</a>
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
     <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
     <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Object Sorting System.png"
+        alt="Object Sorting System Thumbnail"
+    >
+
+</section>
+
+<!-- =====================================
+     AIM
+===================================== -->
 <section class="section" id="aim">
+
     <h2>Aim</h2>
-    <p>To build a Raspberry Pi based computer-vision system that captures an object using a USB webcam, performs YOLOv5n ONNX inference, and displays the detected object class and software sorting recommendation.</p>
+
+    <p>
+        To develop an Object Sorting
+        System using Raspberry Pi 4
+        Model B, USB webcam, OpenCV,
+        YOLOv5n ONNX model and ONNX
+        Runtime to detect objects,
+        display their class names
+        and confidence scores,
+        and recommend suitable
+        sorting bins through software.
+    </p>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     ABOUT
+===================================== -->
+<section class="section" id="about">
+
     <h2>About the Experiment</h2>
-    <p>The Object Sorting System uses a Raspberry Pi 4B, USB webcam, OpenCV and ONNX Runtime. The webcam captures an object, the software preprocesses the frame and the YOLOv5n ONNX model identifies the detected class.</p>
-    <p>The detected class, confidence value and software recommendation are displayed on screen. This experiment does not use a conveyor belt or automatic mechanical sorting mechanism.</p>
+
+    <p>
+        The Object Sorting System
+        demonstrates computer vision,
+        real-time object recognition
+        and software-based sorting
+        recommendations.
+    </p>
+
+    <p>
+        The Raspberry Pi 4 Model B
+        captures live video through
+        a USB webcam connected
+        to the USB interface.
+    </p>
+
+    <p>
+        OpenCV preprocesses each camera
+        frame and converts the image
+        into a format compatible
+        with the YOLOv5n ONNX model.
+    </p>
+
+    <p>
+        The model performs inference
+        using ONNX Runtime with
+        the CPU Execution Provider.
+    </p>
+
+    <p>
+        The program analyzes prediction
+        confidence values and bounding
+        boxes, then applies
+        Non-Maximum Suppression
+        to remove overlapping detections.
+    </p>
+
+    <p>
+        Each detected object is
+        identified using its class
+        label. The software recommends
+        a sorting bin using a
+        manually defined mapping.
+    </p>
+
+    <p>
+        The detected object name,
+        confidence percentage,
+        bounding box and bin
+        recommendation are displayed
+        on the live camera window.
+    </p>
+
+    <p>
+        The system does not perform
+        physical sorting. It does
+        not use servo motors,
+        conveyor belts or
+        automatic sorting gates.
+    </p>
+
+    <h3>Object Sorting Recommendations</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Detected Object</th>
+                    <th>Software Recommendation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Bottle</td>
+                    <td>BLUE BIN</td>
+                </tr>
+
+                <tr>
+                    <td>Apple</td>
+                    <td>GREEN BIN</td>
+                </tr>
+
+                <tr>
+                    <td>Orange</td>
+                    <td>ORANGE BIN</td>
+                </tr>
+
+                <tr>
+                    <td>Banana</td>
+                    <td>YELLOW BIN</td>
+                </tr>
+
+                <tr>
+                    <td>Other detected object</td>
+                    <td>BLACK BIN / UNKNOWN</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Sorting Logic:</strong>
+
+        <p>
+            These recommendations are
+            educational labels defined
+            by the programmer. The
+            model recognizes object
+            categories, not the
+            actual material or
+            recyclability of an item.
+        </p>
+
+    </div>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+
+                <tr>
+                    <td>Camera</td>
+                    <td>USB Webcam</td>
+                </tr>
+
+                <tr>
+                    <td>Camera Device</td>
+                    <td>/dev/video0</td>
+                </tr>
+
+                <tr>
+                    <td>Camera Interface</td>
+                    <td>V4L2</td>
+                </tr>
+
+                <tr>
+                    <td>Camera Resolution</td>
+                    <td>640 × 480</td>
+                </tr>
+
+                <tr>
+                    <td>AI Model</td>
+                    <td>YOLOv5n ONNX</td>
+                </tr>
+
+                <tr>
+                    <td>Model Filename</td>
+                    <td>yolov5n.onnx</td>
+                </tr>
+
+                <tr>
+                    <td>Model Directory</td>
+                    <td>models</td>
+                </tr>
+
+                <tr>
+                    <td>AI Input Resolution</td>
+                    <td>640 × 640</td>
+                </tr>
+
+                <tr>
+                    <td>Confidence Threshold</td>
+                    <td>0.45</td>
+                </tr>
+
+                <tr>
+                    <td>NMS Threshold</td>
+                    <td>0.45</td>
+                </tr>
+
+                <tr>
+                    <td>Class Labels</td>
+                    <td>COCO 80-class label list</td>
+                </tr>
+
+                <tr>
+                    <td>Inference Library</td>
+                    <td>ONNX Runtime</td>
+                </tr>
+
+                <tr>
+                    <td>Execution Provider</td>
+                    <td>CPUExecutionProvider</td>
+                </tr>
+
+                <tr>
+                    <td>Display</td>
+                    <td>OpenCV Window</td>
+                </tr>
+
+                <tr>
+                    <td>Exit Key</td>
+                    <td>Q</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Object Detection Logic</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Step</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Capture</td>
+                    <td>Capture a USB camera frame</td>
+                </tr>
+
+                <tr>
+                    <td>Preprocess</td>
+                    <td>Resize to 640 × 640, normalize and convert to NCHW</td>
+                </tr>
+
+                <tr>
+                    <td>Inference</td>
+                    <td>Run YOLOv5n through ONNX Runtime</td>
+                </tr>
+
+                <tr>
+                    <td>Filter</td>
+                    <td>Calculate combined confidence and apply NMS</td>
+                </tr>
+
+                <tr>
+                    <td>Classify</td>
+                    <td>Identify the detected object</td>
+                </tr>
+
+                <tr>
+                    <td>Recommend</td>
+                    <td>Find a bin name from the software mapping</td>
+                </tr>
+
+                <tr>
+                    <td>Display</td>
+                    <td>Show label, confidence, bounding box and recommendation</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Model Compatibility:</strong>
+
+        <p>
+            The Python program expects
+            raw YOLOv5 detection predictions
+            containing bounding-box
+            coordinates, objectness
+            confidence and 80 class scores.
+        </p>
+
+        <p>
+            Different YOLOv5 ONNX exports
+            may have different output
+            layouts or built-in NMS.
+            Verify the actual model's
+            input and output shapes.
+        </p>
+
+        <p>
+            The original image preprocessing
+            directly resizes to 640 × 640
+            rather than applying letterbox
+            padding. This may affect
+            detection accuracy compared
+            with the model's original
+            training preprocessing.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     COMPONENTS
+===================================== -->
 <section class="section" id="components">
+
     <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
-            <img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B">
+
+            <img
+                src="Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
+            >
+
             <h4>Raspberry Pi 4 Model B (×1)</h4>
-            <p>Main processing unit that runs OpenCV and ONNX Runtime.</p>
+
+            <p>
+                Processes the live camera
+                feed and executes YOLOv5n
+                ONNX inference.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="USB Camera.png" alt="USB Webcam">
+
+            <img
+                src="USB Camera.png"
+                alt="USB Webcam"
+            >
+
             <h4>USB Webcam (×1)</h4>
-            <p>Captures live object images for computer-vision processing.</p>
+
+            <p>
+                Captures object images
+                for real-time
+                classification.
+            </p>
+
         </div>
 
         <div class="component-card">
-            <img src="Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply">
+
+            <img
+                src="Raspberry Pi Power Supply.png"
+                alt="Raspberry Pi Power Supply"
+            >
+
             <h4>Raspberry Pi Power Supply (×1)</h4>
-            <p>Provides stable power to the Raspberry Pi.</p>
+
+            <p>
+                Provides regulated
+                electrical power
+                to the Raspberry Pi.
+            </p>
+
         </div>
 
     </div>
+
+    <div class="note">
+
+        <strong>Software Requirements:</strong>
+
+        <ul>
+            <li>Raspberry Pi OS</li>
+            <li>Python 3</li>
+            <li>OpenCV</li>
+            <li>NumPy</li>
+            <li>ONNX Runtime</li>
+            <li>YOLOv5n ONNX model — yolov5n.onnx</li>
+        </ul>
+
+        <p>
+            No additional GPIO sensors,
+            motor drivers or servo motors
+            are required because the
+            experiment generates only
+            on-screen recommendations.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     CONNECTIONS
+===================================== -->
 <section class="section" id="connections">
+
     <h2>Circuit Connections</h2>
 
     <div class="table-wrap">
@@ -115,7 +1190,7 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
             <thead>
                 <tr>
                     <th>Component</th>
-                    <th>Connection</th>
+                    <th>Interface</th>
                     <th>Raspberry Pi Connection</th>
                 </tr>
             </thead>
@@ -124,70 +1199,228 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
                 <tr>
                     <td>USB Webcam</td>
                     <td>USB</td>
-                    <td>Any Raspberry Pi USB port</td>
+                    <td>Available Raspberry Pi USB Port</td>
                 </tr>
 
                 <tr>
                     <td>Raspberry Pi Power Supply</td>
                     <td>USB-C Power</td>
-                    <td>Raspberry Pi USB-C power input</td>
+                    <td>Raspberry Pi USB-C Power Input</td>
                 </tr>
             </tbody>
         </table>
     </div>
+
+    <h3>Connection Procedure</h3>
+
+    <ol>
+        <li>Connect the USB webcam to an available Raspberry Pi USB port.</li>
+        <li>Connect the Raspberry Pi power supply.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Verify that the webcam is available as <code>/dev/video0</code>.</li>
+    </ol>
+
+    <div class="note">
+
+        <strong>Connection Note:</strong>
+
+        <p>
+            The webcam connects through
+            USB. No Raspberry Pi GPIO
+            wiring is required.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     CIRCUIT DIAGRAM
+===================================== -->
 <section class="section" id="circuit">
+
     <h2>Circuit Diagram</h2>
 
     <img
         class="circuit-img"
         src="Object Sorting System Circuit.png"
-        alt="Object Sorting System Circuit">
+        alt="Object Sorting System Circuit Diagram"
+    >
+
 </section>
 
+<!-- =====================================
+     WORKING PRINCIPLE
+===================================== -->
 <section class="section" id="working">
+
     <h2>Working Principle</h2>
 
     <div class="flow">
-        USB Webcam
-        <br>↓<br>
-        Raspberry Pi 4B
-        <br>↓<br>
-        OpenCV Frame Capture
-        <br>↓<br>
-        Image Preprocessing
-        <br>↓<br>
-        YOLOv5n ONNX Inference
-        <br>↓<br>
-        Object Class + Confidence
-        <br>↓<br>
-        Software Sorting Recommendation
+
+        <div class="flow-step">
+            USB Webcam Captures Object
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Raspberry Pi Receives Camera Frame
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            OpenCV Preprocesses Image
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            YOLOv5n ONNX Performs Inference
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Calculate Detection Confidence
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Apply Non-Maximum Suppression
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Identify Object Class
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Look Up Software Bin Recommendation
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Show Bounding Box, Confidence and Bin
+        </div>
+
     </div>
+
+    <h3>Camera Capture</h3>
+
+    <p>
+        OpenCV captures live
+        frames from the USB
+        webcam using V4L2.
+    </p>
+
+    <h3>Image Preprocessing</h3>
+
+    <p>
+        The camera frame is resized
+        to 640 × 640 pixels,
+        converted from BGR to RGB,
+        normalized to floating-point
+        values and rearranged into
+        NCHW tensor format.
+    </p>
+
+    <h3>ONNX Model Inference</h3>
+
+    <p>
+        ONNX Runtime runs the YOLOv5n
+        model and returns candidate
+        object detections.
+    </p>
+
+    <h3>Confidence Filtering</h3>
+
+    <p>
+        The program multiplies
+        objectness confidence
+        by the selected class
+        confidence and applies
+        the 0.45 threshold.
+    </p>
+
+    <h3>Non-Maximum Suppression</h3>
+
+    <p>
+        NMS removes overlapping
+        detection boxes according
+        to the configured threshold.
+    </p>
+
+    <h3>Software Sorting</h3>
+
+    <p>
+        The detected class is
+        compared with the manual
+        bin mapping. Supported
+        classes receive a defined
+        recommendation, while other
+        classes receive
+        BLACK BIN / UNKNOWN.
+    </p>
+
+    <h3>Output Display</h3>
+
+    <p>
+        The OpenCV window shows
+        the object label,
+        confidence percentage,
+        bounding box and
+        sorting recommendation.
+    </p>
+
 </section>
 
+<!-- =====================================
+     PROCEDURE
+===================================== -->
 <section class="section" id="procedure">
+
     <h2>Procedure</h2>
 
     <ol>
+        <li>Arrange the Raspberry Pi 4 Model B, USB webcam and Raspberry Pi power supply.</li>
         <li>Connect the USB webcam to the Raspberry Pi.</li>
-        <li>Power the Raspberry Pi using the Raspberry Pi power supply.</li>
-        <li>Create the ObjectSorting project directory and virtual environment.</li>
+        <li>Power the Raspberry Pi and boot Raspberry Pi OS.</li>
+        <li>Open Terminal.</li>
+        <li>Check the webcam using <code>ls /dev/video*</code>.</li>
+        <li>Verify that the desired webcam is accessible as <code>/dev/video0</code>.</li>
+        <li>Create the <code>ObjectSorting</code> experiment directory.</li>
+        <li>Create a <code>models</code> subdirectory.</li>
+        <li>Create and activate a Python virtual environment.</li>
         <li>Install OpenCV, NumPy and ONNX Runtime.</li>
-        <li>Place the verified <strong>yolov5n.onnx</strong> model inside the <strong>models</strong> folder.</li>
-        <li>Confirm that the USB webcam is available as <strong>/dev/video0</strong>.</li>
-        <li>Save the Python program below as <strong>main.py</strong>.</li>
-        <li>Activate the virtual environment.</li>
-        <li>Run <strong>python main.py</strong>.</li>
-        <li>Place one object clearly in front of the webcam.</li>
-        <li>Observe the detected class, confidence and recommendation displayed on screen.</li>
-        <li>Press <strong>Q</strong> to stop the program.</li>
+        <li>Place the trained <code>yolov5n.onnx</code> file inside the models directory.</li>
+        <li>Check that the model supports the expected 640 × 640 input and raw YOLOv5 detection output.</li>
+        <li>Copy the complete Python code from Explore the Code.</li>
+        <li>Save the code as <code>main.py</code>.</li>
+        <li>Run <code>python main.py</code> in a graphical desktop session.</li>
+        <li>Verify that the webcam opens successfully.</li>
+        <li>Place a bottle in front of the webcam.</li>
+        <li>Observe the BLUE BIN recommendation if the bottle is detected.</li>
+        <li>Repeat with apple, orange and banana.</li>
+        <li>Observe the class label and confidence value.</li>
+        <li>Test an object that is not included in the manual bin mapping.</li>
+        <li>Observe BLACK BIN / UNKNOWN when another supported class is detected.</li>
+        <li>Press <code>Q</code> to stop the program.</li>
+        <li>Confirm that the webcam and OpenCV window close.</li>
     </ol>
+
 </section>
 
+<!-- =====================================
+     EXPLORE THE CODE
+===================================== -->
 <section class="section" id="code">
-
-<div class="code-lesson">
 
     <p class="eyebrow">
         Raspberry Pi Experiment · Code Review
@@ -198,7 +1431,10 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
     </h2>
 
     <p class="intro">
-        Object Sorting System · Select a step to see the matching code lines.
+        Select any explanation tab
+        to highlight the exact matching
+        source-code section. Copy Code
+        copies the full Python script.
     </p>
 
     <div class="code-layout">
@@ -206,195 +1442,122 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
         <article class="code-panel">
 
             <div class="code-top">
-                <span class="filename">main.py</span>
+
+                <span class="filename">
+                    main.py
+                </span>
 
                 <button
+                    type="button"
                     class="copy-button"
-                    onclick="copyCode()">
+                    onclick="copyCode()"
+                >
                     Copy Code
                 </button>
+
             </div>
 
-            <div
-                class="code-body"
-                id="code-body">
-
+            <div class="code-body" id="code-body">
                 <code id="code-lines"></code>
-
             </div>
 
         </article>
 
         <article class="guide">
 
-            <h2>
-                Understand it step by step
-            </h2>
+            <h2>Understand it step by step</h2>
 
             <p>
-                Choose a step. The matching code will light up on the left.
+                Select a tab to see
+                its corresponding code
+                highlighted in blue.
             </p>
 
-            <div class="steps">
-                
-                <button
-                    class="step active"
-                    onclick="showStep(0)">
-
-                    <span class="step-number">
-                        01
-                    </span>
-
-                    Load libraries
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(1)">
-
-                    <span class="step-number">
-                        02
-                    </span>
-
-                    Set model and camera
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(2)">
-
-                    <span class="step-number">
-                        03
-                    </span>
-
-                    Define classes and mapping
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(3)">
-
-                    <span class="step-number">
-                        04
-                    </span>
-
-                    Preprocess image
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(4)">
-
-                    <span class="step-number">
-                        05
-                    </span>
-
-                    Load ONNX model
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(5)">
-
-                    <span class="step-number">
-                        06
-                    </span>
-
-                    Open USB camera
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(6)">
-
-                    <span class="step-number">
-                        07
-                    </span>
-
-                    Run detection
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(7)">
-
-                    <span class="step-number">
-                        08
-                    </span>
-
-                    Filter detections
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(8)">
-
-                    <span class="step-number">
-                        09
-                    </span>
-
-                    Show result
-
-                </button>
-                <button
-                    class="step"
-                    onclick="showStep(9)">
-
-                    <span class="step-number">
-                        10
-                    </span>
-
-                    Stop safely
-
-                </button>
-            </div>
+            <div class="steps" id="steps-list"></div>
 
             <div
                 class="explanation"
-                id="explanation">
-
-                <h3>
-                    1. Load libraries
-                </h3>
-
-                <p>
-                    OpenCV handles the camera, NumPy prepares image data and ONNX Runtime performs model inference.
-                </p>
-
-            </div>
+                id="explanation"
+                aria-live="polite"
+            ></div>
 
             <details>
-                <summary>
-                    Explore more: ONNX object detection
-                </summary>
+                <summary>Explore More: YOLOv5n</summary>
 
                 <p>
-                    The verified model uses 640 × 640 input and runs through
-                    ONNX Runtime using the CPUExecutionProvider.
+                    YOLOv5n is a compact
+                    object-detection model.
+                    The ONNX model used here
+                    is expected to recognize
+                    COCO object classes.
                 </p>
             </details>
 
             <details>
-                <summary>
-                    Check your understanding
-                </summary>
+                <summary>Explore More: ONNX Runtime</summary>
 
-                <ul>
-                    <li>
-                        Which camera device is used?
-                        <strong>/dev/video0</strong>
-                    </li>
+                <p>
+                    ONNX Runtime loads
+                    and executes the
+                    exported YOLOv5n
+                    model on the CPU.
+                </p>
+            </details>
 
-                    <li>
-                        Which model is loaded?
-                        <strong>YOLOv5n ONNX</strong>
-                    </li>
+            <details>
+                <summary>Explore More: Preprocessing</summary>
 
-                    <li>
-                        Which library performs inference?
-                        <strong>ONNX Runtime</strong>
-                    </li>
-                </ul>
+                <p>
+                    The frame is resized,
+                    converted to RGB,
+                    normalized and
+                    rearranged into
+                    NCHW tensor format.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: NMS</summary>
+
+                <p>
+                    Non-Maximum Suppression
+                    reduces duplicate
+                    overlapping detections.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Bin Mapping</summary>
+
+                <p>
+                    A Python dictionary
+                    maps selected object
+                    classes to software
+                    bin recommendations.
+                    It does not control
+                    physical bins.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+
+                <ol>
+                    <li>Which camera device is used?</li>
+                    <li>Which model performs inference?</li>
+                    <li>What is the model input resolution?</li>
+                    <li>Which library executes the ONNX model?</li>
+                    <li>What confidence threshold is used?</li>
+                    <li>Which bin is recommended for a bottle?</li>
+                    <li>Which key stops the experiment?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    /dev/video0; YOLOv5n ONNX;
+                    640 × 640; ONNX Runtime;
+                    0.45; BLUE BIN; Q.
+                </p>
             </details>
 
         </article>
@@ -402,266 +1565,1274 @@ footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font
     </div>
 
     <p class="tip">
-        <strong>Try it:</strong>
-        Keep one object centered and clearly visible in the camera frame
-        for more stable detection.
+
+        <strong>Try It:</strong>
+
+        Place a bottle, apple,
+        orange and banana one at
+        a time in front of the
+        camera. Compare the
+        detected class and
+        recommended bin.
+
     </p>
 
-</div>
-
 </section>
 
-<section class="section">
+<!-- =====================================
+     EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
     <h2>Expected Output</h2>
-    <p>The camera window opens and displays the detected object name, confidence value and the software sorting recommendation. When no supported object is detected, the system shows <strong>NO OBJECT DETECTED</strong>.</p>
+
+    <h3>Terminal — Startup</h3>
+
+    <div class="output-box">
+<pre>============================================================
+OBJECT SORTING SYSTEM
+============================================================
+
+Model loaded successfully.
+Opening camera: /dev/video0
+
+Camera opened successfully.
+Place one object in front of the camera.
+Press Q to quit.</pre>
+    </div>
+
+    <h3>Bottle Detection</h3>
+
+    <div class="output-box">
+<pre>Detected: bottle (91.5%) -> BLUE BIN</pre>
+    </div>
+
+    <h3>Apple Detection</h3>
+
+    <div class="output-box">
+<pre>Detected: apple (88.2%) -> GREEN BIN</pre>
+    </div>
+
+    <h3>Banana Detection</h3>
+
+    <div class="output-box">
+<pre>Detected: banana (87.4%) -> YELLOW BIN</pre>
+    </div>
+
+    <h3>Unknown Sorting Recommendation</h3>
+
+    <div class="output-box">
+<pre>Detected: cup (86.0%) -> BLACK BIN / UNKNOWN</pre>
+    </div>
+
+    <h3>OpenCV Camera Window</h3>
+
+    <div class="output-box">
+<pre>Object Sorting System
+
+[Live camera image]
+
+bottle: 91.5%
+[Bounding Box]
+
+PUT IN: BLUE BIN</pre>
+    </div>
+
+    <h3>Functional Output</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Bottle detected</td>
+                    <td>BLUE BIN</td>
+                </tr>
+
+                <tr>
+                    <td>Apple detected</td>
+                    <td>GREEN BIN</td>
+                </tr>
+
+                <tr>
+                    <td>Orange detected</td>
+                    <td>ORANGE BIN</td>
+                </tr>
+
+                <tr>
+                    <td>Banana detected</td>
+                    <td>YELLOW BIN</td>
+                </tr>
+
+                <tr>
+                    <td>Other detected class</td>
+                    <td>BLACK BIN / UNKNOWN</td>
+                </tr>
+
+                <tr>
+                    <td>No detection passes filtering</td>
+                    <td>NO OBJECT DETECTED</td>
+                </tr>
+
+                <tr>
+                    <td>Q key pressed</td>
+                    <td>Program stops and camera closes</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Note:</strong>
+
+        <p>
+            Confidence values are
+            illustrative examples.
+            Actual object detection
+            depends on the model,
+            camera angle, lighting
+            and object visibility.
+        </p>
+
+        <p>
+            If multiple objects are
+            detected, multiple labels
+            and recommendations may be
+            produced. The original
+            software is intended
+            primarily for one clearly
+            visible object at a time.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =====================================
+     DASHBOARD
+===================================== -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="Object Sorting System Dashboard.png"
+            alt="Object Sorting System Output Screenshot"
+        >
+
+    </div>
+
+    <p>
+        This section displays
+        the experiment's output
+        screenshot once the
+        matching PNG is uploaded.
+    </p>
+
+    <p>
+        The supplied Python program
+        uses an OpenCV camera window
+        and does not provide a
+        browser-based dashboard.
+    </p>
+
+</section>
+
+<!-- =====================================
+     RESULT
+===================================== -->
 <section class="section" id="result">
+
     <h2>Result</h2>
-    <p>The Raspberry Pi successfully captures live video, performs YOLOv5n ONNX inference and displays object-detection results in real time.</p>
+
+    <p>
+        The Object Sorting System
+        demonstrates real-time
+        computer vision using
+        Raspberry Pi 4 Model B,
+        USB webcam, OpenCV and
+        YOLOv5n ONNX inference.
+    </p>
+
+    <p>
+        The program detects
+        supported objects,
+        displays their labels,
+        confidence percentages
+        and bounding boxes,
+        and generates software
+        sorting recommendations
+        using a predefined
+        Python dictionary.
+    </p>
+
+    <p>
+        The experiment demonstrates
+        the integration of
+        object detection and
+        classification-based
+        decision-making without
+        mechanical sorting.
+    </p>
+
 </section>
 
-<section class="section">
+<!-- =====================================
+     WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
+
     <h2>What You Learn</h2>
 
     <ul>
-        <li>USB webcam interfacing with Raspberry Pi.</li>
-        <li>Real-time video capture using OpenCV.</li>
-        <li>Image preprocessing for an ONNX model.</li>
-        <li>YOLO object detection basics.</li>
-        <li>ONNX Runtime CPU inference.</li>
-        <li>Confidence filtering and Non-Maximum Suppression.</li>
-        <li>Displaying detection results on a live camera frame.</li>
+        <li>Using Raspberry Pi 4 Model B for computer vision.</li>
+        <li>Connecting a USB webcam.</li>
+        <li>Capturing video frames using OpenCV.</li>
+        <li>Understanding YOLOv5n object detection.</li>
+        <li>Loading ONNX model files.</li>
+        <li>Running inference using ONNX Runtime.</li>
+        <li>Using the CPU Execution Provider.</li>
+        <li>Resizing camera frames for AI inference.</li>
+        <li>Converting BGR images to RGB.</li>
+        <li>Normalizing image pixel values.</li>
+        <li>Understanding NCHW image tensors.</li>
+        <li>Interpreting class confidence values.</li>
+        <li>Using confidence thresholds.</li>
+        <li>Applying Non-Maximum Suppression.</li>
+        <li>Working with COCO object classes.</li>
+        <li>Using Python dictionary mappings.</li>
+        <li>Creating software sorting recommendations.</li>
+        <li>Drawing detection bounding boxes.</li>
+        <li>Displaying real-time camera output.</li>
+        <li>Releasing the webcam and OpenCV resources.</li>
     </ul>
+
 </section>
 
 </main>
 
+<!-- =====================================
+     FOOTER
+===================================== -->
 <footer>
-    <strong>
-        Object Sorting System
-    </strong>
+
+    <strong>SIMUDIY Exploration Kit</strong>
+
+    <div>Object Sorting System</div>
+
 </footer>
 
+<!-- =====================================
+     COMPLETE PYTHON PROGRAM
+     10 INTERACTIVE CODE SECTIONS
+===================================== -->
+<textarea id="python-program" hidden>
+# [01] LOAD LIBRARIES
+
+import cv2
+import numpy as np
+import onnxruntime as ort
+
+# [END 01]
+
+
+# [02] CONFIGURE MODEL AND CAMERA
+
+MODEL_PATH = "models/yolov5n.onnx"
+
+CAMERA = "/dev/video0"
+
+INPUT_SIZE = 640
+
+CONFIDENCE_THRESHOLD = 0.45
+NMS_THRESHOLD = 0.45
+
+# [END 02]
+
+
+# [03] DEFINE CLASSES AND BIN MAPPING
+
+CLASS_NAMES = [
+    "person", "bicycle", "car", "motorcycle", "airplane",
+    "bus", "train", "truck", "boat", "traffic light",
+    "fire hydrant", "stop sign", "parking meter", "bench",
+    "bird", "cat", "dog", "horse", "sheep", "cow",
+    "elephant", "bear", "zebra", "giraffe", "backpack",
+    "umbrella", "handbag", "tie", "suitcase", "frisbee",
+    "skis", "snowboard", "sports ball", "kite", "baseball bat",
+    "baseball glove", "skateboard", "surfboard", "tennis racket",
+    "bottle", "wine glass", "cup", "fork", "knife", "spoon",
+    "bowl", "banana", "apple", "sandwich", "orange",
+    "broccoli", "carrot", "hot dog", "pizza", "donut", "cake",
+    "chair", "couch", "potted plant", "bed", "dining table",
+    "toilet", "tv", "laptop", "mouse", "remote", "keyboard",
+    "cell phone", "microwave", "oven", "toaster", "sink",
+    "refrigerator", "book", "clock", "vase", "scissors",
+    "teddy bear", "hair drier", "toothbrush"
+]
+
+# Manual sorting recommendations.
+# This mapping is educational and does not
+# control any physical sorting mechanism.
+
+BIN_MAPPING = {
+    "bottle": "BLUE BIN",
+    "apple": "GREEN BIN",
+    "orange": "ORANGE BIN",
+    "banana": "YELLOW BIN",
+}
+
+# [END 03]
+
+
+# [04] PREPROCESS CAMERA IMAGE
+
+def preprocess(frame):
+
+    image = cv2.resize(
+        frame,
+        (INPUT_SIZE, INPUT_SIZE)
+    )
+
+    image = cv2.cvtColor(
+        image,
+        cv2.COLOR_BGR2RGB
+    )
+
+    image = (
+        image.astype(np.float32)
+        / 255.0
+    )
+
+    image = np.transpose(
+        image,
+        (2, 0, 1)
+    )
+
+    image = np.expand_dims(
+        image,
+        axis=0
+    )
+
+    return image
+
+# [END 04]
+
+
+# [05] LOAD YOLO ONNX MODEL
+
+def load_model():
+
+    session = ort.InferenceSession(
+        MODEL_PATH,
+        providers=["CPUExecutionProvider"]
+    )
+
+    input_name = (
+        session.get_inputs()[0].name
+    )
+
+    print(
+        "Model loaded successfully."
+    )
+
+    return session, input_name
+
+# [END 05]
+
+
+# [06] OPEN USB CAMERA
+
+def open_camera():
+
+    print(
+        "Opening camera:",
+        CAMERA
+    )
+
+    cap = cv2.VideoCapture(
+        CAMERA,
+        cv2.CAP_V4L2
+    )
+
+    if not cap.isOpened():
+
+        raise RuntimeError(
+            "Could not open camera."
+        )
+
+    cap.set(
+        cv2.CAP_PROP_FRAME_WIDTH,
+        640
+    )
+
+    cap.set(
+        cv2.CAP_PROP_FRAME_HEIGHT,
+        480
+    )
+
+    print(
+        "Camera opened successfully."
+    )
+
+    print(
+        "Place one object in front of the camera."
+    )
+
+    print(
+        "Press Q to quit."
+    )
+
+    return cap
+
+# [END 06]
+
+
+# [07] RUN OBJECT DETECTION
+
+def run_detection(
+    frame,
+    session,
+    input_name
+):
+
+    original_h, original_w = (
+        frame.shape[:2]
+    )
+
+    input_image = preprocess(
+        frame
+    )
+
+    outputs = session.run(
+        None,
+        {
+            input_name: input_image
+        }
+    )
+
+    # Expected raw YOLOv5 output:
+    # [1, number_of_predictions, 85]
+    # 4 box values + objectness + 80 classes
+
+    predictions = outputs[0]
+
+    if (
+        predictions.ndim != 3
+        or predictions.shape[0] != 1
+        or predictions.shape[2] != 85
+    ):
+
+        raise ValueError(
+            "Unexpected YOLOv5 output shape: "
+            f"{predictions.shape}. "
+            "Check the ONNX model export format."
+        )
+
+    predictions = predictions[0]
+
+    boxes = []
+    confidences = []
+    class_ids = []
+
+    for prediction in predictions:
+
+        objectness = float(
+            prediction[4]
+        )
+
+        if (
+            objectness
+            &lt; CONFIDENCE_THRESHOLD
+        ):
+
+            continue
+
+        class_scores = (
+            prediction[5:]
+        )
+
+        class_id = int(
+            np.argmax(class_scores)
+        )
+
+        class_confidence = float(
+            class_scores[class_id]
+        )
+
+        confidence = (
+            objectness
+            * class_confidence
+        )
+
+        if (
+            confidence
+            &lt; CONFIDENCE_THRESHOLD
+        ):
+
+            continue
+
+        center_x = (
+            prediction[0]
+            * original_w
+            / INPUT_SIZE
+        )
+
+        center_y = (
+            prediction[1]
+            * original_h
+            / INPUT_SIZE
+        )
+
+        width = (
+            prediction[2]
+            * original_w
+            / INPUT_SIZE
+        )
+
+        height = (
+            prediction[3]
+            * original_h
+            / INPUT_SIZE
+        )
+
+        x = int(
+            center_x - width / 2
+        )
+
+        y = int(
+            center_y - height / 2
+        )
+
+        boxes.append([
+            x,
+            y,
+            int(width),
+            int(height)
+        ])
+
+        confidences.append(
+            confidence
+        )
+
+        class_ids.append(
+            class_id
+        )
+
+    return (
+        boxes,
+        confidences,
+        class_ids
+    )
+
+# [END 07]
+
+
+# [08] FILTER DETECTIONS USING NMS
+
+def filter_detections(
+    boxes,
+    confidences,
+    class_ids
+):
+
+    if not boxes:
+
+        return []
+
+    indices = cv2.dnn.NMSBoxes(
+        boxes,
+        confidences,
+        CONFIDENCE_THRESHOLD,
+        NMS_THRESHOLD
+    )
+
+    detections = []
+
+    for index in np.array(
+        indices
+    ).flatten():
+
+        i = int(index)
+
+        detections.append({
+            "box": boxes[i],
+            "confidence": confidences[i],
+            "class_id": class_ids[i]
+        })
+
+    return detections
+
+# [END 08]
+
+
+# [09] SHOW SORTING RECOMMENDATION
+
+def display_detections(
+    frame,
+    detections
+):
+
+    if not detections:
+
+        cv2.putText(
+            frame,
+            "NO OBJECT DETECTED",
+            (20, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 255, 255),
+            2
+        )
+
+        return frame
+
+    # Display the highest-confidence
+    # detected object's recommendation
+    # as the main banner.
+
+    best_detection = max(
+        detections,
+        key=lambda item: item["confidence"]
+    )
+
+    best_class_id = (
+        best_detection["class_id"]
+    )
+
+    best_name = CLASS_NAMES[
+        best_class_id
+    ]
+
+    best_bin = BIN_MAPPING.get(
+        best_name,
+        "BLACK BIN / UNKNOWN"
+    )
+
+    cv2.putText(
+        frame,
+        f"PUT IN: {best_bin}",
+        (20, 40),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (0, 255, 255),
+        2
+    )
+
+    for detection in detections:
+
+        x, y, w, h = (
+            detection["box"]
+        )
+
+        class_id = (
+            detection["class_id"]
+        )
+
+        confidence = (
+            detection["confidence"]
+        )
+
+        object_name = CLASS_NAMES[
+            class_id
+        ]
+
+        bin_name = BIN_MAPPING.get(
+            object_name,
+            "BLACK BIN / UNKNOWN"
+        )
+
+        cv2.rectangle(
+            frame,
+            (x, y),
+            (x + w, y + h),
+            (0, 255, 0),
+            2
+        )
+
+        cv2.putText(
+            frame,
+            (
+                f"{object_name}: "
+                f"{confidence * 100:.1f}%"
+            ),
+            (
+                x,
+                max(y - 10, 25)
+            ),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        )
+
+        print(
+            f"Detected: {object_name} "
+            f"({confidence * 100:.1f}%) "
+            f"-> {bin_name}"
+        )
+
+    return frame
+
+# [END 09]
+
+
+# [10] RUN SYSTEM AND CLEAN UP
+
+def main():
+
+    print("=" * 60)
+    print("OBJECT SORTING SYSTEM")
+    print("=" * 60)
+
+    session, input_name = (
+        load_model()
+    )
+
+    cap = open_camera()
+
+    try:
+
+        while True:
+
+            ret, frame = cap.read()
+
+            if not ret:
+
+                print(
+                    "ERROR: Could not read camera frame."
+                )
+
+                break
+
+            (
+                boxes,
+                confidences,
+                class_ids
+            ) = run_detection(
+                frame,
+                session,
+                input_name
+            )
+
+            detections = filter_detections(
+                boxes,
+                confidences,
+                class_ids
+            )
+
+            display_frame = (
+                display_detections(
+                    frame,
+                    detections
+                )
+            )
+
+            cv2.imshow(
+                "Object Sorting System",
+                display_frame
+            )
+
+            key = (
+                cv2.waitKey(1)
+                &amp; 0xFF
+            )
+
+            if key == ord("q"):
+
+                break
+
+    except KeyboardInterrupt:
+
+        print(
+            "Program interrupted."
+        )
+
+    finally:
+
+        cap.release()
+
+        cv2.destroyAllWindows()
+
+        print(
+            "Camera released."
+        )
+
+        print(
+            "Object Sorting System stopped."
+        )
+
+
+if __name__ == "__main__":
+
+    main()
+
+# [END 10]
+</textarea>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
 <script>
 
-const program="import cv2\nimport numpy as np\nimport onnxruntime as ort\n\nMODEL_PATH = \"models/yolov5n.onnx\"\nCAMERA = \"/dev/video0\"\n\nCLASS_NAMES = [\n    \"person\", \"bicycle\", \"car\", \"motorcycle\", \"airplane\",\n    \"bus\", \"train\", \"truck\", \"boat\", \"traffic light\",\n    \"fire hydrant\", \"stop sign\", \"parking meter\", \"bench\",\n    \"bird\", \"cat\", \"dog\", \"horse\", \"sheep\", \"cow\",\n    \"elephant\", \"bear\", \"zebra\", \"giraffe\", \"backpack\",\n    \"umbrella\", \"handbag\", \"tie\", \"suitcase\", \"frisbee\",\n    \"skis\", \"snowboard\", \"sports ball\", \"kite\", \"baseball bat\",\n    \"baseball glove\", \"skateboard\", \"surfboard\", \"tennis racket\",\n    \"bottle\", \"wine glass\", \"cup\", \"fork\", \"knife\", \"spoon\",\n    \"bowl\", \"banana\", \"apple\", \"sandwich\", \"orange\",\n    \"broccoli\", \"carrot\", \"hot dog\", \"pizza\", \"donut\", \"cake\",\n    \"chair\", \"couch\", \"potted plant\", \"bed\", \"dining table\",\n    \"toilet\", \"tv\", \"laptop\", \"mouse\", \"remote\", \"keyboard\",\n    \"cell phone\", \"microwave\", \"oven\", \"toaster\", \"sink\",\n    \"refrigerator\", \"book\", \"clock\", \"vase\", \"scissors\",\n    \"teddy bear\", \"hair drier\", \"toothbrush\"\n]\n\n# Manual bin recommendations used by the software.\nBIN_MAPPING = {\n    \"bottle\": \"BLUE BIN\",\n    \"apple\": \"GREEN BIN\",\n    \"orange\": \"ORANGE BIN\",\n    \"banana\": \"YELLOW BIN\",\n}\n\nCONFIDENCE_THRESHOLD = 0.45\nNMS_THRESHOLD = 0.45\n\n\ndef preprocess(frame):\n    image = cv2.resize(frame, (640, 640))\n    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)\n    image = image.astype(np.float32) / 255.0\n    image = np.transpose(image, (2, 0, 1))\n    image = np.expand_dims(image, axis=0)\n    return image\n\n\ndef main():\n    print(\"=\" * 60)\n    print(\"OBJECT SORTING SYSTEM\")\n    print(\"=\" * 60)\n\n    session = ort.InferenceSession(\n        MODEL_PATH,\n        providers=[\"CPUExecutionProvider\"]\n    )\n\n    input_name = session.get_inputs()[0].name\n\n    print(\"Model loaded successfully.\")\n    print(\"Opening camera:\", CAMERA)\n\n    cap = cv2.VideoCapture(CAMERA, cv2.CAP_V4L2)\n\n    if not cap.isOpened():\n        print(\"ERROR: Could not open camera.\")\n        return\n\n    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)\n    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)\n\n    print(\"Camera opened successfully.\")\n    print(\"Place one object in front of the camera.\")\n    print(\"Press Q to quit.\")\n\n    while True:\n        ret, frame = cap.read()\n\n        if not ret:\n            print(\"ERROR: Could not read camera frame.\")\n            break\n\n        original_h, original_w = frame.shape[:2]\n        input_image = preprocess(frame)\n\n        outputs = session.run(\n            None,\n            {input_name: input_image}\n        )\n\n        predictions = outputs[0][0]\n\n        boxes = []\n        confidences = []\n        class_ids = []\n\n        for prediction in predictions:\n            objectness = float(prediction[4])\n\n            if objectness < CONFIDENCE_THRESHOLD:\n                continue\n\n            class_scores = prediction[5:]\n            class_id = int(np.argmax(class_scores))\n            class_confidence = float(class_scores[class_id])\n            confidence = objectness * class_confidence\n\n            if confidence < CONFIDENCE_THRESHOLD:\n                continue\n\n            center_x = prediction[0] * original_w / 640\n            center_y = prediction[1] * original_h / 640\n            width = prediction[2] * original_w / 640\n            height = prediction[3] * original_h / 640\n\n            x = int(center_x - width / 2)\n            y = int(center_y - height / 2)\n\n            boxes.append([x, y, int(width), int(height)])\n            confidences.append(confidence)\n            class_ids.append(class_id)\n\n        indices = cv2.dnn.NMSBoxes(\n            boxes,\n            confidences,\n            CONFIDENCE_THRESHOLD,\n            NMS_THRESHOLD\n        )\n\n        if len(indices) > 0:\n            for i in indices.flatten():\n                x, y, w, h = boxes[i]\n                class_id = class_ids[i]\n                confidence = confidences[i]\n\n                object_name = CLASS_NAMES[class_id]\n\n                if object_name in BIN_MAPPING:\n                    bin_name = BIN_MAPPING[object_name]\n                else:\n                    bin_name = \"BLACK BIN / UNKNOWN\"\n\n                cv2.rectangle(\n                    frame,\n                    (x, y),\n                    (x + w, y + h),\n                    (0, 255, 0),\n                    2\n                )\n\n                cv2.putText(\n                    frame,\n                    f\"{object_name}: {confidence * 100:.1f}%\",\n                    (x, max(y - 10, 25)),\n                    cv2.FONT_HERSHEY_SIMPLEX,\n                    0.6,\n                    (0, 255, 0),\n                    2\n                )\n\n                cv2.putText(\n                    frame,\n                    f\"PUT IN: {bin_name}\",\n                    (20, 40),\n                    cv2.FONT_HERSHEY_SIMPLEX,\n                    0.8,\n                    (0, 255, 255),\n                    2\n                )\n\n                print(\n                    f\"Detected: {object_name} \"\n                    f\"({confidence * 100:.1f}%) -> {bin_name}\"\n                )\n\n        else:\n            cv2.putText(\n                frame,\n                \"NO OBJECT DETECTED\",\n                (20, 40),\n                cv2.FONT_HERSHEY_SIMPLEX,\n                0.8,\n                (0, 255, 255),\n                2\n            )\n\n        cv2.imshow(\"Object Sorting System\", frame)\n\n        key = cv2.waitKey(1) & 0xFF\n\n        if key == ord(\"q\"):\n            break\n\n    cap.release()\n    cv2.destroyAllWindows()\n\n\nif __name__ == \"__main__\":\n    main()";
+/* READ COMPLETE PYTHON PROGRAM */
 
-const lines=
-    program.split("\n");
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
 
-const steps=[{"title":"Load libraries","start":"import cv2","end":"import onnxruntime as ort","text":"OpenCV handles the camera, NumPy prepares image data and ONNX Runtime performs model inference."},{"title":"Set model and camera","start":"MODEL_PATH = \"models/yolov5n.onnx\"","end":"CAMERA = \"/dev/video0\"","text":"The program uses the verified YOLOv5n ONNX model and USB webcam device /dev/video0."},{"title":"Define classes and mapping","start":"CLASS_NAMES = [","end":"NMS_THRESHOLD = 0.45","text":"The COCO class names, manual bin mapping, confidence threshold and NMS threshold are defined."},{"title":"Preprocess image","start":"def preprocess(frame):","end":"return image","text":"Each camera frame is resized, converted to RGB, normalized and changed to NCHW format for the model."},{"title":"Load ONNX model","start":"session = ort.InferenceSession(","end":"input_name = session.get_inputs()[0].name","text":"The model is loaded using ONNX Runtime with CPUExecutionProvider."},{"title":"Open USB camera","start":"cap = cv2.VideoCapture(CAMERA, cv2.CAP_V4L2)","end":"cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)","text":"The USB webcam is opened through V4L2 and configured for 640 × 480 capture."},{"title":"Run detection","start":"while True:","end":"class_ids.append(class_id)","text":"Frames are captured, preprocessed and passed through the model; candidate detections are collected."},{"title":"Filter detections","start":"indices = cv2.dnn.NMSBoxes(","end":"NMS_THRESHOLD","text":"Non-Maximum Suppression removes overlapping duplicate boxes."},{"title":"Show result","start":"if len(indices) > 0:","end":"cv2.imshow(\"Object Sorting System\", frame)","text":"Detected object names, confidence and the software's bin recommendation are shown on the camera frame."},{"title":"Stop safely","start":"cap.release()","end":"cv2.destroyAllWindows()","text":"The camera and OpenCV windows are released when Q is pressed."}];
+const lines = program.split("\n");
 
-function escapeHtml(text){
+/* TEN EXPLANATION STEPS */
 
-    return text
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
+const steps = [
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Imports OpenCV for camera processing, " +
+            "NumPy for numerical image operations " +
+            "and ONNX Runtime for AI inference."
+    },
+    {
+        number: "02",
+        label: "CONFIGURE MODEL AND CAMERA",
+        title: "Configure Model and Camera",
+        text:
+            "Defines the ONNX model path, " +
+            "USB camera device, input image size " +
+            "and detection thresholds."
+    },
+    {
+        number: "03",
+        label: "DEFINE CLASSES AND BIN MAPPING",
+        title: "Define Classes and Mapping",
+        text:
+            "Defines the COCO class labels " +
+            "and the manual dictionary used " +
+            "to recommend sorting bins."
+    },
+    {
+        number: "04",
+        label: "PREPROCESS CAMERA IMAGE",
+        title: "Preprocess Image",
+        text:
+            "Resizes camera frames to 640 by 640, " +
+            "converts BGR to RGB, normalizes " +
+            "pixels and prepares the NCHW tensor."
+    },
+    {
+        number: "05",
+        label: "LOAD YOLO ONNX MODEL",
+        title: "Load ONNX Model",
+        text:
+            "Loads yolov5n.onnx using " +
+            "ONNX Runtime with CPUExecutionProvider."
+    },
+    {
+        number: "06",
+        label: "OPEN USB CAMERA",
+        title: "Open USB Camera",
+        text:
+            "Opens /dev/video0 through V4L2 " +
+            "and configures 640 by 480 video capture."
+    },
+    {
+        number: "07",
+        label: "RUN OBJECT DETECTION",
+        title: "Run Detection",
+        text:
+            "Runs YOLO inference, checks the expected " +
+            "model output, calculates confidence and " +
+            "collects detection bounding boxes."
+    },
+    {
+        number: "08",
+        label: "FILTER DETECTIONS USING NMS",
+        title: "Filter Detections",
+        text:
+            "Applies Non-Maximum Suppression " +
+            "and returns the retained detections."
+    },
+    {
+        number: "09",
+        label: "SHOW SORTING RECOMMENDATION",
+        title: "Show Sorting Result",
+        text:
+            "Looks up bin recommendations, " +
+            "draws object bounding boxes and labels, " +
+            "and prints detected classes and confidence."
+    },
+    {
+        number: "10",
+        label: "RUN SYSTEM AND CLEAN UP",
+        title: "Run and Stop System",
+        text:
+            "Runs the continuous detection loop, " +
+            "shows the live OpenCV window and " +
+            "releases the camera when Q is pressed."
+    }
+];
 
+/* ESCAPE SOURCE CODE FOR DISPLAY */
+
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
-function displayCode(){
+/* DISPLAY COMPLETE CODE */
 
-    document
-        .getElementById("code-lines")
-        .innerHTML=
-        lines.map(function(line,index){
+function displayCode() {
+
+    const container =
+        document.getElementById(
+            "code-lines"
+        );
+
+    container.innerHTML = lines.map(
+        function(line, index) {
 
             return (
-                '<span class="code-line" id="line-'+
-                (index+1)+
-                '">' +
-                '<span class="line-number">'+
-                (index+1)+
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+
+                '<span class="line-number">' +
+                (index + 1) +
                 '</span>' +
-                '<span>'+
-                escapeHtml(line)+
+
+                '<span>' +
+                escapeHtml(line) +
                 '</span>' +
+
                 '</span>'
             );
-
-        }).join("");
-
-}
-
-function findLine(searchText,startIndex){
-
-    startIndex=startIndex || 0;
-
-    for(
-        let i=startIndex;
-        i<lines.length;
-        i++
-    ){
-
-        if(
-            lines[i].includes(searchText)
-        ){
-
-            return i;
-
         }
-
-    }
-
-    return -1;
-
+    ).join("");
 }
 
-function showStep(index){
+/* FIND EXACT MARKERS */
 
-    const step=
-        steps[index];
+function findMarker(marker) {
 
-    const buttons=
-        document.querySelectorAll(".step");
+    return lines.findIndex(
+        function(line) {
 
-    buttons.forEach(function(button){
+            return line.trim() === marker;
+        }
+    );
+}
 
-        button.classList.remove("active");
+/* MAP TEN CODE SECTIONS */
 
-    });
+const ranges = steps.map(
+    function(step) {
 
-    if(
-        buttons[index]
-    ){
-
-        buttons[index]
-            .classList
-            .add("active");
-
-    }
-
-    document
-        .querySelectorAll(".code-line")
-        .forEach(function(line){
-
-            line.classList.remove("selected");
-
-        });
-
-    const startLine=
-        findLine(
-            step.start,
-            0
+        const start = findMarker(
+            "# [" +
+            step.number +
+            "] " +
+            step.label
         );
 
-    if(
-        startLine===-1
-    ){
-
-        return;
-
-    }
-
-    let endLine=
-        findLine(
-            step.end,
-            startLine
+        const end = findMarker(
+            "# [END " +
+            step.number +
+            "]"
         );
 
-    if(
-        endLine===-1
-    ){
-
-        endLine=startLine;
-
+        return {
+            start: start,
+            end: end,
+            valid:
+                start >= 0 &&
+                end >= start
+        };
     }
+);
 
-    for(
-        let i=startLine;
-        i<=endLine;
-        i++
-    ){
+/* CREATE EXPLANATION TABS */
 
-        const line=
-            document.getElementById(
-                "line-"+(i+1)
+function createSteps() {
+
+    const container =
+        document.getElementById(
+            "steps-list"
+        );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement(
+                    "span"
+                );
+
+            number.className =
+                "step-number";
+
+            number.textContent =
+                step.number;
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+            title.textContent =
+                step.title;
+
+            button.append(
+                number,
+                title
             );
 
-        if(
-            line
-        ){
+            button.addEventListener(
+                "click",
+                function() {
 
-            line.classList.add(
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(
+                button
+            );
+        }
+    );
+}
+
+/* HIGHLIGHT MATCHING CODE */
+
+function showStep(index) {
+
+    document.querySelectorAll(
+        ".step"
+    ).forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(
+        ".code-line"
+    ).forEach(
+        function(line) {
+
+            line.classList.remove(
                 "selected"
             );
-
         }
+    );
 
-    }
+    const step = steps[index];
+    const range = ranges[index];
 
-    const selected=
+    const explanation =
         document.getElementById(
-            "line-"+(startLine+1)
+            "explanation"
         );
 
-    const body=
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement(
+            "h3"
+        );
+
+    heading.textContent =
+        (index + 1) +
+        ". " +
+        step.title;
+
+    const paragraph =
+        document.createElement(
+            "p"
+        );
+
+    paragraph.textContent =
+        step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching source markers not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
+
+        if (element) {
+
+            element.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+    const codeBody =
         document.getElementById(
             "code-body"
         );
 
-    if(
-        selected &&
-        body
-    ){
+    if (firstLine && codeBody) {
 
-        body.scrollTo({
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
             top:
-                selected.offsetTop -
-                body.offsetTop -
+                codeBody.scrollTop +
+                offset -
                 20,
-            behavior:"smooth"
+            behavior: "smooth"
         });
+    }
+}
 
+/* COPY COMPLETE PYTHON SCRIPT */
+
+async function copyCode() {
+
+    const button =
+        document.querySelector(
+            ".copy-button"
+        );
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+
+                button.textContent =
+                    "Copy Code";
+            },
+            1500
+        );
     }
 
-    document
-        .getElementById(
-            "explanation"
-        )
-        .innerHTML=
-        "<h3>"+
-        (index+1)+
-        ". "+
-        step.title+
-        "</h3><p>"+
-        step.text+
-        "</p>";
+    function fallback() {
 
-}
-
-function copyCode(){
-
-    navigator
-        .clipboard
-        .writeText(program)
-        .then(function(){
-
-            const button=
-                document.querySelector(
-                    ".copy-button"
-                );
-
-            button.innerText=
-                "Copied!";
-
-            setTimeout(
-                function(){
-
-                    button.innerText=
-                        "Copy Code";
-
-                },
-                1500
+        const field =
+            document.createElement(
+                "textarea"
             );
 
-        });
+        field.value = program;
 
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(
+            field
+        );
+
+        field.select();
+
+        let success = false;
+
+        try {
+
+            success =
+                document.execCommand(
+                    "copy"
+                );
+
+        } catch(error) {
+
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+
+            copied();
+
+        } else {
+
+            button.textContent =
+                "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch(error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
 
+/* INITIALIZE CODE EXPLORER */
+
 displayCode();
+createSteps();
 showStep(0);
 
 </script>
