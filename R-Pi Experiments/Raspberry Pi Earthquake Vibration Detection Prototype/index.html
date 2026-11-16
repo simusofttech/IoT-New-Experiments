@@ -1,1462 +1,3082 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
->
-
-<title>
-Earthquake Vibration Detection
-</title>
+<title>Earthquake Vibration Detection</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
+/* ==========================================
+   GENERAL DESIGN
+========================================== */
+* {
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font: 16px/1.7 Arial, Helvetica, sans-serif;
 }
 
-.header{
-    background:#2563eb;
-    color:white;
-    text-align:center;
-    padding:42px 20px;
+/* ==========================================
+   HEADER
+========================================== */
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
+    text-align: center;
 }
 
-.header h1{
-    margin:0 0 8px;
-    font-size:34px;
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    object-fit: contain;
 }
 
-.header p{
-    margin:0;
-    font-size:17px;
+.header-content {
+    margin: auto 0;
+    padding: 35px 165px;
 }
 
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:20;
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
 }
 
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
+.header p {
+    margin: 0;
+    font-size: 17px;
 }
 
-.container{
-    width:90%;
-    max-width:1050px;
-    margin:35px auto;
+.header-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,.12);
 }
 
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
+.header-left-buttons,
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
-.section h3{
-    color:#1e3a8a;
+.header-nav-btn:hover {
+    background: #dbeafe;
 }
 
-ul,
-ol{
-    padding-left:24px;
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
 }
 
-li{
-    margin-bottom:8px;
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
+/* ==========================================
+   NAVIGATION
+========================================== */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
 }
 
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
 }
 
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
+nav a:hover {
+    color: #2563eb;
 }
 
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
+/* ==========================================
+   MAIN SECTIONS
+========================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
 }
 
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 100px;
 }
 
-.table-wrap{
-    overflow-x:auto;
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
 }
 
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
+.section h3 {
+    color: #1e3a8a;
 }
 
-th,
-td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
+ul, ol {
+    padding-left: 24px;
 }
 
-th{
-    background:#2563eb;
-    color:white;
+li {
+    margin-bottom: 8px;
 }
 
-tr:nth-child(even){
-    background:#f8fafc;
+/* ==========================================
+   THUMBNAIL
+========================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
 }
 
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
 }
 
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:white;
-    padding:10px;
+/* ==========================================
+   COMPONENT CARDS
+========================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
 }
 
-.code-lesson{
-    color:#142e3a;
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
 }
 
-.eyebrow{
-    color:#2563eb;
-    font-weight:bold;
-    font-size:13px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    margin:0 0 4px;
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
 }
 
-.lesson-title{
-    font-size:32px !important;
-    margin:0 0 8px !important;
-    color:#1e3a8a !important;
-    border:0 !important;
-    padding:0 !important;
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
 }
 
-.intro{
-    color:#526875;
-    margin:0 0 22px;
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
 }
 
-.code-layout{
-    display:grid;
-    grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);
-    gap:20px;
-    align-items:start;
+/* ==========================================
+   TABLES AND NOTES
+========================================== */
+.table-wrap {
+    overflow-x: auto;
 }
 
-.code-panel{
-    background:white;
-    border:1px solid #bfdbfe;
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 4px 14px rgba(37,99,235,.10);
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
 }
 
-.code-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
-    padding:15px 20px;
-    background:#2563eb;
-    color:white;
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
 }
 
-.filename{
-    color:white;
-    font:bold 14px/1.4 Consolas,Monaco,monospace;
+th {
+    background: #2563eb;
+    color: white;
 }
 
-.copy-button{
-    border:1px solid white;
-    background:white;
-    color:#2563eb;
-    border-radius:8px;
-    padding:8px 14px;
-    min-height:40px;
-    font-weight:bold;
-    cursor:pointer;
+tr:nth-child(even) {
+    background: #f8fafc;
 }
 
-.code-body{
-    height:600px;
-    overflow:auto;
-    background:white;
-    padding:16px 0;
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
 }
 
-.code-line{
-    display:flex;
-    min-width:max-content;
-    min-height:24px;
-    padding-right:22px;
-    white-space:pre;
-    font:13px/24px Consolas,Monaco,monospace;
-    color:#1e293b;
-    border-bottom:1px solid #f1f5f9;
+/* ==========================================
+   CIRCUIT AND WORKING
+========================================== */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
 }
 
-.code-line.selected{
-    background:#dbeafe;
-    box-shadow:inset 4px 0 #2563eb;
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
 }
 
-.line-number{
-    user-select:none;
-    min-width:52px;
-    text-align:right;
-    padding-right:15px;
-    color:#64748b;
+.flow-step {
+    padding: 5px 10px;
 }
 
-.guide{
-    background:white;
-    border:1px solid #dce6e9;
-    border-radius:14px;
-    padding:22px;
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
 }
 
-.guide h2{
-    border:0;
-    padding:0;
-    margin:0 0 8px;
-    font-size:21px;
+/* ==========================================
+   INTERACTIVE CODE EXPLORER
+========================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
 }
 
-.guide > p{
-    color:#526875;
-    font-size:15px;
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
 }
 
-.steps{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-    margin:16px 0;
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
 }
 
-.step{
-    border:1px solid #dce6e9;
-    border-radius:9px;
-    padding:10px;
-    min-height:65px;
-    background:white;
-    text-align:left;
-    font-size:13px;
-    font-weight:bold;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-    color:#1e3a8a;
+.code-layout {
+    display: grid;
+    grid-template-columns: minmax(0,1.45fr) minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
 }
 
-.step.active{
-    background:#eff6ff;
-    border-color:#60a5fa;
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
 }
 
-.step-number{
-    color:#2563eb;
-    font-size:12px;
-    flex-shrink:0;
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
 }
 
-.explanation{
-    background:#eff6ff;
-    border-radius:9px;
-    padding:16px;
-    min-height:130px;
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
 }
 
-.explanation h3{
-    font-size:17px;
-    margin:0 0 7px;
-    color:#1e3a8a;
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.explanation p{
-    margin:0;
-    color:#526875;
-    font-size:15px;
+.copy-button:hover {
+    background: #eff6ff;
 }
 
-.guide details{
-    border-top:1px solid #dce6e9;
-    margin-top:15px;
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
 }
 
-.guide summary{
-    cursor:pointer;
-    color:#2563eb;
-    font-weight:bold;
-    padding:13px 0;
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
 }
 
-.tip{
-    background:#eff6ff;
-    color:#234e87;
-    padding:14px 17px;
-    border-radius:9px;
-    margin-top:20px;
-    font-size:14px;
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
 }
 
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
 }
 
-footer strong{
-    color:white;
+/* ==========================================
+   EXPLANATION GUIDE
+========================================== */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
 }
 
-@media(max-width:850px){
-    .code-layout{
-        grid-template-columns:1fr;
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* ==========================================
+   EXPECTED OUTPUT
+========================================== */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* ==========================================
+   CENTER DASHBOARD IMAGE
+========================================== */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+@media(max-width:900px) {
+    .header-content {
+        padding: 65px 20px 35px;
     }
 }
 
-</style>
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media(max-width:600px) {
+    .header {
+        padding: 15px 0 0;
+    }
+
+    .header-logo {
+        top: 12px;
+        left: 12px;
+        width: 95px;
+        max-height: 60px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
+    }
+}
+</style>
 </head>
 
 <body>
 
+<!-- ==========================================
+     HEADER
+========================================== -->
 <header class="header">
 
-    <h1>
-        Raspberry Pi Experiment
-    </h1>
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
 
-    <p>
-       Earthquake Vibration Detection
-    </p>
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Earthquake Vibration Detection</p>
+    </div>
 
-</header>
+    <div class="header-buttons">
 
-<nav>
+        <div class="header-left-buttons">
 
-    <a href="../index.html">
-        ← R-Pi Experiments
-    </a>
+            <a href="../index.html" class="header-nav-btn">
+                &#8592; Back
+            </a>
 
-    <a href="#aim">
-        Aim
-    </a>
-
-    <a href="#components">
-        Components
-    </a>
-
-    <a href="#connections">
-        Connections
-    </a>
-
-    <a href="#circuit">
-        Circuit
-    </a>
-
-    <a href="#working">
-        Working
-    </a>
-
-    <a href="#procedure">
-        Procedure
-    </a>
-
-    <a href="#code">
-        Code
-    </a>
-
-    <a href="#result">
-        Result
-    </a>
-
-</nav>
-
-<main class="container">
-
-<section
-class="section"
-id="aim"
->
-
-    <h2>
-        Aim
-    </h2>
-
-    <p>
-        To build an educational Raspberry Pi vibration monitor that reads acceleration from an MPU6050, calculates short-window RMS vibration, activates a servo and buzzer when the threshold is exceeded, and records data to CSV.
-    </p>
-
-</section>
-
-<section class="section">
-
-    <h2>
-        About the Experiment
-    </h2>
-
-    <p>
-        The MPU6050 GY-521 sends X/Y/Z acceleration data to the Raspberry Pi over I²C.
-    </p>
-
-    <p>
-        The program estimates gravity/orientation,
-        subtracts it from the measured acceleration,
-        calculates changing acceleration magnitude,
-        and then calculates an approximately one-second RMS value.
-    </p>
-
-    <p>
-        When RMS stays above the alert threshold,
-        GPIO18 moves the servo and GPIO23 activates the buzzer.
-        The project is an educational prototype,
-        not a certified earthquake warning or prediction device.
-    </p>
-
-</section>
-
-<section
-class="section"
-id="components"
->
-
-    <h2>
-        Components Required
-    </h2>
-
-    <div class="components-grid">
-
-        <div class="component-card">
-
-            <img
-            src="Raspberry Pi 4 Model B.png"
-            alt="Raspberry Pi 4 Model B (×1)"
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
             >
-
-            <h4>
-                Raspberry Pi 4 Model B (×1)
-            </h4>
-
-            <p>
-                Reads the MPU6050, calculates vibration and controls the outputs.
-            </p>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
 
         </div>
 
-        <div class="component-card">
+        <div class="header-right-buttons">
 
-            <img
-            src="MPU6050 GY-521.png"
-            alt="MPU6050 GY-521 (×1)"
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
             >
+                Arduino
+            </a>
 
-            <h4>
-                MPU6050 GY-521 (×1)
-            </h4>
-
-            <p>
-                Measures X, Y and Z acceleration through I²C.
-            </p>
-
-        </div>
-
-        <div class="component-card">
-
-            <img
-            src="Servo Motor.png"
-            alt="SG90 Servo Motor (×1)"
+            <a
+                href="../../ESP32 CAM Experiments/index.html"
+                class="header-nav-btn"
             >
+                ESP
+            </a>
 
-            <h4>
-                SG90 Servo Motor (×1)
-            </h4>
-
-            <p>
-                Moves the visual pointer to the alert position.
-            </p>
-
-        </div>
-
-        <div class="component-card">
-
-            <img
-            src="Buzzer.png"
-            alt="Buzzer (×1)"
+            <a
+                href="../index.html"
+                class="header-nav-btn"
             >
-
-            <h4>
-                Buzzer (×1)
-            </h4>
-
-            <p>
-                Provides an audible vibration alert.
-            </p>
-
-        </div>
-
-        <div class="component-card">
-
-            <img
-            src="Raspberry Pi Power Supply.png"
-            alt="Raspberry Pi Power Supply (×1)"
-            >
-
-            <h4>
-                Raspberry Pi Power Supply (×1)
-            </h4>
-
-            <p>
-                Provides stable power to the Raspberry Pi.
-            </p>
-
-        </div>
-
-        <div class="component-card">
-
-            <img
-            src="Jumper Wires.png"
-            alt="Jumper Wires"
-            >
-
-            <h4>
-                Jumper Wires
-            </h4>
-
-            <p>
-                Connect the sensor and outputs to the GPIO header.
-            </p>
-
-        </div>
-
-        <div class="component-card">
-
-            <img
-            src="Breadboard.png"
-            alt="Breadboard (×1)"
-            >
-
-            <h4>
-                Breadboard (×1)
-            </h4>
-
-            <p>
-                Provides a convenient prototype connection area.
-            </p>
+                R-Pi
+            </a>
 
         </div>
 
     </div>
 
+</header>
+
+<!-- NAVIGATION -->
+<nav>
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
+
+<main class="container">
+
+<!-- ==========================================
+     EXPERIMENT THUMBNAIL
+========================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Earthquake Detection System.png"
+        alt="Earthquake Vibration Detection Thumbnail"
+    >
+
 </section>
 
-<section
-class="section"
-id="connections"
->
+<!-- ==========================================
+     AIM
+========================================== -->
+<section class="section" id="aim">
 
-    <h2>
-        Circuit Connections
-    </h2>
+    <h2>Aim</h2>
+
+    <p>
+        To develop an educational Earthquake
+        Vibration Detection experiment using
+        a Raspberry Pi 4 Model B and MPU6050
+        accelerometer to measure changing
+        acceleration, calculate short-window
+        RMS vibration and activate a servo
+        motor and buzzer when the configured
+        alert threshold is exceeded.
+    </p>
+
+    <p>
+        The experiment also records
+        acceleration values and alert
+        states in a CSV file and displays
+        the vibration RMS on a live graph.
+    </p>
+
+</section>
+
+<!-- ==========================================
+     ABOUT
+========================================== -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Earthquake Vibration Detection
+        experiment demonstrates accelerometer
+        interfacing, digital signal processing,
+        RMS calculation, threshold-based
+        alert control, data logging and
+        live graph visualization.
+    </p>
+
+    <p>
+        The MPU6050 GY-521 sensor measures
+        acceleration along the X, Y
+        and Z axes. These readings
+        are transferred to the Raspberry Pi
+        using the I²C interface.
+    </p>
+
+    <p>
+        The Python program estimates
+        the slowly changing component
+        of the acceleration caused
+        by gravity and orientation.
+        This estimate is subtracted
+        from each measured axis
+        to obtain dynamic acceleration.
+    </p>
+
+    <p>
+        The magnitude of dynamic acceleration
+        is calculated and placed into
+        a rolling one-second window.
+        The system then calculates
+        the Root Mean Square (RMS)
+        vibration value.
+    </p>
+
+    <p>
+        When the RMS remains at or above
+        the configured alert threshold
+        of 0.08 g for at least
+        0.5 seconds, the servo moves
+        to its alert position and
+        the buzzer is activated.
+    </p>
+
+    <p>
+        The alert clears only when
+        RMS remains at or below
+        0.04 g for at least
+        five seconds.
+        This hysteresis and hold-time
+        logic helps reduce repeated
+        switching between alert states.
+    </p>
+
+    <p>
+        The program continuously records
+        accelerometer readings, dynamic
+        magnitude, RMS and alert state
+        into a timestamped CSV file.
+        A Matplotlib window displays
+        the recent RMS measurements.
+    </p>
+
+    <h3>Alert Classification Logic</h3>
 
     <div class="table-wrap">
 
         <table>
-
             <thead>
-
                 <tr>
-                    <th>Component</th>
-                    <th>Pin / Wire</th>
-                    <th>Raspberry Pi Connection</th>
+                    <th>Condition</th>
+                    <th>Duration</th>
+                    <th>System Action</th>
                 </tr>
-
             </thead>
 
             <tbody>
-
                 <tr>
-                    <td>MPU6050</td>
-                    <td>VCC</td>
-                    <td>3.3 V / Physical Pin 1</td>
+                    <td>RMS ≥ 0.08 g</td>
+                    <td>At least 0.5 seconds</td>
+                    <td>Activate alert</td>
                 </tr>
 
                 <tr>
-                    <td>MPU6050</td>
-                    <td>GND</td>
-                    <td>GND / Physical Pin 6</td>
+                    <td>Alert active</td>
+                    <td>Until clear condition</td>
+                    <td>Servo at 0°, buzzer ON</td>
                 </tr>
 
                 <tr>
-                    <td>MPU6050</td>
-                    <td>SDA</td>
-                    <td>GPIO2 / Physical Pin 3</td>
+                    <td>RMS ≤ 0.04 g</td>
+                    <td>At least 5 seconds</td>
+                    <td>Clear alert</td>
                 </tr>
 
                 <tr>
-                    <td>MPU6050</td>
-                    <td>SCL</td>
-                    <td>GPIO3 / Physical Pin 5</td>
+                    <td>Normal state</td>
+                    <td>—</td>
+                    <td>Servo at 90°, buzzer OFF</td>
                 </tr>
 
                 <tr>
-                    <td>SG90 Servo</td>
-                    <td>Signal</td>
-                    <td>GPIO18 / Physical Pin 12</td>
+                    <td>RMS between thresholds</td>
+                    <td>—</td>
+                    <td>Maintain current alert state</td>
                 </tr>
-
-                <tr>
-                    <td>Buzzer</td>
-                    <td>Control</td>
-                    <td>GPIO23 through the appropriate driver / module</td>
-                </tr>
-
             </tbody>
 
         </table>
 
     </div>
 
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+
+                <tr>
+                    <td>Accelerometer</td>
+                    <td>MPU6050 GY-521</td>
+                </tr>
+
+                <tr>
+                    <td>I²C Bus</td>
+                    <td>1</td>
+                </tr>
+
+                <tr>
+                    <td>MPU6050 Address</td>
+                    <td>0x68</td>
+                </tr>
+
+                <tr>
+                    <td>MPU6050 SDA</td>
+                    <td>GPIO2</td>
+                </tr>
+
+                <tr>
+                    <td>MPU6050 SCL</td>
+                    <td>GPIO3</td>
+                </tr>
+
+                <tr>
+                    <td>Acceleration Range</td>
+                    <td>±2 g</td>
+                </tr>
+
+                <tr>
+                    <td>Accelerometer Scale</td>
+                    <td>16384 LSB/g</td>
+                </tr>
+
+                <tr>
+                    <td>Target Sampling Rate</td>
+                    <td>50 Hz</td>
+                </tr>
+
+                <tr>
+                    <td>RMS Window</td>
+                    <td>50 samples, approximately 1 second</td>
+                </tr>
+
+                <tr>
+                    <td>Gravity Filter Time Constant</td>
+                    <td>1.5 seconds</td>
+                </tr>
+
+                <tr>
+                    <td>Alert Threshold</td>
+                    <td>0.08 g</td>
+                </tr>
+
+                <tr>
+                    <td>Reset Threshold</td>
+                    <td>0.04 g</td>
+                </tr>
+
+                <tr>
+                    <td>Alert Hold</td>
+                    <td>0.5 seconds</td>
+                </tr>
+
+                <tr>
+                    <td>Clear Hold</td>
+                    <td>5 seconds</td>
+                </tr>
+
+                <tr>
+                    <td>Servo GPIO</td>
+                    <td>GPIO18</td>
+                </tr>
+
+                <tr>
+                    <td>Buzzer GPIO</td>
+                    <td>GPIO23</td>
+                </tr>
+
+                <tr>
+                    <td>Normal Servo Angle</td>
+                    <td>90°</td>
+                </tr>
+
+                <tr>
+                    <td>Alert Servo Angle</td>
+                    <td>0°</td>
+                </tr>
+
+                <tr>
+                    <td>Graph History</td>
+                    <td>10 seconds</td>
+                </tr>
+
+                <tr>
+                    <td>Data Output</td>
+                    <td>Timestamped CSV</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Important Safety Information:</strong>
+
+        <p>
+            This is an educational vibration
+            monitor. It is not designed
+            or validated for earthquake
+            prediction, seismic intensity
+            measurement, building safety
+            decisions, or emergency warning.
+        </p>
+
+        <p>
+            The 0.08 g and 0.04 g thresholds
+            are experimental settings.
+            They must not be interpreted
+            as certified earthquake
+            severity thresholds.
+        </p>
+
+        <p>
+            Real sampling frequency
+            can vary because of I²C
+            communication and graph
+            rendering. The one-second
+            RMS window is based on
+            50 samples rather than
+            exact timestamp integration.
+        </p>
+
+    </div>
+
 </section>
 
-<section
-class="section"
-id="circuit"
->
+<!-- ==========================================
+     COMPONENTS
+========================================== -->
+<section class="section" id="components">
 
-    <h2>
-        Circuit Diagram
-    </h2>
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
+            >
+
+            <h4>Raspberry Pi 4 Model B (×1)</h4>
+
+            <p>
+                Reads the MPU6050,
+                calculates RMS vibration,
+                controls the outputs
+                and logs the readings.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="MPU6050 GY-521.png"
+                alt="MPU6050 GY-521"
+            >
+
+            <h4>MPU6050 GY-521 (×1)</h4>
+
+            <p>
+                Measures acceleration
+                along the X, Y and
+                Z axes using I²C.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Servo Motor.png"
+                alt="SG90 Servo Motor"
+            >
+
+            <h4>SG90 Servo Motor (×1)</h4>
+
+            <p>
+                Moves a visual pointer
+                between the normal
+                and alert positions.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Buzzer.png"
+                alt="Buzzer"
+            >
+
+            <h4>Buzzer (×1)</h4>
+
+            <p>
+                Provides audible
+                feedback when an
+                alert is activated.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi Power Supply.png"
+                alt="Raspberry Pi Power Supply"
+            >
+
+            <h4>Raspberry Pi Power Supply (×1)</h4>
+
+            <p>
+                Provides regulated
+                electrical power
+                to the Raspberry Pi.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Connect the MPU6050,
+                servo, buzzer and
+                common ground.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+
+            <h4>Breadboard (×1)</h4>
+
+            <p>
+                Provides a convenient
+                prototype connection
+                area for the circuit.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Python Libraries:</strong>
+
+        <ul>
+            <li>smbus2</li>
+            <li>gpiozero</li>
+            <li>matplotlib</li>
+            <li>csv, math, time, collections, datetime and pathlib (Python standard library)</li>
+        </ul>
+
+        <p>
+            A compatible Raspberry Pi
+            GPIO pin factory is required
+            for GPIOZero.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     CONNECTIONS
+========================================== -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>MPU6050 Accelerometer</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>MPU6050 Pin</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>VCC</td>
+                    <td>3.3V / Physical Pin 1</td>
+                </tr>
+
+                <tr>
+                    <td>GND</td>
+                    <td>GND / Physical Pin 6</td>
+                </tr>
+
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO2 / Physical Pin 3</td>
+                </tr>
+
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO3 / Physical Pin 5</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>SG90 Servo Motor</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Servo Wire</th>
+                    <th>Function</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Orange / Yellow</td>
+                    <td>Signal</td>
+                    <td>GPIO18 / Physical Pin 12</td>
+                </tr>
+
+                <tr>
+                    <td>Red</td>
+                    <td>Power</td>
+                    <td>Suitable regulated servo supply</td>
+                </tr>
+
+                <tr>
+                    <td>Brown / Black</td>
+                    <td>Ground</td>
+                    <td>Common GND with Raspberry Pi</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Buzzer</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Buzzer Connection</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Control input</td>
+                    <td>GPIO23 / Physical Pin 16 through suitable driver/module</td>
+                </tr>
+
+                <tr>
+                    <td>Ground</td>
+                    <td>Common GND</td>
+                </tr>
+
+                <tr>
+                    <td>Supply, if required</td>
+                    <td>Supply compatible with the selected buzzer module</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>GPIO Summary</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Function</th>
+                    <th>GPIO</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>MPU6050 SDA</td>
+                    <td>GPIO2</td>
+                </tr>
+
+                <tr>
+                    <td>MPU6050 SCL</td>
+                    <td>GPIO3</td>
+                </tr>
+
+                <tr>
+                    <td>SG90 Servo Signal</td>
+                    <td>GPIO18</td>
+                </tr>
+
+                <tr>
+                    <td>Buzzer Control</td>
+                    <td>GPIO23</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Hardware Precautions:</strong>
+
+        <p>
+            Use 3.3V-compatible I²C
+            connections for the MPU6050.
+            Confirm that the module's
+            SDA and SCL lines are
+            not pulled up to 5V.
+        </p>
+
+        <p>
+            The SG90 servo may require
+            a separate regulated power
+            arrangement capable of supplying
+            its operating current.
+            Do not power the servo
+            from a GPIO signal pin.
+        </p>
+
+        <p>
+            The buzzer must be compatible
+            with the available GPIO
+            output or controlled through
+            an appropriate driver.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     CIRCUIT DIAGRAM
+========================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
 
     <img
-    class="circuit-img"
-    src="Earthquake Detector.png"
-    alt="Vibration Detection Prototype Circuit"
+        class="circuit-img"
+        src="Earthquake Detector.png"
+        alt="Earthquake Vibration Detection Circuit Diagram"
     >
 
 </section>
 
-<section
-class="section"
-id="working"
->
+<!-- ==========================================
+     WORKING PRINCIPLE
+========================================== -->
+<section class="section" id="working">
 
-    <h2>
-        Working Principle
-    </h2>
+    <h2>Working Principle</h2>
 
     <div class="flow">
 
-        MPU6050
-        <br>
-        ↓
-        <br>
+        <div class="flow-step">
+            MPU6050 Measures X, Y and Z Acceleration
+        </div>
 
-        Raspberry Pi I²C
-        <br>
-        ↓
-        <br>
+        <div class="flow-arrow">↓</div>
 
-        X / Y / Z Acceleration
-        <br>
-        ↓
-        <br>
+        <div class="flow-step">
+            Raspberry Pi Reads Sensor Through I²C
+        </div>
 
-        Dynamic Acceleration
-        <br>
-        ↓
-        <br>
+        <div class="flow-arrow">↓</div>
 
-        1-Second RMS
-        <br>
-        ↓
-        <br>
+        <div class="flow-step">
+            Convert Raw Values into g
+        </div>
 
-        Threshold Check
-        <br>
-        ↓
-        <br>
+        <div class="flow-arrow">↓</div>
 
-        Servo + Buzzer + CSV + Live Graph
+        <div class="flow-step">
+            Estimate and Remove Gravity Component
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Calculate Dynamic Acceleration Magnitude
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Calculate Rolling RMS
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Compare RMS with Alert Thresholds
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Activate or Clear Servo and Buzzer Alert
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Save Data to CSV
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Display Live Matplotlib Graph
+        </div>
 
     </div>
 
+    <h3>Accelerometer Reading</h3>
+
+    <p>
+        The MPU6050 supplies raw
+        acceleration readings along
+        three axes. The Raspberry Pi
+        converts them to units of g
+        using the configured ±2 g scale.
+    </p>
+
+    <h3>Gravity Estimation</h3>
+
+    <p>
+        A low-pass filter estimates
+        the slowly varying component
+        associated with gravity
+        and sensor orientation.
+    </p>
+
+    <h3>Dynamic Acceleration</h3>
+
+    <p>
+        The estimated gravity component
+        is subtracted from the
+        current measured acceleration.
+    </p>
+
+    <h3>RMS Calculation</h3>
+
+    <p>
+        Dynamic acceleration values
+        are squared, averaged across
+        the rolling sample window
+        and square-rooted to calculate RMS.
+    </p>
+
+    <h3>Alert Activation</h3>
+
+    <p>
+        When RMS is at least 0.08 g
+        for 0.5 seconds, the
+        buzzer turns ON and the
+        servo moves to 0°.
+    </p>
+
+    <h3>Alert Reset</h3>
+
+    <p>
+        When RMS is at most 0.04 g
+        for five seconds, the buzzer
+        turns OFF and the servo
+        returns to 90°.
+    </p>
+
+    <h3>Data Logging and Graph</h3>
+
+    <p>
+        Each sample is written
+        to a timestamped CSV file.
+        Matplotlib displays the
+        recent RMS readings against
+        the alert threshold.
+    </p>
+
 </section>
 
-<section
-class="section"
-id="procedure"
->
+<!-- ==========================================
+     PROCEDURE
+========================================== -->
+<section class="section" id="procedure">
 
-    <h2>
-        Procedure
-    </h2>
+    <h2>Procedure</h2>
 
     <ol>
-
-        <li>
-            Connect MPU6050 VCC to 3.3 V, GND to GND, SDA to GPIO2 and SCL to GPIO3.
-        </li>
-
-        <li>
-            Connect the SG90 signal wire to GPIO18 and keep the servo ground common with Raspberry Pi ground.
-        </li>
-
-        <li>
-            Connect the buzzer control to GPIO23 using the appropriate driver / module for the buzzer.
-        </li>
-
-        <li>
-            Enable I²C using <code>raspi-config</code> and reboot.
-        </li>
-
-        <li>
-            Verify the MPU6050 using <code>sudo i2cdetect -y 1</code>.
-        </li>
-
-        <li>
-            Create <code>~/Desktop/Earthquake_Detection_System/logs</code> and the virtual environment described in the SOP.
-        </li>
-
-        <li>
-            Install <code>smbus2</code> and verify the required libraries.
-        </li>
-
-        <li>
-            Save the Python program as <code>main.py</code>.
-        </li>
-
-        <li>
-            Run <code>python main.py</code>.
-        </li>
-
-        <li>
-            Create gentle controlled vibrations near the sensor and observe the RMS graph, servo and buzzer.
-        </li>
-
-        <li>
-            Press <code>Ctrl+C</code> to stop safely.
-        </li>
-
-
+        <li>Arrange the Raspberry Pi 4 Model B, MPU6050 GY-521, SG90 servo, buzzer, breadboard and jumper wires.</li>
+        <li>Connect MPU6050 VCC to 3.3V, physical pin 1.</li>
+        <li>Connect MPU6050 GND to Raspberry Pi ground.</li>
+        <li>Connect MPU6050 SDA to GPIO2, physical pin 3.</li>
+        <li>Connect MPU6050 SCL to GPIO3, physical pin 5.</li>
+        <li>Connect the SG90 servo signal to GPIO18, physical pin 12.</li>
+        <li>Provide suitable servo power and connect the supply ground to Raspberry Pi ground.</li>
+        <li>Connect the buzzer control to GPIO23 using a compatible driver or module.</li>
+        <li>Check the complete circuit before powering the system.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Enable I²C using Raspberry Pi configuration.</li>
+        <li>Verify the MPU6050 at address <code>0x68</code> using <code>sudo i2cdetect -y 1</code>.</li>
+        <li>Create the experiment folder <code>~/Desktop/Earthquake_Detection_System</code>.</li>
+        <li>Create the <code>logs</code> directory or allow the program to create it.</li>
+        <li>Create and activate the Python virtual environment specified in the SOP.</li>
+        <li>Install <code>smbus2</code>, <code>gpiozero</code>, <code>matplotlib</code> and a compatible GPIO backend.</li>
+        <li>Copy the complete Python code from Explore the Code.</li>
+        <li>Save it as <code>main.py</code>.</li>
+        <li>Run <code>python main.py</code> from a graphical desktop session.</li>
+        <li>Observe the RMS graph and normal servo position.</li>
+        <li>Gently create controlled vibrations near the mounted sensor.</li>
+        <li>Observe whether the RMS exceeds the configured alert threshold.</li>
+        <li>Check the servo and buzzer response when the alert condition is sustained.</li>
+        <li>Allow the sensor to remain still and observe the reset behavior.</li>
+        <li>Open the timestamped CSV file and review the recorded measurements.</li>
+        <li>Press <code>Ctrl+C</code> to stop monitoring safely.</li>
     </ol>
 
 </section>
 
-<section
-class="section"
-id="code"
->
+<!-- ==========================================
+     EXPLORE THE CODE
+========================================== -->
+<section class="section" id="code">
 
-    <div class="code-lesson">
-
-        <p class="eyebrow">
-            Raspberry Pi Experiment · Code Review
-        </p>
-
-        <h2 class="lesson-title">
-            Explore the Code
-        </h2>
-
-        <p class="intro">
-            Select a step.
-            The matching code block will highlight in blue.
-        </p>
-
-        <div class="code-layout">
-
-            <article class="code-panel">
-
-                <div class="code-top">
-
-                    <span class="filename">
-                        main.py
-                    </span>
-
-                    <button
-                    class="copy-button"
-                    onclick="copyCode()"
-                    >
-                        Copy Code
-                    </button>
-
-                </div>
-
-                <div
-                class="code-body"
-                id="code-body"
-                >
-
-                    <code id="code-lines"></code>
-
-                </div>
-
-            </article>
-
-            <article class="guide">
-
-                <h2>
-                    Understand it step by step
-                </h2>
-
-                <p>
-                    Choose a step.
-                    The matching code will light up on the left.
-                </p>
-
-                <div class="steps">
-
-<button
-class="step active"
-onclick="showStep(0)"
->
-    <span class="step-number">
-        01
-    </span>
-    Load the libraries
-</button>
-
-<button
-class="step"
-onclick="showStep(1)"
->
-    <span class="step-number">
-        02
-    </span>
-    Set sensor and alert values
-</button>
-
-<button
-class="step"
-onclick="showStep(2)"
->
-    <span class="step-number">
-        03
-    </span>
-    Prepare the MPU6050
-</button>
-
-<button
-class="step"
-onclick="showStep(3)"
->
-    <span class="step-number">
-        04
-    </span>
-    Prepare logging and outputs
-</button>
-
-<button
-class="step"
-onclick="showStep(4)"
->
-    <span class="step-number">
-        05
-    </span>
-    Read and filter acceleration
-</button>
-
-<button
-class="step"
-onclick="showStep(5)"
->
-    <span class="step-number">
-        06
-    </span>
-    Calculate vibration RMS
-</button>
-
-<button
-class="step"
-onclick="showStep(6)"
->
-    <span class="step-number">
-        07
-    </span>
-    Trigger and clear the alert
-</button>
-
-<button
-class="step"
-onclick="showStep(7)"
->
-    <span class="step-number">
-        08
-    </span>
-    Log and plot the data
-</button>
-
-<button
-class="step"
-onclick="showStep(8)"
->
-    <span class="step-number">
-        09
-    </span>
-    Stop and clean up
-</button>
-                </div>
-
-                <div
-                class="explanation"
-                id="explanation"
-                >
-
-                    <h3>
-                        1. Load the libraries
-                    </h3>
-
-                    <p>
-                        The program loads CSV logging, mathematics, I²C, Matplotlib and GPIO control libraries.
-                    </p>
-
-                </div>
-
-                <details>
-
-                    <summary>
-                        Explore more
-                    </summary>
-
-                    <p>
-        The example alert threshold is
-        <code>0.08 g</code>
-        and the reset threshold is
-        <code>0.04 g</code>.
-        These are project settings and should be calibrated for the mounting and test location.
+    <p class="eyebrow">
+        Raspberry Pi Experiment · Code Review
     </p>
 
-                </details>
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
 
-                <details>
+    <p class="intro">
+        Select a step to highlight
+        its exact Python source-code
+        section. Copy Code copies
+        the complete program.
+    </p>
 
-                    <summary>
-                        Check your understanding
-                    </summary>
+    <div class="code-layout">
 
-                    <ul>
-        <li>
-            Which GPIO controls the servo?
-            <strong>GPIO18</strong>
-        </li>
-        <li>
-            Which GPIO controls the buzzer output?
-            <strong>GPIO23</strong>
-        </li>
-        <li>
-            What is the MPU6050 I²C address in the program?
-            <strong>0x68</strong>
-        </li>
-    </ul>
+        <article class="code-panel">
 
-                </details>
+            <div class="code-top">
 
-            </article>
+                <span class="filename">
+                    main.py
+                </span>
 
-        </div>
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
 
-        <p class="tip">
+            </div>
 
-            <strong>
-                Try it:
-            </strong>
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
 
-            Gently tap or vibrate the mounted sensor and compare the live RMS value with the alert threshold.
+        </article>
 
-        </p>
+        <article class="guide">
 
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Each tab highlights
+                its matching section
+                of the full program.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: MPU6050</summary>
+
+                <p>
+                    The MPU6050 measures
+                    acceleration on three
+                    axes and communicates
+                    through I²C.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: RMS</summary>
+
+                <p>
+                    Root Mean Square measures
+                    the effective magnitude
+                    of changing acceleration
+                    over a sample window.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Hysteresis</summary>
+
+                <p>
+                    Different alert and
+                    reset thresholds prevent
+                    rapid switching when
+                    vibration is close
+                    to one threshold.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: CSV</summary>
+
+                <p>
+                    CSV logging records
+                    timestamps, acceleration
+                    values, RMS and
+                    the alert state for
+                    later analysis.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Graph</summary>
+
+                <p>
+                    Matplotlib displays
+                    recent RMS values
+                    alongside the
+                    configured alert threshold.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+
+                <ol>
+                    <li>What is the MPU6050 I²C address?</li>
+                    <li>Which GPIO controls the servo?</li>
+                    <li>Which GPIO controls the buzzer?</li>
+                    <li>What is the target sampling rate?</li>
+                    <li>What is the alert threshold?</li>
+                    <li>What is the reset threshold?</li>
+                    <li>How long must a low RMS persist to clear an alert?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    0x68; GPIO18; GPIO23;
+                    50 Hz; 0.08 g; 0.04 g;
+                    five seconds.
+                </p>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+
+        <strong>Try It:</strong>
+        Create gentle, controlled
+        vibrations near the sensor.
+        Observe the RMS graph,
+        alert threshold, buzzer,
+        servo and CSV log.
+
+    </p>
+
+</section>
+
+<!-- ==========================================
+     EXPECTED OUTPUT
+========================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Terminal — Startup</h3>
+
+    <div class="output-box">
+<pre>Vibration monitoring started. Ctrl+C to stop.</pre>
+    </div>
+
+    <h3>Normal Vibration — Example</h3>
+
+    <div class="output-box">
+<pre>RMS=0.018 g | Alert=NORMAL
+
+RMS=0.025 g | Alert=NORMAL</pre>
+    </div>
+
+    <h3>Alert — Example</h3>
+
+    <div class="output-box">
+<pre>ALERT: vibration RMS 0.105 g
+
+RMS=0.112 g | Alert=ACTIVE</pre>
+    </div>
+
+    <h3>Alert Cleared — Example</h3>
+
+    <div class="output-box">
+<pre>Alert cleared; vibration returned below reset level.
+
+RMS=0.020 g | Alert=NORMAL</pre>
+    </div>
+
+    <h3>CSV File Structure</h3>
+
+    <div class="output-box">
+<pre>timestamp_iso,elapsed_s,ax_g,ay_g,az_g,dynamic_magnitude_g,rms_1s_g,alert
+
+2026-11-16T10:00:01.000,1.000,0.01200,0.02400,0.99800,0.02100,0.01800,0
+
+2026-11-16T10:00:02.000,2.000,0.09600,0.05500,1.08400,0.11200,0.10500,1</pre>
+    </div>
+
+    <h3>Functional Output</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>System starts</td>
+                    <td>Servo at 90°; buzzer OFF</td>
+                </tr>
+
+                <tr>
+                    <td>Normal vibration</td>
+                    <td>Continue RMS monitoring</td>
+                </tr>
+
+                <tr>
+                    <td>Sustained RMS ≥ 0.08 g</td>
+                    <td>Servo moves to 0°; buzzer ON</td>
+                </tr>
+
+                <tr>
+                    <td>Sustained RMS ≤ 0.04 g</td>
+                    <td>Servo returns to 90°; buzzer OFF</td>
+                </tr>
+
+                <tr>
+                    <td>Monitoring active</td>
+                    <td>CSV file receives sample data</td>
+                </tr>
+
+                <tr>
+                    <td>Monitoring active</td>
+                    <td>Live RMS graph updates</td>
+                </tr>
+
+                <tr>
+                    <td>Ctrl+C pressed</td>
+                    <td>Hardware and files are released</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+        These values are illustrative
+        examples, not measurements
+        from your hardware. The
+        RMS depends on sensor mounting,
+        actual motion and filtering.
     </div>
 
 </section>
 
-<section class="section">
+<!-- ==========================================
+     DASHBOARD
+========================================== -->
+<section class="section" id="dashboard">
 
-    <h2>
-        Expected Output
-    </h2>
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="Earthquake Vibration Detection Dashboard.png"
+            alt="Earthquake Vibration Detection Live Graph Screenshot"
+        >
+
+    </div>
 
     <p>
-        The live graph displays recent RMS acceleration values.
-        When vibration remains above the configured alert threshold,
-        the buzzer turns ON and the servo moves to the alert position.
+        This section displays the
+        experiment's graph or output
+        screenshot after the matching
+        PNG is uploaded.
     </p>
 
     <p>
-        Each acceleration sample,
-        RMS value and alert state is saved in a timestamped CSV file.
+        The Python program produces
+        a live Matplotlib RMS graph.
+        It does not host a
+        browser-based dashboard.
     </p>
 
 </section>
 
-<section
-class="section"
-id="result"
->
+<!-- ==========================================
+     RESULT
+========================================== -->
+<section class="section" id="result">
 
-    <h2>
-        Result
-    </h2>
+    <h2>Result</h2>
 
     <p>
-        The prototype successfully measures vibration with the MPU6050, calculates RMS acceleration, activates the alert outputs when the configured condition is met, and records the measurements to CSV.
+        The Earthquake Vibration Detection
+        experiment demonstrates
+        accelerometer-based vibration
+        monitoring using Raspberry Pi 4
+        and MPU6050 GY-521.
+    </p>
+
+    <p>
+        The system calculates dynamic
+        acceleration magnitude and
+        short-window RMS, compares
+        the measurements with configurable
+        thresholds, and activates a
+        servo and buzzer when
+        the alert conditions are met.
+    </p>
+
+    <p>
+        Acceleration readings, RMS
+        values and alert states
+        are recorded to CSV and
+        visualized using a
+        live Matplotlib graph.
     </p>
 
 </section>
 
-<section class="section">
+<!-- ==========================================
+     WHAT YOU LEARN
+========================================== -->
+<section class="section" id="learn">
 
-    <h2>
-        What You Learn
-    </h2>
+    <h2>What You Learn</h2>
 
     <ul>
-
-        <li>
-            Using I²C communication with the MPU6050.
-        </li>
-
-        <li>
-            Reading and converting accelerometer data.
-        </li>
-
-        <li>
-            Separating changing motion from gravity/orientation.
-        </li>
-
-        <li>
-            Calculating RMS vibration.
-        </li>
-
-        <li>
-            Using hysteresis and hold times for stable alerts.
-        </li>
-
-        <li>
-            Controlling a servo and buzzer from Raspberry Pi.
-        </li>
-
-        <li>
-            Logging sensor data to CSV and plotting live values.
-        </li>
-
-
+        <li>Using Raspberry Pi 4 for sensor experiments.</li>
+        <li>Interfacing an MPU6050 GY-521 accelerometer.</li>
+        <li>Using GPIO2 and GPIO3 for I²C.</li>
+        <li>Reading raw accelerometer registers.</li>
+        <li>Converting raw sensor values into g.</li>
+        <li>Calculating three-axis acceleration.</li>
+        <li>Estimating gravity and orientation.</li>
+        <li>Using a low-pass filter.</li>
+        <li>Calculating dynamic acceleration magnitude.</li>
+        <li>Calculating rolling RMS values.</li>
+        <li>Implementing vibration thresholds.</li>
+        <li>Using hysteresis and hold times.</li>
+        <li>Controlling an SG90 servo on GPIO18.</li>
+        <li>Controlling a buzzer on GPIO23.</li>
+        <li>Creating timestamped CSV files.</li>
+        <li>Logging sensor measurements.</li>
+        <li>Plotting live RMS values with Matplotlib.</li>
+        <li>Handling I²C read errors.</li>
+        <li>Safely releasing GPIO and file resources.</li>
+        <li>Understanding the limitations of educational vibration-monitoring systems.</li>
     </ul>
 
 </section>
 
 </main>
 
+<!-- ==========================================
+     FOOTER
+========================================== -->
 <footer>
 
-    <strong>
-        R-Pi Experiment
-    </strong>
+    <strong>SIMUDIY Exploration Kit</strong>
 
-    <br>
-
-    Raspberry Pi Earthquake / Vibration Detection Prototype
+    <div>
+        Earthquake Vibration Detection
+    </div>
 
 </footer>
 
+<!-- ==========================================
+     COMPLETE PYTHON PROGRAM
+     NINE CODE EXPLANATION SECTIONS
+========================================== -->
+<textarea id="python-program" hidden>
+#!/usr/bin/env python3
+
+# [01] LOAD LIBRARIES
+
+import csv
+import math
+import time
+
+from collections import deque
+from datetime import datetime
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+
+from smbus2 import SMBus
+
+from gpiozero import (
+    AngularServo,
+    OutputDevice
+)
+
+# [END 01]
+
+
+# [02] CONFIGURE SENSOR AND ALERTS
+
+I2C_BUS = 1
+MPU_ADDRESS = 0x68
+
+SAMPLE_HZ = 50
+
+ALERT_RMS_G = 0.08
+RESET_RMS_G = 0.04
+
+ALERT_HOLD_SECONDS = 0.5
+CLEAR_HOLD_SECONDS = 5.0
+
+GRAVITY_FILTER_TAU = 1.5
+
+PLOT_SECONDS = 10
+
+SERVO_GPIO = 18
+BUZZER_GPIO = 23
+
+SERVO_ALERT_ANGLE = 0
+SERVO_NORMAL_ANGLE = 90
+
+LOG_DIR = (
+    Path(__file__).resolve().parent
+    / "logs"
+)
+
+PWR_MGMT_1 = 0x6B
+ACCEL_XOUT_H = 0x3B
+
+ACCEL_SCALE = 16384.0
+
+# [END 02]
+
+
+# [03] INITIALIZE AND READ MPU6050
+
+def signed16(msb, lsb):
+
+    value = (msb &lt;&lt; 8) | lsb
+
+    return (
+        value - 65536
+        if value &amp; 0x8000
+        else value
+    )
+
+
+def initialize_mpu(bus):
+
+    bus.write_byte_data(
+        MPU_ADDRESS,
+        PWR_MGMT_1,
+        0x00
+    )
+
+    time.sleep(0.1)
+
+    # Accelerometer range: +/- 2 g
+    bus.write_byte_data(
+        MPU_ADDRESS,
+        0x1C,
+        0x00
+    )
+
+
+def read_acceleration_g(bus):
+
+    data = bus.read_i2c_block_data(
+        MPU_ADDRESS,
+        ACCEL_XOUT_H,
+        6
+    )
+
+    return tuple(
+        signed16(
+            data[i],
+            data[i + 1]
+        )
+        / ACCEL_SCALE
+        for i in (0, 2, 4)
+    )
+
+# [END 03]
+
+
+# [04] PREPARE OUTPUTS CSV AND GRAPH
+
+def create_graph():
+
+    plt.ion()
+
+    fig, ax = plt.subplots(
+        figsize=(10, 4.8)
+    )
+
+    line, = ax.plot(
+        [],
+        [],
+        label="1-second RMS (g)"
+    )
+
+    ax.axhline(
+        ALERT_RMS_G,
+        linestyle="--",
+        label="Alert threshold"
+    )
+
+    ax.set_title(
+        "Vibration monitor - educational prototype"
+    )
+
+    ax.set_xlabel(
+        "Time (s)"
+    )
+
+    ax.set_ylabel(
+        "RMS acceleration (g)"
+    )
+
+    ax.grid(True)
+
+    ax.legend(
+        loc="upper right"
+    )
+
+    plt.show(
+        block=False
+    )
+
+    return fig, ax, line
+
+
+def prepare_outputs():
+
+    LOG_DIR.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    stamp = datetime.now().strftime(
+        "%Y%m%d_%H%M%S"
+    )
+
+    log_path = (
+        LOG_DIR
+        / f"vibration_{stamp}.csv"
+    )
+
+    csv_file = open(
+        log_path,
+        "w",
+        newline="",
+        buffering=1
+    )
+
+    writer = csv.writer(
+        csv_file
+    )
+
+    writer.writerow([
+        "timestamp_iso",
+        "elapsed_s",
+        "ax_g",
+        "ay_g",
+        "az_g",
+        "dynamic_magnitude_g",
+        "rms_1s_g",
+        "alert"
+    ])
+
+    servo = AngularServo(
+        SERVO_GPIO,
+        min_angle=0,
+        max_angle=180,
+        min_pulse_width=0.0005,
+        max_pulse_width=0.0025,
+        initial_angle=SERVO_NORMAL_ANGLE
+    )
+
+    buzzer = OutputDevice(
+        BUZZER_GPIO,
+        active_high=True,
+        initial_value=False
+    )
+
+    fig, ax, line = create_graph()
+
+    return {
+        "csv_file": csv_file,
+        "writer": writer,
+        "log_path": log_path,
+        "servo": servo,
+        "buzzer": buzzer,
+        "fig": fig,
+        "ax": ax,
+        "line": line
+    }
+
+# [END 04]
+
+
+# [05] REMOVE GRAVITY AND FILTER MOTION
+
+def filter_acceleration(
+    acceleration,
+    gravity,
+    dt
+):
+
+    if gravity is None:
+
+        gravity = list(
+            acceleration
+        )
+
+    alpha = (
+        dt
+        / (GRAVITY_FILTER_TAU + dt)
+    )
+
+    gravity = [
+        gravity[i]
+        + alpha * (
+            acceleration[i] - gravity[i]
+        )
+        for i in range(3)
+    ]
+
+    dx = acceleration[0] - gravity[0]
+    dy = acceleration[1] - gravity[1]
+    dz = acceleration[2] - gravity[2]
+
+    return gravity, dx, dy, dz
+
+# [END 05]
+
+
+# [06] CALCULATE ROLLING VIBRATION RMS
+
+def calculate_rms(
+    dx,
+    dy,
+    dz,
+    squared_window
+):
+
+    dynamic_mag = math.sqrt(
+        dx * dx
+        + dy * dy
+        + dz * dz
+    )
+
+    squared_window.append(
+        dynamic_mag * dynamic_mag
+    )
+
+    rms = math.sqrt(
+        sum(squared_window)
+        / len(squared_window)
+    )
+
+    return dynamic_mag, rms
+
+# [END 06]
+
+
+# [07] ACTIVATE AND CLEAR ALERT
+
+def update_alert(
+    rms,
+    now,
+    state,
+    servo,
+    buzzer
+):
+
+    if rms &gt;= ALERT_RMS_G:
+
+        state["quiet_since"] = None
+
+        if state["alert_since"] is None:
+
+            state["alert_since"] = now
+
+        if (
+            not state["active"]
+            and now - state["alert_since"]
+            &gt;= ALERT_HOLD_SECONDS
+        ):
+
+            state["active"] = True
+
+            servo.angle = SERVO_ALERT_ANGLE
+
+            buzzer.on()
+
+            print(
+                f"ALERT: vibration RMS {rms:.3f} g"
+            )
+
+    elif rms &lt;= RESET_RMS_G:
+
+        state["alert_since"] = None
+
+        if state["quiet_since"] is None:
+
+            state["quiet_since"] = now
+
+        if (
+            state["active"]
+            and now - state["quiet_since"]
+            &gt;= CLEAR_HOLD_SECONDS
+        ):
+
+            state["active"] = False
+
+            servo.angle = SERVO_NORMAL_ANGLE
+
+            buzzer.off()
+
+            print(
+                "Alert cleared; vibration "
+                "returned below reset level."
+            )
+
+    else:
+
+        state["alert_since"] = None
+        state["quiet_since"] = None
+
+    return state["active"]
+
+# [END 07]
+
+
+# [08] LOG AND PLOT SENSOR DATA
+
+def update_log_and_graph(
+    outputs,
+    history,
+    elapsed,
+    acceleration,
+    dynamic_mag,
+    rms,
+    alert_active
+):
+
+    ax_g, ay_g, az_g = acceleration
+
+    outputs["writer"].writerow([
+        datetime.now().isoformat(
+            timespec="milliseconds"
+        ),
+        f"{elapsed:.3f}",
+        f"{ax_g:.5f}",
+        f"{ay_g:.5f}",
+        f"{az_g:.5f}",
+        f"{dynamic_mag:.5f}",
+        f"{rms:.5f}",
+        int(alert_active)
+    ])
+
+    history["times"].append(elapsed)
+    history["rms"].append(rms)
+
+    outputs["line"].set_data(
+        list(history["times"]),
+        list(history["rms"])
+    )
+
+    outputs["ax"].set_xlim(
+        max(
+            0,
+            elapsed - PLOT_SECONDS
+        ),
+        max(
+            PLOT_SECONDS,
+            elapsed
+        )
+    )
+
+    outputs["ax"].set_ylim(
+        0,
+        max(
+            ALERT_RMS_G * 1.5,
+            max(
+                history["rms"],
+                default=0.01
+            ) * 1.2
+        )
+    )
+
+    outputs["fig"].canvas.draw_idle()
+
+    outputs["fig"].canvas.flush_events()
+
+    plt.pause(0.001)
+
+# [END 08]
+
+
+# [09] RUN MONITOR AND CLEAN UP
+
+def main():
+
+    bus = None
+    outputs = None
+
+    history_len = max(
+        2,
+        int(SAMPLE_HZ * PLOT_SECONDS)
+    )
+
+    history = {
+        "times": deque(
+            maxlen=history_len
+        ),
+        "rms": deque(
+            maxlen=history_len
+        )
+    }
+
+    squared_window = deque(
+        maxlen=SAMPLE_HZ
+    )
+
+    state = {
+        "active": False,
+        "alert_since": None,
+        "quiet_since": None
+    }
+
+    gravity = None
+
+    period = 1.0 / SAMPLE_HZ
+
+    start = time.monotonic()
+    last_sample_time = None
+    last_status = start
+
+    try:
+
+        bus = SMBus(I2C_BUS)
+
+        initialize_mpu(bus)
+
+        outputs = prepare_outputs()
+
+        print(
+            "Vibration monitoring started. "
+            "Ctrl+C to stop."
+        )
+
+        while True:
+
+            loop_start = time.monotonic()
+
+            try:
+
+                acceleration = (
+                    read_acceleration_g(bus)
+                )
+
+            except OSError as error:
+
+                print(
+                    f"I2C read failed: {error}. "
+                    "Reinitializing sensor..."
+                )
+
+                time.sleep(0.25)
+
+                try:
+
+                    bus.close()
+
+                except Exception:
+
+                    pass
+
+                bus = SMBus(I2C_BUS)
+
+                initialize_mpu(bus)
+
+                continue
+
+            now = time.monotonic()
+
+            elapsed = now - start
+
+            if last_sample_time is None:
+
+                dt = period
+
+            else:
+
+                dt = max(
+                    0.001,
+                    now - last_sample_time
+                )
+
+            last_sample_time = now
+
+            gravity, dx, dy, dz = (
+                filter_acceleration(
+                    acceleration,
+                    gravity,
+                    dt
+                )
+            )
+
+            dynamic_mag, rms = (
+                calculate_rms(
+                    dx,
+                    dy,
+                    dz,
+                    squared_window
+                )
+            )
+
+            alert_active = update_alert(
+                rms,
+                now,
+                state,
+                outputs["servo"],
+                outputs["buzzer"]
+            )
+
+            update_log_and_graph(
+                outputs,
+                history,
+                elapsed,
+                acceleration,
+                dynamic_mag,
+                rms,
+                alert_active
+            )
+
+            if now - last_status &gt;= 1.0:
+
+                print(
+                    f"RMS={rms:.3f} g | "
+                    f"Alert={'ACTIVE' if alert_active else 'NORMAL'}"
+                )
+
+                last_status = now
+
+            remaining = (
+                period
+                - (
+                    time.monotonic()
+                    - loop_start
+                )
+            )
+
+            if remaining &gt; 0:
+
+                time.sleep(remaining)
+
+    except KeyboardInterrupt:
+
+        print("\nStopping monitor...")
+
+    finally:
+
+        if outputs is not None:
+
+            try:
+
+                outputs["buzzer"].off()
+                outputs["buzzer"].close()
+
+            except Exception:
+
+                pass
+
+            try:
+
+                outputs["servo"].detach()
+                outputs["servo"].close()
+
+            except Exception:
+
+                pass
+
+            try:
+
+                outputs["csv_file"].close()
+
+            except Exception:
+
+                pass
+
+        if bus is not None:
+
+            try:
+
+                bus.close()
+
+            except Exception:
+
+                pass
+
+        try:
+
+            plt.close("all")
+
+        except Exception:
+
+            pass
+
+        if outputs is not None:
+
+            print(
+                f"Stopped. Data file: "
+                f"{outputs['log_path']}"
+            )
+
+        else:
+
+            print("Monitor stopped.")
+
+
+if __name__ == "__main__":
+
+    main()
+
+# [END 09]
+</textarea>
+
+<!-- ==========================================
+     CODE EXPLORER JAVASCRIPT
+========================================== -->
 <script>
 
-const program =
-"#!/usr/bin/env python3\n\nimport csv\nimport math\nimport time\nfrom collections import deque\nfrom datetime import datetime\nfrom pathlib import Path\n\nimport matplotlib.pyplot as plt\nfrom smbus2 import SMBus\nfrom gpiozero import AngularServo, OutputDevice\n\nI2C_BUS = 1\nMPU_ADDRESS = 0x68\nSAMPLE_HZ = 50\nALERT_RMS_G = 0.08\nRESET_RMS_G = 0.04\nALERT_HOLD_SECONDS = 0.5\nCLEAR_HOLD_SECONDS = 5.0\nGRAVITY_FILTER_TAU = 1.5\nPLOT_SECONDS = 10\nSERVO_GPIO = 18\nBUZZER_GPIO = 23\nSERVO_ALERT_ANGLE = 0\nSERVO_NORMAL_ANGLE = 90\nLOG_DIR = Path(__file__).resolve().parent / \"logs\"\n\nPWR_MGMT_1 = 0x6B\nACCEL_XOUT_H = 0x3B\nACCEL_SCALE = 16384.0\n\ndef signed16(msb, lsb):\n    value = (msb << 8) | lsb\n    return value - 65536 if value & 0x8000 else value\n\ndef initialize_mpu(bus):\n    bus.write_byte_data(\n        MPU_ADDRESS,\n        PWR_MGMT_1,\n        0x00\n    )\n    time.sleep(0.1)\n\n    bus.write_byte_data(\n        MPU_ADDRESS,\n        0x1C,\n        0x00\n    )\n\ndef read_acceleration_g(bus):\n    data = bus.read_i2c_block_data(\n        MPU_ADDRESS,\n        ACCEL_XOUT_H,\n        6\n    )\n\n    return tuple(\n        signed16(\n            data[i],\n            data[i + 1]\n        )\n        / ACCEL_SCALE\n        for i in (0, 2, 4)\n    )\n\ndef main():\n    LOG_DIR.mkdir(\n        parents=True,\n        exist_ok=True\n    )\n\n    stamp = datetime.now().strftime(\n        \"%Y%m%d_%H%M%S\"\n    )\n\n    log_path = LOG_DIR / f\"vibration_{stamp}.csv\"\n\n    csv_file = None\n    bus = None\n    servo = None\n    buzzer = None\n\n    history_len = max(\n        2,\n        int(\n            SAMPLE_HZ\n            * PLOT_SECONDS\n        )\n    )\n\n    times = deque(\n        maxlen=history_len\n    )\n\n    rms_values = deque(\n        maxlen=history_len\n    )\n\n    start = time.monotonic()\n    gravity = None\n\n    sum_sq = deque(\n        maxlen=SAMPLE_HZ\n    )\n\n    alert_since = None\n    quiet_since = None\n    alert_active = False\n    last_status = 0.0\n\n    try:\n        bus = SMBus(\n            I2C_BUS\n        )\n\n        initialize_mpu(\n            bus\n        )\n\n        servo = AngularServo(\n            SERVO_GPIO,\n            min_angle=0,\n            max_angle=180,\n            min_pulse_width=0.0005,\n            max_pulse_width=0.0025,\n            initial_angle=SERVO_NORMAL_ANGLE\n        )\n\n        buzzer = OutputDevice(\n            BUZZER_GPIO,\n            active_high=True,\n            initial_value=False\n        )\n\n        csv_file = open(\n            log_path,\n            \"w\",\n            newline=\"\",\n            buffering=1\n        )\n\n        writer = csv.writer(\n            csv_file\n        )\n\n        writer.writerow([\n            \"timestamp_iso\",\n            \"elapsed_s\",\n            \"ax_g\",\n            \"ay_g\",\n            \"az_g\",\n            \"dynamic_magnitude_g\",\n            \"rms_1s_g\",\n            \"alert\"\n        ])\n\n        plt.ion()\n\n        fig, ax = plt.subplots(\n            figsize=(10, 4.8)\n        )\n\n        line, = ax.plot(\n            [],\n            [],\n            label=\"1-second RMS (g)\"\n        )\n\n        ax.axhline(\n            ALERT_RMS_G,\n            linestyle=\"--\",\n            label=\"Alert threshold\"\n        )\n\n        ax.set_title(\n            \"Vibration monitor — educational prototype\"\n        )\n\n        ax.set_xlabel(\n            \"Time (s)\"\n        )\n\n        ax.set_ylabel(\n            \"RMS acceleration (g)\"\n        )\n\n        ax.grid(\n            True\n        )\n\n        ax.legend(\n            loc=\"upper right\"\n        )\n\n        plt.show(\n            block=False\n        )\n\n        period = 1.0 / SAMPLE_HZ\n\n        print(\n            \"Vibration monitoring started. Ctrl+C to stop.\"\n        )\n\n        while True:\n            loop_start = time.monotonic()\n\n            try:\n                ax_g, ay_g, az_g = read_acceleration_g(\n                    bus\n                )\n\n            except OSError as exc:\n                print(\n                    f\"I2C read failed: {exc}. Reinitializing sensor...\"\n                )\n\n                time.sleep(\n                    0.25\n                )\n\n                try:\n                    bus.close()\n\n                except Exception:\n                    pass\n\n                bus = SMBus(\n                    I2C_BUS\n                )\n\n                initialize_mpu(\n                    bus\n                )\n\n                continue\n\n            now = time.monotonic()\n            elapsed = now - start\n\n            if gravity is None:\n                gravity = [\n                    ax_g,\n                    ay_g,\n                    az_g\n                ]\n\n            dt = period if not times else max(\n                0.001,\n                now\n                -\n                (\n                    start\n                    +\n                    times[-1]\n                )\n            )\n\n            alpha = dt / (\n                GRAVITY_FILTER_TAU\n                +\n                dt\n            )\n\n            gravity = [\n                gravity[i]\n                +\n                alpha\n                *\n                (\n                    (ax_g, ay_g, az_g)[i]\n                    -\n                    gravity[i]\n                )\n                for i\n                in range(3)\n            ]\n\n            dx = ax_g - gravity[0]\n            dy = ay_g - gravity[1]\n            dz = az_g - gravity[2]\n\n            dynamic_mag = math.sqrt(\n                dx * dx\n                +\n                dy * dy\n                +\n                dz * dz\n            )\n\n            sum_sq.append(\n                dynamic_mag\n                *\n                dynamic_mag\n            )\n\n            rms = math.sqrt(\n                sum(sum_sq)\n                /\n                len(sum_sq)\n            )\n\n            times.append(\n                elapsed\n            )\n\n            rms_values.append(\n                rms\n            )\n\n            if rms >= ALERT_RMS_G:\n                quiet_since = None\n\n                if alert_since is None:\n                    alert_since = now\n\n                if (\n                    not alert_active\n                    and\n                    now - alert_since\n                    >= ALERT_HOLD_SECONDS\n                ):\n                    alert_active = True\n\n                    servo.angle = SERVO_ALERT_ANGLE\n                    buzzer.on()\n\n                    print(\n                        f\"ALERT: vibration RMS {rms:.3f} g\"\n                    )\n\n            elif rms <= RESET_RMS_G:\n                alert_since = None\n\n                if quiet_since is None:\n                    quiet_since = now\n\n                if (\n                    alert_active\n                    and\n                    now - quiet_since\n                    >= CLEAR_HOLD_SECONDS\n                ):\n                    alert_active = False\n\n                    servo.angle = SERVO_NORMAL_ANGLE\n                    buzzer.off()\n\n                    print(\n                        \"Alert cleared; vibration returned below reset level.\"\n                    )\n\n            else:\n                alert_since = None\n                quiet_since = None\n\n            writer.writerow([\n                datetime.now().isoformat(\n                    timespec=\"milliseconds\"\n                ),\n                f\"{elapsed:.3f}\",\n                f\"{ax_g:.5f}\",\n                f\"{ay_g:.5f}\",\n                f\"{az_g:.5f}\",\n                f\"{dynamic_mag:.5f}\",\n                f\"{rms:.5f}\",\n                int(alert_active)\n            ])\n\n            if (\n                now - last_status\n                >= 1.0\n            ):\n                print(\n                    f\"RMS={rms:.3f} g | \"\n                    f\"Alert={'ACTIVE' if alert_active else 'NORMAL'}\"\n                )\n\n                last_status = now\n\n            line.set_data(\n                list(times),\n                list(rms_values)\n            )\n\n            ax.set_xlim(\n                max(\n                    0,\n                    elapsed\n                    -\n                    PLOT_SECONDS\n                ),\n                max(\n                    PLOT_SECONDS,\n                    elapsed\n                )\n            )\n\n            ax.set_ylim(\n                0,\n                max(\n                    ALERT_RMS_G\n                    *\n                    1.5,\n                    max(\n                        rms_values,\n                        default=0.01\n                    )\n                    *\n                    1.2\n                )\n            )\n\n            fig.canvas.draw_idle()\n            fig.canvas.flush_events()\n\n            plt.pause(\n                0.001\n            )\n\n            remaining = period - (\n                time.monotonic()\n                -\n                loop_start\n            )\n\n            if remaining > 0:\n                time.sleep(\n                    remaining\n                )\n\n    except KeyboardInterrupt:\n        print(\n            \"\\nStopping monitor...\"\n        )\n\n    finally:\n        if buzzer is not None:\n            try:\n                buzzer.off()\n                buzzer.close()\n\n            except Exception:\n                pass\n\n        if servo is not None:\n            try:\n                servo.detach()\n                servo.close()\n\n            except Exception:\n                pass\n\n        if bus is not None:\n            try:\n                bus.close()\n\n            except Exception:\n                pass\n\n        if csv_file is not None:\n            try:\n                csv_file.close()\n\n            except Exception:\n                pass\n\n        try:\n            plt.close(\n                \"all\"\n            )\n\n        except Exception:\n            pass\n\n        print(\n            f\"Stopped. Data file: {log_path}\"\n        )\n\nif __name__ == \"__main__\":\n    main()";
+/* READ THE COMPLETE PYTHON SCRIPT */
 
-const lines =
-program.split("\n");
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
 
-const steps =
-[
+const lines = program.split("\n");
+
+/* NINE EXPLANATION STEPS */
+
+const steps = [
     {
-        "title": "Load the libraries",
-        "start": "import csv",
-        "end": "from gpiozero import AngularServo, OutputDevice",
-        "text": "The program loads CSV logging, mathematics, I²C, Matplotlib and GPIO control libraries."
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Imports CSV, math, timing, I2C, " +
+            "Matplotlib, GPIOZero and supporting " +
+            "Python modules."
     },
     {
-        "title": "Set sensor and alert values",
-        "start": "I2C_BUS = 1",
-        "end": "LOG_DIR = Path(__file__).resolve().parent / \"logs\"",
-        "text": "The MPU6050 address, sample rate, alert thresholds, GPIO pins and servo angles are configured."
+        number: "02",
+        label: "CONFIGURE SENSOR AND ALERTS",
+        title: "Configure Sensor and Alerts",
+        text:
+            "Defines the MPU6050 address, " +
+            "50 Hz sampling, RMS thresholds, " +
+            "hold times, GPIO pins and log location."
     },
     {
-        "title": "Prepare the MPU6050",
-        "start": "def signed16(msb, lsb):",
-        "end": "for i in (0, 2, 4)",
-        "text": "The MPU6050 is awakened, configured for ±2 g and raw accelerometer data is converted to g."
+        number: "03",
+        label: "INITIALIZE AND READ MPU6050",
+        title: "Read MPU6050",
+        text:
+            "Wakes the accelerometer, configures " +
+            "the plus/minus 2 g range and converts " +
+            "raw X/Y/Z readings into g."
     },
     {
-        "title": "Prepare logging and outputs",
-        "start": "def main():",
-        "end": "print(",
-        "text": "The log folder, CSV file, rolling buffers, servo, buzzer and live graph are prepared."
+        number: "04",
+        label: "PREPARE OUTPUTS CSV AND GRAPH",
+        title: "Prepare Logging and Outputs",
+        text:
+            "Creates the CSV file, initializes " +
+            "the servo and buzzer and prepares " +
+            "the live Matplotlib graph."
     },
     {
-        "title": "Read and filter acceleration",
-        "start": "ax_g, ay_g, az_g = read_acceleration_g(",
-        "end": "for i",
-        "text": "The program reads X/Y/Z acceleration and estimates gravity so changing motion can be isolated."
+        number: "05",
+        label: "REMOVE GRAVITY AND FILTER MOTION",
+        title: "Filter Acceleration",
+        text:
+            "Applies a low-pass gravity estimate " +
+            "and subtracts it from the three " +
+            "acceleration axes."
     },
     {
-        "title": "Calculate vibration RMS",
-        "start": "dynamic_mag = math.sqrt(",
-        "end": "rms_values.append(",
-        "text": "Dynamic acceleration magnitude is calculated and converted into a short-window RMS vibration value."
+        number: "06",
+        label: "CALCULATE ROLLING VIBRATION RMS",
+        title: "Calculate Vibration RMS",
+        text:
+            "Calculates dynamic acceleration " +
+            "magnitude and the RMS over the " +
+            "rolling sample window."
     },
     {
-        "title": "Trigger and clear the alert",
-        "start": "if rms >= ALERT_RMS_G:",
-        "end": "print(",
-        "text": "A sustained high RMS activates the servo and buzzer; a sustained low RMS clears the alert."
+        number: "07",
+        label: "ACTIVATE AND CLEAR ALERT",
+        title: "Control Vibration Alert",
+        text:
+            "Uses 0.08 g and 0.04 g thresholds " +
+            "with hold times to operate " +
+            "the servo and buzzer."
     },
     {
-        "title": "Log and plot the data",
-        "start": "writer.writerow([",
-        "end": "time.sleep(",
-        "text": "Each sample is written to CSV and the recent RMS values are updated on the live Matplotlib graph."
+        number: "08",
+        label: "LOG AND PLOT SENSOR DATA",
+        title: "Log and Plot Data",
+        text:
+            "Records samples and alert states " +
+            "to CSV, then updates the recent " +
+            "RMS graph."
     },
     {
-        "title": "Stop and clean up",
-        "start": "except KeyboardInterrupt:",
-        "end": "main()",
-        "text": "Ctrl+C stops the monitor and safely closes the buzzer, servo, I²C bus, CSV file and plot."
+        number: "09",
+        label: "RUN MONITOR AND CLEAN UP",
+        title: "Run and Stop Monitor",
+        text:
+            "Runs the sampling loop, handles " +
+            "sensor read failures and safely " +
+            "releases hardware and files on exit."
     }
 ];
 
+/* ESCAPE SOURCE FOR SAFE DISPLAY */
 
-function escapeHtml(text){
+function escapeHtml(value) {
 
-    return text
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
-
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
+/* DISPLAY THE COMPLETE SOURCE CODE */
 
-function displayCode(){
+function displayCode() {
 
-    let output = "";
+    const container =
+        document.getElementById(
+            "code-lines"
+        );
 
-    lines.forEach(
-        function(line,index){
+    container.innerHTML = lines.map(
+        function(line, index) {
 
-            output +=
+            return (
                 '<span class="code-line" id="line-' +
-                (index + 1) +
-                '">' +
+                (index + 1) + '">' +
 
                 '<span class="line-number">' +
-                (index + 1) +
-                '</span>' +
+                (index + 1) + '</span>' +
 
                 '<span>' +
                 escapeHtml(line) +
                 '</span>' +
 
-                '</span>';
-
+                '</span>'
+            );
         }
-    );
-
-    document
-    .getElementById("code-lines")
-    .innerHTML =
-    output;
-
+    ).join("");
 }
 
+/* FIND EXACT SECTION MARKERS */
 
-function findLine(
-    searchText,
-    startIndex = 0
-){
+function findMarker(marker) {
 
-    for(
-        let i = startIndex;
-        i < lines.length;
-        i++
-    ){
+    return lines.findIndex(
+        function(line) {
 
-        if(
-            lines[i]
-            .includes(searchText)
-        ){
-
-            return i;
-
+            return line.trim() === marker;
         }
-
-    }
-
-    return -1;
-
+    );
 }
 
+/* MAP EACH TAB TO ITS COMPLETE SECTION */
 
-function showStep(index){
+const ranges = steps.map(
+    function(step) {
 
-    const step =
-    steps[index];
-
-    const buttons =
-    document.querySelectorAll(".step");
-
-    buttons.forEach(
-        function(button){
-
-            button
-            .classList
-            .remove("active");
-
-        }
-    );
-
-    if(
-        buttons[index]
-    ){
-
-        buttons[index]
-        .classList
-        .add("active");
-
-    }
-
-    document
-    .querySelectorAll(".code-line")
-    .forEach(
-        function(line){
-
-            line
-            .classList
-            .remove("selected");
-
-        }
-    );
-
-    const startLine =
-    findLine(
-        step.start
-    );
-
-    if(
-        startLine === -1
-    ){
-
-        console.warn(
-            "Start marker not found:",
-            step.start
+        const start = findMarker(
+            "# [" +
+            step.number +
+            "] " +
+            step.label
         );
 
-        return;
+        const end = findMarker(
+            "# [END " +
+            step.number +
+            "]"
+        );
 
+        return {
+            start: start,
+            end: end,
+            valid:
+                start >= 0 &&
+                end >= start
+        };
     }
+);
 
-    let endLine =
-    findLine(
-        step.end,
-        startLine
-    );
+/* GENERATE THE CODE EXPLANATION BUTTONS */
 
-    if(
-        endLine === -1
-    ){
+function createSteps() {
 
-        endLine =
-        startLine;
-
-    }
-
-    for(
-        let i = startLine;
-        i <= endLine;
-        i++
-    ){
-
-        const line =
+    const container =
         document.getElementById(
-            "line-" +
-            (i + 1)
+            "steps-list"
         );
 
-        if(line){
-
-            line
-            .classList
-            .add("selected");
-
-        }
-
-    }
-
-    const selectedLine =
-    document.getElementById(
-        "line-" +
-        (startLine + 1)
-    );
-
-    const codeBody =
-    document.getElementById(
-        "code-body"
-    );
-
-    if(
-        selectedLine &&
-        codeBody
-    ){
-
-        codeBody.scrollTo({
-
-            top:
-                selectedLine.offsetTop
-                -
-                codeBody.offsetTop
-                -
-                20,
-
-            behavior:
-                "smooth"
-
-        });
-
-    }
-
-    document
-    .getElementById("explanation")
-    .innerHTML =
-
-        "<h3>" +
-        (index + 1) +
-        ". " +
-        step.title +
-        "</h3>" +
-
-        "<p>" +
-        step.text +
-        "</p>";
-
-}
-
-
-function copyCode(){
-
-    navigator
-    .clipboard
-    .writeText(program)
-    .then(
-        function(){
+    steps.forEach(
+        function(step, index) {
 
             const button =
-            document.querySelector(
-                ".copy-button"
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+
+            button.className = "step";
+
+            const number =
+                document.createElement(
+                    "span"
+                );
+
+            number.className =
+                "step-number";
+
+            number.textContent =
+                step.number;
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+            title.textContent =
+                step.title;
+
+            button.append(
+                number,
+                title
             );
 
-            button.innerText =
-            "Copied!";
+            button.addEventListener(
+                "click",
+                function() {
 
-            setTimeout(
-                function(){
-
-                    button.innerText =
-                    "Copy Code";
-
-                },
-                1500
+                    showStep(index);
+                }
             );
 
+            container.appendChild(
+                button
+            );
+        }
+    );
+}
+
+/* HIGHLIGHT THE CORRECT CODE SECTION */
+
+function showStep(index) {
+
+    document.querySelectorAll(
+        ".step"
+    ).forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
         }
     );
 
+    document.querySelectorAll(
+        ".code-line"
+    ).forEach(
+        function(line) {
+
+            line.classList.remove(
+                "selected"
+            );
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById(
+            "explanation"
+        );
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement(
+            "h3"
+        );
+
+    heading.textContent =
+        (index + 1) +
+        ". " +
+        step.title;
+
+    const paragraph =
+        document.createElement(
+            "p"
+        );
+
+    paragraph.textContent =
+        step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching code markers not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
+
+        if (element) {
+
+            element.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+    const codeBody =
+        document.getElementById(
+            "code-body"
+        );
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+            behavior: "smooth"
+        });
+    }
 }
 
+/* COPY THE FULL PYTHON PROGRAM */
+
+async function copyCode() {
+
+    const button =
+        document.querySelector(
+            ".copy-button"
+        );
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+
+                button.textContent =
+                    "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement(
+                "textarea"
+            );
+
+        field.value = program;
+
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(
+            field
+        );
+
+        field.select();
+
+        let success = false;
+
+        try {
+
+            success =
+                document.execCommand(
+                    "copy"
+                );
+
+        } catch(error) {
+
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+
+            copied();
+
+        } else {
+
+            button.textContent =
+                "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch(error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
+}
+
+/* INITIALIZE CODE EXPLORER */
 
 displayCode();
-
+createSteps();
 showStep(0);
 
 </script>
 
 </body>
-
 </html>
