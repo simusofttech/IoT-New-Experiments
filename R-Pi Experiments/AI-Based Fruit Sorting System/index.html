@@ -1,169 +1,2589 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI-Based Fruit Sorting System</title>
+
 <style>
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
-.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
-.header h1{margin:0 0 8px;font-size:34px;}
-.header p{margin:0;font-size:17px;}
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
-.container{width:90%;max-width:1050px;margin:35px auto;}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
-.section h3{color:#1e3a8a;} ul,ol{padding-left:24px;} li{margin-bottom:8px;}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
-.component-card p{color:#475569;font-size:14px;margin:0;}
-.table-wrap{overflow-x:auto;} table{width:100%;min-width:620px;border-collapse:collapse;} th,td{padding:12px;border:1px solid #ddd;text-align:left;} th{background:#2563eb;color:white;} tr:nth-child(even){background:#f8fafc;}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px;}
-.code-lesson{color:#142e3a;} .eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
-.lesson-title{font-size:32px !important;margin:0 0 8px !important;color:#1e3a8a !important;border:0 !important;padding:0 !important;}
-.intro{color:#526875;margin:0 0 22px;}
-.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
-.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
-.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
-.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
-.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
-.copy-button:hover{background:#eff6ff;}
-.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
-.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
-.code-line:hover{background:#f8fbff;} .code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
-.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
-.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;} .guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;} .guide>p{color:#526875;font-size:15px;}
-.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
-.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
-.step:hover{border-color:#60a5fa;background:#f8fbff;} .step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;} .step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
-.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;} .explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;} .explanation p{margin:0;color:#526875;font-size:15px;}
-.guide details{border-top:1px solid #dce6e9;margin-top:15px;} .guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;} .guide details p,.guide details li{color:#526875;font-size:15px;} .guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
-.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;} footer strong{color:white;}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+/* GENERAL */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font: 16px/1.7 Arial, Helvetica, sans-serif;
+}
+
+/* HEADER */
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
+    text-align: center;
+}
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    object-fit: contain;
+}
+
+.header-content {
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0, 0, 0, .12);
+}
+
+.header-left-buttons,
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+}
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* NAVIGATION */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* CONTENT */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+    scroll-margin-top: 100px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* THUMBNAIL */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* COMPONENTS */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* TABLES */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+/* CIRCUIT */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* WORKING FLOW */
+.flow {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-step {
+    padding: 5px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* CODE EXPLORER */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, .10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+
+/* CODE GUIDE */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* OUTPUT */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* CENTER DASHBOARD IMAGE */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* FOOTER */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media(max-width:600px) {
+    .header {
+        padding: 15px 0 0;
+    }
+
+    .header-logo {
+        top: 12px;
+        left: 12px;
+        width: 95px;
+        max-height: 60px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
+    }
+}
 </style>
 </head>
+
 <body>
-<header class="header"><h1>Raspberry Pi Experiment</h1><p>AI-Based Fruit Sorting System</p></header>
+
+<!-- HEADER -->
+<header class="header">
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>AI-Based Fruit Sorting System</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >
+                Arduino
+            </a>
+
+            <a
+                href="../../ESP32 CAM Experiments/index.html"
+                class="header-nav-btn"
+            >
+                ESP
+            </a>
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                R-Pi
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- NAVIGATION -->
 <nav>
-<a href="../index.html">← R-Pi Experiments</a>
-<a href="#aim">Aim</a><a href="#components">Components</a><a href="#connections">Connections</a>
-<a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a>
-<a href="#code">Code</a><a href="#result">Result</a>
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
+
 <main class="container">
 
-<section class="section" id="aim"><h2>Aim</h2><p>To build a Raspberry Pi based AI fruit sorting system that detects Strawberry and Pear using a USB camera and automatically sends each fruit to its assigned sorting path using two servo motors.</p></section>
+<!-- EXPERIMENT THUMBNAIL -->
+<section class="section project-thumbnail">
 
-<section class="section"><h2>About the Experiment</h2>
-<p>The Raspberry Pi 4 receives live video from a fixed USB camera and runs a YOLO11m fruit and vegetable detector.</p>
-<p>The program uses <strong>Pear class 25</strong> and <strong>Strawberry class 31</strong>. Strawberry activates the left sorting servo on GPIO17, while Pear activates the right sorting servo on GPIO18.</p>
-<p>To keep the camera display responsive, inference runs at 320 × 320 on every fourth camera frame while the camera operates at 640 × 480.</p>
+    <img
+        src="../AI-Based Fruit Sorting System.png"
+        alt="AI-Based Fruit Sorting System Thumbnail"
+    >
+
 </section>
 
-<section class="section" id="components"><h2>Components Required</h2><div class="components-grid">
-<div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs YOLO inference, camera processing and servo control.</p></div>
-<div class="component-card"><img src="USB Camera.png" alt="USB Camera"><h4>USB Camera (×1)</h4><p>Captures the fruits in the fixed sorting area.</p></div>
-<div class="component-card"><img src="Servo Motor.png" alt="SG90 Servo Motor"><h4>SG90 Servo Motor (×2)</h4><p>Left servo sorts Strawberry and right servo sorts Pear.</p></div>
-<div class="component-card"><img src="Raspberry Pi Power Supply.png" alt="5 V Power Supply"><h4>5 V Power Supply (×1)</h4><p>Provides stable 5 V power for the sorting setup.</p></div>
-<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires"><h4>Jumper Wires</h4><p>Used for servo signal, power and common-ground connections.</p></div>
-</div></section>
+<!-- AIM -->
+<section class="section" id="aim">
 
-<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table>
-<thead><tr><th>Component</th><th>Connection</th><th>Raspberry Pi / Supply Connection</th></tr></thead><tbody>
-<tr><td>USB Camera</td><td>USB</td><td>Any Raspberry Pi USB port</td></tr>
-<tr><td>Left Servo</td><td>Signal</td><td>GPIO17</td></tr>
-<tr><td>Right Servo</td><td>Signal</td><td>GPIO18</td></tr>
-<tr><td>Both Servos</td><td>VCC</td><td>External regulated +5 V</td></tr>
-<tr><td>Both Servos</td><td>GND</td><td>External supply GND</td></tr>
-<tr><td>External Supply</td><td>GND</td><td>Raspberry Pi GND / common ground</td></tr>
-</tbody></table></div></section>
+    <h2>Aim</h2>
 
-<section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="AI-Based Fruit Sorting System Circuit.png" alt="AI-Based Fruit Sorting System Circuit"></section>
+    <p>
+        To develop an AI-Based Fruit Sorting
+        System using a Raspberry Pi 4 Model B,
+        USB camera, trained YOLO11m model,
+        and two SG90 servo motors.
+    </p>
 
-<section class="section" id="working"><h2>Working Principle</h2><div class="flow">
-USB Camera<br>↓<br>Raspberry Pi 4<br>↓<br>YOLO11m Fruit Detection<br>↓<br>
-Strawberry → GPIO17 Left Servo → LEFT SORT<br>
-Pear → GPIO18 Right Servo → RIGHT SORT
-</div></section>
+    <p>
+        The experiment identifies Strawberry
+        and Pear in the camera view and
+        directs them toward their assigned
+        sorting paths using independently
+        controlled servo motors.
+    </p>
 
-<section class="section" id="procedure"><h2>Procedure</h2><ol>
-<li>Connect the USB camera to a Raspberry Pi USB port.</li>
-<li>Connect the left sorting servo signal to GPIO17 and the right sorting servo signal to GPIO18.</li>
-<li>Power the two servos from a stable regulated 5 V supply and connect the supply ground to Raspberry Pi ground.</li>
-<li>Create <code>~/AI_Fruit_Tracking</code> and a <code>fruit_env</code> virtual environment with system site packages.</li>
-<li>Install the required Raspberry Pi Python packages and Ultralytics as described in the SOP.</li>
-<li>Place <code>best.pt</code> in <code>~/AI_Fruit_Tracking/models/</code> and verify Pear is class 25 and Strawberry is class 31.</li>
-<li>Save the program as <code>fruit_sorting.py</code> and run <code>python fruit_sorting.py</code>.</li>
-<li>Place Strawberry and Pear in the sorting area and verify the correct servo operates.</li>
-<li>Press <code>Q</code> to stop safely.</li>
-</ol></section>
-
-<section class="section" id="code"><div class="code-lesson">
-<p class="eyebrow">Raspberry Pi Experiment · Code Review</p>
-<h2 class="lesson-title">Explore the Code</h2>
-<p class="intro">AI-Based Fruit Sorting System · Select a step to see what each part of the Python program does.</p>
-<div class="code-layout"><article class="code-panel">
-<div class="code-top"><span class="filename">fruit_sorting.py</span><button class="copy-button" onclick="copyCode()">Copy Code</button></div>
-<div class="code-body" id="code-body"><code id="code-lines"></code></div></article>
-<article class="guide"><h2>Understand it step by step</h2><p>Choose a step. The matching code will light up on the left.</p>
-<div class="steps"><button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load the libraries</button><button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set model and sorting values</button><button class="step" onclick="showStep(2)"><span class="step-number">03</span>Load the fruit model</button><button class="step" onclick="showStep(3)"><span class="step-number">04</span>Prepare the two servos</button><button class="step" onclick="showStep(4)"><span class="step-number">05</span>Open the USB camera</button><button class="step" onclick="showStep(5)"><span class="step-number">06</span>Run YOLO detection</button><button class="step" onclick="showStep(6)"><span class="step-number">07</span>Sort the detected fruit</button><button class="step" onclick="showStep(7)"><span class="step-number">08</span>Display detections</button><button class="step" onclick="showStep(8)"><span class="step-number">09</span>Stop and clean up</button></div>
-<div class="explanation" id="explanation"><h3>1. Load the libraries</h3><p>The program loads YOLO, GPIOZero Servo control, OpenCV and timing functions.</p></div>
-<details><summary>Explore more: sorting logic</summary><p>Only Pear class 25 and Strawberry class 31 are used. Other model classes are ignored.</p><p>If both target fruits are visible, the program selects the highest-confidence target so only one sorting action occurs at a time.</p></details>
-<details><summary>Check your understanding</summary><ul><li>Which GPIO sorts Strawberry? <strong>GPIO17</strong></li><li>Which GPIO sorts Pear? <strong>GPIO18</strong></li><li>How often does YOLO run? <strong>Every 4th frame</strong></li><li>What AI input size is used? <strong>320 × 320</strong></li></ul></details>
-</article></div>
-<p class="tip"><strong>Try it:</strong> Run <code>python fruit_sorting.py</code>, place a Strawberry and then a Pear in the sorting area, and check that each fruit activates its assigned servo.</p>
-</div></section>
-
-<section class="section"><h2>Expected Output</h2>
-<p>A detected Strawberry activates the left servo and returns it to HOME after sorting.</p>
-<p>A detected Pear activates the right servo and returns it to HOME.</p>
-<p>Other detected classes are ignored, while the live window shows the accepted fruit label and confidence.</p>
 </section>
 
-<section class="section" id="result"><h2>Result</h2><p>The AI-Based Fruit Sorting System successfully detects Strawberry and Pear and operates the assigned left or right servo to sort the fruit into the correct path.</p></section>
+<!-- ABOUT -->
+<section class="section" id="about">
 
-<section class="section"><h2>What You Learn</h2><ul>
-<li>Running YOLO object detection on Raspberry Pi.</li>
-<li>Using class IDs to trigger different physical outputs.</li>
-<li>Controlling two servo motors independently with GPIOZero.</li>
-<li>Reducing AI workload by detecting every fourth camera frame.</li>
-<li>Selecting the highest-confidence target when multiple fruits are visible.</li>
-<li>Using a common ground with an external servo supply.</li>
-</ul></section>
+    <h2>About the Experiment</h2>
 
-</main><footer><strong>R-Pi Experiment</strong><br>AI-Based Fruit Sorting System</footer>
+    <p>
+        The AI-Based Fruit Sorting System
+        demonstrates the integration
+        of computer vision, object detection
+        and motorized sorting using
+        a Raspberry Pi.
+    </p>
 
+    <p>
+        A USB camera captures live images
+        from a fixed fruit inspection area.
+        The Raspberry Pi processes these
+        images using a trained YOLO11m
+        fruit and vegetable detection model.
+    </p>
+
+    <p>
+        The system specifically uses
+        <strong>Pear class 25</strong> and
+        <strong>Strawberry class 31</strong>.
+        Other object classes are ignored
+        for sorting.
+    </p>
+
+    <p>
+        When Strawberry is detected,
+        the left SG90 servo connected
+        to GPIO17 moves to the sorting
+        position. When Pear is detected,
+        the right SG90 servo connected
+        to GPIO18 operates.
+    </p>
+
+    <p>
+        For more responsive video display,
+        the Raspberry Pi performs
+        inference every fourth camera
+        frame at an AI input size
+        of 320 × 320 pixels.
+    </p>
+
+    <p>
+        If multiple target fruits appear
+        in the same inference result,
+        the program selects the target
+        with the highest confidence
+        score for the sorting action.
+    </p>
+
+    <h3>Fruit Classification and Sorting</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fruit</th>
+                    <th>Class ID</th>
+                    <th>Servo</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Strawberry</td>
+                    <td>31</td>
+                    <td>GPIO17</td>
+                    <td>LEFT SORT</td>
+                </tr>
+
+                <tr>
+                    <td>Pear</td>
+                    <td>25</td>
+                    <td>GPIO18</td>
+                    <td>RIGHT SORT</td>
+                </tr>
+
+                <tr>
+                    <td>Other classes</td>
+                    <td>Other IDs</td>
+                    <td>None</td>
+                    <td>Ignored</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+                <tr>
+                    <td>Camera</td>
+                    <td>USB Camera</td>
+                </tr>
+                <tr>
+                    <td>Camera Index</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Camera Resolution</td>
+                    <td>640 × 480</td>
+                </tr>
+                <tr>
+                    <td>AI Model</td>
+                    <td>YOLO11m, trained fruit model</td>
+                </tr>
+                <tr>
+                    <td>Model Filename</td>
+                    <td>best.pt</td>
+                </tr>
+                <tr>
+                    <td>Inference Size</td>
+                    <td>320 × 320</td>
+                </tr>
+                <tr>
+                    <td>Inference Interval</td>
+                    <td>Every fourth frame</td>
+                </tr>
+                <tr>
+                    <td>Confidence Threshold</td>
+                    <td>0.45</td>
+                </tr>
+                <tr>
+                    <td>Pear Class</td>
+                    <td>25</td>
+                </tr>
+                <tr>
+                    <td>Strawberry Class</td>
+                    <td>31</td>
+                </tr>
+                <tr>
+                    <td>Left Servo</td>
+                    <td>GPIO17</td>
+                </tr>
+                <tr>
+                    <td>Right Servo</td>
+                    <td>GPIO18</td>
+                </tr>
+                <tr>
+                    <td>Servo Home Value</td>
+                    <td>0.0</td>
+                </tr>
+                <tr>
+                    <td>Servo Sorting Value</td>
+                    <td>0.65</td>
+                </tr>
+                <tr>
+                    <td>Servo Hold Time</td>
+                    <td>0.6 seconds</td>
+                </tr>
+                <tr>
+                    <td>Display</td>
+                    <td>OpenCV live window</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Model Compatibility:</strong>
+
+        <p>
+            The trained file
+            <code>best.pt</code> must have
+            Pear and Strawberry assigned
+            to class IDs 25 and 31
+            respectively.
+        </p>
+
+        <p>
+            If the model uses different
+            class IDs, the sorting logic
+            must be updated to match
+            the actual trained model.
+        </p>
+
+        <p>
+            The original program can
+            activate a servo repeatedly
+            when the same fruit remains
+            visible. This is a
+            demonstration sorting system;
+            a real conveyor implementation
+            would need object tracking
+            or a separate fruit-position
+            sensor to prevent repeated sorting.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- COMPONENTS -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
+            >
+
+            <h4>Raspberry Pi 4 Model B (×1)</h4>
+
+            <p>
+                Runs YOLO inference,
+                camera processing
+                and servo control.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="USB Camera.png"
+                alt="USB Camera"
+            >
+
+            <h4>USB Camera (×1)</h4>
+
+            <p>
+                Captures fruits
+                positioned in the
+                sorting area.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Servo Motor.png"
+                alt="SG90 Servo Motor"
+            >
+
+            <h4>SG90 Servo Motor (×2)</h4>
+
+            <p>
+                Left servo sorts
+                Strawberry and right
+                servo sorts Pear.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi Power Supply.png"
+                alt="5V Power Supply"
+            >
+
+            <h4>5V Power Supply (×1)</h4>
+
+            <p>
+                Provides regulated
+                electrical power
+                for the setup.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires</h4>
+
+            <p>
+                Connect the servo
+                signals, supply
+                and common ground.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Software Requirements:</strong>
+
+        <ul>
+            <li>Raspberry Pi OS</li>
+            <li>Python 3</li>
+            <li>Ultralytics YOLO</li>
+            <li>OpenCV</li>
+            <li>GPIOZero</li>
+            <li>Compatible GPIO pin backend</li>
+            <li>Trained fruit model: best.pt</li>
+        </ul>
+
+        <p>
+            Verify that the 5V supply
+            arrangement provides sufficient
+            current for the Raspberry Pi
+            and servo motors. The source
+            wiring specifies an external
+            regulated 5V supply for the
+            two servos, with a common
+            ground to the Raspberry Pi.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- CONNECTIONS -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>USB Camera</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Interface</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USB Camera</td>
+                    <td>USB</td>
+                    <td>Available Raspberry Pi USB port</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Left Sorting Servo — Strawberry</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Servo Wire</th>
+                    <th>Function</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Orange / Yellow</td>
+                    <td>Signal</td>
+                    <td>GPIO17 / Physical Pin 11</td>
+                </tr>
+                <tr>
+                    <td>Red</td>
+                    <td>VCC</td>
+                    <td>External regulated +5V</td>
+                </tr>
+                <tr>
+                    <td>Brown / Black</td>
+                    <td>GND</td>
+                    <td>External supply GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Right Sorting Servo — Pear</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Servo Wire</th>
+                    <th>Function</th>
+                    <th>Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Orange / Yellow</td>
+                    <td>Signal</td>
+                    <td>GPIO18 / Physical Pin 12</td>
+                </tr>
+                <tr>
+                    <td>Red</td>
+                    <td>VCC</td>
+                    <td>External regulated +5V</td>
+                </tr>
+                <tr>
+                    <td>Brown / Black</td>
+                    <td>GND</td>
+                    <td>External supply GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Common-Ground Connection</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Connection</th>
+                    <th>Requirement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>External servo supply GND</td>
+                    <td>Connect to Raspberry Pi GND</td>
+                </tr>
+                <tr>
+                    <td>Servo signal lines</td>
+                    <td>GPIO17 and GPIO18 only</td>
+                </tr>
+                <tr>
+                    <td>Servo power</td>
+                    <td>External regulated +5V</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Hardware Precaution:</strong>
+
+        <p>
+            Do not connect the servo
+            power wires to Raspberry Pi
+            GPIO signal pins.
+        </p>
+
+        <p>
+            Use a regulated 5V servo
+            supply with adequate current
+            capacity and connect its
+            ground to Raspberry Pi GND.
+        </p>
+
+        <p>
+            Verify that both sorting
+            mechanisms can move freely
+            without mechanical obstruction
+            or servo stalling.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- CIRCUIT DIAGRAM -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="AI-Based Fruit Sorting System Circuit.png"
+        alt="AI-Based Fruit Sorting System Circuit Diagram"
+    >
+
+</section>
+
+<!-- WORKING PRINCIPLE -->
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            USB Camera Captures Fruit Image
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Raspberry Pi Reads Video Frames
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            YOLO11m Processes Every Fourth Frame
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Detect Pear and Strawberry Classes
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Select Highest-Confidence Target
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Strawberry → GPIO17 → LEFT SORT
+        </div>
+
+        <div class="flow-step">
+            Pear → GPIO18 → RIGHT SORT
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Hold Servo for 0.6 Seconds
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Return Servo to HOME
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Show Fruit Label and Confidence
+        </div>
+
+    </div>
+
+    <h3>Camera Capture</h3>
+
+    <p>
+        The USB camera captures
+        live video at a requested
+        resolution of 640 × 480 pixels.
+    </p>
+
+    <h3>YOLO Fruit Detection</h3>
+
+    <p>
+        YOLO11m performs AI inference
+        at 320 × 320 pixels on
+        every fourth captured frame.
+    </p>
+
+    <h3>Target Classification</h3>
+
+    <p>
+        The program considers only
+        class 25 for Pear and
+        class 31 for Strawberry.
+        Other classes are ignored.
+    </p>
+
+    <h3>Highest-Confidence Selection</h3>
+
+    <p>
+        When multiple matching detections
+        are present, the highest-confidence
+        target is selected for the
+        next sorting action.
+    </p>
+
+    <h3>Servo Movement</h3>
+
+    <p>
+        The selected servo moves
+        to the configured sorting
+        position of 0.65 in GPIOZero's
+        normalized servo-value range.
+    </p>
+
+    <p>
+        After 0.6 seconds,
+        the servo returns to
+        its HOME position of 0.0.
+    </p>
+
+    <h3>Live Display</h3>
+
+    <p>
+        An OpenCV window displays
+        the accepted fruit labels,
+        confidence scores and
+        bounding boxes.
+    </p>
+
+</section>
+
+<!-- PROCEDURE -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the Raspberry Pi 4 Model B, USB camera, two SG90 servo motors, regulated supply and jumper wires.</li>
+        <li>Connect the USB camera to a Raspberry Pi USB port.</li>
+        <li>Connect the left servo signal wire to GPIO17, physical pin 11.</li>
+        <li>Connect the right servo signal wire to GPIO18, physical pin 12.</li>
+        <li>Connect both servo VCC wires to the suitable regulated 5V supply.</li>
+        <li>Connect both servo ground wires to the external supply GND.</li>
+        <li>Connect the external supply GND to Raspberry Pi GND.</li>
+        <li>Verify the wiring and mechanical sorting paths.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Create the experiment directory using <code>mkdir -p ~/AI_Fruit_Tracking/models</code>.</li>
+        <li>Navigate to <code>~/AI_Fruit_Tracking</code>.</li>
+        <li>Create the Python virtual environment <code>fruit_env</code>.</li>
+        <li>Install the required Python packages and a compatible GPIO backend.</li>
+        <li>Place the trained <code>best.pt</code> model inside the <code>models</code> directory.</li>
+        <li>Verify that the trained model assigns class 25 to Pear and class 31 to Strawberry.</li>
+        <li>Copy the Python program from Explore the Code.</li>
+        <li>Save the program as <code>fruit_sorting.py</code>.</li>
+        <li>Run <code>python fruit_sorting.py</code> using a desktop environment that supports OpenCV windows.</li>
+        <li>Confirm that the USB camera opens and the AI model loads.</li>
+        <li>Place a Strawberry within the sorting area.</li>
+        <li>Verify Strawberry detection and left servo movement.</li>
+        <li>Place a Pear within the sorting area.</li>
+        <li>Verify Pear detection and right servo movement.</li>
+        <li>Observe labels and confidence values in the live camera window.</li>
+        <li>Press <code>Q</code> to stop the program.</li>
+        <li>Confirm the servos return HOME and are released.</li>
+    </ol>
+
+</section>
+
+<!-- EXPLORE THE CODE -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        Raspberry Pi Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Click each explanation tab to
+        highlight its matching Python
+        source-code section.
+        Copy Code copies the full script.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    fruit_sorting.py
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Each tab highlights
+                the exact corresponding
+                source-code section.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>
+                    Explore More: YOLO11m
+                </summary>
+                <p>
+                    YOLO11m is used with
+                    trained fruit-detection
+                    weights to recognize
+                    the target classes.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Class IDs
+                </summary>
+                <p>
+                    The program expects
+                    Pear to have class ID 25
+                    and Strawberry to have
+                    class ID 31.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Servo Values
+                </summary>
+                <p>
+                    GPIOZero Servo uses
+                    normalized values.
+                    The configured HOME
+                    value is 0.0 and
+                    SORT value is 0.65.
+                    These are not
+                    angle measurements
+                    in degrees.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Frame Skipping
+                </summary>
+                <p>
+                    Running inference every
+                    fourth frame reduces
+                    processing workload
+                    compared with running
+                    inference on every frame.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Highest Confidence
+                </summary>
+                <p>
+                    When multiple target
+                    fruits are visible,
+                    the program selects
+                    the detection with
+                    the highest confidence
+                    score.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>Which GPIO sorts Strawberry?</li>
+                    <li>Which GPIO sorts Pear?</li>
+                    <li>What is Strawberry's class ID?</li>
+                    <li>What is Pear's class ID?</li>
+                    <li>How often does YOLO inference run?</li>
+                    <li>What is the confidence threshold?</li>
+                    <li>Which key stops the program?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO17; GPIO18;
+                    31; 25; every fourth frame;
+                    0.45; Q.
+                </p>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Place a Strawberry and then a
+        Pear in the sorting area.
+        Observe the fruit label,
+        confidence and corresponding
+        servo movement.
+    </p>
+
+</section>
+
+<!-- EXPECTED OUTPUT -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Terminal — Startup</h3>
+
+    <div class="output-box">
+<pre>Loading fruit model...
+Model loaded
+
+===================================
+AI FRUIT SORTING STARTED
+STRAWBERRY -> LEFT SERVO
+PEAR -> RIGHT SERVO
+Press Q to stop
+===================================</pre>
+    </div>
+
+    <h3>Strawberry Detection</h3>
+
+    <div class="output-box">
+<pre>STRAWBERRY detected Confidence=0.91 -> LEFT SERVO
+
+GPIO17: Sorting position
+Hold: 0.6 seconds
+Return: HOME</pre>
+    </div>
+
+    <h3>Pear Detection</h3>
+
+    <div class="output-box">
+<pre>PEAR detected Confidence=0.88 -> RIGHT SERVO
+
+GPIO18: Sorting position
+Hold: 0.6 seconds
+Return: HOME</pre>
+    </div>
+
+    <h3>OpenCV Live Camera Output</h3>
+
+    <div class="output-box">
+<pre>AI Fruit Sorting
+
+[Live USB Camera Image]
+
+STRAWBERRY 0.91
+[Bounding Box]
+
+PEAR 0.88
+[Bounding Box]</pre>
+    </div>
+
+    <h3>Functional Output</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Strawberry detected</td>
+                    <td>Left GPIO17 servo operates</td>
+                </tr>
+                <tr>
+                    <td>Pear detected</td>
+                    <td>Right GPIO18 servo operates</td>
+                </tr>
+                <tr>
+                    <td>Other class detected</td>
+                    <td>No sorting action</td>
+                </tr>
+                <tr>
+                    <td>Multiple target fruits detected</td>
+                    <td>Highest-confidence target selected</td>
+                </tr>
+                <tr>
+                    <td>Servo completes sorting</td>
+                    <td>Returns HOME</td>
+                </tr>
+                <tr>
+                    <td>Q key pressed</td>
+                    <td>Program exits and cleans up</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        The example confidence values
+        illustrate expected output.
+        Actual values depend on the
+        model, camera conditions,
+        fruit appearance and lighting.
+    </div>
+
+</section>
+
+<!-- DASHBOARD -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="AI-Based Fruit Sorting System Dashboard.png"
+            alt="AI-Based Fruit Sorting System Output Screenshot"
+        >
+
+    </div>
+
+    <p>
+        This section is reserved
+        for the experiment's output
+        screenshot. The Python application
+        shows live fruit detections in
+        an OpenCV window; it does not
+        provide a browser-hosted dashboard.
+    </p>
+
+</section>
+
+<!-- RESULT -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The AI-Based Fruit Sorting System
+        demonstrates fruit recognition
+        and servo-based sorting using
+        Raspberry Pi 4, USB camera
+        and a trained YOLO11m model.
+    </p>
+
+    <p>
+        Strawberry detections activate
+        the left servo on GPIO17,
+        while Pear detections activate
+        the right servo on GPIO18.
+        Other object classes are ignored.
+    </p>
+
+    <p>
+        The experiment demonstrates
+        integration of AI object detection
+        and independently controlled
+        physical sorting outputs.
+    </p>
+
+</section>
+
+<!-- WHAT YOU LEARN -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using Raspberry Pi 4 for AI experiments.</li>
+        <li>Connecting and using a USB camera.</li>
+        <li>Capturing live video with OpenCV.</li>
+        <li>Running YOLO11m object detection.</li>
+        <li>Loading trained model weights.</li>
+        <li>Understanding class IDs.</li>
+        <li>Detecting Pear class 25.</li>
+        <li>Detecting Strawberry class 31.</li>
+        <li>Using confidence thresholds.</li>
+        <li>Skipping frames to reduce AI workload.</li>
+        <li>Selecting the highest-confidence target.</li>
+        <li>Controlling two SG90 servo motors.</li>
+        <li>Using GPIO17 and GPIO18.</li>
+        <li>Understanding GPIOZero Servo values.</li>
+        <li>Applying servo hold timing.</li>
+        <li>Returning servos to HOME.</li>
+        <li>Drawing bounding boxes and labels.</li>
+        <li>Using a common ground with an external supply.</li>
+        <li>Safely closing the camera and GPIO outputs.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>AI-Based Fruit Sorting System</div>
+</footer>
+
+<!-- ======================================
+     COMPLETE PYTHON PROGRAM
+     9 INTERACTIVE CODE SECTIONS
+====================================== -->
+<textarea id="python-program" hidden>
+# [01] LOAD LIBRARIES
+
+from ultralytics import YOLO
+from gpiozero import Servo
+import cv2
+import time
+
+# [END 01]
+
+
+# [02] CONFIGURE MODEL AND SORTING
+
+MODEL_PATH = "/home/pi/AI_Fruit_Tracking/models/best.pt"
+
+CAMERA_ID = 0
+
+AI_SIZE = 320
+DETECT_EVERY = 4
+CONFIDENCE = 0.45
+
+PEAR_CLASS = 25
+STRAWBERRY_CLASS = 31
+
+LEFT_SERVO_GPIO = 17
+RIGHT_SERVO_GPIO = 18
+
+HOME_ANGLE = 0.0
+SORT_ANGLE = 0.65
+HOLD_TIME = 0.6
+
+# [END 02]
+
+
+# [03] LOAD FRUIT MODEL
+
+print("Loading fruit model...")
+
+model = YOLO(MODEL_PATH)
+
+print("Model loaded")
+
+print("Model class labels:")
+
+print(model.names)
+
+# Verify the class IDs in best.pt:
+# 25 = Pear
+# 31 = Strawberry
+
+# [END 03]
+
+
+# [04] INITIALIZE TWO SERVOS
+
+left_servo = Servo(
+    LEFT_SERVO_GPIO,
+    min_pulse_width=0.0005,
+    max_pulse_width=0.0025
+)
+
+right_servo = Servo(
+    RIGHT_SERVO_GPIO,
+    min_pulse_width=0.0005,
+    max_pulse_width=0.0025
+)
+
+left_servo.value = HOME_ANGLE
+right_servo.value = HOME_ANGLE
+
+# [END 04]
+
+
+# [05] OPEN USB CAMERA
+
+cap = cv2.VideoCapture(CAMERA_ID)
+
+if not cap.isOpened():
+
+    print("ERROR: Camera not detected")
+
+    left_servo.detach()
+    right_servo.detach()
+
+    raise SystemExit(1)
+
+cap.set(
+    cv2.CAP_PROP_FRAME_WIDTH,
+    640
+)
+
+cap.set(
+    cv2.CAP_PROP_FRAME_HEIGHT,
+    480
+)
+
+cap.set(
+    cv2.CAP_PROP_BUFFERSIZE,
+    1
+)
+
+frame_count = 0
+last_results = None
+last_sort_time = 0.0
+
+print("===================================")
+print("AI FRUIT SORTING STARTED")
+print("STRAWBERRY -> LEFT SERVO")
+print("PEAR -> RIGHT SERVO")
+print("Press Q to stop")
+print("===================================")
+
+# [END 05]
+
+
+# [06] RUN YOLO FRUIT DETECTION
+
+def detect_fruits(frame):
+
+    results = model.predict(
+        source=frame,
+        imgsz=AI_SIZE,
+        conf=CONFIDENCE,
+        device="cpu",
+        verbose=False
+    )
+
+    result = results[0]
+
+    targets = []
+
+    if result.boxes is None:
+
+        return result, targets
+
+    for box in result.boxes:
+
+        class_id = int(box.cls[0])
+
+        confidence = float(
+            box.conf[0]
+        )
+
+        if class_id not in [
+            PEAR_CLASS,
+            STRAWBERRY_CLASS
+        ]:
+
+            continue
+
+        x1, y1, x2, y2 = map(
+            int,
+            box.xyxy[0].tolist()
+        )
+
+        cx = int((x1 + x2) / 2)
+        cy = int((y1 + y2) / 2)
+
+        targets.append({
+            "class_id": class_id,
+            "confidence": confidence,
+            "x1": x1,
+            "y1": y1,
+            "x2": x2,
+            "y2": y2,
+            "cx": cx,
+            "cy": cy
+        })
+
+    return result, targets
+
+# [END 06]
+
+
+# [07] SORT DETECTED FRUIT
+
+def sort_fruit(targets):
+
+    global last_sort_time
+
+    if not targets:
+
+        return
+
+    if (
+        time.monotonic() - last_sort_time
+        &lt;= HOLD_TIME
+    ):
+
+        return
+
+    target = max(
+        targets,
+        key=lambda item: item["confidence"]
+    )
+
+    class_id = target["class_id"]
+    confidence = target["confidence"]
+
+    if class_id == STRAWBERRY_CLASS:
+
+        print(
+            f"STRAWBERRY detected "
+            f"Confidence={confidence:.2f} "
+            f"-> LEFT SERVO"
+        )
+
+        left_servo.value = SORT_ANGLE
+
+        time.sleep(HOLD_TIME)
+
+        left_servo.value = HOME_ANGLE
+
+        last_sort_time = time.monotonic()
+
+    elif class_id == PEAR_CLASS:
+
+        print(
+            f"PEAR detected "
+            f"Confidence={confidence:.2f} "
+            f"-> RIGHT SERVO"
+        )
+
+        right_servo.value = SORT_ANGLE
+
+        time.sleep(HOLD_TIME)
+
+        right_servo.value = HOME_ANGLE
+
+        last_sort_time = time.monotonic()
+
+# [END 07]
+
+
+# [08] DISPLAY DETECTIONS AND RUN LOOP
+
+def draw_fruits(frame, result):
+
+    display = frame.copy()
+
+    if result is None:
+
+        return display
+
+    if result.boxes is None:
+
+        return display
+
+    for box in result.boxes:
+
+        class_id = int(box.cls[0])
+
+        confidence = float(
+            box.conf[0]
+        )
+
+        if class_id not in [
+            PEAR_CLASS,
+            STRAWBERRY_CLASS
+        ]:
+
+            continue
+
+        x1, y1, x2, y2 = map(
+            int,
+            box.xyxy[0].tolist()
+        )
+
+        if class_id == PEAR_CLASS:
+
+            label = (
+                f"PEAR {confidence:.2f}"
+            )
+
+        else:
+
+            label = (
+                f"STRAWBERRY {confidence:.2f}"
+            )
+
+        cv2.rectangle(
+            display,
+            (x1, y1),
+            (x2, y2),
+            (0, 255, 0),
+            2
+        )
+
+        cv2.putText(
+            display,
+            label,
+            (x1, max(y1 - 10, 20)),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 255, 0),
+            2
+        )
+
+    return display
+
+
+def run_sorting():
+
+    global frame_count
+    global last_results
+
+    while True:
+
+        ret, frame = cap.read()
+
+        if not ret:
+
+            # Keep the UI responsive
+            # if a camera frame is missed.
+
+            if cv2.waitKey(1) &amp; 0xFF == ord("q"):
+                break
+
+            time.sleep(0.02)
+            continue
+
+        frame_count += 1
+
+        if frame_count % DETECT_EVERY == 0:
+
+            result, targets = detect_fruits(
+                frame
+            )
+
+            last_results = result
+
+            sort_fruit(targets)
+
+        display = draw_fruits(
+            frame,
+            last_results
+        )
+
+        cv2.imshow(
+            "AI Fruit Sorting",
+            display
+        )
+
+        if cv2.waitKey(1) &amp; 0xFF == ord("q"):
+            break
+
+# [END 08]
+
+
+# [09] STOP AND CLEAN UP
+
+def cleanup():
+
+    cap.release()
+
+    cv2.destroyAllWindows()
+
+    left_servo.value = HOME_ANGLE
+    right_servo.value = HOME_ANGLE
+
+    time.sleep(0.2)
+
+    left_servo.detach()
+    right_servo.detach()
+
+    print(
+        "AI Fruit Sorting stopped"
+    )
+
+
+if __name__ == "__main__":
+
+    try:
+
+        run_sorting()
+
+    except KeyboardInterrupt:
+
+        print(
+            "Stopping fruit sorting..."
+        )
+
+    finally:
+
+        cleanup()
+
+# [END 09]
+</textarea>
+
+<!-- ======================================
+     INTERACTIVE CODE EXPLORER
+====================================== -->
 <script>
-const program="from ultralytics import YOLO\nfrom gpiozero import Servo\nimport cv2\nimport time\n\nMODEL_PATH = \"/home/pi/AI_Fruit_Tracking/models/best.pt\"\nCAMERA_ID = 0\nAI_SIZE = 320\nDETECT_EVERY = 4\nCONFIDENCE = 0.45\nPEAR_CLASS = 25\nSTRAWBERRY_CLASS = 31\n\nLEFT_SERVO_GPIO = 17\nRIGHT_SERVO_GPIO = 18\nHOME_ANGLE = 0.0\nSORT_ANGLE = 0.65\nHOLD_TIME = 0.6\n\nprint(\"Loading fruit model...\")\nmodel = YOLO(MODEL_PATH)\nprint(\"Model loaded\")\n\nleft_servo = Servo(\n    LEFT_SERVO_GPIO,\n    min_pulse_width=0.0005,\n    max_pulse_width=0.0025\n)\nright_servo = Servo(\n    RIGHT_SERVO_GPIO,\n    min_pulse_width=0.0005,\n    max_pulse_width=0.0025\n)\nleft_servo.value = HOME_ANGLE\nright_servo.value = HOME_ANGLE\n\ncap = cv2.VideoCapture(CAMERA_ID)\nif not cap.isOpened():\n    print(\"ERROR: Camera not detected\")\n    left_servo.detach()\n    right_servo.detach()\n    raise SystemExit\n\ncap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)\ncap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)\ncap.set(cv2.CAP_PROP_BUFFERSIZE, 1)\n\nframe_count = 0\nlast_results = None\nlast_sort_time = 0\n\nprint(\"===================================\")\nprint(\"AI FRUIT SORTING STARTED\")\nprint(\"STRAWBERRY -> LEFT SERVO\")\nprint(\"PEAR -> RIGHT SERVO\")\nprint(\"Press Q to stop\")\nprint(\"===================================\")\n\ntry:\n    while True:\n        ret, frame = cap.read()\n        if not ret:\n            continue\n\n        frame_count += 1\n\n        if frame_count % DETECT_EVERY == 0:\n            results = model.predict(\n                source=frame,\n                imgsz=AI_SIZE,\n                conf=CONFIDENCE,\n                device=\"cpu\",\n                verbose=False\n            )\n            last_results = results[0]\n\n            targets = []\n            for box in last_results.boxes:\n                class_id = int(box.cls[0])\n                confidence = float(box.conf[0])\n\n                if class_id not in [PEAR_CLASS, STRAWBERRY_CLASS]:\n                    continue\n\n                x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())\n                cx = int((x1 + x2) / 2)\n                cy = int((y1 + y2) / 2)\n\n                targets.append({\n                    \"class_id\": class_id,\n                    \"confidence\": confidence,\n                    \"x1\": x1,\n                    \"y1\": y1,\n                    \"x2\": x2,\n                    \"y2\": y2,\n                    \"cx\": cx,\n                    \"cy\": cy\n                })\n\n            if targets and (time.time() - last_sort_time > HOLD_TIME):\n                target = max(targets, key=lambda t: t[\"confidence\"])\n                class_id = target[\"class_id\"]\n                confidence = target[\"confidence\"]\n\n                if class_id == STRAWBERRY_CLASS:\n                    print(f\"STRAWBERRY detected Confidence={confidence:.2f} -> LEFT SERVO\")\n                    left_servo.value = SORT_ANGLE\n                    time.sleep(HOLD_TIME)\n                    left_servo.value = HOME_ANGLE\n                    last_sort_time = time.time()\n\n                elif class_id == PEAR_CLASS:\n                    print(f\"PEAR detected Confidence={confidence:.2f} -> RIGHT SERVO\")\n                    right_servo.value = SORT_ANGLE\n                    time.sleep(HOLD_TIME)\n                    right_servo.value = HOME_ANGLE\n                    last_sort_time = time.time()\n\n        display = frame.copy()\n        if last_results is not None:\n            for box in last_results.boxes:\n                class_id = int(box.cls[0])\n                confidence = float(box.conf[0])\n\n                if class_id not in [PEAR_CLASS, STRAWBERRY_CLASS]:\n                    continue\n\n                x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())\n                label = f\"PEAR {confidence:.2f}\" if class_id == PEAR_CLASS else f\"STRAWBERRY {confidence:.2f}\"\n\n                cv2.rectangle(display, (x1, y1), (x2, y2), (0, 255, 0), 2)\n                cv2.putText(\n                    display,\n                    label,\n                    (x1, max(y1 - 10, 20)),\n                    cv2.FONT_HERSHEY_SIMPLEX,\n                    0.6,\n                    (0, 255, 0),\n                    2\n                )\n\n        cv2.imshow(\"AI Fruit Sorting\", display)\n\n        if cv2.waitKey(1) & 0xFF == ord(\"q\"):\n            break\n\nfinally:\n    cap.release()\n    cv2.destroyAllWindows()\n\n    left_servo.value = HOME_ANGLE\n    right_servo.value = HOME_ANGLE\n\n    left_servo.detach()\n    right_servo.detach()\n\n    print(\"AI Fruit Sorting stopped\")";
-const lines=program.split("\n");
-const steps=[{"title":"Load the libraries","start":"from ultralytics import YOLO","end":"import time","text":"The program loads YOLO, GPIOZero Servo control, OpenCV and timing functions."},{"title":"Set model and sorting values","start":"MODEL_PATH =","end":"HOLD_TIME = 0.6","text":"The model path, AI size, detection interval, confidence threshold, fruit class IDs, servo GPIO pins and timing are configured."},{"title":"Load the fruit model","start":"print(\"Loading fruit model...\")","end":"print(\"Model loaded\")","text":"YOLO loads the trained fruit and vegetable model from best.pt."},{"title":"Prepare the two servos","start":"left_servo = Servo(","end":"right_servo.value = HOME_ANGLE","text":"GPIO17 controls Strawberry sorting and GPIO18 controls Pear sorting; both servos start at HOME."},{"title":"Open the USB camera","start":"cap = cv2.VideoCapture(CAMERA_ID)","end":"last_sort_time = 0","text":"OpenCV opens camera 0, configures 640 × 480 capture and uses a one-frame buffer."},{"title":"Run YOLO detection","start":"if frame_count % DETECT_EVERY == 0:","end":"if targets and (time.time() - last_sort_time > HOLD_TIME):","text":"Every fourth frame is analyzed at 320 × 320, and only Pear and Strawberry detections are accepted."},{"title":"Sort the detected fruit","start":"if targets and (time.time() - last_sort_time > HOLD_TIME):","end":"display = frame.copy()","text":"The highest-confidence target is selected. Strawberry operates the left servo and Pear operates the right servo."},{"title":"Display detections","start":"display = frame.copy()","end":"cv2.imshow(\"AI Fruit Sorting\", display)","text":"The live frame shows the accepted fruit label, confidence score and bounding box."},{"title":"Stop and clean up","start":"if cv2.waitKey(1) & 0xFF == ord(\"q\"):","end":"print(\"AI Fruit Sorting stopped\")","text":"Pressing Q stops the system. The camera closes and both servos return HOME and detach."}];
-function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-function displayCode(){let output="";lines.forEach(function(line,index){output+='<span class="code-line" id="line-'+(index+1)+'"><span class="line-number">'+(index+1)+'</span><span>'+escapeHtml(line)+'</span></span>';});document.getElementById("code-lines").innerHTML=output;}
-function findLine(searchText,startIndex=0){for(let i=startIndex;i<lines.length;i++){if(lines[i].includes(searchText)){return i;}}return -1;}
-function showStep(index){
- const step=steps[index];
- const buttons=document.querySelectorAll(".step");
- buttons.forEach(b=>b.classList.remove("active"));
- if(buttons[index])buttons[index].classList.add("active");
- document.querySelectorAll(".code-line").forEach(l=>l.classList.remove("selected"));
- const startLine=findLine(step.start);
- if(startLine===-1){console.warn("Start marker not found:",step.start);return;}
- let endLine=findLine(step.end,startLine);
- if(endLine===-1)endLine=startLine;
- for(let i=startLine;i<=endLine;i++){const line=document.getElementById("line-"+(i+1));if(line)line.classList.add("selected");}
- const selectedLine=document.getElementById("line-"+(startLine+1));
- const codeBody=document.getElementById("code-body");
- if(selectedLine&&codeBody){codeBody.scrollTo({top:selectedLine.offsetTop-codeBody.offsetTop-20,behavior:"smooth"});}
- document.getElementById("explanation").innerHTML="<h3>"+(index+1)+". "+step.title+"</h3><p>"+step.text+"</p>";
+
+/* COMPLETE PYTHON PROGRAM */
+
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+/* NINE EXPLANATION STEPS */
+
+const steps = [
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Imports Ultralytics YOLO, GPIOZero Servo, " +
+            "OpenCV and time for AI detection, " +
+            "servo control and video processing."
+    },
+    {
+        number: "02",
+        label: "CONFIGURE MODEL AND SORTING",
+        title: "Configure Sorting",
+        text:
+            "Defines the trained model, camera, " +
+            "inference size, confidence threshold, " +
+            "fruit class IDs, servo GPIOs and timing."
+    },
+    {
+        number: "03",
+        label: "LOAD FRUIT MODEL",
+        title: "Load Fruit Model",
+        text:
+            "Loads best.pt and displays its class " +
+            "labels so the required Pear and " +
+            "Strawberry IDs can be checked."
+    },
+    {
+        number: "04",
+        label: "INITIALIZE TWO SERVOS",
+        title: "Initialize Servos",
+        text:
+            "Configures the left servo on GPIO17 " +
+            "and right servo on GPIO18, with " +
+            "both initially set to HOME."
+    },
+    {
+        number: "05",
+        label: "OPEN USB CAMERA",
+        title: "Open USB Camera",
+        text:
+            "Opens camera index 0, requests " +
+            "640 by 480 video and initializes " +
+            "the frame counter and sorting timer."
+    },
+    {
+        number: "06",
+        label: "RUN YOLO FRUIT DETECTION",
+        title: "Detect Fruits",
+        text:
+            "Runs YOLO inference at 320 pixels " +
+            "and extracts only Pear class 25 " +
+            "and Strawberry class 31 detections."
+    },
+    {
+        number: "07",
+        label: "SORT DETECTED FRUIT",
+        title: "Sort Fruits",
+        text:
+            "Selects the highest-confidence target, " +
+            "activates the assigned servo for " +
+            "0.6 seconds, and returns it HOME."
+    },
+    {
+        number: "08",
+        label: "DISPLAY DETECTIONS AND RUN LOOP",
+        title: "Display Detections",
+        text:
+            "Processes every fourth frame, draws " +
+            "fruit bounding boxes and labels, " +
+            "and displays the live OpenCV window."
+    },
+    {
+        number: "09",
+        label: "STOP AND CLEAN UP",
+        title: "Stop System",
+        text:
+            "Releases the camera, closes the " +
+            "OpenCV window, returns both servos " +
+            "HOME and detaches them."
+    }
+];
+
+/* SAFE SOURCE DISPLAY */
+
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
-function copyCode(){navigator.clipboard.writeText(program).then(function(){const b=document.querySelector(".copy-button");b.innerText="Copied!";setTimeout(()=>b.innerText="Copy Code",1500);});}
-displayCode();showStep(0);
+
+/* RENDER COMPLETE CODE */
+
+function displayCode() {
+
+    const container =
+        document.getElementById(
+            "code-lines"
+        );
+
+    container.innerHTML = lines.map(
+        function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+
+                '<span class="line-number">' +
+                (index + 1) + '</span>' +
+
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+
+                '</span>'
+            );
+        }
+    ).join("");
+}
+
+/* LOCATE EXACT SECTION MARKERS */
+
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+            return line.trim() === marker;
+        }
+    );
+}
+
+/* MAP MARKERS TO HIGHLIGHT RANGES */
+
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "# [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "# [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid:
+                start >= 0 &&
+                end >= start
+        };
+    }
+);
+
+/* CREATE INTERACTIVE BUTTONS */
+
+function createSteps() {
+
+    const container =
+        document.getElementById(
+            "steps-list"
+        );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement(
+                    "span"
+                );
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+            title.textContent = step.title;
+
+            button.append(
+                number,
+                title
+            );
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+/* HIGHLIGHT MATCHING CODE SECTION */
+
+function showStep(index) {
+
+    document.querySelectorAll(
+        ".step"
+    ).forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(
+        ".code-line"
+    ).forEach(
+        function(line) {
+
+            line.classList.remove(
+                "selected"
+            );
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById(
+            "explanation"
+        );
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph =
+        document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching source markers not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
+
+        if (element) {
+
+            element.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+    const codeBody =
+        document.getElementById(
+            "code-body"
+        );
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top:
+                codeBody.scrollTop +
+                offset - 20,
+            behavior: "smooth"
+        });
+    }
+}
+
+/* COPY COMPLETE PYTHON SCRIPT */
+
+async function copyCode() {
+
+    const button =
+        document.querySelector(
+            ".copy-button"
+        );
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement(
+                "textarea"
+            );
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(
+            field
+        );
+
+        field.select();
+
+        let success = false;
+
+        try {
+
+            success =
+                document.execCommand("copy");
+
+        } catch (error) {
+
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch (error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
+}
+
+/* INITIALIZE EXPLORER */
+
+displayCode();
+createSteps();
+showStep(0);
+
 </script>
-</body></html>
+
+</body>
+</html>
