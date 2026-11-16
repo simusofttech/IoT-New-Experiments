@@ -1,523 +1,1056 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
->
-
-<title>
-Real-Time Camera Histogram Analyzer
-</title>
+<title>Real-Time Camera Histogram Analyzer</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
+/* =====================================
+   GENERAL PAGE DESIGN
+===================================== */
+* {
+    box-sizing: border-box;
 }
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f7fb;
-    color:#222;
-    line-height:1.7;
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font: 16px/1.7 Arial, Helvetica, sans-serif;
 }
 
-.header{
-    background:#2563eb;
-    color:white;
-    text-align:center;
-    padding:42px 20px;
+/* =====================================
+   HEADER
+===================================== */
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
+    text-align: center;
 }
 
-.header h1{
-    margin:0 0 8px;
-    font-size:34px;
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    object-fit: contain;
 }
 
-.header p{
-    margin:0;
-    font-size:17px;
+.header-content {
+    margin: auto 0;
+    padding: 35px 165px;
 }
 
-nav{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:18px;
-    padding:13px 15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-    position:sticky;
-    top:0;
-    z-index:20;
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
 }
 
-nav a{
-    text-decoration:none;
-    color:#1e3a8a;
-    font-size:14px;
-    font-weight:bold;
+.header p {
+    margin: 0;
+    font-size: 17px;
 }
 
-.container{
-    width:90%;
-    max-width:1050px;
-    margin:35px auto;
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0, 0, 0, .12);
 }
 
-.section{
-    background:white;
-    margin-bottom:24px;
-    padding:28px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
+.header-left-buttons,
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.section h2{
-    margin-top:0;
-    margin-bottom:18px;
-    color:#1e3a8a;
-    font-size:25px;
-    border-bottom:2px solid #dbeafe;
-    padding-bottom:8px;
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
-.section h3{
-    color:#1e3a8a;
+.header-nav-btn:hover {
+    background: #dbeafe;
 }
 
-ul,
-ol{
-    padding-left:24px;
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
 }
 
-li{
-    margin-bottom:8px;
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
-.components-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
+/* =====================================
+   NAVIGATION
+===================================== */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
 }
 
-.component-card{
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,.04);
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
 }
 
-.component-card img{
-    width:100%;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:15px;
+nav a:hover {
+    color: #2563eb;
 }
 
-.component-card h4{
-    color:#1e3a8a;
-    margin:0 0 8px;
-    font-size:18px;
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
 }
 
-.component-card p{
-    color:#475569;
-    font-size:14px;
-    margin:0;
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+    scroll-margin-top: 100px;
 }
 
-.table-wrap{
-    overflow-x:auto;
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
 }
 
-table{
-    width:100%;
-    min-width:620px;
-    border-collapse:collapse;
+.section h3 {
+    color: #1e3a8a;
 }
 
-th,
-td{
-    padding:12px;
-    border:1px solid #ddd;
-    text-align:left;
+ul, ol {
+    padding-left: 24px;
 }
 
-th{
-    background:#2563eb;
-    color:white;
+li {
+    margin-bottom: 8px;
 }
 
-tr:nth-child(even){
-    background:#f8fafc;
+/* =====================================
+   THUMBNAIL
+===================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
 }
 
-.flow{
-    text-align:center;
-    font-weight:bold;
-    color:#1e3a8a;
-    font-size:18px;
-    line-height:2;
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 10px;
+    object-fit: contain;
 }
 
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:white;
-    padding:10px;
+/* =====================================
+   COMPONENT CARDS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
 }
 
-.code-lesson{
-    color:#142e3a;
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
 }
 
-.eyebrow{
-    color:#2563eb;
-    font-weight:bold;
-    font-size:13px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    margin:0 0 4px;
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
 }
 
-.lesson-title{
-    font-size:32px !important;
-    margin:0 0 8px !important;
-    color:#1e3a8a !important;
-    border:0 !important;
-    padding:0 !important;
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
 }
 
-.intro{
-    color:#526875;
-    margin:0 0 22px;
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
 }
 
-.code-layout{
-    display:grid;
-    grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);
-    gap:20px;
-    align-items:start;
+/* =====================================
+   TABLES AND NOTES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
 }
 
-.code-panel{
-    background:white;
-    border:1px solid #bfdbfe;
-    border-radius:14px;
-    overflow:hidden;
-    box-shadow:0 4px 14px rgba(37,99,235,.10);
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
 }
 
-.code-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
-    padding:15px 20px;
-    background:#2563eb;
-    color:white;
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
 }
 
-.filename{
-    color:white;
-    font:bold 14px/1.4 Consolas,Monaco,monospace;
+th {
+    background: #2563eb;
+    color: white;
 }
 
-.copy-button{
-    border:1px solid white;
-    background:white;
-    color:#2563eb;
-    border-radius:8px;
-    padding:8px 14px;
-    min-height:40px;
-    font-weight:bold;
-    cursor:pointer;
+tr:nth-child(even) {
+    background: #f8fafc;
 }
 
-.code-body{
-    height:600px;
-    overflow:auto;
-    background:white;
-    padding:16px 0;
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
 }
 
-.code-line{
-    display:flex;
-    min-width:max-content;
-    min-height:24px;
-    padding-right:22px;
-    white-space:pre;
-    font:13px/24px Consolas,Monaco,monospace;
-    color:#1e293b;
-    border-bottom:1px solid #f1f5f9;
+/* =====================================
+   CIRCUIT DIAGRAM
+===================================== */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
 }
 
-.code-line.selected{
-    background:#dbeafe;
-    box-shadow:inset 4px 0 #2563eb;
+/* =====================================
+   WORKING FLOW
+===================================== */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
 }
 
-.line-number{
-    user-select:none;
-    min-width:52px;
-    text-align:right;
-    padding-right:15px;
-    color:#64748b;
+.flow-step {
+    padding: 5px 10px;
 }
 
-.guide{
-    background:white;
-    border:1px solid #dce6e9;
-    border-radius:14px;
-    padding:22px;
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
 }
 
-.guide h2{
-    border:0;
-    padding:0;
-    margin:0 0 8px;
-    font-size:21px;
+/* =====================================
+   CODE EXPLORER
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
 }
 
-.guide > p{
-    color:#526875;
-    font-size:15px;
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
 }
 
-.steps{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:8px;
-    margin:16px 0;
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
 }
 
-.step{
-    border:1px solid #dce6e9;
-    border-radius:9px;
-    padding:10px;
-    min-height:65px;
-    background:white;
-    text-align:left;
-    font-size:13px;
-    font-weight:bold;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    cursor:pointer;
-    color:#1e3a8a;
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
 }
 
-.step.active{
-    background:#eff6ff;
-    border-color:#60a5fa;
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, .10);
 }
 
-.step-number{
-    color:#2563eb;
-    font-size:12px;
-    flex-shrink:0;
+.code-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
 }
 
-.explanation{
-    background:#eff6ff;
-    border-radius:9px;
-    padding:16px;
-    min-height:130px;
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+    overflow-wrap: anywhere;
 }
 
-.explanation h3{
-    font-size:17px;
-    margin:0 0 7px;
-    color:#1e3a8a;
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.explanation p{
-    margin:0;
-    color:#526875;
-    font-size:15px;
+.copy-button:hover {
+    background: #eff6ff;
 }
 
-.guide details{
-    border-top:1px solid #dce6e9;
-    margin-top:15px;
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
 }
 
-.guide summary{
-    cursor:pointer;
-    color:#2563eb;
-    font-weight:bold;
-    padding:13px 0;
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
 }
 
-.tip{
-    background:#eff6ff;
-    color:#234e87;
-    padding:14px 17px;
-    border-radius:9px;
-    margin-top:20px;
-    font-size:14px;
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
 }
 
-footer{
-    text-align:center;
-    padding:25px 20px;
-    background:#0f172a;
-    color:#cbd5e1;
-    font-size:14px;
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
 }
 
-footer strong{
-    color:white;
+/* =====================================
+   EXPLANATION GUIDE
+===================================== */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
 }
 
-@media(max-width:850px){
-    .code-layout{
-        grid-template-columns:1fr;
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* =====================================
+   EXPECTED OUTPUT
+===================================== */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* =====================================
+   CENTER DASHBOARD IMAGE
+===================================== */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+@media(max-width:900px) {
+    .header-content {
+        padding: 65px 20px 35px;
     }
 }
 
-</style>
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
 
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media(max-width:600px) {
+    .header {
+        padding: 15px 0 0;
+    }
+
+    .header-logo {
+        top: 12px;
+        left: 12px;
+        width: 95px;
+        max-height: 60px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
+    }
+}
+</style>
 </head>
 
 <body>
 
+<!-- =====================================
+     HEADER
+===================================== -->
 <header class="header">
 
-    <h1>
-        Raspberry Pi Experiment
-    </h1>
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
 
-    <p>
-        Real-Time Camera Histogram Analyzer
-    </p>
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Real-Time Camera Histogram Analyzer</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >
+                Arduino
+            </a>
+
+            <a
+                href="../../ESP32 CAM Experiments/index.html"
+                class="header-nav-btn"
+            >
+                ESP
+            </a>
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                R-Pi
+            </a>
+
+        </div>
+
+    </div>
 
 </header>
 
+<!-- NAVIGATION -->
 <nav>
-
-    <a href="../index.html">
-        ← R-Pi Experiments
-    </a>
-
-    <a href="#aim">
-        Aim
-    </a>
-
-    <a href="#components">
-        Components
-    </a>
-
-    <a href="#connections">
-        Connections
-    </a>
-
-    <a href="#circuit">
-        Circuit
-    </a>
-
-    <a href="#working">
-        Working
-    </a>
-
-    <a href="#procedure">
-        Procedure
-    </a>
-
-    <a href="#code">
-        Code
-    </a>
-
-    <a href="#result">
-        Result
-    </a>
-
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
-<section
-class="section"
-id="aim"
->
+<!-- =====================================
+     EXPERIMENT THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
 
-    <h2>
-        Aim
-    </h2>
+    <img
+        src="../Real-Time Camera Histogram Analyzer.png"
+        alt="Real-Time Camera Histogram Analyzer Thumbnail"
+    >
+
+</section>
+
+<!-- =====================================
+     AIM
+===================================== -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
 
     <p>
-        To capture live images from an OV5647 CSI camera,
-        calculate a real-time grayscale brightness histogram,
-        display minimum, maximum and average brightness,
-        and classify the scene as DARK, NORMAL or BRIGHT.
+        To develop a Real-Time Camera
+        Histogram Analyzer using a
+        Raspberry Pi 4 Model B and
+        OV5647 CSI camera that captures
+        live images, calculates the
+        grayscale brightness histogram,
+        measures minimum, maximum and
+        average pixel brightness, and
+        classifies the scene as DARK,
+        NORMAL or BRIGHT.
     </p>
 
 </section>
 
-<section class="section">
+<!-- =====================================
+     ABOUT
+===================================== -->
+<section class="section" id="about">
 
-    <h2>
-        About the Experiment
-    </h2>
+    <h2>About the Experiment</h2>
 
     <p>
-        The Raspberry Pi 4B uses Picamera2 to capture frames
-        from the OV5647 CSI camera.
+        The Real-Time Camera Histogram
+        Analyzer demonstrates digital
+        image processing, grayscale
+        conversion, pixel-intensity
+        analysis and histogram
+        visualization on Raspberry Pi.
     </p>
 
     <p>
-        OpenCV converts each frame to grayscale and builds a
-        256-level brightness histogram from 0 to 255.
-        NumPy calculates the minimum, maximum and average
-        brightness values.
+        The Raspberry Pi 4 Model B
+        captures live video through
+        the OV5647 CSI camera
+        using the Picamera2 library.
     </p>
+
+    <p>
+        OpenCV converts each captured
+        color frame into a grayscale
+        image whose pixel intensities
+        range from 0 to 255.
+    </p>
+
+    <p>
+        A 256-bin histogram is calculated
+        to show the distribution of
+        brightness values within
+        the current image.
+    </p>
+
+    <p>
+        NumPy calculates minimum,
+        maximum and average brightness
+        values for each frame.
+    </p>
+
+    <p>
+        The average brightness
+        determines whether the
+        scene is classified as
+        DARK, NORMAL or BRIGHT.
+    </p>
+
+    <p>
+        The experiment displays
+        two OpenCV windows:
+        one showing the live
+        camera image with
+        brightness measurements,
+        and another displaying
+        the grayscale histogram.
+    </p>
+
+    <h3>Brightness Classification</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Classification</th>
+                    <th>Average Brightness</th>
+                    <th>Interpretation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>DARK</td>
+                    <td>Below 70</td>
+                    <td>Low average image brightness</td>
+                </tr>
+
+                <tr>
+                    <td>NORMAL</td>
+                    <td>70 to 180</td>
+                    <td>Intermediate average brightness</td>
+                </tr>
+
+                <tr>
+                    <td>BRIGHT</td>
+                    <td>Above 180</td>
+                    <td>High average image brightness</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+
+                <tr>
+                    <td>Camera</td>
+                    <td>OV5647 CSI Camera</td>
+                </tr>
+
+                <tr>
+                    <td>Camera Interface</td>
+                    <td>CSI</td>
+                </tr>
+
+                <tr>
+                    <td>Capture Library</td>
+                    <td>Picamera2</td>
+                </tr>
+
+                <tr>
+                    <td>Image Processing</td>
+                    <td>OpenCV</td>
+                </tr>
+
+                <tr>
+                    <td>Brightness Statistics</td>
+                    <td>NumPy</td>
+                </tr>
+
+                <tr>
+                    <td>Camera Resolution</td>
+                    <td>640 × 480</td>
+                </tr>
+
+                <tr>
+                    <td>Capture Format</td>
+                    <td>RGB888</td>
+                </tr>
+
+                <tr>
+                    <td>Grayscale Range</td>
+                    <td>0–255</td>
+                </tr>
+
+                <tr>
+                    <td>Histogram Bins</td>
+                    <td>256</td>
+                </tr>
+
+                <tr>
+                    <td>Histogram Window</td>
+                    <td>640 × 400</td>
+                </tr>
+
+                <tr>
+                    <td>DARK Threshold</td>
+                    <td>Below 70</td>
+                </tr>
+
+                <tr>
+                    <td>BRIGHT Threshold</td>
+                    <td>Above 180</td>
+                </tr>
+
+                <tr>
+                    <td>Output Interface</td>
+                    <td>OpenCV GUI Windows</td>
+                </tr>
+
+                <tr>
+                    <td>Exit Key</td>
+                    <td>Q</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Understanding Grayscale Brightness</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Pixel Intensity</th>
+                    <th>Meaning</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>Black</td>
+                </tr>
+
+                <tr>
+                    <td>1–254</td>
+                    <td>Different shades of gray</td>
+                </tr>
+
+                <tr>
+                    <td>255</td>
+                    <td>White</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        <p>
+            Image brightness depends
+            on scene illumination,
+            camera exposure, gain
+            and other image-processing
+            settings.
+        </p>
+
+        <p>
+            DARK, NORMAL and BRIGHT
+            are software classifications
+            based on grayscale image
+            values. They are not
+            calibrated illuminance
+            measurements in lux.
+        </p>
+
+        <p>
+            The thresholds 70 and 180
+            may be adjusted after
+            testing different lighting
+            conditions.
+        </p>
+
+    </div>
 
 </section>
 
-<section
-class="section"
-id="components"
->
+<!-- =====================================
+     COMPONENTS
+===================================== -->
+<section class="section" id="components">
 
-    <h2>
-        Components Required
-    </h2>
+    <h2>Components Required</h2>
 
     <div class="components-grid">
 
         <div class="component-card">
 
             <img
-            src="Raspberry Pi 4 Model B.png"
-            alt="Raspberry Pi 4 Model B"
+                src="Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
             >
 
-            <h4>
-                Raspberry Pi 4 Model B (×1)
-            </h4>
+            <h4>Raspberry Pi 4 Model B (×1)</h4>
 
             <p>
-                Runs Picamera2,
-                OpenCV and NumPy.
+                Runs Picamera2, OpenCV,
+                NumPy and real-time
+                brightness analysis.
             </p>
 
         </div>
@@ -525,17 +1058,16 @@ id="components"
         <div class="component-card">
 
             <img
-            src="OV5647 Raspberry Pi CSI Camera.jpg"
-            alt="OV5647 Raspberry Pi CSI Camera"
+                src="OV5647 Raspberry Pi CSI Camera.jpg"
+                alt="OV5647 Raspberry Pi CSI Camera"
             >
 
-            <h4>
-                OV5647 Raspberry Pi CSI Camera (×1)
-            </h4>
+            <h4>OV5647 Raspberry Pi CSI Camera (×1)</h4>
 
             <p>
-                Captures the live image
-                for brightness analysis.
+                Captures live images
+                for grayscale
+                histogram analysis.
             </p>
 
         </div>
@@ -543,16 +1075,15 @@ id="components"
         <div class="component-card">
 
             <img
-            src="Raspberry Pi Power Supply.png"
-            alt="Raspberry Pi Power Supply"
+                src="Raspberry Pi Power Supply.png"
+                alt="Raspberry Pi Power Supply"
             >
 
-            <h4>
-                Raspberry Pi Power Supply (×1)
-            </h4>
+            <h4>Raspberry Pi Power Supply (×1)</h4>
 
             <p>
-                Provides stable power
+                Provides regulated
+                electrical power
                 to the Raspberry Pi.
             </p>
 
@@ -560,589 +1091,1176 @@ id="components"
 
     </div>
 
+    <div class="note">
+
+        <strong>Software Requirements:</strong>
+
+        <ul>
+            <li>Raspberry Pi OS</li>
+            <li>Python 3</li>
+            <li>Picamera2</li>
+            <li>OpenCV</li>
+            <li>NumPy</li>
+        </ul>
+
+        <p>
+            The experiment requires
+            a working Raspberry Pi
+            camera stack and a desktop
+            environment capable of
+            showing OpenCV windows.
+        </p>
+
+    </div>
+
 </section>
 
-<section
-class="section"
-id="connections"
->
+<!-- =====================================
+     CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
 
-    <h2>
-        Circuit Connections
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Interface</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>OV5647 CSI Camera</td>
+                    <td>CSI Camera Interface</td>
+                    <td>Raspberry Pi Camera / CSI Connector</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Connection Procedure</h3>
+
+    <ol>
+        <li>Switch off the Raspberry Pi before handling the camera connector.</li>
+        <li>Locate the Raspberry Pi camera CSI connector.</li>
+        <li>Connect the OV5647 camera using its compatible camera ribbon connection.</li>
+        <li>Check the ribbon orientation and connector locking mechanism.</li>
+        <li>Power on the Raspberry Pi after securing the connection.</li>
+        <li>Verify the camera is detected before running the program.</li>
+    </ol>
+
+    <div class="note">
+
+        <strong>Connection Note:</strong>
+
+        <p>
+            The CSI camera is connected
+            through the dedicated camera
+            interface. No separate
+            Raspberry Pi GPIO signals
+            are required for the
+            image-analysis program.
+        </p>
+
+        <p>
+            Avoid inserting or
+            removing the camera
+            connection while the
+            Raspberry Pi is powered.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     CIRCUIT DIAGRAM
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="Histogram.png"
+        alt="Real-Time Camera Histogram Analyzer Circuit Diagram"
+    >
+
+</section>
+
+<!-- =====================================
+     WORKING PRINCIPLE
+===================================== -->
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            OV5647 CSI Camera Captures Scene
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Picamera2 Receives RGB Frame
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            OpenCV Converts Frame to Grayscale
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Calculate 256-Bin Histogram
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            NumPy Calculates Min, Max and Average
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Classify DARK / NORMAL / BRIGHT
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Generate Histogram Graph
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Display Live Camera and Histogram
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Repeat Until Q Is Pressed
+        </div>
+
+    </div>
+
+    <h3>Camera Frame Capture</h3>
+
+    <p>
+        Picamera2 configures the
+        camera for 640 × 480 capture
+        using an RGB888 image stream.
+    </p>
+
+    <h3>Grayscale Conversion</h3>
+
+    <p>
+        OpenCV converts the live
+        color image into grayscale,
+        producing one intensity
+        value for each pixel.
+    </p>
+
+    <h3>Histogram Generation</h3>
+
+    <p>
+        OpenCV groups pixel values
+        into 256 histogram bins,
+        corresponding to intensities
+        from 0 to 255.
+    </p>
+
+    <h3>Brightness Statistics</h3>
+
+    <p>
+        NumPy calculates the
+        minimum, maximum and
+        average pixel intensity
+        from the grayscale image.
+    </p>
+
+    <h3>Scene Classification</h3>
+
+    <p>
+        An average below 70 is DARK,
+        an average above 180 is BRIGHT,
+        and intermediate values
+        are classified NORMAL.
+    </p>
+
+    <h3>Histogram Display</h3>
+
+    <p>
+        The histogram frequencies
+        are normalized for drawing
+        and displayed as a white
+        brightness curve against
+        a dark background.
+    </p>
+
+    <h3>Live Monitoring</h3>
+
+    <p>
+        The analyzer displays
+        a live camera window
+        showing brightness statistics,
+        and a separate histogram
+        window showing the
+        intensity distribution.
+    </p>
+
+</section>
+
+<!-- =====================================
+     PROCEDURE
+===================================== -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the Raspberry Pi 4 Model B, OV5647 CSI camera and Raspberry Pi power supply.</li>
+        <li>Switch off the Raspberry Pi before connecting the camera.</li>
+        <li>Connect the OV5647 camera to the Raspberry Pi CSI connector.</li>
+        <li>Check that the ribbon connection is correctly oriented and secured.</li>
+        <li>Power on the Raspberry Pi.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Verify camera detection using <code>rpicam-hello -t 0</code>.</li>
+        <li>Install Picamera2, OpenCV and NumPy.</li>
+        <li>Open Terminal.</li>
+        <li>Create the experiment directory using <code>mkdir -p ~/Desktop/camera_histogram</code>.</li>
+        <li>Navigate to the experiment directory.</li>
+        <li>Copy the Python code from Explore the Code.</li>
+        <li>Save the program as <code>histogram.py</code>.</li>
+        <li>Run <code>python3 histogram.py</code> in a graphical desktop session.</li>
+        <li>Check that the camera starts successfully.</li>
+        <li>Observe the Live Camera window.</li>
+        <li>Observe the Brightness Histogram window.</li>
+        <li>Cover the camera to produce a dark scene.</li>
+        <li>Observe the change in average brightness and DARK classification.</li>
+        <li>Point the camera toward a normally illuminated scene.</li>
+        <li>Observe the NORMAL classification when the average is within the configured range.</li>
+        <li>Point the camera toward a brighter scene and observe the histogram distribution.</li>
+        <li>Observe BRIGHT classification when the average exceeds 180.</li>
+        <li>Compare the minimum, maximum and average brightness values.</li>
+        <li>Press <code>Q</code> while an OpenCV window has focus to stop the analyzer.</li>
+    </ol>
+
+</section>
+
+<!-- =====================================
+     EXPLORE THE CODE
+===================================== -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        Raspberry Pi Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
     </h2>
+
+    <p class="intro">
+        Select a step to highlight
+        its complete matching Python
+        code section. Copy Code
+        copies the entire program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    histogram.py
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>
+                Understand it step by step
+            </h2>
+
+            <p>
+                Each explanation tab
+                highlights the correct
+                Python section.
+            </p>
+
+            <div
+                class="steps"
+                id="steps-list"
+            ></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore More: Picamera2
+                </summary>
+
+                <p>
+                    Picamera2 captures
+                    frames from supported
+                    Raspberry Pi cameras
+                    through the camera
+                    software stack.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Grayscale
+                </summary>
+
+                <p>
+                    A grayscale image
+                    represents brightness
+                    using a single
+                    intensity value.
+                    Zero is black
+                    and 255 is white.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Histogram
+                </summary>
+
+                <p>
+                    A grayscale histogram
+                    shows how many pixels
+                    have each brightness
+                    value between
+                    0 and 255.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: NumPy
+                </summary>
+
+                <p>
+                    NumPy processes the
+                    grayscale pixel array
+                    to calculate minimum,
+                    maximum and average
+                    brightness.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Thresholds
+                </summary>
+
+                <p>
+                    The supplied experiment
+                    uses an average below
+                    70 for DARK and above
+                    180 for BRIGHT.
+                </p>
+
+                <p>
+                    Values from 70
+                    through 180
+                    are classified NORMAL.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>Which camera is used?</li>
+                    <li>What is the image resolution?</li>
+                    <li>How many histogram bins are calculated?</li>
+                    <li>What intensity represents black?</li>
+                    <li>What intensity represents white?</li>
+                    <li>When is a scene classified DARK?</li>
+                    <li>When is a scene classified BRIGHT?</li>
+                    <li>Which key stops the experiment?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    OV5647 CSI camera;
+                    640 × 480;
+                    256 bins; 0; 255;
+                    below 70; above 180; Q.
+                </p>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+
+        <strong>Try It:</strong>
+
+        Cover the camera and then
+        point it toward a bright scene.
+        Compare the changes in
+        average brightness,
+        classification and
+        histogram shape.
+
+    </p>
+
+</section>
+
+<!-- =====================================
+     EXPECTED OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Terminal — Startup</h3>
+
+    <div class="output-box">
+<pre>Camera started successfully.
+Press Q to quit.</pre>
+    </div>
+
+    <h3>Live Camera Window — Example</h3>
+
+    <div class="output-box">
+<pre>LIVE CAMERA
+
+Average Brightness: 125.4
+Minimum: 12
+Maximum: 247
+Status: NORMAL
+
+[Live camera image]</pre>
+    </div>
+
+    <h3>Brightness Histogram Window</h3>
+
+    <div class="output-box">
+<pre>BRIGHTNESS HISTOGRAM
+
+Y-axis: Relative histogram frequency
+X-axis: Grayscale intensity 0–255
+
+[Live 256-bin histogram curve]</pre>
+    </div>
+
+    <h3>Brightness Classification Examples</h3>
 
     <div class="table-wrap">
 
         <table>
-
             <thead>
-
                 <tr>
-
-                    <th>
-                        Component
-                    </th>
-
-                    <th>
-                        Connection
-                    </th>
-
-                    <th>
-                        Raspberry Pi Connection
-                    </th>
-
+                    <th>Average Brightness</th>
+                    <th>Classification</th>
                 </tr>
-
             </thead>
 
             <tbody>
-
                 <tr>
-
-                    <td>
-                        OV5647 CSI Camera
-                    </td>
-
-                    <td>
-                        CSI Camera Interface
-                    </td>
-
-                    <td>
-                        Raspberry Pi Camera / CSI Connector
-                    </td>
-
+                    <td>35</td>
+                    <td>DARK</td>
                 </tr>
 
+                <tr>
+                    <td>95</td>
+                    <td>NORMAL</td>
+                </tr>
+
+                <tr>
+                    <td>150</td>
+                    <td>NORMAL</td>
+                </tr>
+
+                <tr>
+                    <td>220</td>
+                    <td>BRIGHT</td>
+                </tr>
             </tbody>
 
         </table>
 
     </div>
 
-</section>
+    <h3>Expected Experiment Behavior</h3>
 
-<section
-class="section"
-id="circuit"
->
+    <div class="table-wrap">
 
-    <h2>
-        Circuit Diagram
-    </h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
 
-    <img
-    class="circuit-img"
-    src="Histogram.png"
-    alt="Real-Time Camera Histogram Analyzer Circuit"
-    >
+            <tbody>
+                <tr>
+                    <td>Camera is covered</td>
+                    <td>Average brightness generally decreases</td>
+                </tr>
 
-</section>
+                <tr>
+                    <td>Camera faces a bright scene</td>
+                    <td>Average brightness generally increases</td>
+                </tr>
 
-<section
-class="section"
-id="working"
->
+                <tr>
+                    <td>Lighting changes</td>
+                    <td>Histogram distribution changes</td>
+                </tr>
 
-    <h2>
-        Working Principle
-    </h2>
+                <tr>
+                    <td>Average falls below 70</td>
+                    <td>DARK is displayed</td>
+                </tr>
 
-    <div class="flow">
+                <tr>
+                    <td>Average exceeds 180</td>
+                    <td>BRIGHT is displayed</td>
+                </tr>
 
-        OV5647 CSI Camera
-        <br>
-        ↓
-        <br>
+                <tr>
+                    <td>Q key is pressed</td>
+                    <td>Camera stops and windows close</td>
+                </tr>
+            </tbody>
 
-        Picamera2
-        <br>
-        ↓
-        <br>
-
-        Live RGB Frame
-        <br>
-        ↓
-        <br>
-
-        OpenCV Grayscale Conversion
-        <br>
-        ↓
-        <br>
-
-        256-Level Brightness Histogram
-        <br>
-        ↓
-        <br>
-
-        Minimum + Maximum + Average Brightness
-        <br>
-        ↓
-        <br>
-
-        DARK / NORMAL / BRIGHT
+        </table>
 
     </div>
 
-</section>
+    <div class="note">
 
-<section
-class="section"
-id="procedure"
->
+        <strong>Note:</strong>
 
-    <h2>
-        Procedure
-    </h2>
-
-    <ol>
-
-        <li>
-            Switch OFF the Raspberry Pi before connecting the CSI camera.
-        </li>
-
-        <li>
-            Connect the OV5647 CSI camera to the Raspberry Pi camera connector.
-        </li>
-
-        <li>
-            Power ON the Raspberry Pi.
-        </li>
-
-        <li>
-            Install Picamera2, OpenCV and NumPy.
-        </li>
-
-        <li>
-            Verify the CSI camera using
-            <code>rpicam-hello -t 0</code>.
-        </li>
-
-        <li>
-            Create the project folder
-            <code>~/Desktop/camera_histogram</code>.
-        </li>
-
-        <li>
-            Save the program as
-            <code>histogram.py</code>.
-        </li>
-
-        <li>
-            Run
-            <code>python3 histogram.py</code>.
-        </li>
-
-        <li>
-            Change the lighting or point the camera toward
-            different scenes and observe the histogram.
-        </li>
-
-        <li>
-            Press
-            <code>Q</code>
-            to stop the analyzer.
-        </li>
-
-    </ol>
-
-</section>
-
-<section
-class="section"
-id="code"
->
-
-    <div class="code-lesson">
-
-        <p class="eyebrow">
-            Raspberry Pi Experiment · Code Review
+        <p>
+            The example brightness
+            measurements are illustrative.
+            Actual results depend on
+            the scene, illumination
+            and camera settings.
         </p>
 
-        <h2 class="lesson-title">
-            Explore the Code
-        </h2>
-
-        <p class="intro">
-            Select a step.
-            The matching code block will highlight in blue.
-        </p>
-
-        <div class="code-layout">
-
-            <article class="code-panel">
-
-                <div class="code-top">
-
-                    <span class="filename">
-                        histogram.py
-                    </span>
-
-                    <button
-                    class="copy-button"
-                    onclick="copyCode()"
-                    >
-                        Copy Code
-                    </button>
-
-                </div>
-
-                <div
-                class="code-body"
-                id="code-body"
-                >
-
-                    <code id="code-lines"></code>
-
-                </div>
-
-            </article>
-
-            <article class="guide">
-
-                <h2>
-                    Understand it step by step
-                </h2>
-
-                <p>
-                    Choose a step.
-                    The matching code will light up on the left.
-                </p>
-
-                <div class="steps">
-
-<button
-class="step active"
-onclick="showStep(0)"
->
-    <span class="step-number">
-        01
-    </span>
-    Load the libraries
-</button>
-
-<button
-class="step"
-onclick="showStep(1)"
->
-    <span class="step-number">
-        02
-    </span>
-    Configure the CSI camera
-</button>
-
-<button
-class="step"
-onclick="showStep(2)"
->
-    <span class="step-number">
-        03
-    </span>
-    Capture a live frame
-</button>
-
-<button
-class="step"
-onclick="showStep(3)"
->
-    <span class="step-number">
-        04
-    </span>
-    Create the grayscale histogram
-</button>
-
-<button
-class="step"
-onclick="showStep(4)"
->
-    <span class="step-number">
-        05
-    </span>
-    Calculate brightness values
-</button>
-
-<button
-class="step"
-onclick="showStep(5)"
->
-    <span class="step-number">
-        06
-    </span>
-    Classify the scene
-</button>
-
-<button
-class="step"
-onclick="showStep(6)"
->
-    <span class="step-number">
-        07
-    </span>
-    Draw the histogram
-</button>
-
-<button
-class="step"
-onclick="showStep(7)"
->
-    <span class="step-number">
-        08
-    </span>
-    Display measurements
-</button>
-
-<button
-class="step"
-onclick="showStep(8)"
->
-    <span class="step-number">
-        09
-    </span>
-    Stop the analyzer
-</button>
-                </div>
-
-                <div
-                class="explanation"
-                id="explanation"
-                >
-
-                    <h3>
-                        1. Load the libraries
-                    </h3>
-
-                    <p>
-                        Picamera2 captures CSI camera frames, OpenCV processes and displays them, and NumPy calculates brightness values.
-                    </p>
-
-                </div>
-
-                <details>
-
-                    <summary>
-                        Explore more
-                    </summary>
-
-                    <p>
-                        A grayscale value of 0 is black
-                        and 255 is white.
-                        The thresholds 70 and 180 can be adjusted
-                        after testing in the intended environment.
-                    </p>
-
-                </details>
-
-                <details>
-
-                    <summary>
-                        Check your understanding
-                    </summary>
-
-                    <ul>
-
-                        <li>
-                            What value represents black?
-                            <strong>0</strong>
-                        </li>
-
-                        <li>
-                            What value represents white?
-                            <strong>255</strong>
-                        </li>
-
-                        <li>
-                            When is the status DARK?
-                            <strong>Average brightness below 70</strong>
-                        </li>
-
-                    </ul>
-
-                </details>
-
-            </article>
-
-        </div>
-
-        <p class="tip">
-
-            <strong>
-                Try it:
-            </strong>
-
-            Cover the camera,
-            then point it toward a bright scene
-            and observe how the histogram moves.
-
+        <p>
+            The histogram graph uses
+            normalized heights, so its
+            displayed vertical dimension
+            is relative and does not
+            directly represent raw
+            pixel counts.
         </p>
 
     </div>
 
 </section>
 
-<section class="section">
+<!-- =====================================
+     DASHBOARD
+===================================== -->
+<section class="section" id="dashboard">
 
-    <h2>
-        Expected Output
-    </h2>
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="Real-Time Camera Histogram Analyzer Dashboard.png"
+            alt="Real-Time Camera Histogram Analyzer Output Screenshot"
+        >
+
+    </div>
 
     <p>
-        Two OpenCV windows appear:
-        one showing the live camera image and brightness values,
-        and another showing the grayscale brightness histogram.
+        This section is reserved
+        for the experiment's output
+        screenshot showing the live
+        camera and brightness histogram.
+        The program uses OpenCV windows
+        rather than a browser-based
+        dashboard.
     </p>
 
 </section>
 
-<section
-class="section"
-id="result"
->
+<!-- =====================================
+     RESULT
+===================================== -->
+<section class="section" id="result">
 
-    <h2>
-        Result
-    </h2>
+    <h2>Result</h2>
 
     <p>
-        The Real-Time Camera Histogram Analyzer successfully
-        measures the brightness distribution of live CSI camera frames
-        and classifies each scene as DARK, NORMAL or BRIGHT.
+        The Real-Time Camera Histogram
+        Analyzer demonstrates grayscale
+        image processing using Raspberry
+        Pi 4 and an OV5647 CSI camera.
+    </p>
+
+    <p>
+        The experiment calculates
+        a 256-bin histogram and
+        measures minimum, maximum
+        and average pixel brightness
+        from live camera frames.
+    </p>
+
+    <p>
+        The current scene is classified
+        as DARK, NORMAL or BRIGHT
+        based on the configured
+        average-brightness thresholds.
+    </p>
+
+    <p>
+        The system displays live
+        measurements and histogram
+        visualization using OpenCV.
     </p>
 
 </section>
 
-<section class="section">
+<!-- =====================================
+     WHAT YOU LEARN
+===================================== -->
+<section class="section" id="learn">
 
-    <h2>
-        What You Learn
-    </h2>
+    <h2>What You Learn</h2>
 
     <ul>
-
-        <li>
-            Using an OV5647 CSI camera with Raspberry Pi.
-        </li>
-
-        <li>
-            Capturing images with Picamera2.
-        </li>
-
-        <li>
-            Converting RGB images to grayscale.
-        </li>
-
-        <li>
-            Calculating and interpreting brightness histograms.
-        </li>
-
-        <li>
-            Using NumPy for image statistics.
-        </li>
-
+        <li>Using Raspberry Pi 4 Model B for image processing.</li>
+        <li>Interfacing an OV5647 CSI camera.</li>
+        <li>Capturing live frames using Picamera2.</li>
+        <li>Understanding RGB and BGR image formats.</li>
+        <li>Converting color images to grayscale.</li>
+        <li>Understanding grayscale pixel intensity.</li>
+        <li>Calculating a 256-bin image histogram.</li>
+        <li>Understanding brightness distributions.</li>
+        <li>Calculating minimum brightness using NumPy.</li>
+        <li>Calculating maximum brightness using NumPy.</li>
+        <li>Calculating average image brightness.</li>
+        <li>Classifying scenes using thresholds.</li>
+        <li>Normalizing histogram data for visualization.</li>
+        <li>Drawing histogram curves with OpenCV.</li>
+        <li>Overlaying measurements on live images.</li>
+        <li>Displaying multiple OpenCV windows.</li>
+        <li>Processing real-time video in Python.</li>
+        <li>Stopping the camera and releasing resources.</li>
     </ul>
 
 </section>
 
 </main>
 
+<!-- =====================================
+     FOOTER
+===================================== -->
 <footer>
 
-    <strong>
-        R-Pi Experiment
-    </strong>
+    <strong>SIMUDIY Exploration Kit</strong>
 
-    <br>
-
-    Real-Time Camera Histogram Analyzer
+    <div>
+        Real-Time Camera Histogram Analyzer
+    </div>
 
 </footer>
 
+<!-- =====================================
+     COMPLETE PYTHON PROGRAM
+     NINE EXACT CODE SECTIONS
+===================================== -->
+<textarea id="python-program" hidden>
+# [01] LOAD LIBRARIES
+
+from picamera2 import Picamera2
+import cv2
+import numpy as np
+
+# [END 01]
+
+
+# [02] CONFIGURE CSI CAMERA
+
+picam2 = Picamera2()
+
+config = picam2.create_preview_configuration(
+    main={
+        "size": (640, 480),
+        "format": "RGB888"
+    }
+)
+
+picam2.configure(config)
+
+picam2.start()
+
+print("Camera started successfully.")
+print("Press Q to quit.")
+
+# [END 02]
+
+
+# [03] CAPTURE LIVE CAMERA FRAME
+
+def capture_frame():
+
+    frame = picam2.capture_array()
+
+    frame = cv2.cvtColor(
+        frame,
+        cv2.COLOR_RGB2BGR
+    )
+
+    return frame
+
+# [END 03]
+
+
+# [04] CREATE GRAYSCALE HISTOGRAM
+
+def calculate_histogram(frame):
+
+    gray = cv2.cvtColor(
+        frame,
+        cv2.COLOR_BGR2GRAY
+    )
+
+    histogram = cv2.calcHist(
+        [gray],
+        [0],
+        None,
+        [256],
+        [0, 256]
+    )
+
+    return gray, histogram
+
+# [END 04]
+
+
+# [05] CALCULATE BRIGHTNESS VALUES
+
+def calculate_brightness(gray):
+
+    average_brightness = float(
+        np.mean(gray)
+    )
+
+    minimum_brightness = int(
+        np.min(gray)
+    )
+
+    maximum_brightness = int(
+        np.max(gray)
+    )
+
+    return (
+        average_brightness,
+        minimum_brightness,
+        maximum_brightness
+    )
+
+# [END 05]
+
+
+# [06] CLASSIFY SCENE BRIGHTNESS
+
+def classify_scene(average_brightness):
+
+    if average_brightness &lt; 70:
+
+        status = "DARK"
+
+    elif average_brightness &gt; 180:
+
+        status = "BRIGHT"
+
+    else:
+
+        status = "NORMAL"
+
+    return status
+
+# [END 06]
+
+
+# [07] DRAW HISTOGRAM GRAPH
+
+def draw_histogram(histogram):
+
+    hist_img = np.zeros(
+        (400, 640, 3),
+        dtype=np.uint8
+    )
+
+    # Use a separate normalized histogram
+    # to preserve the original frequency data.
+
+    normalized_histogram = cv2.normalize(
+        histogram,
+        None,
+        0,
+        350,
+        cv2.NORM_MINMAX
+    )
+
+    for i in range(1, 256):
+
+        x1 = int(
+            (i - 1) * 640 / 256
+        )
+
+        x2 = int(
+            i * 640 / 256
+        )
+
+        y1 = 400 - int(
+            normalized_histogram[i - 1, 0]
+        )
+
+        y2 = 400 - int(
+            normalized_histogram[i, 0]
+        )
+
+        cv2.line(
+            hist_img,
+            (x1, y1),
+            (x2, y2),
+            (255, 255, 255),
+            2
+        )
+
+    cv2.putText(
+        hist_img,
+        "BRIGHTNESS HISTOGRAM",
+        (190, 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (255, 255, 255),
+        2
+    )
+
+    return hist_img
+
+# [END 07]
+
+
+# [08] DISPLAY BRIGHTNESS MEASUREMENTS
+
+def display_results(
+    frame,
+    hist_img,
+    average_brightness,
+    minimum_brightness,
+    maximum_brightness,
+    status
+):
+
+    cv2.putText(
+        frame,
+        f"Average Brightness: {average_brightness:.1f}",
+        (10, 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (0, 255, 0),
+        2
+    )
+
+    cv2.putText(
+        frame,
+        f"Minimum: {minimum_brightness}",
+        (10, 60),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (0, 255, 0),
+        2
+    )
+
+    cv2.putText(
+        frame,
+        f"Maximum: {maximum_brightness}",
+        (10, 90),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (0, 255, 0),
+        2
+    )
+
+    cv2.putText(
+        frame,
+        f"Status: {status}",
+        (10, 125),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (0, 255, 0),
+        2
+    )
+
+    cv2.imshow(
+        "Live Camera",
+        frame
+    )
+
+    cv2.imshow(
+        "Brightness Histogram",
+        hist_img
+    )
+
+# [END 08]
+
+
+# [09] RUN ANALYZER AND CLEAN UP
+
+def run_analyzer():
+
+    try:
+
+        while True:
+
+            frame = capture_frame()
+
+            gray, histogram = (
+                calculate_histogram(frame)
+            )
+
+            (
+                average_brightness,
+                minimum_brightness,
+                maximum_brightness
+            ) = calculate_brightness(gray)
+
+            status = classify_scene(
+                average_brightness
+            )
+
+            hist_img = draw_histogram(
+                histogram
+            )
+
+            display_results(
+                frame,
+                hist_img,
+                average_brightness,
+                minimum_brightness,
+                maximum_brightness,
+                status
+            )
+
+            if cv2.waitKey(1) &amp; 0xFF == ord("q"):
+
+                break
+
+    except KeyboardInterrupt:
+
+        print("Analyzer interrupted.")
+
+    finally:
+
+        picam2.stop()
+
+        picam2.close()
+
+        cv2.destroyAllWindows()
+
+        print("Camera stopped.")
+
+
+if __name__ == "__main__":
+
+    run_analyzer()
+
+# [END 09]
+</textarea>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
 <script>
 
-const program =
-"from picamera2 import Picamera2\nimport cv2\nimport numpy as np\n\npicam2 = Picamera2()\n\nconfig = picam2.create_preview_configuration(\n    main={\n        \"size\": (640, 480),\n        \"format\": \"RGB888\"\n    }\n)\n\npicam2.configure(config)\npicam2.start()\n\nprint(\"Camera started successfully.\")\nprint(\"Press Q to quit.\")\n\nwhile True:\n    frame = picam2.capture_array()\n\n    frame = cv2.cvtColor(\n        frame,\n        cv2.COLOR_RGB2BGR\n    )\n\n    gray = cv2.cvtColor(\n        frame,\n        cv2.COLOR_BGR2GRAY\n    )\n\n    histogram = cv2.calcHist(\n        [gray],\n        [0],\n        None,\n        [256],\n        [0, 256]\n    )\n\n    average_brightness = np.mean(gray)\n    minimum_brightness = np.min(gray)\n    maximum_brightness = np.max(gray)\n\n    if average_brightness < 70:\n        status = \"DARK\"\n\n    elif average_brightness > 180:\n        status = \"BRIGHT\"\n\n    else:\n        status = \"NORMAL\"\n\n    hist_img = np.zeros(\n        (400, 640, 3),\n        dtype=np.uint8\n    )\n\n    cv2.normalize(\n        histogram,\n        histogram,\n        0,\n        350,\n        cv2.NORM_MINMAX\n    )\n\n    for i in range(1, 256):\n        x1 = int((i - 1) * 640 / 256)\n        x2 = int(i * 640 / 256)\n        y1 = 400 - int(histogram[i - 1])\n        y2 = 400 - int(histogram[i])\n\n        cv2.line(\n            hist_img,\n            (x1, y1),\n            (x2, y2),\n            (255, 255, 255),\n            2\n        )\n\n    cv2.putText(\n        hist_img,\n        \"BRIGHTNESS HISTOGRAM\",\n        (190, 30),\n        cv2.FONT_HERSHEY_SIMPLEX,\n        0.8,\n        (255, 255, 255),\n        2\n    )\n\n    cv2.putText(\n        frame,\n        f\"Average Brightness: {average_brightness:.1f}\",\n        (10, 30),\n        cv2.FONT_HERSHEY_SIMPLEX,\n        0.7,\n        (0, 255, 0),\n        2\n    )\n\n    cv2.putText(\n        frame,\n        f\"Minimum: {minimum_brightness}\",\n        (10, 60),\n        cv2.FONT_HERSHEY_SIMPLEX,\n        0.7,\n        (0, 255, 0),\n        2\n    )\n\n    cv2.putText(\n        frame,\n        f\"Maximum: {maximum_brightness}\",\n        (10, 90),\n        cv2.FONT_HERSHEY_SIMPLEX,\n        0.7,\n        (0, 255, 0),\n        2\n    )\n\n    cv2.putText(\n        frame,\n        f\"Status: {status}\",\n        (10, 125),\n        cv2.FONT_HERSHEY_SIMPLEX,\n        0.8,\n        (0, 255, 0),\n        2\n    )\n\n    cv2.imshow(\n        \"Live Camera\",\n        frame\n    )\n\n    cv2.imshow(\n        \"Brightness Histogram\",\n        hist_img\n    )\n\n    if cv2.waitKey(1) & 0xFF == ord(\"q\"):\n        break\n\npicam2.stop()\ncv2.destroyAllWindows()\nprint(\"Camera stopped.\")";
+/* READ COMPLETE PYTHON PROGRAM */
 
-const lines =
-program.split("\n");
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
 
-const steps =
-[
+const lines = program.split("\n");
+
+/* NINE EXPLANATION STEPS */
+
+const steps = [
+
     {
-        "title": "Load the libraries",
-        "start": "from picamera2 import Picamera2",
-        "end": "import numpy as np",
-        "text": "Picamera2 captures CSI camera frames, OpenCV processes and displays them, and NumPy calculates brightness values."
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Imports Picamera2 for CSI camera " +
+            "capture, OpenCV for image processing " +
+            "and NumPy for brightness statistics."
     },
+
     {
-        "title": "Configure the CSI camera",
-        "start": "picam2 = Picamera2()",
-        "end": "print(\"Press Q to quit.\")",
-        "text": "The OV5647 CSI camera is configured for a 640 × 480 RGB preview and then started."
+        number: "02",
+        label: "CONFIGURE CSI CAMERA",
+        title: "Configure CSI Camera",
+        text:
+            "Configures the OV5647 camera " +
+            "for 640 by 480 RGB888 frames " +
+            "and starts the camera."
     },
+
     {
-        "title": "Capture a live frame",
-        "start": "frame = picam2.capture_array()",
-        "end": "cv2.COLOR_RGB2BGR",
-        "text": "The Raspberry Pi captures a live frame and converts the Picamera2 RGB format into OpenCV BGR format."
+        number: "03",
+        label: "CAPTURE LIVE CAMERA FRAME",
+        title: "Capture Live Frame",
+        text:
+            "Captures a frame using Picamera2 " +
+            "and converts RGB data to BGR " +
+            "for the OpenCV processing pipeline."
     },
+
     {
-        "title": "Create the grayscale histogram",
-        "start": "gray = cv2.cvtColor(",
-        "end": "]",
-        "text": "The frame is converted to grayscale and a 256-bin brightness histogram is calculated."
+        number: "04",
+        label: "CREATE GRAYSCALE HISTOGRAM",
+        title: "Calculate Histogram",
+        text:
+            "Converts the image to grayscale " +
+            "and calculates a histogram " +
+            "with 256 brightness bins."
     },
+
     {
-        "title": "Calculate brightness values",
-        "start": "average_brightness = np.mean(gray)",
-        "end": "maximum_brightness = np.max(gray)",
-        "text": "Minimum, maximum and average grayscale brightness values are calculated for the current frame."
+        number: "05",
+        label: "CALCULATE BRIGHTNESS VALUES",
+        title: "Calculate Brightness",
+        text:
+            "Uses NumPy to calculate " +
+            "minimum, maximum and average " +
+            "pixel brightness."
     },
+
     {
-        "title": "Classify the scene",
-        "start": "if average_brightness < 70:",
-        "end": "status = \"NORMAL\"",
-        "text": "Average brightness below 70 is DARK, above 180 is BRIGHT, and values between them are NORMAL."
+        number: "06",
+        label: "CLASSIFY SCENE BRIGHTNESS",
+        title: "Classify Scene",
+        text:
+            "Classifies the scene as DARK " +
+            "below 70, BRIGHT above 180, " +
+            "or NORMAL between those values."
     },
+
     {
-        "title": "Draw the histogram",
-        "start": "hist_img = np.zeros(",
-        "end": "cv2.line(",
-        "text": "A blank histogram image is created, the histogram is normalized and the brightness curve is drawn."
+        number: "07",
+        label: "DRAW HISTOGRAM GRAPH",
+        title: "Draw Histogram",
+        text:
+            "Normalizes the histogram " +
+            "for visualization and draws " +
+            "its 256-level brightness curve."
     },
+
     {
-        "title": "Display measurements",
-        "start": "\"BRIGHTNESS HISTOGRAM\"",
-        "end": "\"Brightness Histogram\"",
-        "text": "The program writes brightness measurements and status on the live frame and shows the live camera and histogram windows."
+        number: "08",
+        label: "DISPLAY BRIGHTNESS MEASUREMENTS",
+        title: "Display Measurements",
+        text:
+            "Overlays brightness measurements " +
+            "and classification on the camera " +
+            "view, then displays both windows."
     },
+
     {
-        "title": "Stop the analyzer",
-        "start": "if cv2.waitKey(1) & 0xFF == ord(\"q\"):",
-        "end": "print(\"Camera stopped.\")",
-        "text": "Pressing Q exits the loop, stops Picamera2 and closes the OpenCV windows."
+        number: "09",
+        label: "RUN ANALYZER AND CLEAN UP",
+        title: "Run and Stop Analyzer",
+        text:
+            "Repeatedly captures frames, analyzes " +
+            "brightness and updates both windows. " +
+            "Pressing Q stops the camera."
     }
+
 ];
 
+/* ESCAPE SOURCE CODE FOR SAFE DISPLAY */
 
-function escapeHtml(text){
+function escapeHtml(value) {
 
-    return text
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
-
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
+/* RENDER COMPLETE PYTHON CODE */
 
-function displayCode(){
+function displayCode() {
 
-    let output = "";
+    const container =
+        document.getElementById(
+            "code-lines"
+        );
 
-    lines.forEach(
-        function(line,index){
+    container.innerHTML = lines.map(
+        function(line, index) {
 
-            output +=
+            return (
                 '<span class="code-line" id="line-' +
-                (index + 1) +
-                '">' +
+                (index + 1) + '">' +
 
                 '<span class="line-number">' +
                 (index + 1) +
@@ -1152,228 +2270,327 @@ function displayCode(){
                 escapeHtml(line) +
                 '</span>' +
 
-                '</span>';
-
+                '</span>'
+            );
         }
-    );
-
-    document
-    .getElementById("code-lines")
-    .innerHTML =
-    output;
-
+    ).join("");
 }
 
+/* FIND EXACT SECTION MARKERS */
 
-function findLine(
-    searchText,
-    startIndex = 0
-){
+function findMarker(marker) {
 
-    for(
-        let i = startIndex;
-        i < lines.length;
-        i++
-    ){
+    return lines.findIndex(
+        function(line) {
 
-        if(
-            lines[i]
-            .includes(searchText)
-        ){
-
-            return i;
-
+            return line.trim() === marker;
         }
-
-    }
-
-    return -1;
-
+    );
 }
 
+/* MAP EACH EXPLANATION TO ITS SOURCE */
 
-function showStep(index){
+const ranges = steps.map(
+    function(step) {
 
-    const step =
-    steps[index];
-
-    const buttons =
-    document.querySelectorAll(".step");
-
-    buttons.forEach(
-        function(button){
-
-            button
-            .classList
-            .remove("active");
-
-        }
-    );
-
-    if(
-        buttons[index]
-    ){
-
-        buttons[index]
-        .classList
-        .add("active");
-
-    }
-
-    document
-    .querySelectorAll(".code-line")
-    .forEach(
-        function(line){
-
-            line
-            .classList
-            .remove("selected");
-
-        }
-    );
-
-    const startLine =
-    findLine(
-        step.start
-    );
-
-    if(
-        startLine === -1
-    ){
-
-        console.warn(
-            "Start marker not found:",
-            step.start
+        const start = findMarker(
+            "# [" +
+            step.number +
+            "] " +
+            step.label
         );
+
+        const end = findMarker(
+            "# [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid:
+                start >= 0 &&
+                end >= start
+        };
+    }
+);
+
+/* CREATE EXPLANATION BUTTONS */
+
+function createSteps() {
+
+    const container =
+        document.getElementById(
+            "steps-list"
+        );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement(
+                    "span"
+                );
+
+            number.className =
+                "step-number";
+
+            number.textContent =
+                step.number;
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+            title.textContent =
+                step.title;
+
+            button.append(
+                number,
+                title
+            );
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(
+                button
+            );
+        }
+    );
+}
+
+/* HIGHLIGHT THE CORRECT CODE SECTION */
+
+function showStep(index) {
+
+    document.querySelectorAll(
+        ".step"
+    ).forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(
+        ".code-line"
+    ).forEach(
+        function(line) {
+
+            line.classList.remove(
+                "selected"
+            );
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById(
+            "explanation"
+        );
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement(
+            "h3"
+        );
+
+    heading.textContent =
+        (index + 1) +
+        ". " +
+        step.title;
+
+    const paragraph =
+        document.createElement(
+            "p"
+        );
+
+    paragraph.textContent =
+        step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching code markers not found.";
 
         return;
-
     }
 
-    let endLine =
-    findLine(
-        step.end,
-        startLine
-    );
-
-    if(
-        endLine === -1
-    ){
-
-        endLine =
-        startLine;
-
-    }
-
-    for(
-        let i = startLine;
-        i <= endLine;
+    for (
+        let i = range.start;
+        i <= range.end;
         i++
-    ){
+    ) {
 
-        const line =
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
+
+        if (element) {
+
+            element.classList.add(
+                "selected"
+            );
+        }
+    }
+
+    const firstLine =
         document.getElementById(
-            "line-" +
-            (i + 1)
+            "line-" + (range.start + 1)
         );
 
-        if(line){
-
-            line
-            .classList
-            .add("selected");
-
-        }
-
-    }
-
-    const selectedLine =
-    document.getElementById(
-        "line-" +
-        (startLine + 1)
-    );
-
     const codeBody =
-    document.getElementById(
-        "code-body"
-    );
+        document.getElementById(
+            "code-body"
+        );
 
-    if(
-        selectedLine &&
-        codeBody
-    ){
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
 
         codeBody.scrollTo({
 
             top:
-                selectedLine.offsetTop
-                -
-                codeBody.offsetTop
-                -
+                codeBody.scrollTop +
+                offset -
                 20,
 
-            behavior:
-                "smooth"
-
+            behavior: "smooth"
         });
-
     }
-
-    document
-    .getElementById("explanation")
-    .innerHTML =
-
-        "<h3>" +
-        (index + 1) +
-        ". " +
-        step.title +
-        "</h3>" +
-
-        "<p>" +
-        step.text +
-        "</p>";
-
 }
 
+/* COPY THE COMPLETE PYTHON SCRIPT */
 
-function copyCode(){
+async function copyCode() {
 
-    navigator
-    .clipboard
-    .writeText(program)
-    .then(
-        function(){
+    const button =
+        document.querySelector(
+            ".copy-button"
+        );
 
-            const button =
-            document.querySelector(
-                ".copy-button"
-            );
+    function copied() {
 
-            button.innerText =
+        button.textContent =
             "Copied!";
 
-            setTimeout(
-                function(){
+        setTimeout(
+            function() {
 
-                    button.innerText =
+                button.textContent =
                     "Copy Code";
+            },
+            1500
+        );
+    }
 
-                },
-                1500
+    function fallback() {
+
+        const field =
+            document.createElement(
+                "textarea"
             );
 
-        }
-    );
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
 
+        document.body.appendChild(
+            field
+        );
+
+        field.select();
+
+        let success = false;
+
+        try {
+
+            success =
+                document.execCommand(
+                    "copy"
+                );
+
+        } catch(error) {
+
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+
+            copied();
+
+        } else {
+
+            button.textContent =
+                "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch(error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
 
+/* INITIALIZE CODE EXPLORER */
 
 displayCode();
+
+createSteps();
 
 showStep(0);
 
 </script>
 
 </body>
-
 </html>
