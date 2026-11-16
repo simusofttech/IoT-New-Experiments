@@ -1,467 +1,2086 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>People Counting System</title>
+
 <style>
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
-.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
-.header h1{margin:0 0 8px;font-size:34px;}
-.header p{margin:0;font-size:17px;}
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
-.container{width:90%;max-width:1050px;margin:35px auto;}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
-.section h3{color:#1e3a8a;} ul,ol{padding-left:24px;} li{margin-bottom:8px;}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
-.component-card p{color:#475569;font-size:14px;margin:0;}
-.table-wrap{overflow-x:auto;} table{width:100%;min-width:620px;border-collapse:collapse;} th,td{padding:12px;border:1px solid #ddd;text-align:left;} th{background:#2563eb;color:white;} tr:nth-child(even){background:#f8fafc;}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px;}
-.code-lesson{color:#142e3a;} .eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
-.lesson-title{font-size:32px !important;margin:0 0 8px !important;color:#1e3a8a !important;border:0 !important;padding:0 !important;}
-.intro{color:#526875;margin:0 0 22px;}
-.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
-.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
-.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
-.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
-.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
-.copy-button:hover{background:#eff6ff;}
-.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
-.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
-.code-line:hover{background:#f8fbff;} .code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
-.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
-.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;} .guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;} .guide>p{color:#526875;font-size:15px;}
-.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
-.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
-.step:hover{border-color:#60a5fa;background:#f8fbff;} .step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;} .step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
-.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;} .explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;} .explanation p{margin:0;color:#526875;font-size:15px;}
-.guide details{border-top:1px solid #dce6e9;margin-top:15px;} .guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;} .guide details p,.guide details li{color:#526875;font-size:15px;} .guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
-.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;} footer strong{color:white;}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+/* GENERAL */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f7fb;color:#222;font:16px/1.7 Arial,Helvetica,sans-serif}
+
+/* HEADER */
+.header{position:relative;display:flex;flex-direction:column;min-height:230px;padding:25px 0 0;background:#2563eb;color:white;text-align:center}
+.header-logo{position:absolute;top:15px;left:20px;width:135px;max-height:75px;height:auto;object-fit:contain;background:white;border-radius:5px;padding:5px}
+.header-content{margin:auto 0;padding:35px 165px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+.header-buttons{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 25px;background:rgba(0,0,0,.12)}
+.header-left-buttons,.header-right-buttons{display:flex;align-items:center;gap:10px}
+.header-nav-btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;background:white;color:#1e3a8a;border:1px solid #dbeafe;border-radius:7px;text-decoration:none;font-size:13px;font-weight:bold;white-space:nowrap}
+.header-nav-btn:hover{background:#dbeafe}
+.home-icon-btn{width:40px;height:38px;padding:8px}
+.home-icon-btn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* NAVIGATION */
+nav{position:sticky;top:0;z-index:20;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;padding:13px 15px;background:white;border-bottom:1px solid #ddd}
+nav a{color:#1e3a8a;text-decoration:none;font-size:14px;font-weight:bold}
+nav a:hover{color:#2563eb}
+
+/* CONTENT */
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{margin-bottom:24px;padding:28px;background:white;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);scroll-margin-top:100px}
+.section h2{margin:0 0 18px;padding-bottom:8px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe}
+.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+
+/* THUMBNAIL */
+.project-thumbnail{text-align:center;padding:20px}
+.project-thumbnail img{display:block;width:100%;max-width:760px;max-height:420px;height:auto;margin:0 auto;object-fit:contain;border-radius:10px}
+
+/* COMPONENTS */
+.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.component-card{padding:20px;background:white;border:1px solid #e2e8f0;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{display:block;width:100%;max-width:180px;height:140px;margin:0 auto 15px;object-fit:contain}
+.component-card h4{margin:0 0 8px;color:#1e3a8a;font-size:17px}
+.component-card p{margin:0;color:#475569;font-size:14px}
+
+/* TABLES AND NOTES */
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:600px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px 16px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+
+/* CIRCUIT AND FLOW */
+.circuit-img{display:block;width:100%;max-width:760px;height:auto;margin:20px auto;padding:10px;border:1px solid #e2e8f0;border-radius:10px;object-fit:contain}
+.flow{text-align:center;color:#1e3a8a;font-size:18px;font-weight:bold;line-height:2}
+.flow-step{padding:5px 10px}
+.flow-arrow{font-size:22px;color:#2563eb}
+
+/* EXPLORE CODE */
+.eyebrow{margin:0 0 4px;color:#2563eb;font-size:13px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase}
+.lesson-title{margin:0 0 8px!important;padding:0!important;border:0!important;color:#1e3a8a!important;font-size:32px!important}
+.intro{margin:0 0 22px;color:#526875}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{min-width:0;overflow:hidden;background:white;border:1px solid #bfdbfe;border-radius:14px;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
+.filename{font:bold 14px Consolas,Monaco,monospace;overflow-wrap:anywhere}
+.copy-button{min-height:40px;padding:8px 14px;background:white;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;font-weight:bold;cursor:pointer}
+.copy-button:hover{background:#eff6ff}
+.code-body{height:600px;padding:16px 0;overflow:auto;background:white}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:20px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{min-width:52px;padding-right:15px;color:#64748b;text-align:right;user-select:none}
+
+/* GUIDE */
+.guide{min-width:0;padding:22px;background:white;border:1px solid #dce6e9;border-radius:14px}
+.guide h2{margin:0 0 8px;padding:0;border:0;font-size:21px}
+.guide>p{color:#526875}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{display:flex;align-items:center;gap:8px;min-height:65px;padding:10px;background:white;color:#1e3a8a;border:1px solid #dce6e9;border-radius:9px;font-size:13px;font-weight:bold;text-align:left;cursor:pointer}
+.step:hover{border-color:#60a5fa}
+.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
+.explanation{min-height:130px;padding:16px;background:#eff6ff;border-radius:9px}
+.explanation h3{margin:0 0 7px;color:#1e3a8a;font-size:17px}
+.explanation p{margin:0;color:#526875}
+.guide details{margin-top:15px;border-top:1px solid #dce6e9}
+.guide summary{padding:13px 0;color:#2563eb;font-weight:bold;cursor:pointer}
+.tip{margin-top:20px;padding:14px 17px;background:#eff6ff;border-radius:9px}
+
+/* OUTPUT */
+.output-box{margin:15px 0;padding:16px;background:#f8fafc;border:1px solid #dbeafe;border-radius:9px}
+.output-box pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.8 Consolas,Monaco,monospace}
+
+/* CENTER DASHBOARD IMAGE */
+.dashboard-image{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    padding:20px;
+}
+.dashboard-image img{
+    display:block;
+    width:100%;
+    max-width:550px;
+    height:auto;
+    margin:0 auto;
+    object-fit:contain;
+    border-radius:10px;
+}
+
+/* FOOTER */
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}
+footer strong{color:white}
+
+/* RESPONSIVE */
+@media(max-width:900px){.header-content{padding:65px 20px 35px}}
+@media(max-width:850px){.code-layout{grid-template-columns:1fr}.code-body{height:450px}}
+@media(max-width:600px){
+.header{padding:15px 0 0}
+.header-logo{top:12px;left:12px;width:95px;max-height:60px}
+.header-content{padding:85px 12px 25px}
+.header h1{font-size:25px}
+.header p{font-size:15px}
+.header-buttons{padding:10px 8px;gap:8px}
+.header-left-buttons,.header-right-buttons{gap:5px}
+.header-nav-btn{min-height:36px;padding:8px 7px;font-size:11px}
+.home-icon-btn{width:36px;height:36px;padding:7px}
+.container{width:92%}
+.section{padding:20px}
+.steps{grid-template-columns:1fr}
+nav{gap:11px}
+}
 </style>
 </head>
-<body>
-<header class="header"><h1>Raspberry Pi Experiment</h1><p>People Counting System</p></header>
 
+<body>
+
+<!-- HEADER -->
+<header class="header">
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>People Counting System</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a href="../index.html" class="header-nav-btn">
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a href="../../Arduino Experiments/index.html"
+               class="header-nav-btn">Arduino</a>
+
+            <a href="../../ESP32 CAM Experiments/index.html"
+               class="header-nav-btn">ESP</a>
+
+            <a href="../index.html"
+               class="header-nav-btn">R-Pi</a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- NAVIGATION -->
 <nav>
-<a href="../index.html">← R-Pi Experiments</a>
-<a href="#aim">Aim</a>
-<a href="#components">Components</a>
-<a href="#connections">Connections</a>
-<a href="#circuit">Circuit</a>
-<a href="#working">Working</a>
-<a href="#procedure">Procedure</a>
-<a href="#code">Code</a>
-<a href="#result">Result</a>
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
-<section class="section" id="aim">
-<h2>Aim</h2>
-<p>To build a Raspberry Pi based AI people counting system that detects people in real time, displays the current count on an SH1106 OLED and provides a Flask live dashboard.</p>
-</section>
-
-<section class="section">
-<h2>About the Experiment</h2>
-<p>The Raspberry Pi 4 captures live video from a USB camera and uses a pretrained YOLO11n model to detect the person class.</p>
-<p>The current number of visible people is displayed locally on a 1.3-inch SH1106 I²C OLED.</p>
-<p>A Flask web dashboard provides the live camera with person bounding boxes and the current people count.</p>
-</section>
-
-<section class="section" id="components">
-<h2>Components Required</h2>
-<div class="components-grid">
-<div class="component-card"><img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B (×1)"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs the camera, YOLO11n people detection, OLED control and Flask dashboard.</p></div>
-<div class="component-card"><img src="USB Camera.png" alt="USB Camera / Webcam (×1)"><h4>USB Camera / Webcam (×1)</h4><p>Captures the live scene for people detection.</p></div>
-<div class="component-card"><img src="OLED.png" alt="1.3&amp;quot; SH1106 I²C OLED (×1)"><h4>1.3&quot; SH1106 I²C OLED (×1)</h4><p>Displays the current people count locally.</p></div>
-<div class="component-card"><img src="Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply (×1)"><h4>Raspberry Pi Power Supply (×1)</h4><p>Provides power to the Raspberry Pi.</p></div>
-<div class="component-card"><img src="Jumper Wires.png" alt="Jumper Wires (×4)"><h4>Jumper Wires (×4)</h4><p>Connect the OLED to power and I²C pins.</p></div>
-</div>
-</section>
-
-<section class="section" id="connections">
-<h2>Circuit Connections</h2>
-<div class="table-wrap">
-<table>
-<thead><tr><th>Component</th><th>Connection</th><th>Raspberry Pi Connection</th></tr></thead>
-<tbody>
-<tr><td>USB Camera</td><td>USB</td><td>Any Raspberry Pi USB port</td></tr>
-<tr><td>SH1106 OLED</td><td>VCC</td><td>3.3V / Physical Pin 1</td></tr>
-<tr><td>SH1106 OLED</td><td>GND</td><td>GND / Physical Pin 6</td></tr>
-<tr><td>SH1106 OLED</td><td>SDA</td><td>GPIO2 / SDA1 / Physical Pin 3</td></tr>
-<tr><td>SH1106 OLED</td><td>SCL</td><td>GPIO3 / SCL1 / Physical Pin 5</td></tr>
-</tbody>
-</table>
-</div>
-</section>
-
-<!-- =========================
-     CIRCUIT
-========================= -->
-
-<section
-class="section"
-id="circuit">
-
-    <h2>
-        Circuit Diagram
-    </h2>
+<!-- EXPERIMENT THUMBNAIL -->
+<section class="section project-thumbnail">
 
     <img
-    class="circuit-img"
-    src="People Counting System Circuit.png"
-    alt="People Counting System Circuit">
+        src="../People Counting System.png"
+        alt="People Counting System Thumbnail"
+    >
 
 </section>
 
+<!-- AIM -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To develop a Raspberry Pi-based
+        AI People Counting System using
+        a Raspberry Pi 4 Model B, USB camera,
+        pretrained YOLO11n object detection
+        model and 1.3-inch SH1106 I²C OLED.
+    </p>
+
+    <p>
+        The system detects people in
+        real time, calculates the current
+        number of visible people, displays
+        the count on the OLED and provides
+        a Flask live camera dashboard.
+    </p>
+
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The People Counting System
+        demonstrates AI-based person
+        detection using a Raspberry Pi
+        and a USB camera.
+    </p>
+
+    <p>
+        The camera captures real-time video,
+        and a pretrained YOLO11n model
+        processes the frames to identify
+        people. The program filters
+        detections to YOLO class 0,
+        representing the person category.
+    </p>
+
+    <p>
+        The total number of person
+        bounding boxes detected in
+        the current frame becomes
+        the live people count.
+    </p>
+
+    <p>
+        A 1.3-inch SH1106 OLED connected
+        through I²C displays the people
+        count and current operating
+        status. The display refreshes
+        approximately every 0.5 seconds.
+    </p>
+
+    <p>
+        A Flask dashboard hosted by
+        the Raspberry Pi displays
+        the live camera stream
+        with person bounding boxes
+        and the current count.
+    </p>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+                <tr>
+                    <td>Camera</td>
+                    <td>USB Camera / Webcam</td>
+                </tr>
+                <tr>
+                    <td>Camera Index</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>AI Model</td>
+                    <td>YOLO11n</td>
+                </tr>
+                <tr>
+                    <td>Model Path</td>
+                    <td>models/yolo11n.pt</td>
+                </tr>
+                <tr>
+                    <td>Detection Class</td>
+                    <td>Class 0 — Person</td>
+                </tr>
+                <tr>
+                    <td>Confidence Threshold</td>
+                    <td>0.40</td>
+                </tr>
+                <tr>
+                    <td>Inference Size</td>
+                    <td>320 pixels</td>
+                </tr>
+                <tr>
+                    <td>Camera Resolution</td>
+                    <td>640 × 480</td>
+                </tr>
+                <tr>
+                    <td>OLED Controller</td>
+                    <td>SH1106</td>
+                </tr>
+                <tr>
+                    <td>OLED Size</td>
+                    <td>1.3-inch, 128×64</td>
+                </tr>
+                <tr>
+                    <td>OLED I²C Address</td>
+                    <td>0x3C</td>
+                </tr>
+                <tr>
+                    <td>OLED Refresh</td>
+                    <td>Approximately 0.5 seconds</td>
+                </tr>
+                <tr>
+                    <td>Web Framework</td>
+                    <td>Flask</td>
+                </tr>
+                <tr>
+                    <td>Dashboard Port</td>
+                    <td>5000</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>People Counting Logic</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Camera Condition</th>
+                    <th>Displayed Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>No person detected</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>One person detected</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Three people detected</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>One of three people leaves the view</td>
+                    <td>2, if both remaining people are detected</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Important:</strong>
+        This experiment counts people
+        currently visible in the camera
+        frame. It does not maintain
+        a cumulative visitor count,
+        identify individuals or track
+        entries and exits.
+    </div>
+
+</section>
+
+<!-- COMPONENTS -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
+            >
+
+            <h4>Raspberry Pi 4 Model B (×1)</h4>
+
+            <p>
+                Main processing device
+                for camera capture,
+                AI detection, OLED control
+                and Flask dashboard.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="USB Camera.png"
+                alt="USB Camera"
+            >
+
+            <h4>USB Camera / Webcam (×1)</h4>
+
+            <p>
+                Captures the live scene
+                for person detection.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="OLED.png"
+                alt="SH1106 OLED Display"
+            >
+
+            <h4>1.3-inch SH1106 I²C OLED (×1)</h4>
+
+            <p>
+                Displays the current
+                people count and
+                system status.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi Power Supply.png"
+                alt="Raspberry Pi Power Supply"
+            >
+
+            <h4>Raspberry Pi Power Supply (×1)</h4>
+
+            <p>
+                Provides regulated
+                electrical power
+                to the Raspberry Pi.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+
+            <h4>Jumper Wires (×4)</h4>
+
+            <p>
+                Connect the OLED power,
+                ground, SDA and SCL pins.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Required Software:</strong>
+
+        <ul>
+            <li>Raspberry Pi OS and Python 3</li>
+            <li>Ultralytics YOLO</li>
+            <li>OpenCV</li>
+            <li>Flask</li>
+            <li>luma.oled and luma.core</li>
+            <li>Pillow</li>
+            <li>NumPy and other compatible dependencies</li>
+        </ul>
+
+        <p>
+            Enable I²C on Raspberry Pi
+            before connecting the SH1106
+            OLED and running the Python
+            program.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- CONNECTIONS -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Component Pin</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USB Camera</td>
+                    <td>USB</td>
+                    <td>Available Raspberry Pi USB Port</td>
+                </tr>
+                <tr>
+                    <td>SH1106 OLED</td>
+                    <td>VCC</td>
+                    <td>3.3V — Physical Pin 1</td>
+                </tr>
+                <tr>
+                    <td>SH1106 OLED</td>
+                    <td>GND</td>
+                    <td>GND — Physical Pin 6</td>
+                </tr>
+                <tr>
+                    <td>SH1106 OLED</td>
+                    <td>SDA</td>
+                    <td>GPIO2 / SDA1 — Physical Pin 3</td>
+                </tr>
+                <tr>
+                    <td>SH1106 OLED</td>
+                    <td>SCL</td>
+                    <td>GPIO3 / SCL1 — Physical Pin 5</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>I²C Configuration</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>I²C Bus</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>SDA</td>
+                    <td>GPIO2</td>
+                </tr>
+                <tr>
+                    <td>SCL</td>
+                    <td>GPIO3</td>
+                </tr>
+                <tr>
+                    <td>OLED Address</td>
+                    <td>0x3C</td>
+                </tr>
+                <tr>
+                    <td>Display Driver</td>
+                    <td>SH1106</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Hardware Note:</strong>
+        Verify that the OLED module
+        supports 3.3V supply and logic
+        levels. The SH1106 is not
+        interchangeable with an SSD1306
+        in software without selecting
+        the appropriate display driver.
+    </div>
+
+</section>
+
+<!-- CIRCUIT -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="People Counting System Circuit.png"
+        alt="People Counting System Circuit Diagram"
+    >
+
+</section>
+
+<!-- WORKING -->
 <section class="section" id="working">
-<h2>Working Principle</h2>
-<div class="flow">USB Camera<br>↓<br>Raspberry Pi 4<br>↓<br>OpenCV<br>↓<br>YOLO11n Person Detection<br>↓<br>Current People Count<br>↓<br>SH1106 OLED + Flask Dashboard</div>
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            USB Camera Captures Live Video
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Raspberry Pi Processes Video Frames
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            YOLO11n Detects Person Class
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Apply 0.40 Confidence Threshold
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Count Currently Detected People
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Draw Person Bounding Boxes
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Update SH1106 OLED
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Stream Video Through Flask
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Display Live People Count on Dashboard
+        </div>
+
+    </div>
+
+    <h3>Camera Capture</h3>
+
+    <p>
+        The USB camera captures
+        real-time frames through
+        OpenCV at a requested
+        resolution of 640×480.
+    </p>
+
+    <h3>YOLO Person Detection</h3>
+
+    <p>
+        The pretrained YOLO11n
+        model processes camera frames.
+        The program uses class 0
+        to select detections
+        classified as people.
+    </p>
+
+    <h3>Current People Count</h3>
+
+    <p>
+        The number of detected
+        person bounding boxes
+        in the current frame
+        determines the displayed count.
+    </p>
+
+    <h3>OLED Display</h3>
+
+    <p>
+        The Raspberry Pi updates
+        the SH1106 OLED approximately
+        every 0.5 seconds with the
+        latest people count and
+        operating status.
+    </p>
+
+    <h3>Web Dashboard</h3>
+
+    <p>
+        Flask hosts a local
+        web interface displaying
+        the current people count
+        and annotated live
+        camera video.
+    </p>
+
 </section>
 
+<!-- PROCEDURE -->
 <section class="section" id="procedure">
-<h2>Procedure</h2>
-<ol><li>Connect the USB camera to any Raspberry Pi USB port.</li><li>Connect the SH1106 OLED VCC to 3.3V and GND to Raspberry Pi GND.</li><li>Connect OLED SDA to GPIO2 / physical pin 3.</li><li>Connect OLED SCL to GPIO3 / physical pin 5.</li><li>Enable I²C on the Raspberry Pi and confirm the OLED address is <code>0x3C</code>.</li><li>Create and activate the <code>people_env</code> virtual environment.</li><li>Install Ultralytics, OpenCV, Flask, NumPy and luma.oled.</li><li>Prepare <code>models/yolo11n.pt</code>.</li><li>Save the main program as <code>people_counter.py</code> and run it.</li><li>Open <code>http://&lt;RASPBERRY_PI_IP&gt;:5000</code> from a device on the same network.</li></ol>
+
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange Raspberry Pi 4 Model B, USB camera, 1.3-inch SH1106 OLED, jumper wires and Raspberry Pi power supply.</li>
+        <li>Connect the USB camera to a Raspberry Pi USB port.</li>
+        <li>Connect OLED VCC to 3.3V, physical pin 1.</li>
+        <li>Connect OLED GND to physical pin 6.</li>
+        <li>Connect OLED SDA to GPIO2, physical pin 3.</li>
+        <li>Connect OLED SCL to GPIO3, physical pin 5.</li>
+        <li>Verify all connections before powering the system.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Enable I²C using Raspberry Pi configuration tools.</li>
+        <li>Confirm the OLED is visible at address <code>0x3C</code> using <code>i2cdetect -y 1</code>.</li>
+        <li>Connect and verify the USB camera.</li>
+        <li>Create and activate the <code>people_env</code> Python virtual environment.</li>
+        <li>Install Ultralytics, OpenCV, Flask, Pillow, NumPy and luma.oled.</li>
+        <li>Create a <code>models</code> folder.</li>
+        <li>Place <code>yolo11n.pt</code> inside the models folder.</li>
+        <li>Copy the Python code from Explore the Code.</li>
+        <li>Save the program as <code>people_counter.py</code>.</li>
+        <li>Run <code>python people_counter.py</code>.</li>
+        <li>Observe the initial count on the SH1106 OLED.</li>
+        <li>Identify the Raspberry Pi IP address using <code>hostname -I</code>.</li>
+        <li>Open <code>http://RASPBERRY_PI_IP:5000</code> in a browser on the same network.</li>
+        <li>Observe the live camera stream.</li>
+        <li>Stand in front of the camera and check whether the count becomes 1.</li>
+        <li>Introduce additional people into the camera view and compare the count.</li>
+        <li>Move out of view and observe the updated count.</li>
+        <li>Compare OLED and dashboard readings.</li>
+        <li>Stop the program using Ctrl+C.</li>
+    </ol>
+
 </section>
 
-<!-- =========================================
-     EXPLORE THE CODE
-========================================= -->
-
+<!-- EXPLORE THE CODE -->
 <section class="section" id="code">
-<div class="code-lesson">
 
-<p class="eyebrow">
-    Raspberry Pi Experiment · Code Review
-</p>
+    <p class="eyebrow">
+        Raspberry Pi Experiment · Code Review
+    </p>
 
-<h2 class="lesson-title">
-    Explore the Code
-</h2>
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
 
-<p class="intro">
-    People Counting System · Select a step to see
-    what each part of the Python program does.
-</p>
+    <p class="intro">
+        Click a step to highlight the
+        corresponding part of the Python
+        program. Copy Code copies
+        the complete script.
+    </p>
 
-<div class="code-layout">
+    <div class="code-layout">
 
-<article class="code-panel">
+        <article class="code-panel">
 
-<div class="code-top">
+            <div class="code-top">
 
-    <span class="filename">
-        people_counter.py
-    </span>
+                <span class="filename">
+                    people_counter.py
+                </span>
 
-    <button
-    class="copy-button"
-    onclick="copyCode()">
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
 
-        Copy Code
+            </div>
 
-    </button>
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
 
-</div>
+        </article>
 
-<div
-class="code-body"
-id="code-body">
+        <article class="guide">
 
-<code id="code-lines"></code>
+            <h2>Understand it step by step</h2>
 
-</div>
+            <p>
+                Each step highlights its
+                matching code section
+                on the left.
+            </p>
 
-</article>
+            <div class="steps" id="steps-list"></div>
 
-<article class="guide">
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
 
-<h2>
-    Understand it step by step
-</h2>
+            <details>
+                <summary>Explore More: YOLO11n</summary>
 
-<p>
-    Choose a step.
-    The matching code will light up on the left.
-</p>
+                <p>
+                    YOLO11n is a compact
+                    object detection model.
+                    The code restricts
+                    inference results to
+                    the person category.
+                </p>
+            </details>
 
-<div class="steps">
-<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Load the libraries</button>
-<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Set camera and OLED values</button>
-<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Load YOLO11n</button>
-<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Open USB camera</button>
-<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Initialize OLED</button>
-<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Update OLED count</button>
-<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Detect people</button>
-<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Serve dashboard</button>
-<button class="step" onclick="showStep(8)"><span class="step-number">09</span>Start the system</button>
-</div>
+            <details>
+                <summary>Explore More: SH1106 OLED</summary>
 
-<div
-class="explanation"
-id="explanation">
+                <p>
+                    The SH1106 is a
+                    monochrome display
+                    controller. The luma.oled
+                    library is used for
+                    drawing text and graphics.
+                </p>
+            </details>
 
-<h3>
-    1. Load the libraries
-</h3>
+            <details>
+                <summary>Explore More: I²C</summary>
 
-<p>
-    The program imports OpenCV, YOLO, Flask, OLED libraries, Pillow, threading and time.
-</p>
+                <p>
+                    I²C uses SDA and SCL
+                    communication lines.
+                    Raspberry Pi GPIO2
+                    is SDA and GPIO3 is SCL.
+                </p>
+            </details>
 
-</div>
+            <details>
+                <summary>Explore More: Live Counting</summary>
 
-<details>
-<summary>
-    Explore more: system operation
-</summary>
-<p>The system uses YOLO class 0 for people, a 0.40 confidence threshold, 320-pixel YOLO input and updates the OLED approximately every 0.5 seconds.</p>
-</details>
+                <p>
+                    The system counts
+                    detected people in
+                    the current frame.
+                    This is not a total
+                    visitor counter.
+                </p>
+            </details>
 
-<details>
-<summary>
-    Check your understanding
-</summary>
-<ul>
-<li>Which GPIO is OLED SDA? <strong>GPIO2 / Physical Pin 3</strong></li><li>Which GPIO is OLED SCL? <strong>GPIO3 / Physical Pin 5</strong></li><li>What is the OLED I²C address? <strong>0x3C</strong></li><li>Which YOLO class is used for people? <strong>Class 0</strong></li>
-</ul>
-</details>
+            <details>
+                <summary>Explore More: Flask</summary>
 
-</article>
-</div>
+                <p>
+                    Flask serves the
+                    dashboard page, a JSON
+                    count endpoint and a
+                    live MJPEG video stream.
+                </p>
+            </details>
 
-<p class="tip">
-<strong>Try it:</strong>
-Run <code>python people_counter.py</code>, stand in front of the USB camera and compare the live web count with the count shown on the OLED.
-</p>
+            <details>
+                <summary>Check Your Understanding</summary>
 
-</div>
+                <ol>
+                    <li>Which YOLO class detects people?</li>
+                    <li>What confidence threshold is used?</li>
+                    <li>Which GPIO is OLED SDA?</li>
+                    <li>Which GPIO is OLED SCL?</li>
+                    <li>What is the OLED I²C address?</li>
+                    <li>Which port hosts the web dashboard?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    Class 0; 0.40;
+                    GPIO2; GPIO3;
+                    0x3C; port 5000.
+                </p>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Stand in front of the USB
+        camera, add another person
+        to the scene and compare
+        the current people count
+        on the OLED and dashboard.
+    </p>
+
 </section>
 
-<section class="section">
-<h2>Expected Output</h2>
-<p>The OLED displays the current number of visible people and ACTIVE status.</p>
-<p>The web dashboard displays the current people count.</p>
-<p>The live camera shows YOLO person bounding boxes.</p>
-<p>The count updates as people enter or leave the camera view.</p>
+<!-- EXPECTED OUTPUT -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Terminal — Startup</h3>
+
+    <div class="output-box">
+<pre>Loading YOLO model...
+YOLO model loaded
+
+USB camera connected
+SH1106 OLED initialized
+
+======================================
+ AI PEOPLE COUNTING SYSTEM
+======================================
+
+Camera : USB Camera
+Model  : YOLO11n
+OLED   : SH1106 / 0x3C
+Web    : Port 5000
+
+Use: http://RASPBERRY_PI_IP:5000
+Press CTRL+C to stop</pre>
+    </div>
+
+    <h3>OLED — No People Detected</h3>
+
+    <div class="output-box">
+<pre>PEOPLE COUNTER
+
+       0
+
+     PEOPLE
+
+     ACTIVE</pre>
+    </div>
+
+    <h3>OLED — Three People Detected</h3>
+
+    <div class="output-box">
+<pre>PEOPLE COUNTER
+
+       3
+
+     PEOPLE
+
+     ACTIVE</pre>
+    </div>
+
+    <h3>Dashboard — Example</h3>
+
+    <div class="output-box">
+<pre>AI PEOPLE COUNTING SYSTEM
+
+CURRENT PEOPLE
+
+       3
+
+Camera: ONLINE
+YOLO: ACTIVE
+
+LIVE CAMERA
+[Live video with person bounding boxes]</pre>
+    </div>
+
+    <h3>Functional Output</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Camera is ready</td>
+                    <td>Live video appears on dashboard</td>
+                </tr>
+                <tr>
+                    <td>No people visible</td>
+                    <td>Count is 0</td>
+                </tr>
+                <tr>
+                    <td>One person visible</td>
+                    <td>Count is 1 if detected</td>
+                </tr>
+                <tr>
+                    <td>Multiple people visible</td>
+                    <td>Count reflects detected person boxes</td>
+                </tr>
+                <tr>
+                    <td>Person leaves the view</td>
+                    <td>Count decreases after subsequent detection</td>
+                </tr>
+                <tr>
+                    <td>Camera read fails</td>
+                    <td>Error status is reported</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        The displayed number depends on
+        actual detection accuracy, lighting,
+        camera angle and whether people
+        are visible or obstructed.
+    </div>
+
 </section>
 
+<!-- DASHBOARD -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="People Counting System Dashboard.png"
+            alt="People Counting System Dashboard"
+        >
+
+    </div>
+
+</section>
+
+<!-- RESULT -->
 <section class="section" id="result">
-<h2>Result</h2>
-<p>The People Counting System successfully detects visible people using YOLO11n on Raspberry Pi 4, displays the live count on an SH1106 OLED and provides a Flask web dashboard.</p>
+
+    <h2>Result</h2>
+
+    <p>
+        The People Counting System
+        demonstrates real-time person
+        detection using YOLO11n,
+        OpenCV and Raspberry Pi 4.
+    </p>
+
+    <p>
+        The system calculates the number
+        of people currently visible
+        in the camera frame and
+        displays the count on a
+        1.3-inch SH1106 OLED.
+    </p>
+
+    <p>
+        A Flask dashboard provides
+        live camera monitoring,
+        person bounding boxes
+        and the current people count.
+    </p>
+
 </section>
 
-<section class="section">
-<h2>What You Learn</h2>
-<ul><li>Using YOLO11n for person-only detection.</li><li>Interfacing an SH1106 OLED through Raspberry Pi I²C.</li><li>Displaying real-time sensor/AI information locally and remotely.</li><li>Streaming annotated camera frames through Flask.</li><li>Using Python threads for real-time AI processing.</li></ul>
+<!-- WHAT YOU LEARN -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using Raspberry Pi 4 for AI experiments.</li>
+        <li>Connecting a USB webcam.</li>
+        <li>Capturing video with OpenCV.</li>
+        <li>Understanding YOLO11n object detection.</li>
+        <li>Filtering detections by class ID.</li>
+        <li>Detecting the person category.</li>
+        <li>Applying confidence thresholds.</li>
+        <li>Counting people in the current camera frame.</li>
+        <li>Drawing person bounding boxes.</li>
+        <li>Interfacing a 1.3-inch SH1106 OLED.</li>
+        <li>Using Raspberry Pi GPIO2 and GPIO3 for I²C.</li>
+        <li>Configuring the OLED I²C address.</li>
+        <li>Displaying dynamic text using Pillow.</li>
+        <li>Updating OLED readings periodically.</li>
+        <li>Using Python threads.</li>
+        <li>Creating a Flask dashboard.</li>
+        <li>Streaming live MJPEG video.</li>
+        <li>Transmitting live counts through JSON.</li>
+    </ul>
+
 </section>
 
 </main>
 
+<!-- FOOTER -->
 <footer>
-<strong>R-Pi Experiment</strong>
-<br>
-People Counting System
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>People Counting System</div>
 </footer>
 
-<script>
-const program="import cv2\nimport threading\nimport time\nfrom ultralytics import YOLO\nfrom flask import Flask, Response, render_template_string\nfrom luma.core.interface.serial import i2c\nfrom luma.oled.device import sh1106\nfrom PIL import Image, ImageDraw, ImageFont\nCAMERA_INDEX = 0\nMODEL_PATH = \"models/yolo11n.pt\"\nCONFIDENCE = 0.40\nOLED_ADDRESS = 0x3C\nFRAME_WIDTH = 640\nFRAME_HEIGHT = 480\nprint(\"Loading YOLO model...\")\nmodel = YOLO(MODEL_PATH)\nprint(\"YOLO model loaded\")\ncamera = cv2.VideoCapture(CAMERA_INDEX)\ncamera.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)\ncamera.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)\ncamera.set(cv2.CAP_PROP_BUFFERSIZE, 1)\nif not camera.isOpened():\n print(\"ERROR: USB camera not detected\")\n raise SystemExit\nprint(\"USB camera connected\")\nserial = i2c(port=1, address=OLED_ADDRESS)\noled = sh1106(serial)\nfont = ImageFont.load_default()\ndef update_oled(count, status=\"ACTIVE\"):\n image = Image.new(\"1\", (128, 64))\n draw = ImageDraw.Draw(image)\n draw.rectangle((0, 0, 127, 63), outline=0, fill=0)Page 6\n draw.text((18, 3), \"PEOPLE COUNTER\", font=font, fill=255)\n draw.text((45, 22), str(count), font=font, fill=255)\n draw.text((35, 39), \"PEOPLE\", font=font, fill=255)\n draw.text((30, 54), status, font=font, fill=255)\n oled.display(image)\npeople_count = 0\nsystem_status = \"STARTING\"\nlatest_frame = None\nrunning = True\ndata_lock = threading.Lock()\nlast_oled_update = 0\ndef detection_loop():\n global people_count\n global system_status\n global latest_frame\n global running\n global last_oled_update\n while running:\n ret, frame = camera.read()\n if not ret:\n system_status = \"CAM ERROR\"\n time.sleep(0.1)\n continue\n results = model(\n frame,\n conf=CONFIDENCE,\n classes=[0],\n imgsz=320,\n verbose=False\n )\n count = 0\n annotated_frame = frame.copy()\n for result in results:\n if result.boxes is not None:\n count = len(result.boxes)\n annotated_frame = result.plot()\n people_count = count\n system_status = \"ACTIVE\"\n now = time.time()\n if now - last_oled_update >= 0.5:\n update_oled(people_count, system_status)\n last_oled_update = now\n cv2.putText(\n annotated_frame,\n f\"PEOPLE: {people_count}\",\n (20, 40),\n cv2.FONT_HERSHEY_SIMPLEX,\n 1,\n (0, 255, 0),\n 2\n )\n cv2.putText(Page 7\n annotated_frame,\n \"YOLO ACTIVE\",\n (20, 75),\n cv2.FONT_HERSHEY_SIMPLEX,\n 0.7,\n (0, 255, 0),\n 2\n )\n ok, buffer = cv2.imencode(\".jpg\", annotated_frame)\n if ok:\n with data_lock:\n latest_frame = buffer.tobytes()\napp = Flask(__name__)\nHTML_PAGE = \"\"\"\n<!DOCTYPE html>\n<html>\n<head>\n<title>AI People Counting System</title>\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<style>\nbody {\n margin: 0;\n background: #111827;\n color: white;\n font-family: Arial, sans-serif;\n text-align: center;\n}\n.header {\n padding: 20px;\n background: #1f2937;\n}\n.header h1 { margin: 0; }\n.container {\n max-width: 900px;\n margin: auto;\n padding: 20px;\n}\n.count-box {\n background: #2563eb;\n border-radius: 15px;\n padding: 25px;\n margin-bottom: 20px;\n}\n.count {\n font-size: 60px;\n font-weight: bold;\n}\n.status {\n font-size: 18px;\n margin-top: 10px;\n}\n.camera-box {\n background: #1f2937;\n padding: 15px;\n border-radius: 15px;\n}\n.camera-box img {\n width: 100%;\n max-width: 640px;\n border-radius: 10px;\n}\n.footer {Page 8\n margin-top: 20px;\n color: #9ca3af;\n}\n</style>\n</head>\n<body>\n<div class=\"header\">\n<h1>AI PEOPLE COUNTING SYSTEM</h1>\n<p>Raspberry Pi 4 + USB Camera + YOLO11n</p>\n</div>\n<div class=\"container\">\n<div class=\"count-box\">\n<h2>CURRENT PEOPLE</h2>\n<div class=\"count\" id=\"count\">0</div>\n<div class=\"status\">Camera: ONLINE</div>\n<div class=\"status\">YOLO: ACTIVE</div>\n</div>\n<div class=\"camera-box\">\n<h2>LIVE CAMERA</h2>\n<img src=\"/video\" alt=\"Live camera\">\n</div>\n<div class=\"footer\">\nRaspberry Pi 4 AI People Counting System\n</div>\n</div>\n<script>
+<!-- ======================================
+     COMPLETE PYTHON PROGRAM
+     9 INTERACTIVE CODE SECTIONS
+====================================== -->
+<textarea id="python-program" hidden>
+# [01] LOAD LIBRARIES
 
-const program = "import cv2\nimport threading\nimport time\nfrom ultralytics import YOLO\nfrom flask import Flask, Response, render_template_string\nfrom luma.core.interface.serial import i2c\nfrom luma.oled.device import sh1106\nfrom PIL import Image, ImageDraw, ImageFont\nCAMERA_INDEX = 0\nMODEL_PATH = \"models/yolo11n.pt\"\nCONFIDENCE = 0.40\nOLED_ADDRESS = 0x3C\nFRAME_WIDTH = 640\nFRAME_HEIGHT = 480\nprint(\"Loading YOLO model...\")\nmodel = YOLO(MODEL_PATH)\nprint(\"YOLO model loaded\")\ncamera = cv2.VideoCapture(CAMERA_INDEX)\ncamera.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)\ncamera.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)\ncamera.set(cv2.CAP_PROP_BUFFERSIZE, 1)\nif not camera.isOpened():\n print(\"ERROR: USB camera not detected\")\n raise SystemExit\nprint(\"USB camera connected\")\nserial = i2c(port=1, address=OLED_ADDRESS)\noled = sh1106(serial)\nfont = ImageFont.load_default()\ndef update_oled(count, status=\"ACTIVE\"):\n image = Image.new(\"1\", (128, 64))\n draw = ImageDraw.Draw(image)\n draw.rectangle((0, 0, 127, 63), outline=0, fill=0)\n draw.text((18, 3), \"PEOPLE COUNTER\", font=font, fill=255)\n draw.text((45, 22), str(count), font=font, fill=255)\n draw.text((35, 39), \"PEOPLE\", font=font, fill=255)\n draw.text((30, 54), status, font=font, fill=255)\n oled.display(image)\npeople_count = 0\nsystem_status = \"STARTING\"\nlatest_frame = None\nrunning = True\ndata_lock = threading.Lock()\nlast_oled_update = 0\ndef detection_loop():\n global people_count\n global system_status\n global latest_frame\n global running\n global last_oled_update\n while running:\n ret, frame = camera.read()\n if not ret:\n system_status = \"CAM ERROR\"\n time.sleep(0.1)\n continue\n results = model(\n frame,\n conf=CONFIDENCE,\n classes=[0],\n imgsz=320,\n verbose=False\n )\n count = 0\n annotated_frame = frame.copy()\n for result in results:\n if result.boxes is not None:\n count = len(result.boxes)\n annotated_frame = result.plot()\n people_count = count\n system_status = \"ACTIVE\"\n now = time.time()\n if now - last_oled_update >= 0.5:\n update_oled(people_count, system_status)\n last_oled_update = now\n cv2.putText(\n annotated_frame,\n f\"PEOPLE: {people_count}\",\n (20, 40),\n cv2.FONT_HERSHEY_SIMPLEX,\n 1,\n (0, 255, 0),\n 2\n )\n cv2.putText(\n annotated_frame,\n \"YOLO ACTIVE\",\n (20, 75),\n cv2.FONT_HERSHEY_SIMPLEX,\n 0.7,\n (0, 255, 0),\n 2\n )\n ok, buffer = cv2.imencode(\".jpg\", annotated_frame)\n if ok:\n with data_lock:\n latest_frame = buffer.tobytes()\napp = Flask(__name__)\nHTML_PAGE = \"\"\"\n<!DOCTYPE html>\n<html>\n<head>\n<title>AI People Counting System</title>\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<style>\nbody {\n margin: 0;\n background: #111827;\n color: white;\n font-family: Arial, sans-serif;\n text-align: center;\n}\n.header {\n padding: 20px;\n background: #1f2937;\n}\n.header h1 { margin: 0; }\n.container {\n max-width: 900px;\n margin: auto;\n padding: 20px;\n}\n.count-box {\n background: #2563eb;\n border-radius: 15px;\n padding: 25px;\n margin-bottom: 20px;\n}\n.count {\n font-size: 60px;\n font-weight: bold;\n}\n.status {\n font-size: 18px;\n margin-top: 10px;\n}\n.camera-box {\n background: #1f2937;\n padding: 15px;\n border-radius: 15px;\n}\n.camera-box img {\n width: 100%;\n max-width: 640px;\n border-radius: 10px;\n}\n.footer {\n margin-top: 20px;\n color: #9ca3af;\n}\n</style>\n</head>\n<body>\n<div class=\"header\">\n<h1>AI PEOPLE COUNTING SYSTEM</h1>\n<p>Raspberry Pi 4 + USB Camera + YOLO11n</p>\n</div>\n<div class=\"container\">\n<div class=\"count-box\">\n<h2>CURRENT PEOPLE</h2>\n<div class=\"count\" id=\"count\">0</div>\n<div class=\"status\">Camera: ONLINE</div>\n<div class=\"status\">YOLO: ACTIVE</div>\n</div>\n<div class=\"camera-box\">\n<h2>LIVE CAMERA</h2>\n<img src=\"/video\" alt=\"Live camera\">\n</div>\n<div class=\"footer\">\nRaspberry Pi 4 AI People Counting System\n</div>\n</div>\n<script>\nfunction updateCount() {\n fetch(\"/count\")\n .then(response => response.json())\n .then(data => {\n document.getElementById(\"count\").innerText = data.count;\n })\n .catch(error => console.log(error));\n}\nsetInterval(updateCount, 500);\nupdateCount();\n</script>\n</body>\n</html>\n\"\"\"\n@app.route(\"/\")\ndef index():\n return render_template_string(HTML_PAGE)\n@app.route(\"/count\")\ndef count():\n return {\"count\": people_count}\n@app.route(\"/video\")\ndef video():\n def generate():\n while True:\n with data_lock:\n frame = latest_frame\n if frame is not None:\n yield (\n b\"--frame\\r\\n\"\n b\"Content-Type: image/jpeg\\r\\n\\r\\n\"\n + frame\n+ b\"\\r\\n\"\n )\n time.sleep(0.03)\n return Response(\n generate(),\n mimetype=\"multipart/x-mixed-replace; boundary=frame\"\n )\ndetection_worker = threading.Thread(\n target=detection_loop,\n daemon=True\n)\ndetection_worker.start()\nupdate_oled(0, \"STARTING\")\nprint(\"\")\nprint(\"======================================\")\nprint(\" AI PEOPLE COUNTING SYSTEM\")\nprint(\"======================================\")\nprint(\"Camera : USB Camera\")\nprint(\"Model : YOLO11n\")\nprint(\"OLED : SH1106 / 0x3C\")\nprint(\"Web : Port 5000\")\nprint(\"\")\nprint(\"Use: http://<RASPBERRY_PI_IP>:5000\")\nprint(\"Press CTRL+C to stop\")\nprint(\"\")\ntry:\n app.run(\n host=\"0.0.0.0\",\n port=5000,\n threaded=True\n )\nfinally:\n running = False\n camera.release()\n update_oled(0, \"STOPPED\")";
+import cv2
+import threading
+import time
+
+from ultralytics import YOLO
+from flask import Flask, Response, jsonify
+from luma.core.interface.serial import i2c
+from luma.oled.device import sh1106
+from PIL import Image, ImageDraw, ImageFont
+
+# [END 01]
+
+
+# [02] CONFIGURE CAMERA AND OLED
+
+CAMERA_INDEX = 0
+MODEL_PATH = "models/yolo11n.pt"
+
+CONFIDENCE = 0.40
+YOLO_SIZE = 320
+
+OLED_ADDRESS = 0x3C
+
+FRAME_WIDTH = 640
+FRAME_HEIGHT = 480
+
+OLED_UPDATE_INTERVAL = 0.5
+
+people_count = 0
+system_status = "STARTING"
+
+latest_frame = None
+running = True
+
+data_lock = threading.Lock()
+oled_lock = threading.Lock()
+
+last_oled_update = 0.0
+
+app = Flask(__name__)
+
+# [END 02]
+
+
+# [03] LOAD YOLO11N MODEL
+
+print("Loading YOLO model...")
+
+model = YOLO(MODEL_PATH)
+
+print("YOLO model loaded")
+
+# [END 03]
+
+
+# [04] OPEN USB CAMERA
+
+camera = cv2.VideoCapture(
+    CAMERA_INDEX
+)
+
+camera.set(
+    cv2.CAP_PROP_FRAME_WIDTH,
+    FRAME_WIDTH
+)
+
+camera.set(
+    cv2.CAP_PROP_FRAME_HEIGHT,
+    FRAME_HEIGHT
+)
+
+camera.set(
+    cv2.CAP_PROP_BUFFERSIZE,
+    1
+)
+
+if not camera.isOpened():
+
+    raise RuntimeError(
+        "USB camera not detected"
+    )
+
+print("USB camera connected")
+
+# [END 04]
+
+
+# [05] INITIALIZE SH1106 OLED
+
+serial = i2c(
+    port=1,
+    address=OLED_ADDRESS
+)
+
+oled = sh1106(serial)
+
+font = ImageFont.load_default()
+
+print("SH1106 OLED initialized")
+
+# [END 05]
+
+
+# [06] UPDATE OLED PEOPLE COUNT
+
+def update_oled(
+    count,
+    status="ACTIVE"
+):
+
+    image = Image.new(
+        "1",
+        (128, 64),
+        color=0
+    )
+
+    draw = ImageDraw.Draw(image)
+
+    draw.text(
+        (18, 3),
+        "PEOPLE COUNTER",
+        font=font,
+        fill=255
+    )
+
+    draw.text(
+        (45, 22),
+        str(count),
+        font=font,
+        fill=255
+    )
+
+    draw.text(
+        (35, 39),
+        "PEOPLE",
+        font=font,
+        fill=255
+    )
+
+    draw.text(
+        (30, 54),
+        status,
+        font=font,
+        fill=255
+    )
+
+    with oled_lock:
+
+        oled.display(image)
+
+# [END 06]
+
+
+# [07] DETECT AND COUNT PEOPLE
+
+def detection_loop():
+
+    global people_count
+    global system_status
+    global latest_frame
+    global last_oled_update
+
+    while running:
+
+        ok, frame = camera.read()
+
+        if not ok:
+
+            with data_lock:
+                system_status = "CAM ERROR"
+                people_count = 0
+
+            time.sleep(0.1)
+            continue
+
+        try:
+
+            results = model.predict(
+                source=frame,
+                conf=CONFIDENCE,
+                classes=[0],
+                imgsz=YOLO_SIZE,
+                verbose=False
+            )
+
+            result = results[0]
+
+            count = 0
+
+            if result.boxes is not None:
+
+                count = len(
+                    result.boxes
+                )
+
+            annotated_frame = result.plot()
+
+            status = "ACTIVE"
+
+        except Exception as error:
+
+            print(
+                "Detection error:",
+                error
+            )
+
+            count = 0
+            status = "AI ERROR"
+            annotated_frame = frame.copy()
+
+        cv2.putText(
+            annotated_frame,
+            f"PEOPLE: {count}",
+            (20, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            (0, 255, 0),
+            2
+        )
+
+        cv2.putText(
+            annotated_frame,
+            "YOLO ACTIVE"
+            if status == "ACTIVE"
+            else status,
+            (20, 75),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.7,
+            (0, 255, 0),
+            2
+        )
+
+        encoded, buffer = cv2.imencode(
+            ".jpg",
+            annotated_frame
+        )
+
+        with data_lock:
+
+            people_count = count
+            system_status = status
+
+            if encoded:
+
+                latest_frame = (
+                    buffer.tobytes()
+                )
+
+        now = time.monotonic()
+
+        if (
+            now - last_oled_update
+            &gt;= OLED_UPDATE_INTERVAL
+        ):
+
+            update_oled(
+                count,
+                status
+            )
+
+            last_oled_update = now
+
+        time.sleep(0.01)
+
+# [END 07]
+
+
+# [08] CREATE FLASK WEB DASHBOARD
+
+HTML_PAGE = """
+&lt;!DOCTYPE html>
+&lt;html lang="en">
+
+&lt;head>
+
+&lt;meta charset="UTF-8">
+
+&lt;meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+&lt;title>AI People Counting System&lt;/title>
+
+&lt;style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #111827;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.header {
+    padding: 20px;
+    background: #1f2937;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+.count-box {
+    padding: 25px;
+    margin-bottom: 20px;
+    background: #2563eb;
+    border-radius: 15px;
+}
+
+.count {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.status {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.camera-box {
+    padding: 15px;
+    background: #1f2937;
+    border-radius: 15px;
+}
+
+.camera-box img {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    margin: auto;
+    border-radius: 10px;
+}
+
+.footer {
+    margin-top: 20px;
+    color: #9ca3af;
+}
+
+@media(max-width:600px) {
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .count {
+        font-size: 48px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+}
+
+&lt;/style>
+&lt;/head>
+
+&lt;body>
+
+&lt;div class="header">
+
+    &lt;h1>
+        AI PEOPLE COUNTING SYSTEM
+    &lt;/h1>
+
+    &lt;p>
+        Raspberry Pi 4 + USB Camera + YOLO11n
+    &lt;/p>
+
+&lt;/div>
+
+&lt;div class="container">
+
+    &lt;div class="count-box">
+
+        &lt;h2>
+            CURRENT PEOPLE
+        &lt;/h2>
+
+        &lt;div
+            class="count"
+            id="count"
+        >
+            0
+        &lt;/div>
+
+        &lt;div
+            class="status"
+            id="camera-status"
+        >
+            Camera: STARTING
+        &lt;/div>
+
+        &lt;div
+            class="status"
+            id="ai-status"
+        >
+            YOLO: STARTING
+        &lt;/div>
+
+    &lt;/div>
+
+    &lt;div class="camera-box">
+
+        &lt;h2>
+            LIVE CAMERA
+        &lt;/h2>
+
+        &lt;img
+            src="/video"
+            alt="Live People Detection Camera"
+        >
+
+    &lt;/div>
+
+    &lt;div class="footer">
+
+        Raspberry Pi 4 AI People Counting System
+
+    &lt;/div>
+
+&lt;/div>
+
+&lt;script>
+
+async function updateCount() {
+
+    try {
+
+        const response = await fetch(
+            "/count",
+            {
+                cache:"no-store"
+            }
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Count unavailable"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        document.getElementById(
+            "count"
+        ).textContent =
+            data.count;
+
+        document.getElementById(
+            "camera-status"
+        ).textContent =
+            data.status === "CAM ERROR"
+                ? "Camera: ERROR"
+                : "Camera: ONLINE";
+
+        document.getElementById(
+            "ai-status"
+        ).textContent =
+            "YOLO: " + data.status;
+
+    } catch (error) {
+
+        document.getElementById(
+            "camera-status"
+        ).textContent =
+            "Camera: CONNECTION LOST";
+
+        document.getElementById(
+            "ai-status"
+        ).textContent =
+            "YOLO: UNAVAILABLE";
+    }
+}
+
+updateCount();
+
+setInterval(
+    updateCount,
+    500
+);
+
+&lt;/script>
+
+&lt;/body>
+&lt;/html>
+"""
+
+
+@app.route("/")
+def index():
+
+    return HTML_PAGE
+
+
+@app.route("/count")
+def count():
+
+    with data_lock:
+
+        current_count = people_count
+        current_status = system_status
+
+    return jsonify({
+        "count": current_count,
+        "status": current_status
+    })
+
+
+def generate_frames():
+
+    while running:
+
+        with data_lock:
+
+            frame = latest_frame
+
+        if frame is None:
+
+            time.sleep(0.05)
+            continue
+
+        yield (
+            b"--frame\r\n"
+            b"Content-Type: image/jpeg\r\n\r\n"
+            + frame
+            + b"\r\n"
+        )
+
+        time.sleep(0.03)
+
+
+@app.route("/video")
+def video():
+
+    return Response(
+        generate_frames(),
+        mimetype=(
+            "multipart/x-mixed-replace; "
+            "boundary=frame"
+        )
+    )
+
+# [END 08]
+
+
+# [09] START SYSTEM AND CLEAN UP
+
+if __name__ == "__main__":
+
+    update_oled(
+        0,
+        "STARTING"
+    )
+
+    detection_worker = threading.Thread(
+        target=detection_loop,
+        daemon=True
+    )
+
+    detection_worker.start()
+
+    print("")
+    print("======================================")
+    print(" AI PEOPLE COUNTING SYSTEM")
+    print("======================================")
+    print("Camera : USB Camera")
+    print("Model  : YOLO11n")
+    print("OLED   : SH1106 / 0x3C")
+    print("Web    : Port 5000")
+    print("")
+    print(
+        "Use: http://RASPBERRY_PI_IP:5000"
+    )
+    print("Press CTRL+C to stop")
+    print("")
+
+    try:
+
+        app.run(
+            host="0.0.0.0",
+            port=5000,
+            threaded=True,
+            debug=False
+        )
+
+    finally:
+
+        running = False
+
+        detection_worker.join(
+            timeout=2.0
+        )
+
+        camera.release()
+
+        update_oled(
+            0,
+            "STOPPED"
+        )
+
+        print(
+            "System stopped."
+        )
+
+# [END 09]
+</textarea>
+
+<!-- ======================================
+     INTERACTIVE CODE EXPLORER
+====================================== -->
+<script>
+
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
 
 const lines = program.split("\n");
 
-const steps = [{"title": "Load the libraries", "start": "import cv2", "end": "from PIL import Image, ImageDraw, ImageFont", "text": "The program imports OpenCV, YOLO, Flask, OLED libraries, Pillow, threading and time."}, {"title": "Set camera and OLED values", "start": "CAMERA_INDEX = 0", "end": "FRAME_HEIGHT = 480", "text": "Camera index, YOLO model path, confidence threshold, OLED I\u00b2C address and 640 \u00d7 480 frame size are configured."}, {"title": "Load YOLO11n", "start": "print(\"Loading YOLO model...\")", "end": "print(\"YOLO model loaded\")", "text": "The pretrained YOLO11n model is loaded for person detection."}, {"title": "Open USB camera", "start": "camera = cv2.VideoCapture(CAMERA_INDEX)", "end": "print(\"USB camera connected\")", "text": "The USB camera is opened and configured for 640 \u00d7 480 capture."}, {"title": "Initialize OLED", "start": "serial = i2c(port=1, address=OLED_ADDRESS)", "end": "font = ImageFont.load_default()", "text": "The SH1106 OLED is initialized on I\u00b2C address 0x3C."}, {"title": "Update OLED count", "start": "def update_oled(count, status=\"ACTIVE\"):", "end": "oled.display(image)", "text": "The display shows PEOPLE COUNTER, the current people count and system status."}, {"title": "Detect people", "start": "def detection_loop():", "end": "latest_frame = buffer.tobytes()", "text": "YOLO is restricted to class 0 (person), counts the current visible detections and draws bounding boxes."}, {"title": "Serve dashboard", "start": "app = Flask(__name__)", "end": "mimetype=\"multipart/x-mixed-replace; boundary=frame\"", "text": "Flask serves the current people count and live video stream."}, {"title": "Start the system", "start": "detection_worker = threading.Thread(", "end": "update_oled(0, \"STOPPED\")", "text": "The detection thread starts, the OLED is initialized, and the Flask server runs on port 5000 until the program stops."}];
+const steps = [
+    {
+        number:"01",
+        label:"LOAD LIBRARIES",
+        title:"Load Libraries",
+        text:"Imports OpenCV, threading, time, YOLO, Flask, SH1106 OLED support and Pillow."
+    },
+    {
+        number:"02",
+        label:"CONFIGURE CAMERA AND OLED",
+        title:"Configure Hardware",
+        text:"Defines camera index, model path, confidence threshold, frame size, OLED address, and shared data."
+    },
+    {
+        number:"03",
+        label:"LOAD YOLO11N MODEL",
+        title:"Load YOLO11n",
+        text:"Loads the pretrained YOLO11n model from the models directory."
+    },
+    {
+        number:"04",
+        label:"OPEN USB CAMERA",
+        title:"Open USB Camera",
+        text:"Opens the camera and configures the requested 640 by 480 frame resolution."
+    },
+    {
+        number:"05",
+        label:"INITIALIZE SH1106 OLED",
+        title:"Initialize OLED",
+        text:"Initializes the SH1106 display through I2C bus 1 using address 0x3C."
+    },
+    {
+        number:"06",
+        label:"UPDATE OLED PEOPLE COUNT",
+        title:"Update OLED Count",
+        text:"Draws the current people count and system status on the OLED."
+    },
+    {
+        number:"07",
+        label:"DETECT AND COUNT PEOPLE",
+        title:"Detect People",
+        text:"Runs YOLO11n using person class 0, counts current bounding boxes and prepares annotated camera frames."
+    },
+    {
+        number:"08",
+        label:"CREATE FLASK WEB DASHBOARD",
+        title:"Create Flask Dashboard",
+        text:"Creates the browser dashboard, live JPEG video endpoint and JSON count endpoint."
+    },
+    {
+        number:"09",
+        label:"START SYSTEM AND CLEAN UP",
+        title:"Start and Stop System",
+        text:"Starts the detection thread, runs Flask on port 5000, and releases the camera on shutdown."
+    }
+];
 
+function escapeHtml(value) {
 
-function escapeHtml(text){
-
-    return text
+    return value
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;");
-
 }
 
+function displayCode() {
 
-function displayCode(){
+    const container =
+        document.getElementById("code-lines");
 
-    let output = "";
+    container.innerHTML = lines.map(
+        function(line,index) {
 
-    lines.forEach(function(line,index){
-
-        output +=
-        '<span class="code-line" id="line-'+(index+1)+'">' +
-        '<span class="line-number">'+(index+1)+'</span>' +
-        '<span>'+escapeHtml(line)+'</span>' +
-        '</span>';
-
-    });
-
-    document.getElementById("code-lines").innerHTML = output;
-
-}
-
-
-function findLine(searchText,startIndex=0){
-
-    for(let i=startIndex;i<lines.length;i++){
-
-        if(lines[i].includes(searchText)){
-
-            return i;
-
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+                '<span class="line-number">' +
+                (index + 1) + '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span></span>'
+            );
         }
-
-    }
-
-    return -1;
-
+    ).join("");
 }
 
+function findMarker(marker) {
 
-function showStep(index){
+    return lines.findIndex(
+        function(line) {
+
+            return line.trim() === marker;
+        }
+    );
+}
+
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "# [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "# [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start:start,
+            end:end,
+            valid:start >= 0 && end >= start
+        };
+    }
+);
+
+function createSteps() {
+
+    const container =
+        document.getElementById("steps-list");
+
+    steps.forEach(
+        function(step,index) {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement("span");
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title =
+                document.createElement("span");
+
+            title.textContent = step.title;
+
+            button.append(number,title);
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+function showStep(index) {
+
+    document.querySelectorAll(".step").forEach(
+        function(button,i) {
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(".code-line").forEach(
+        function(line) {
+            line.classList.remove("selected");
+        }
+    );
 
     const step = steps[index];
+    const range = ranges[index];
 
+    const explanation =
+        document.getElementById("explanation");
 
-    /* ACTIVE STEP BUTTON */
+    explanation.replaceChildren();
 
-    const buttons = document.querySelectorAll(".step");
+    const heading =
+        document.createElement("h3");
 
-    buttons.forEach(function(button){
+    heading.textContent =
+        (index + 1) + ". " + step.title;
 
-        button.classList.remove("active");
+    const paragraph =
+        document.createElement("p");
 
-    });
+    paragraph.textContent = step.text;
 
-    if(buttons[index]){
+    explanation.append(heading,paragraph);
 
-        buttons[index].classList.add("active");
+    if (!range.valid) {
 
-    }
-
-
-    /* REMOVE OLD HIGHLIGHT */
-
-    document.querySelectorAll(".code-line").forEach(function(line){
-
-        line.classList.remove("selected");
-
-    });
-
-
-    /* FIND THE START AND END OF THE REAL CODE BLOCK */
-
-    const startLine = findLine(step.start);
-
-    if(startLine === -1){
-
-        console.warn("Start marker not found:",step.start);
+        paragraph.textContent =
+            "Matching code markers not found.";
 
         return;
-
     }
 
-    let endLine = findLine(step.end,startLine);
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
 
-    if(endLine === -1){
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
 
-        endLine = startLine;
-
-    }
-
-
-    /* BLUE HIGHLIGHT */
-
-    for(let i=startLine;i<=endLine;i++){
-
-        const line = document.getElementById("line-"+(i+1));
-
-        if(line){
-
-            line.classList.add("selected");
-
+        if (element) {
+            element.classList.add("selected");
         }
-
     }
 
-
-    /* SCROLL TO THE SELECTED BLOCK */
-
-    const selectedLine =
-    document.getElementById("line-"+(startLine+1));
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
 
     const codeBody =
-    document.getElementById("code-body");
+        document.getElementById("code-body");
 
-    if(selectedLine && codeBody){
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
 
         codeBody.scrollTo({
-
             top:
-            selectedLine.offsetTop
-            -
-            codeBody.offsetTop
-            -
-            20,
-
+                codeBody.scrollTop +
+                offset -
+                20,
             behavior:"smooth"
-
         });
-
     }
-
-
-    /* UPDATE EXPLANATION */
-
-    document.getElementById("explanation").innerHTML =
-
-        "<h3>" +
-        (index+1) +
-        ". " +
-        step.title +
-        "</h3>" +
-
-        "<p>" +
-        step.text +
-        "</p>";
-
 }
 
+async function copyCode() {
 
-function copyCode(){
-
-    navigator.clipboard.writeText(program).then(function(){
-
-        const button =
+    const button =
         document.querySelector(".copy-button");
 
-        button.innerText = "Copied!";
+    function copied() {
 
-        setTimeout(function(){
+        button.textContent = "Copied!";
 
-            button.innerText = "Copy Code";
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
 
-        },1500);
+    function fallback() {
 
-    });
+        const field =
+            document.createElement("textarea");
 
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch(error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch(error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
 
-
 displayCode();
-
+createSteps();
 showStep(0);
 
 </script>
