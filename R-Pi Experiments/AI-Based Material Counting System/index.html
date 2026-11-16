@@ -1,910 +1,2672 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI-Based Material Counting System</title>
+
 <style>
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
-.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
-.header h1{margin:0 0 8px;font-size:34px;}
-.header p{margin:0;font-size:17px;}
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
-.container{width:90%;max-width:1050px;margin:35px auto;}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
-.section h3{color:#1e3a8a;} ul,ol{padding-left:24px;} li{margin-bottom:8px;}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
-.component-card p{color:#475569;font-size:14px;margin:0;}
-.table-wrap{overflow-x:auto;} table{width:100%;min-width:620px;border-collapse:collapse;} th,td{padding:12px;border:1px solid #ddd;text-align:left;} th{background:#2563eb;color:white;} tr:nth-child(even){background:#f8fafc;}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
-.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:white;padding:10px;}
-.code-lesson{color:#142e3a;} .eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
-.lesson-title{font-size:32px !important;margin:0 0 8px !important;color:#1e3a8a !important;border:0 !important;padding:0 !important;}
-.intro{color:#526875;margin:0 0 22px;}
-.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
-.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
-.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
-.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
-.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
-.copy-button:hover{background:#eff6ff;}
-.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
-.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
-.code-line:hover{background:#f8fbff;} .code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
-.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
-.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;} .guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;} .guide>p{color:#526875;font-size:15px;}
-.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
-.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
-.step:hover{border-color:#60a5fa;background:#f8fbff;} .step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;} .step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
-.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;} .explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;} .explanation p{margin:0;color:#526875;font-size:15px;}
-.guide details{border-top:1px solid #dce6e9;margin-top:15px;} .guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;} .guide details p,.guide details li{color:#526875;font-size:15px;} .guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
-.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;} footer strong{color:white;}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+/* GENERAL */
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font: 16px/1.7 Arial, Helvetica, sans-serif;
+}
+
+/* HEADER */
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
+    text-align: center;
+}
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    object-fit: contain;
+}
+.header-content {
+    margin: auto 0;
+    padding: 35px 165px;
+}
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,.12);
+}
+.header-left-buttons,
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.header-nav-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.header-nav-btn:hover {
+    background: #dbeafe;
+}
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* NAVIGATION */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+nav a:hover {
+    color: #2563eb;
+}
+
+/* CONTENT */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 100px;
+}
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+.section h3 {
+    color: #1e3a8a;
+}
+ul, ol {
+    padding-left: 24px;
+}
+li {
+    margin-bottom: 8px;
+}
+
+/* THUMBNAIL */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* COMPONENTS */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+    gap: 20px;
+}
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* TABLES */
+.table-wrap {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+th {
+    background: #2563eb;
+    color: white;
+}
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+/* CIRCUIT */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* WORKING */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+.flow-step {
+    padding: 5px 10px;
+}
+.flow-arrow {
+    font-size: 22px;
+    color: #2563eb;
+}
+
+/* CODE EXPLORER */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr)
+        minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+.code-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+.filename {
+    font: bold 14px Consolas,Monaco,monospace;
+    overflow-wrap: anywhere;
+}
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.copy-button:hover {
+    background: #eff6ff;
+}
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
+}
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    font: 13px/24px Consolas,Monaco,monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+
+/* CODE GUIDE */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+.guide > p {
+    color: #526875;
+}
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+.step:hover {
+    border-color: #60a5fa;
+}
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* OUTPUT */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas,Monaco,monospace;
+}
+
+/* DASHBOARD */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* FOOTER */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+footer strong {
+    color: white;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+    .code-body {
+        height: 450px;
+    }
+}
+@media(max-width:600px) {
+    .header {
+        padding: 15px 0 0;
+    }
+    .header-logo {
+        top: 12px;
+        left: 12px;
+        width: 95px;
+        max-height: 60px;
+    }
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+    .header h1 {
+        font-size: 25px;
+    }
+    .header p {
+        font-size: 15px;
+    }
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+    .container {
+        width: 92%;
+    }
+    .section {
+        padding: 20px;
+    }
+    .steps {
+        grid-template-columns: 1fr;
+    }
+    nav {
+        gap: 11px;
+    }
+}
 </style>
 </head>
+
 <body>
 
+<!-- HEADER -->
 <header class="header">
-<h1>Raspberry Pi Experiment</h1>
-<p>AI-Based Material Counting System</p>
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>AI-Based Material Counting System</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >Arduino</a>
+
+            <a
+                href="../../ESP32 CAM Experiments/index.html"
+                class="header-nav-btn"
+            >ESP</a>
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >R-Pi</a>
+
+        </div>
+    </div>
+
 </header>
 
+<!-- NAVIGATION -->
 <nav>
-<a href="../index.html">← R-Pi Experiments</a>
-<a href="#aim">Aim</a>
-<a href="#components">Components</a>
-<a href="#connections">Connections</a>
-<a href="#circuit">Circuit</a>
-<a href="#working">Working</a>
-<a href="#procedure">Procedure</a>
-<a href="#code">Code</a>
-<a href="#result">Result</a>
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
 
+<!-- THUMBNAIL -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../AI-Based Material Counting System.png"
+        alt="AI-Based Material Counting System Thumbnail"
+    >
+
+</section>
+
+<!-- AIM -->
 <section class="section" id="aim">
-<h2>Aim</h2>
-<p>To build a Raspberry Pi based AI material counting system that detects and counts nine electronic and mechanical component classes using a USB camera and a trained YOLO11 model exported to ONNX.</p>
+
+    <h2>Aim</h2>
+
+    <p>
+        To develop an AI-Based Material
+        Counting System using Raspberry Pi 4
+        Model B, USB camera and a trained
+        nine-class YOLO11 object-detection
+        model exported to ONNX.
+    </p>
+
+    <p>
+        The experiment detects electronic
+        and mechanical components in
+        live camera frames, draws bounding
+        boxes, and displays individual
+        class counts and the total
+        number of accepted detections
+        currently visible.
+    </p>
+
 </section>
 
-<section class="section">
-<h2>About the Experiment</h2>
-<p>The complete workflow is performed on the Raspberry Pi: public annotated datasets are downloaded, combined into one 9-class YOLO dataset, used to train YOLO11n, validated and exported to ONNX.</p>
-<p>The final lightweight program uses ONNX Runtime and a USB camera to detect <strong>Resistor, Capacitor, Diode, Transistor, LED, Bolt, Nut, Screw and Washer</strong>.</p>
-<p>Each accepted detection is shown with a bounding box and material label. The program also displays individual counts and the total number of accepted detections currently visible in the camera frame.</p>
+<!-- ABOUT -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The AI-Based Material Counting
+        System demonstrates the
+        application of computer vision,
+        artificial intelligence and
+        real-time object detection
+        for counting small materials.
+    </p>
+
+    <p>
+        The training workflow described
+        in the experiment uses annotated
+        datasets that are combined
+        into a common nine-class
+        YOLO dataset.
+    </p>
+
+    <p>
+        YOLO11n is trained and validated
+        using the prepared dataset.
+        The trained model is then
+        exported from
+        <code>best.pt</code>
+        to <code>best.onnx</code>.
+    </p>
+
+    <p>
+        The final lightweight
+        application uses ONNX Runtime
+        with the CPU Execution Provider
+        to perform object detection
+        on the Raspberry Pi.
+    </p>
+
+    <p>
+        A USB camera continuously
+        captures images of
+        electronic and mechanical
+        materials.
+    </p>
+
+    <p>
+        The trained model recognizes
+        nine material classes:
+        Resistor, Capacitor, Diode,
+        Transistor, LED, Bolt, Nut,
+        Screw and Washer.
+    </p>
+
+    <p>
+        Each accepted detection
+        is labeled with its class
+        name and confidence score.
+        A green bounding box is
+        drawn around the detected
+        object.
+    </p>
+
+    <p>
+        The program counts the
+        accepted detections belonging
+        to each class and displays
+        the result in an information
+        panel on the live camera view.
+    </p>
+
+    <p>
+        The total represents the
+        number of accepted detections
+        in the current camera frame.
+        It is not a cumulative count
+        of unique objects across time.
+    </p>
+
+    <h3>Nine Material Classes</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Class ID</th>
+                    <th>Material</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>Resistor</td>
+                    <td>Electronic Component</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Capacitor</td>
+                    <td>Electronic Component</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Diode</td>
+                    <td>Electronic Component</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Transistor</td>
+                    <td>Electronic Component</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>LED</td>
+                    <td>Electronic Component</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Bolt</td>
+                    <td>Mechanical Component</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Nut</td>
+                    <td>Mechanical Component</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Screw</td>
+                    <td>Mechanical Component</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Washer</td>
+                    <td>Mechanical Component</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+                <tr>
+                    <td>Camera</td>
+                    <td>USB Camera</td>
+                </tr>
+                <tr>
+                    <td>Camera Device</td>
+                    <td>/dev/video0</td>
+                </tr>
+                <tr>
+                    <td>Requested Camera Resolution</td>
+                    <td>640 × 480</td>
+                </tr>
+                <tr>
+                    <td>AI Model</td>
+                    <td>YOLO11n</td>
+                </tr>
+                <tr>
+                    <td>Model Format</td>
+                    <td>ONNX</td>
+                </tr>
+                <tr>
+                    <td>Model Filename</td>
+                    <td>best.onnx</td>
+                </tr>
+                <tr>
+                    <td>Model Location</td>
+                    <td>/home/pi/AI_Material_Counting/best.onnx</td>
+                </tr>
+                <tr>
+                    <td>Inference Runtime</td>
+                    <td>ONNX Runtime</td>
+                </tr>
+                <tr>
+                    <td>Execution Provider</td>
+                    <td>CPUExecutionProvider</td>
+                </tr>
+                <tr>
+                    <td>Model Input</td>
+                    <td>640 × 640</td>
+                </tr>
+                <tr>
+                    <td>Material Classes</td>
+                    <td>9</td>
+                </tr>
+                <tr>
+                    <td>Confidence Threshold</td>
+                    <td>0.10</td>
+                </tr>
+                <tr>
+                    <td>NMS IoU Threshold</td>
+                    <td>0.45</td>
+                </tr>
+                <tr>
+                    <td>Counting Method</td>
+                    <td>Per-frame accepted detections</td>
+                </tr>
+                <tr>
+                    <td>Display</td>
+                    <td>OpenCV Camera Window</td>
+                </tr>
+                <tr>
+                    <td>Exit Key</td>
+                    <td>Q</td>
+                </tr>
+                <tr>
+                    <td>Program Filename</td>
+                    <td>material_counter.py</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <h3>Counting Logic</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Camera Capture</td>
+                    <td>Read a live frame from the USB camera</td>
+                </tr>
+                <tr>
+                    <td>Preprocessing</td>
+                    <td>Resize, convert to RGB, normalize and rearrange</td>
+                </tr>
+                <tr>
+                    <td>ONNX Inference</td>
+                    <td>Detect the nine trained material classes</td>
+                </tr>
+                <tr>
+                    <td>Confidence Filtering</td>
+                    <td>Remove predictions below 0.10 confidence</td>
+                </tr>
+                <tr>
+                    <td>NMS</td>
+                    <td>Reduce overlapping detections</td>
+                </tr>
+                <tr>
+                    <td>Class Counting</td>
+                    <td>Count accepted detections by material class</td>
+                </tr>
+                <tr>
+                    <td>Output</td>
+                    <td>Display boxes, labels, individual counts and TOTAL</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        <p>
+            The final Python program
+            expects an ONNX export
+            with nine class scores
+            and four bounding-box
+            coordinates per prediction.
+        </p>
+
+        <p>
+            The code assumes the
+            trained model uses the
+            same nine-class order
+            shown above.
+        </p>
+
+        <p>
+            The 0.10 confidence
+            threshold is retained
+            from the supplied
+            experiment. It is relatively
+            low and may allow
+            false-positive detections.
+        </p>
+
+        <p>
+            This experiment counts
+            detected instances in each
+            frame. It does not provide
+            unique-object tracking
+            or an accumulated count
+            across multiple frames.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- COMPONENTS -->
 <section class="section" id="components">
-<h2>Components Required</h2>
 
-<div class="components-grid">
+    <h2>Components Required</h2>
 
-<div class="component-card">
-<img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B">
-<h4>Raspberry Pi 4 Model B (×1)</h4>
-<p>Runs dataset preparation, model training, ONNX inference and material counting.</p>
-</div>
+    <div class="components-grid">
 
-<div class="component-card">
-<img src="USB Camera.png" alt="USB Camera">
-<h4>USB Camera (×1)</h4>
-<p>Captures the materials for real-time detection and counting.</p>
-</div>
+        <div class="component-card">
 
-<div class="component-card">
-<img src="Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply">
-<h4>Raspberry Pi Power Supply (×1)</h4>
-<p>Provides stable power to the Raspberry Pi.</p>
-</div>
+            <img
+                src="Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
+            >
 
-</div>
+            <h4>Raspberry Pi 4 Model B (×1)</h4>
+
+            <p>
+                Executes the trained
+                ONNX model, processes
+                images and calculates
+                material counts.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="USB Camera.png"
+                alt="USB Camera"
+            >
+
+            <h4>USB Camera (×1)</h4>
+
+            <p>
+                Captures electronic
+                and mechanical materials
+                for real-time analysis.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="Raspberry Pi Power Supply.png"
+                alt="Raspberry Pi Power Supply"
+            >
+
+            <h4>Raspberry Pi Power Supply (×1)</h4>
+
+            <p>
+                Provides regulated
+                power for Raspberry Pi
+                operation.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Software Requirements:</strong>
+
+        <ul>
+            <li>Raspberry Pi OS</li>
+            <li>Python 3</li>
+            <li>OpenCV</li>
+            <li>NumPy</li>
+            <li>ONNX Runtime</li>
+            <li>Trained ONNX model: best.onnx</li>
+        </ul>
+
+        <p>
+            For the complete model
+            training workflow, the
+            supplied experiment also
+            requires prepared YOLO
+            datasets, compatible
+            PyTorch, Ultralytics
+            and the training
+            configuration data.yaml.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- CONNECTIONS -->
 <section class="section" id="connections">
-<h2>Circuit Connections</h2>
 
-<div class="table-wrap">
+    <h2>Circuit Connections</h2>
 
-<table>
+    <div class="table-wrap">
 
-<thead>
-<tr>
-<th>Component</th>
-<th>Connection</th>
-<th>Raspberry Pi Connection</th>
-</tr>
-</thead>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Interface</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
 
-<tbody>
-<tr>
-<td>USB Camera</td>
-<td>USB</td>
-<td>Any Raspberry Pi USB port</td>
-</tr>
-</tbody>
+            <tbody>
+                <tr>
+                    <td>USB Camera</td>
+                    <td>USB</td>
+                    <td>Any available Raspberry Pi USB port</td>
+                </tr>
+            </tbody>
 
-</table>
+        </table>
 
-</div>
+    </div>
+
+    <h3>Connection Procedure</h3>
+
+    <ol>
+        <li>Connect the USB camera to an available Raspberry Pi USB port.</li>
+        <li>Power on the Raspberry Pi using its suitable power supply.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Check the camera device using <code>ls /dev/video*</code>.</li>
+        <li>Confirm that the selected camera is accessible as <code>/dev/video0</code>.</li>
+        <li>Position the materials within the camera's field of view.</li>
+    </ol>
+
+    <div class="note">
+
+        <strong>Connection Note:</strong>
+
+        <p>
+            The system uses a USB
+            camera only. No
+            Raspberry Pi GPIO
+            connections are required
+            for the final object
+            counting program.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- CIRCUIT DIAGRAM -->
 <section class="section" id="circuit">
-<h2>Circuit Diagram</h2>
-<img
-class="circuit-img"
-src="AI-Based Material Counting System Circuit.png"
-alt="AI-Based Material Counting System Circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="AI-Based Material Counting System Circuit.png"
+        alt="AI-Based Material Counting System Circuit Diagram"
+    >
+
 </section>
 
+<!-- WORKING -->
 <section class="section" id="working">
-<h2>Working Principle</h2>
 
-<div class="flow">
+    <h2>Working Principle</h2>
 
-USB Camera
-<br>
-↓
-<br>
+    <div class="flow">
 
-Raspberry Pi 4
-<br>
-↓
-<br>
+        <div class="flow-step">
+            USB Camera Captures Materials
+        </div>
+        <div class="flow-arrow">↓</div>
 
-Trained YOLO11 Model
-<br>
-↓
-<br>
+        <div class="flow-step">
+            Raspberry Pi Reads Camera Frame
+        </div>
+        <div class="flow-arrow">↓</div>
 
-ONNX Runtime
-<br>
-↓
-<br>
+        <div class="flow-step">
+            Preprocess Frame to 640 × 640
+        </div>
+        <div class="flow-arrow">↓</div>
 
-Detect 9 Material Classes
-<br>
-↓
-<br>
+        <div class="flow-step">
+            ONNX Runtime Executes Trained YOLO11
+        </div>
+        <div class="flow-arrow">↓</div>
 
-Bounding Boxes
-+
-Individual Counts
-+
-TOTAL
+        <div class="flow-step">
+            Detect Nine Material Classes
+        </div>
+        <div class="flow-arrow">↓</div>
 
-</div>
+        <div class="flow-step">
+            Filter by Confidence Threshold
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Apply Non-Maximum Suppression
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Count Materials by Class
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Draw Bounding Boxes and Labels
+        </div>
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Display Individual Counts and TOTAL
+        </div>
+
+    </div>
+
+    <h3>Dataset Preparation</h3>
+
+    <p>
+        Annotated source datasets
+        are combined and their
+        class labels are mapped
+        to the nine material
+        categories.
+    </p>
+
+    <h3>Model Training</h3>
+
+    <p>
+        YOLO11n is trained and
+        validated using the
+        combined dataset.
+        The trained weights
+        are exported to ONNX.
+    </p>
+
+    <h3>Live Image Capture</h3>
+
+    <p>
+        A USB camera provides
+        continuous video frames
+        to the Raspberry Pi.
+    </p>
+
+    <h3>AI Inference</h3>
+
+    <p>
+        The program preprocesses
+        each frame and runs the
+        trained best.onnx model
+        using ONNX Runtime.
+    </p>
+
+    <h3>Detection Filtering</h3>
+
+    <p>
+        Predictions below the
+        configured confidence
+        threshold are removed.
+        NMS suppresses overlapping
+        detections.
+    </p>
+
+    <h3>Material Counting</h3>
+
+    <p>
+        Accepted detections are
+        grouped by their class
+        labels using Python Counter.
+    </p>
+
+    <h3>Live Output</h3>
+
+    <p>
+        The camera window displays
+        a bounding box and label
+        for each detected object,
+        together with individual
+        material counts and
+        the total number
+        of accepted detections.
+    </p>
 
 </section>
 
+<!-- PROCEDURE -->
 <section class="section" id="procedure">
 
-<h2>Procedure</h2>
+    <h2>Procedure</h2>
 
-<ol>
-
-<li>
-Connect the USB camera to the Raspberry Pi and confirm
-that it appears as <code>/dev/video0</code>.
-</li>
-
-<li>
-Create
-<code>~/AI_Material_Counting</code>
-and download the two annotated datasets described in the SOP.
-</li>
-
-<li>
-Run the dataset combination script to map the source datasets
-into the final nine classes and create training and validation splits.
-</li>
-
-<li>
-Check that every class is represented in both training
-and validation before training.
-</li>
-
-<li>
-Create
-<code>train_env</code>,
-install CPU-only PyTorch and Ultralytics,
-then train YOLO11n using the supplied
-<code>data.yaml</code>.
-</li>
-
-<li>
-Validate the model,
-test the material classes,
-and export
-<code>best.pt</code>
-to
-<code>best.onnx</code>.
-</li>
-
-<li>
-Create the lightweight
-<code>material_env</code>
-and install ONNX Runtime.
-</li>
-
-<li>
-Copy
-<code>best.onnx</code>
-to
-<code>~/AI_Material_Counting/best.onnx</code>.
-</li>
-
-<li>
-Save the final program as
-<code>material_counter.py</code>.
-</li>
-
-<li>
-Run
-<code>python material_counter.py</code>.
-</li>
-
-<li>
-Place supported materials in front of the camera,
-verify their labels and counts,
-and press
-<code>Q</code>
-to stop.
-</li>
-
-</ol>
+    <ol>
+        <li>Arrange the Raspberry Pi 4 Model B, USB camera and Raspberry Pi power supply.</li>
+        <li>Connect the USB camera to the Raspberry Pi.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Verify the USB camera at <code>/dev/video0</code>.</li>
+        <li>Create the experiment directory <code>~/AI_Material_Counting</code>.</li>
+        <li>Download the annotated source datasets specified in the experiment SOP.</li>
+        <li>Run the dataset-combination script supplied in the SOP.</li>
+        <li>Map the original labels to the required nine-class order.</li>
+        <li>Create and verify training and validation splits.</li>
+        <li>Prepare the YOLO training configuration <code>data.yaml</code>.</li>
+        <li>Create the training environment <code>train_env</code>.</li>
+        <li>Install compatible CPU-only PyTorch and Ultralytics packages.</li>
+        <li>Train the YOLO11n model using the prepared dataset.</li>
+        <li>Validate the trained model and check class predictions.</li>
+        <li>Export <code>best.pt</code> to <code>best.onnx</code>.</li>
+        <li>Create the lightweight inference environment <code>material_env</code>.</li>
+        <li>Install OpenCV, NumPy and ONNX Runtime.</li>
+        <li>Place the exported model at <code>~/AI_Material_Counting/best.onnx</code>.</li>
+        <li>Copy the Python code from Explore the Code.</li>
+        <li>Save the script as <code>material_counter.py</code>.</li>
+        <li>Verify that the model output uses the expected nine-class format.</li>
+        <li>Run <code>python material_counter.py</code> in a graphical desktop session.</li>
+        <li>Place a resistor in front of the camera and check its detection label.</li>
+        <li>Repeat with other supported materials.</li>
+        <li>Place several materials in the frame simultaneously.</li>
+        <li>Compare the individual counts with the visible detected objects.</li>
+        <li>Verify that TOTAL equals the number of accepted detections.</li>
+        <li>Press <code>Q</code> to stop monitoring.</li>
+        <li>Confirm that the camera and OpenCV window close.</li>
+    </ol>
 
 </section>
 
+<!-- EXPLORE THE CODE -->
 <section class="section" id="code">
 
-<div class="code-lesson">
-
-<p class="eyebrow">
-Raspberry Pi Experiment · Code Review
-</p>
-
-<h2 class="lesson-title">
-Explore the Code
-</h2>
-
-<p class="intro">
-AI-Based Material Counting System ·
-Select a step to see what each part of the Python program does.
-</p>
-
-<div class="code-layout">
-
-<article class="code-panel">
-
-<div class="code-top">
-
-<span class="filename">
-material_counter.py
-</span>
-
-<button
-class="copy-button"
-onclick="copyCode()">
-Copy Code
-</button>
-
-</div>
-
-<div
-class="code-body"
-id="code-body">
-
-<code id="code-lines"></code>
-
-</div>
-
-</article>
-
-<article class="guide">
-
-<h2>
-Understand it step by step
-</h2>
-
-<p>
-Choose a step.
-The matching code will light up on the left.
-</p>
-
-<div class="steps">
-
-<button
-class="step active"
-onclick="showStep(0)">
-
-<span class="step-number">
-01
-</span>
-
-Load the libraries
-
-</button><button
-class="step"
-onclick="showStep(1)">
-
-<span class="step-number">
-02
-</span>
-
-Load the ONNX model
-
-</button><button
-class="step"
-onclick="showStep(2)">
-
-<span class="step-number">
-03
-</span>
-
-Set classes and thresholds
-
-</button><button
-class="step"
-onclick="showStep(3)">
-
-<span class="step-number">
-04
-</span>
-
-Open the USB camera
-
-</button><button
-class="step"
-onclick="showStep(4)">
-
-<span class="step-number">
-05
-</span>
-
-Preprocess the frame
-
-</button><button
-class="step"
-onclick="showStep(5)">
-
-<span class="step-number">
-06
-</span>
-
-Run ONNX detection
-
-</button><button
-class="step"
-onclick="showStep(6)">
-
-<span class="step-number">
-07
-</span>
-
-Count detected materials
-
-</button><button
-class="step"
-onclick="showStep(7)">
-
-<span class="step-number">
-08
-</span>
-
-Draw labels and totals
-
-</button><button
-class="step"
-onclick="showStep(8)">
-
-<span class="step-number">
-09
-</span>
-
-Display and stop
-
-</button>
-
-</div>
-
-<div
-class="explanation"
-id="explanation">
-
-<h3>
-1. Load the libraries
-</h3>
-
-<p>
-The program loads OpenCV, NumPy, ONNX Runtime and Counter for camera processing, AI inference and per-class counting.
-</p>
-
-</div>
-
-<details>
-
-<summary>
-Explore more: material counting logic
-</summary>
-
-<p>
-The final model contains nine classes:
-Resistor, Capacitor, Diode, Transistor,
-LED, Bolt, Nut, Screw and Washer.
-</p>
-
-<p>
-The displayed counts represent the accepted detections
-in the current camera frame.
-They are not cumulative unique-object counts over time.
-</p>
-
-</details>
-
-<details>
-
-<summary>
-Check your understanding
-</summary>
-
-<ul>
-
-<li>
-How many material classes are used?
-<strong>9</strong>
-</li>
-
-<li>
-Which runtime is used for final inference?
-<strong>ONNX Runtime</strong>
-</li>
-
-<li>
-Which camera device is used?
-<strong>/dev/video0</strong>
-</li>
-
-<li>
-Which key stops the program?
-<strong>Q</strong>
-</li>
-
-</ul>
-
-</details>
-
-</article>
-
-</div>
-
-<p class="tip">
-
-<strong>Try it:</strong>
-
-Run
-<code>python material_counter.py</code>,
-place several supported materials in view
-and check that each label,
-individual count and TOTAL
-match the visible objects.
-
-</p>
-
-</div>
+    <p class="eyebrow">
+        Raspberry Pi Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Select a step to highlight its
+        exact Python code section.
+        Copy Code copies the complete
+        material counting program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    material_counter.py
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Click any tab to highlight
+                the corresponding code
+                section on the left.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>
+                    Explore More: YOLO11n
+                </summary>
+                <p>
+                    YOLO11n is a lightweight
+                    object-detection model
+                    that can be trained
+                    to recognize the nine
+                    material classes.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: ONNX Runtime
+                </summary>
+                <p>
+                    ONNX Runtime executes
+                    the exported model
+                    using the Raspberry Pi
+                    CPU without requiring
+                    Ultralytics during
+                    final inference.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Confidence
+                </summary>
+                <p>
+                    The program accepts
+                    detections with scores
+                    at least 0.10,
+                    before applying
+                    Non-Maximum Suppression.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: NMS
+                </summary>
+                <p>
+                    Non-Maximum Suppression
+                    reduces overlapping
+                    detection boxes.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Counter
+                </summary>
+                <p>
+                    Python Counter stores
+                    the number of accepted
+                    detections of each
+                    material class in
+                    the current frame.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Explore More: Per-Frame Counting
+                </summary>
+                <p>
+                    Counts are reset
+                    for every new camera
+                    frame. The system
+                    does not accumulate
+                    detections across time.
+                </p>
+            </details>
+
+            <details>
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>How many material classes are used?</li>
+                    <li>Which model is trained?</li>
+                    <li>Which runtime performs inference?</li>
+                    <li>Which camera device is used?</li>
+                    <li>What is the confidence threshold?</li>
+                    <li>What is the NMS IoU threshold?</li>
+                    <li>Does TOTAL count unique objects across time?</li>
+                    <li>Which key stops the program?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    Nine; YOLO11n;
+                    ONNX Runtime;
+                    /dev/video0;
+                    0.10; 0.45;
+                    No; Q.
+                </p>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Place a resistor, capacitor
+        and LED inside the camera view.
+        Compare their detected labels,
+        individual counts and TOTAL
+        with the objects displayed
+        on screen.
+    </p>
 
 </section>
 
-<section class="section">
+<!-- OUTPUT -->
+<section class="section" id="output">
 
-<h2>Expected Output</h2>
+    <h2>Expected Output</h2>
 
-<p>
-The camera window shows green bounding boxes
-and material names for detected objects.
-</p>
+    <h3>Live Camera Window</h3>
 
-<p>
-Individual visible-material counts are shown
-in the information panel.
-</p>
+    <div class="output-box">
+<pre>AI Material Counting
 
-<p>
-The TOTAL value equals the number of accepted
-detections currently visible in the frame.
-</p>
+[Live USB Camera Image]
+
+AI MATERIAL
+Resistor: 2
+Capacitor: 1
+LED: 3
+Bolt: 1
+
+TOTAL: 7
+
+[Green Bounding Boxes Around Detected Materials]</pre>
+    </div>
+
+    <h3>Individual Material Detection</h3>
+
+    <div class="output-box">
+<pre>Resistor 0.86
+Capacitor 0.92
+LED 0.89
+Bolt 0.81</pre>
+    </div>
+
+    <h3>Functional Output</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Expected Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Resistor detected</td>
+                    <td>Resistor label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>Capacitor detected</td>
+                    <td>Capacitor label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>Diode detected</td>
+                    <td>Diode label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>Transistor detected</td>
+                    <td>Transistor label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>LED detected</td>
+                    <td>LED label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>Bolt detected</td>
+                    <td>Bolt label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>Nut detected</td>
+                    <td>Nut label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>Screw detected</td>
+                    <td>Screw label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>Washer detected</td>
+                    <td>Washer label and count displayed</td>
+                </tr>
+                <tr>
+                    <td>Multiple detections</td>
+                    <td>Individual counts and TOTAL updated</td>
+                </tr>
+                <tr>
+                    <td>No accepted detections</td>
+                    <td>TOTAL: 0</td>
+                </tr>
+                <tr>
+                    <td>Q pressed</td>
+                    <td>Camera and display close</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Note:</strong>
+        These counts and confidence
+        scores are illustrative,
+        not actual tested output.
+        The final numbers depend
+        on the trained model and
+        detected objects.
+    </div>
 
 </section>
 
-<section
-class="section"
-id="result">
+<!-- DASHBOARD -->
+<section class="section" id="dashboard">
 
-<h2>Result</h2>
+    <h2>Dashboard</h2>
 
-<p>
-The AI-Based Material Counting System successfully
-uses a trained 9-class YOLO11 model exported to ONNX
-to identify materials from a USB camera and display
-individual class counts and the total number
-of accepted detections.
-</p>
+    <div class="dashboard-image">
+
+        <img
+            src="AI-Based Material Counting System Dashboard.png"
+            alt="AI-Based Material Counting System Dashboard"
+        >
+
+    </div>
+
+    <p>
+        This section is reserved
+        for the experiment's
+        material-counting output
+        screenshot.
+    </p>
+
+    <p>
+        The Python program displays
+        its live material counts
+        in an OpenCV window.
+        It does not provide a
+        separate browser-based
+        dashboard.
+    </p>
 
 </section>
 
-<section class="section">
+<!-- RESULT -->
+<section class="section" id="result">
 
-<h2>
-What You Learn
-</h2>
+    <h2>Result</h2>
 
-<ul>
+    <p>
+        The AI-Based Material Counting
+        System demonstrates real-time
+        detection and counting of nine
+        electronic and mechanical
+        material classes using
+        Raspberry Pi 4, USB camera,
+        a trained YOLO11n model
+        and ONNX Runtime.
+    </p>
 
-<li>
-Combining multiple annotated YOLO datasets
-into one class map.
-</li>
+    <p>
+        The program identifies
+        accepted material detections,
+        displays bounding boxes
+        and class labels, and
+        calculates individual
+        class counts and a
+        current-frame total.
+    </p>
 
-<li>
-Training YOLO11n on Raspberry Pi
-using CPU-only PyTorch.
-</li>
+</section>
 
-<li>
-Validating and exporting a trained model to ONNX.
-</li>
+<!-- LEARN -->
+<section class="section" id="learn">
 
-<li>
-Running ONNX Runtime inference on Raspberry Pi.
-</li>
+    <h2>What You Learn</h2>
 
-<li>
-Using non-maximum suppression
-to reduce overlapping detections.
-</li>
-
-<li>
-Counting detected material classes
-in each live camera frame.
-</li>
-
-</ul>
+    <ul>
+        <li>Using Raspberry Pi 4 for AI experiments.</li>
+        <li>Connecting and operating a USB camera.</li>
+        <li>Capturing real-time frames with OpenCV.</li>
+        <li>Understanding object detection and classification.</li>
+        <li>Combining annotated YOLO datasets.</li>
+        <li>Mapping source labels to nine classes.</li>
+        <li>Preparing training and validation datasets.</li>
+        <li>Training YOLO11n using Ultralytics.</li>
+        <li>Validating a trained model.</li>
+        <li>Exporting PyTorch weights to ONNX.</li>
+        <li>Running ONNX Runtime on Raspberry Pi.</li>
+        <li>Using CPU-based AI inference.</li>
+        <li>Preprocessing input camera images.</li>
+        <li>Working with model output tensors.</li>
+        <li>Converting bounding-box coordinates.</li>
+        <li>Applying confidence filtering.</li>
+        <li>Applying Non-Maximum Suppression.</li>
+        <li>Counting detected objects using Counter.</li>
+        <li>Displaying material names and confidence scores.</li>
+        <li>Drawing green detection boxes.</li>
+        <li>Displaying individual and total object counts.</li>
+        <li>Understanding per-frame versus cumulative counting.</li>
+        <li>Releasing the camera and OpenCV resources.</li>
+    </ul>
 
 </section>
 
 </main>
 
+<!-- FOOTER -->
 <footer>
-
-<strong>
-R-Pi Experiment
-</strong>
-
-<br>
-
-AI-Based Material Counting System
-
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>AI-Based Material Counting System</div>
 </footer>
 
+<!-- =====================================
+     COMPLETE PYTHON PROGRAM
+     NINE EXACT CODE SECTIONS
+===================================== -->
+<textarea id="python-program" hidden>
+# [01] LOAD LIBRARIES
+
+import cv2
+import numpy as np
+import onnxruntime as ort
+
+from collections import Counter
+
+# [END 01]
+
+
+# [02] LOAD ONNX MODEL
+
+MODEL_PATH = "/home/pi/AI_Material_Counting/best.onnx"
+
+session = ort.InferenceSession(
+    MODEL_PATH,
+    providers=["CPUExecutionProvider"]
+)
+
+input_name = session.get_inputs()[0].name
+
+# [END 02]
+
+
+# [03] SET CLASSES AND THRESHOLDS
+
+CLASS_NAMES = [
+    "Resistor",
+    "Capacitor",
+    "Diode",
+    "Transistor",
+    "LED",
+    "Bolt",
+    "Nut",
+    "Screw",
+    "Washer"
+]
+
+CONF_THRESHOLD = 0.10
+IOU_THRESHOLD = 0.45
+
+INPUT_SIZE = 640
+
+CAMERA_DEVICE = "/dev/video0"
+
+# [END 03]
+
+
+# [04] OPEN USB CAMERA
+
+def open_camera():
+
+    cap = cv2.VideoCapture(
+        CAMERA_DEVICE
+    )
+
+    cap.set(
+        cv2.CAP_PROP_FRAME_WIDTH,
+        640
+    )
+
+    cap.set(
+        cv2.CAP_PROP_FRAME_HEIGHT,
+        480
+    )
+
+    if not cap.isOpened():
+
+        print(
+            "ERROR: Camera could not be opened"
+        )
+
+        raise SystemExit(1)
+
+    return cap
+
+# [END 04]
+
+
+# [05] PREPROCESS CAMERA FRAME
+
+def preprocess(frame):
+
+    image = cv2.resize(
+        frame,
+        (INPUT_SIZE, INPUT_SIZE)
+    )
+
+    image = cv2.cvtColor(
+        image,
+        cv2.COLOR_BGR2RGB
+    )
+
+    image = (
+        image.astype(np.float32)
+        / 255.0
+    )
+
+    image = np.transpose(
+        image,
+        (2, 0, 1)
+    )
+
+    return np.expand_dims(
+        image,
+        axis=0
+    )
+
+# [END 05]
+
+
+# [06] RUN ONNX MATERIAL DETECTION
+
+def detect(frame):
+
+    output = session.run(
+        None,
+        {
+            input_name: preprocess(frame)
+        }
+    )[0]
+
+    # Expected YOLO11 raw prediction layout:
+    # [1, 13, N] or [1, N, 13]
+    # 4 bounding-box values + 9 classes
+
+    if (
+        output.ndim != 3
+        or output.shape[0] != 1
+    ):
+
+        raise ValueError(
+            f"Unexpected model output shape: {output.shape}"
+        )
+
+    expected_columns = (
+        4 + len(CLASS_NAMES)
+    )
+
+    if output.shape[1] == expected_columns:
+
+        predictions = output[0].T
+
+    elif output.shape[2] == expected_columns:
+
+        predictions = output[0]
+
+    else:
+
+        raise ValueError(
+            "ONNX model output does not match "
+            "the expected nine-class raw format. "
+            f"Received shape: {output.shape}"
+        )
+
+    boxes = []
+    scores = []
+    class_ids = []
+
+    for prediction in predictions:
+
+        x, y, w, h = prediction[:4]
+
+        class_scores = prediction[4:]
+
+        class_id = int(
+            np.argmax(class_scores)
+        )
+
+        confidence = float(
+            class_scores[class_id]
+        )
+
+        if confidence &lt; CONF_THRESHOLD:
+
+            continue
+
+        x1 = int(
+            (x - w / 2)
+            * frame.shape[1]
+            / INPUT_SIZE
+        )
+
+        y1 = int(
+            (y - h / 2)
+            * frame.shape[0]
+            / INPUT_SIZE
+        )
+
+        x2 = int(
+            (x + w / 2)
+            * frame.shape[1]
+            / INPUT_SIZE
+        )
+
+        y2 = int(
+            (y + h / 2)
+            * frame.shape[0]
+            / INPUT_SIZE
+        )
+
+        x1 = max(
+            0,
+            min(frame.shape[1] - 1, x1)
+        )
+
+        y1 = max(
+            0,
+            min(frame.shape[0] - 1, y1)
+        )
+
+        x2 = max(
+            0,
+            min(frame.shape[1] - 1, x2)
+        )
+
+        y2 = max(
+            0,
+            min(frame.shape[0] - 1, y2)
+        )
+
+        box_width = x2 - x1
+        box_height = y2 - y1
+
+        if (
+            box_width &lt;= 0
+            or box_height &lt;= 0
+        ):
+
+            continue
+
+        boxes.append([
+            x1,
+            y1,
+            box_width,
+            box_height
+        ])
+
+        scores.append(
+            confidence
+        )
+
+        class_ids.append(
+            class_id
+        )
+
+    if not boxes:
+
+        return []
+
+    # Apply NMS separately to each class
+    # so detections of different materials
+    # do not suppress one another.
+
+    detections = []
+
+    for class_id in range(
+        len(CLASS_NAMES)
+    ):
+
+        candidate_indices = [
+            i
+            for i, value
+            in enumerate(class_ids)
+            if value == class_id
+        ]
+
+        if not candidate_indices:
+
+            continue
+
+        class_boxes = [
+            boxes[i]
+            for i in candidate_indices
+        ]
+
+        class_scores = [
+            scores[i]
+            for i in candidate_indices
+        ]
+
+        indices = cv2.dnn.NMSBoxes(
+            class_boxes,
+            class_scores,
+            CONF_THRESHOLD,
+            IOU_THRESHOLD
+        )
+
+        for selected in np.array(
+            indices
+        ).flatten():
+
+            original_index = candidate_indices[
+                int(selected)
+            ]
+
+            detections.append((
+                boxes[original_index],
+                scores[original_index],
+                class_ids[original_index]
+            ))
+
+    return detections
+
+# [END 06]
+
+
+# [07] COUNT DETECTED MATERIALS
+
+def count_materials(detections):
+
+    counts = Counter()
+
+    for box, confidence, class_id in detections:
+
+        material_name = CLASS_NAMES[
+            class_id
+        ]
+
+        counts[material_name] += 1
+
+    total = sum(
+        counts.values()
+    )
+
+    return counts, total
+
+# [END 07]
+
+
+# [08] DRAW BOUNDING BOXES AND COUNTS
+
+def draw_output(
+    frame,
+    detections,
+    counts,
+    total
+):
+
+    # Draw detection boxes and names.
+
+    for box, confidence, class_id in detections:
+
+        x, y, w, h = box
+
+        material_name = CLASS_NAMES[
+            class_id
+        ]
+
+        cv2.rectangle(
+            frame,
+            (x, y),
+            (x + w, y + h),
+            (0, 255, 0),
+            2
+        )
+
+        cv2.putText(
+            frame,
+            f"{material_name} {confidence:.2f}",
+            (x, max(20, y - 8)),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.55,
+            (0, 255, 0),
+            2
+        )
+
+    # Create a panel tall enough for
+    # all visible class counts.
+
+    active_classes = [
+        name
+        for name in CLASS_NAMES
+        if counts[name] &gt; 0
+    ]
+
+    panel_width = 215
+
+    panel_height = (
+        55 + 18 * len(active_classes) + 30
+    )
+
+    panel_height = min(
+        frame.shape[0] - 10,
+        panel_height
+    )
+
+    cv2.rectangle(
+        frame,
+        (5, 5),
+        (panel_width, panel_height),
+        (0, 0, 0),
+        -1
+    )
+
+    cv2.putText(
+        frame,
+        "AI MATERIAL",
+        (12, 27),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2
+    )
+
+    y_text = 49
+
+    for name in active_classes:
+
+        cv2.putText(
+            frame,
+            f"{name}: {counts[name]}",
+            (12, y_text),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.45,
+            (255, 255, 255),
+            1
+        )
+
+        y_text += 18
+
+    cv2.putText(
+        frame,
+        f"TOTAL: {total}",
+        (12, y_text + 7),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (0, 255, 255),
+        2
+    )
+
+    return frame
+
+# [END 08]
+
+
+# [09] DISPLAY CAMERA AND CLEAN UP
+
+def main():
+
+    cap = open_camera()
+
+    try:
+
+        while True:
+
+            ret, frame = cap.read()
+
+            if not ret:
+
+                print(
+                    "Camera frame error"
+                )
+
+                break
+
+            detections = detect(
+                frame
+            )
+
+            counts, total = count_materials(
+                detections
+            )
+
+            display_frame = draw_output(
+                frame,
+                detections,
+                counts,
+                total
+            )
+
+            cv2.imshow(
+                "AI Material Counting",
+                display_frame
+            )
+
+            if (
+                cv2.waitKey(1)
+                &amp; 0xFF
+            ) == ord("q"):
+
+                break
+
+    except KeyboardInterrupt:
+
+        print(
+            "Program interrupted."
+        )
+
+    finally:
+
+        cap.release()
+
+        cv2.destroyAllWindows()
+
+        print(
+            "AI Material Counting stopped."
+        )
+
+
+if __name__ == "__main__":
+
+    main()
+
+# [END 09]
+</textarea>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
 <script>
 
-const program="import cv2\nimport numpy as np\nimport onnxruntime as ort\nfrom collections import Counter\n\nMODEL_PATH = \"/home/pi/AI_Material_Counting/best.onnx\"\n\nsession = ort.InferenceSession(\n    MODEL_PATH,\n    providers=[\"CPUExecutionProvider\"]\n)\n\ninput_name = session.get_inputs()[0].name\n\nCLASS_NAMES = [\n    \"Resistor\",\n    \"Capacitor\",\n    \"Diode\",\n    \"Transistor\",\n    \"LED\",\n    \"Bolt\",\n    \"Nut\",\n    \"Screw\",\n    \"Washer\"\n]\n\nCONF_THRESHOLD = 0.10\nIOU_THRESHOLD = 0.45\n\ncap = cv2.VideoCapture(\"/dev/video0\")\ncap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)\ncap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)\n\nif not cap.isOpened():\n    print(\"ERROR: Camera could not be opened\")\n    raise SystemExit\n\ndef preprocess(frame):\n    image = cv2.resize(frame, (640, 640))\n    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)\n    image = image.astype(np.float32) / 255.0\n    image = np.transpose(image, (2, 0, 1))\n    return np.expand_dims(image, axis=0)\n\ndef detect(frame):\n    output = session.run(\n        None,\n        {input_name: preprocess(frame)}\n    )[0]\n\n    predictions = output[0].T\n\n    boxes = []\n    scores = []\n    class_ids = []\n\n    for p in predictions:\n        x, y, w, h = p[:4]\n\n        class_scores = p[4:]\n\n        class_id = int(\n            np.argmax(class_scores)\n        )\n\n        conf = float(\n            class_scores[class_id]\n        )\n\n        if conf < CONF_THRESHOLD:\n            continue\n\n        x1 = int(\n            (x - w / 2)\n            * frame.shape[1]\n            / 640\n        )\n\n        y1 = int(\n            (y - h / 2)\n            * frame.shape[0]\n            / 640\n        )\n\n        x2 = int(\n            (x + w / 2)\n            * frame.shape[1]\n            / 640\n        )\n\n        y2 = int(\n            (y + h / 2)\n            * frame.shape[0]\n            / 640\n        )\n\n        x1 = max(\n            0,\n            min(\n                frame.shape[1] - 1,\n                x1\n            )\n        )\n\n        y1 = max(\n            0,\n            min(\n                frame.shape[0] - 1,\n                y1\n            )\n        )\n\n        x2 = max(\n            0,\n            min(\n                frame.shape[1] - 1,\n                x2\n            )\n        )\n\n        y2 = max(\n            0,\n            min(\n                frame.shape[0] - 1,\n                y2\n            )\n        )\n\n        boxes.append(\n            [\n                x1,\n                y1,\n                x2 - x1,\n                y2 - y1\n            ]\n        )\n\n        scores.append(\n            conf\n        )\n\n        class_ids.append(\n            class_id\n        )\n\n    idx = cv2.dnn.NMSBoxes(\n        boxes,\n        scores,\n        CONF_THRESHOLD,\n        IOU_THRESHOLD\n    )\n\n    if len(idx):\n        return [\n            (\n                boxes[i],\n                scores[i],\n                class_ids[i]\n            )\n            for i\n            in np.array(idx).flatten()\n        ]\n\n    return []\n\nwhile True:\n    ret, frame = cap.read()\n\n    if not ret:\n        print(\"Camera frame error\")\n        break\n\n    detections = detect(frame)\n\n    counts = Counter()\n\n    for box, conf, class_id in detections:\n        x, y, w, h = box\n\n        name = CLASS_NAMES[\n            class_id\n        ]\n\n        counts[\n            name\n        ] += 1\n\n        cv2.rectangle(\n            frame,\n            (x, y),\n            (x + w, y + h),\n            (0, 255, 0),\n            2\n        )\n\n        cv2.putText(\n            frame,\n            f\"{name} {conf:.2f}\",\n            (\n                x,\n                max(20, y - 8)\n            ),\n            cv2.FONT_HERSHEY_SIMPLEX,\n            0.55,\n            (0, 255, 0),\n            2\n        )\n\n    # Compact information panel\n\n    cv2.rectangle(\n        frame,\n        (5, 5),\n        (190, 125),\n        (0, 0, 0),\n        -1\n    )\n\n    cv2.putText(\n        frame,\n        \"AI MATERIAL\",\n        (12, 27),\n        cv2.FONT_HERSHEY_SIMPLEX,\n        0.55,\n        (255, 255, 255),\n        2\n    )\n\n    y_text = 49\n\n    total = 0\n\n    for name in CLASS_NAMES:\n\n        if counts[name] > 0:\n\n            cv2.putText(\n                frame,\n                f\"{name}: {counts[name]}\",\n                (12, y_text),\n                cv2.FONT_HERSHEY_SIMPLEX,\n                0.45,\n                (255, 255, 255),\n                1\n            )\n\n            y_text += 17\n\n            total += counts[\n                name\n            ]\n\n    cv2.putText(\n        frame,\n        f\"TOTAL: {total}\",\n        (12, 117),\n        cv2.FONT_HERSHEY_SIMPLEX,\n        0.55,\n        (0, 255, 255),\n        2\n    )\n\n    cv2.imshow(\n        \"AI Material Counting\",\n        frame\n    )\n\n    if cv2.waitKey(1) & 0xFF == ord(\"q\"):\n        break\n\ncap.release()\n\ncv2.destroyAllWindows()";
+/* READ COMPLETE PYTHON PROGRAM */
 
-const lines=
-program.split("\n");
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
 
-const steps=
-[{"title":"Load the libraries","start":"import cv2","end":"from collections import Counter","text":"The program loads OpenCV, NumPy, ONNX Runtime and Counter for camera processing, AI inference and per-class counting."},{"title":"Load the ONNX model","start":"MODEL_PATH =","end":"input_name = session.get_inputs()[0].name","text":"ONNX Runtime loads best.onnx with the CPU execution provider and reads the model input name."},{"title":"Set classes and thresholds","start":"CLASS_NAMES = [","end":"IOU_THRESHOLD = 0.45","text":"The nine material classes and the confidence and NMS IoU thresholds are configured."},{"title":"Open the USB camera","start":"cap = cv2.VideoCapture(\"/dev/video0\")","end":"raise SystemExit","text":"The USB camera opens at /dev/video0 with 640 × 480 capture, and the program stops if it cannot be opened."},{"title":"Preprocess the frame","start":"def preprocess(frame):","end":"return np.expand_dims(image, axis=0)","text":"The frame is resized to 640 × 640, converted to RGB, normalized and rearranged into the tensor format expected by the model."},{"title":"Run ONNX detection","start":"def detect(frame):","end":"return []","text":"The ONNX model produces boxes and class scores, low-confidence detections are removed and NMS removes overlapping duplicates."},{"title":"Count detected materials","start":"detections = detect(frame)","end":"] += 1","text":"Accepted detections are converted into material names and counted in the current camera frame."},{"title":"Draw labels and totals","start":"cv2.rectangle(","end":"cv2.imshow(","text":"Bounding boxes, material labels, individual counts and the TOTAL value are drawn on the live frame."},{"title":"Display and stop","start":"cv2.imshow(","end":"cv2.destroyAllWindows()","text":"The live result is displayed until Q is pressed, then the camera and OpenCV window are released."}];
+const lines = program.split("\n");
 
+/* NINE CODE EXPLANATION STEPS */
 
-function escapeHtml(text){
+const steps = [
 
-    return text
+    {
+        number: "01",
+        label: "LOAD LIBRARIES",
+        title: "Load Libraries",
+        text:
+            "Imports OpenCV, NumPy, " +
+            "ONNX Runtime and Counter " +
+            "for camera processing, " +
+            "AI inference and counting."
+    },
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
+    {
+        number: "02",
+        label: "LOAD ONNX MODEL",
+        title: "Load ONNX Model",
+        text:
+            "Loads best.onnx using " +
+            "the CPU Execution Provider " +
+            "and obtains the model input name."
+    },
 
-        .replace(
-            /</g,
-            "&lt;"
-        )
+    {
+        number: "03",
+        label: "SET CLASSES AND THRESHOLDS",
+        title: "Set Classes and Thresholds",
+        text:
+            "Defines nine materials, " +
+            "the 0.10 confidence threshold, " +
+            "0.45 NMS IoU threshold, " +
+            "camera device and input size."
+    },
 
-        .replace(
-            />/g,
-            "&gt;"
-        );
+    {
+        number: "04",
+        label: "OPEN USB CAMERA",
+        title: "Open USB Camera",
+        text:
+            "Opens /dev/video0, requests " +
+            "640 by 480 camera capture " +
+            "and checks that the camera opened."
+    },
 
+    {
+        number: "05",
+        label: "PREPROCESS CAMERA FRAME",
+        title: "Preprocess Camera Frame",
+        text:
+            "Resizes the image, converts " +
+            "BGR to RGB, normalizes pixels " +
+            "and prepares the model tensor."
+    },
+
+    {
+        number: "06",
+        label: "RUN ONNX MATERIAL DETECTION",
+        title: "Run Material Detection",
+        text:
+            "Runs the ONNX model, reads " +
+            "class scores and bounding boxes, " +
+            "filters low-confidence predictions " +
+            "and applies class-wise NMS."
+    },
+
+    {
+        number: "07",
+        label: "COUNT DETECTED MATERIALS",
+        title: "Count Detected Materials",
+        text:
+            "Uses Counter to calculate " +
+            "individual material counts " +
+            "and the current-frame total."
+    },
+
+    {
+        number: "08",
+        label: "DRAW BOUNDING BOXES AND COUNTS",
+        title: "Draw Labels and Counts",
+        text:
+            "Draws green boxes, material " +
+            "labels, confidence scores, " +
+            "individual counts and TOTAL."
+    },
+
+    {
+        number: "09",
+        label: "DISPLAY CAMERA AND CLEAN UP",
+        title: "Display and Stop",
+        text:
+            "Runs the main camera loop, " +
+            "updates the material counts " +
+            "and releases the camera and " +
+            "OpenCV window when Q is pressed."
+    }
+
+];
+
+/* ESCAPE PYTHON CODE FOR SAFE DISPLAY */
+
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
+/* DISPLAY COMPLETE PYTHON CODE */
 
-function displayCode(){
+function displayCode() {
 
-    let output="";
+    const container = document.getElementById(
+        "code-lines"
+    );
 
-    lines.forEach(
-        function(line,index){
+    container.innerHTML = lines.map(
+        function(line, index) {
 
-            output +=
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
 
-            '<span class="code-line" id="line-' +
-            (index+1) +
-            '">' +
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
 
-            '<span class="line-number">' +
-            (index+1) +
-            '</span>' +
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
 
-            '<span>' +
-            escapeHtml(line) +
-            '</span>' +
+                '</span>'
+            );
 
-            '</span>';
+        }
+    ).join("");
+}
+
+/* FIND EXACT SECTION MARKERS */
+
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+
+            return line.trim() === marker;
 
         }
     );
-
-    document
-    .getElementById(
-        "code-lines"
-    )
-    .innerHTML=
-    output;
-
 }
 
+/* MAP EXPLANATIONS TO CODE SECTIONS */
 
-function findLine(
-    searchText,
-    startIndex=0
-){
+const ranges = steps.map(
+    function(step) {
 
-    for(
-        let i=startIndex;
-        i<lines.length;
-        i++
-    ){
+        const start = findMarker(
+            "# [" +
+            step.number +
+            "] " +
+            step.label
+        );
 
-        if(
-            lines[i]
-            .includes(searchText)
-        ){
+        const end = findMarker(
+            "# [END " +
+            step.number +
+            "]"
+        );
 
-            return i;
-
-        }
+        return {
+            start: start,
+            end: end,
+            valid:
+                start >= 0 &&
+                end >= start
+        };
 
     }
+);
 
-    return -1;
+/* CREATE INTERACTIVE STEP BUTTONS */
 
+function createSteps() {
+
+    const container = document.getElementById(
+        "steps-list"
+    );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+
+            button.className = "step";
+
+            const number =
+                document.createElement("span");
+
+            number.className = "step-number";
+
+            number.textContent = step.number;
+
+            const title =
+                document.createElement("span");
+
+            title.textContent = step.title;
+
+            button.append(
+                number,
+                title
+            );
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    showStep(index);
+
+                }
+            );
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
 }
 
+/* HIGHLIGHT CORRECT SOURCE CODE */
 
-function showStep(index){
+function showStep(index) {
 
-    const step=
-    steps[index];
-
-
-    /* ACTIVE BUTTON */
-
-    const buttons=
     document.querySelectorAll(
         ".step"
-    );
+    ).forEach(
+        function(button, i) {
 
-    buttons.forEach(
-        function(button){
-
-            button
-            .classList
-            .remove(
-                "active"
+            button.classList.toggle(
+                "active",
+                i === index
             );
 
         }
     );
 
-    if(
-        buttons[index]
-    ){
-
-        buttons[index]
-        .classList
-        .add(
-            "active"
-        );
-
-    }
-
-
-    /* REMOVE OLD HIGHLIGHT */
-
-    document
-    .querySelectorAll(
+    document.querySelectorAll(
         ".code-line"
-    )
-    .forEach(
-        function(line){
+    ).forEach(
+        function(line) {
 
-            line
-            .classList
-            .remove(
+            line.classList.remove(
                 "selected"
             );
 
         }
     );
 
+    const step = steps[index];
 
-    /* FIND REAL CODE BLOCK */
+    const range = ranges[index];
 
-    const startLine=
-    findLine(
-        step.start
+    const explanation =
+        document.getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement("h3");
+
+    heading.textContent =
+        (index + 1) + ". " + step.title;
+
+    const paragraph =
+        document.createElement("p");
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
     );
 
-    if(
-        startLine === -1
-    ){
+    if (!range.valid) {
 
-        console.warn(
-            "Start marker not found:",
-            step.start
-        );
+        paragraph.textContent =
+            "Matching source markers not found.";
 
         return;
-
     }
 
-
-    let endLine=
-    findLine(
-        step.end,
-        startLine
-    );
-
-    if(
-        endLine === -1
-    ){
-
-        endLine=
-        startLine;
-
-    }
-
-
-    /* BLUE HIGHLIGHT */
-
-    for(
-        let i=startLine;
-        i<=endLine;
+    for (
+        let i = range.start;
+        i <= range.end;
         i++
-    ){
+    ) {
 
-        const line=
-        document.getElementById(
-            "line-" +
-            (i+1)
-        );
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
 
-        if(line){
+        if (element) {
 
-            line
-            .classList
-            .add(
+            element.classList.add(
                 "selected"
             );
 
         }
-
     }
 
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
 
-    /* SCROLL */
+    const codeBody =
+        document.getElementById("code-body");
 
-    const selectedLine=
-    document.getElementById(
-        "line-" +
-        (startLine+1)
-    );
+    if (firstLine && codeBody) {
 
-    const codeBody=
-    document.getElementById(
-        "code-body"
-    );
-
-    if(
-        selectedLine
-        &&
-        codeBody
-    ){
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
 
         codeBody.scrollTo({
-
             top:
-            selectedLine.offsetTop
-            -
-            codeBody.offsetTop
-            -
-            20,
-
-            behavior:
-            "smooth"
-
+                codeBody.scrollTop +
+                offset -
+                20,
+            behavior: "smooth"
         });
+    }
+}
 
+/* COPY COMPLETE PYTHON PROGRAM */
+
+async function copyCode() {
+
+    const button =
+        document.querySelector(".copy-button");
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+
+                button.textContent = "Copy Code";
+
+            },
+            1500
+        );
     }
 
+    function fallback() {
 
-    /* EXPLANATION */
+        const field =
+            document.createElement("textarea");
 
-    document
-    .getElementById(
-        "explanation"
-    )
-    .innerHTML=
+        field.value = program;
 
-        "<h3>" +
-        (index+1) +
-        ". " +
-        step.title +
-        "</h3>" +
+        field.style.position = "fixed";
 
-        "<p>" +
-        step.text +
-        "</p>";
+        field.style.opacity = "0";
 
-}
+        document.body.appendChild(field);
 
+        field.select();
 
-function copyCode(){
+        let success = false;
 
-    navigator
-    .clipboard
-    .writeText(
-        program
-    )
-    .then(
-        function(){
+        try {
 
-            const button=
-            document
-            .querySelector(
-                ".copy-button"
-            );
+            success =
+                document.execCommand("copy");
 
-            button.innerText=
-            "Copied!";
+        } catch(error) {
 
-            setTimeout(
-                function(){
-
-                    button.innerText=
-                    "Copy Code";
-
-                },
-
-                1500
-            );
+            success = false;
 
         }
-    );
 
+        field.remove();
+
+        if (success) {
+
+            copied();
+
+        } else {
+
+            button.textContent =
+                "Copy failed";
+
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch(error) {
+
+            fallback();
+
+        }
+
+    } else {
+
+        fallback();
+
+    }
 }
 
+/* INITIALIZE CODE EXPLORER */
 
 displayCode();
-
+createSteps();
 showStep(0);
 
 </script>
