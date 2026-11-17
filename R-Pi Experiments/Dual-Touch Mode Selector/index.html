@@ -1,524 +1,2173 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dual-Touch Mode Selector</title>
 
 <style>
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7;}
-.header{background:#2563eb;color:white;text-align:center;padding:42px 20px;}
-.header h1{margin:0 0 8px;font-size:34px;}
-.header p{margin:0;font-size:17px;}
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20;}
-nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold;}
-.container{width:90%;max-width:1050px;margin:35px auto;}
-.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
-.section h2{margin-top:0;margin-bottom:18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px;}
-.section h3{color:#1e3a8a;}
-ul,ol{padding-left:24px;}
-li{margin-bottom:8px;}
-.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white;box-shadow:0 2px 8px rgba(0,0,0,.04);}
-.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px;}
-.component-card h4{color:#1e3a8a;margin:0 0 8px;font-size:18px;}
-.component-card p{color:#475569;font-size:14px;margin:0;}
-.table-wrap{overflow-x:auto;}
-table{width:100%;min-width:620px;border-collapse:collapse;}
-th,td{padding:12px;border:1px solid #ddd;text-align:left;}
-th{background:#2563eb;color:white;}
-tr:nth-child(even){background:#f8fafc;}
-.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2;}
-.circuit-img{
-    display:block;
-    width:100%;
-    max-width:760px;
-    margin:20px auto 0;
-    border:1px solid #e2e8f0;
-    border-radius:10px;
-    background:white;
-    padding:10px;
+/* GENERAL */
+* {
+    box-sizing: border-box;
 }
-.code-lesson{color:#142e3a;}
-.eyebrow{color:#2563eb;font-weight:bold;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px;}
-.lesson-title{font-size:32px!important;margin:0 0 8px!important;color:#1e3a8a!important;border:0!important;padding:0!important;}
-.intro{color:#526875;margin:0 0 22px;}
-.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start;}
-.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(37,99,235,.10);}
-.code-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white;}
-.filename{color:white;font:bold 14px/1.4 Consolas,Monaco,monospace;}
-.copy-button{border:1px solid white;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;min-height:40px;font-weight:bold;cursor:pointer;}
-.copy-button:hover{background:#eff6ff;}
-.code-body{height:600px;overflow:auto;background:white;padding:16px 0;}
-.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:22px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9;}
-.code-line:hover{background:#f8fbff;}
-.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb;}
-.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b;}
-.guide{background:white;border:1px solid #dce6e9;border-radius:14px;padding:22px;}
-.guide h2{border:0;padding:0;margin:0 0 8px;font-size:21px;}
-.guide>p{color:#526875;font-size:15px;}
-.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0;}
-.step{border:1px solid #dce6e9;border-radius:9px;padding:10px;min-height:65px;background:white;text-align:left;font-size:13px;font-weight:bold;display:flex;align-items:center;gap:8px;cursor:pointer;color:#1e3a8a;}
-.step:hover{border-color:#60a5fa;background:#f8fbff;}
-.step.active{background:#eff6ff;border-color:#60a5fa;color:#1e3a8a;}
-.step-number{color:#2563eb;font-size:12px;flex-shrink:0;}
-.explanation{background:#eff6ff;border-radius:9px;padding:16px;min-height:130px;}
-.explanation h3{font-size:17px;margin:0 0 7px;color:#1e3a8a;}
-.explanation p{margin:0;color:#526875;font-size:15px;}
-.guide details{border-top:1px solid #dce6e9;margin-top:15px;}
-.guide summary{cursor:pointer;color:#2563eb;font-weight:bold;padding:13px 0;}
-.guide details p,.guide details li{color:#526875;font-size:15px;}
-.guide code{background:#e5ecf4;padding:2px 4px;border-radius:4px;}
-.tip{background:#eff6ff;color:#234e87;padding:14px 17px;border-radius:9px;margin-top:20px;font-size:14px;}
-.result-box{background:#eff6ff;border-left:4px solid #2563eb;padding:16px;border-radius:8px;color:#234e87;}
-footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1;font-size:14px;}
-footer strong{color:white;}
-@media(max-width:850px){.code-layout{grid-template-columns:1fr;}}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font: 16px/1.7 Arial, Helvetica, sans-serif;
+}
+
+/* HEADER */
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
+    text-align: center;
+}
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    object-fit: contain;
+}
+
+.header-content {
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0,0,0,.12);
+}
+
+.header-left-buttons,
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-nav-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+}
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* NAVIGATION */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* CONTENT */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.06);
+    scroll-margin-top: 100px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* THUMBNAIL */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* COMPONENTS */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* TABLES */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+/* CIRCUIT */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* WORKING */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-step {
+    padding: 5px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* CODE EXPLORER */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0,1.45fr)
+        minmax(300px,1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37,99,235,.10);
+}
+
+.code-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    font: 13px/24px Consolas, Monaco, monospace;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+
+/* EXPLANATION GUIDE */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* EXPECTED OUTPUT */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* DASHBOARD */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* FOOTER */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+@media (max-width: 850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media (max-width: 600px) {
+    .header {
+        padding: 15px 0 0;
+    }
+
+    .header-logo {
+        top: 12px;
+        left: 12px;
+        width: 95px;
+        max-height: 60px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
+    }
+}
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header class="header">
-    <h1>
-        Dual-Touch Mode Selector
-    </h1>
 
-    <p>
-        Choose between two modes using touch sensors and LED indicators
-    </p>
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Dual-Touch Mode Selector</p>
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a href="../index.html" class="header-nav-btn">
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >Arduino</a>
+
+            <a
+                href="../../ESP32 CAM Experiments/index.html"
+                class="header-nav-btn"
+            >ESP</a>
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >R-Pi</a>
+
+        </div>
+
+    </div>
+
 </header>
 
+<!-- NAVIGATION -->
 <nav>
-    <a href="../index.html">
-        ← R-Pi Experiments
-    </a>
-
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
     <a href="#aim">Aim</a>
+    <a href="#about">About</a>
     <a href="#components">Components</a>
     <a href="#connections">Connections</a>
     <a href="#circuit">Circuit</a>
     <a href="#working">Working</a>
     <a href="#procedure">Procedure</a>
     <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
     <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
 </nav>
 
 <main class="container">
+
+<!-- THUMBNAIL -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Dual-Touch Mode Selector.png"
+        alt="Dual-Touch Mode Selector Thumbnail"
+    >
+
+</section>
+
+<!-- AIM -->
 <section class="section" id="aim">
-<h2>Aim</h2>
-<p>To demonstrate selecting two operating modes with TTP223 touch sensors and a Raspberry Pi 4B, using red and green LEDs as indicators.</p>
+
+    <h2>Aim</h2>
+
+    <p>
+        To design and implement a
+        Dual-Touch Mode Selector using
+        Raspberry Pi 4 Model B,
+        two TTP223 capacitive touch
+        sensors and two LED indicators
+        to select and display
+        different operating modes
+        without mechanical switches.
+    </p>
+
 </section>
+
+<!-- ABOUT -->
 <section class="section" id="about">
-<h2>About the Experiment</h2>
-<p>Touch Sensor 1 selects Mode 1 and turns ON the red LED while switching OFF the green LED. Touch Sensor 2 selects Mode 2 and turns ON the green LED while switching OFF the red LED. The selected mode is also printed in the terminal.</p>
-</section>
-<section
-    class="section"
-    id="components">
 
-    <h2>
-        Components Required
-    </h2>
+    <h2>About the Experiment</h2>
 
-    <div class="components-grid">
-<div class="component-card">
-    <img src="Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4B">
-    <h4>Raspberry Pi 4B (×1)</h4>
-    <p>Runs the touch-based mode selection program.</p>
-</div>
+    <p>
+        The Dual-Touch Mode Selector
+        demonstrates a capacitive
+        touch-based control system
+        using Raspberry Pi and Python.
+    </p>
 
-<div class="component-card">
-    <img src="Touch Sensor.png" alt="TTP223 Touch Sensor Module">
-    <h4>TTP223 Touch Sensor Module (×2)</h4>
-    <p>Select Mode 1 or Mode 2 when touched.</p>
-</div>
+    <p>
+        Two TTP223 touch sensor
+        modules act as digital inputs.
+        Each touch sensor detects
+        a finger on its touch pad
+        and generates a digital signal.
+    </p>
 
-<div class="component-card">
-    <img src="Red LED.png" alt="Red LED">
-    <h4>Red LED (×1)</h4>
-    <p>Shows Mode 1 is selected.</p>
-</div>
+    <p>
+        Touch Sensor 1 selects
+        <strong>Mode 1</strong>.
+        The Raspberry Pi turns ON
+        the red LED and switches
+        OFF the green LED.
+    </p>
 
-<div class="component-card">
-    <img src="Green LED.png" alt="Green LED">
-    <h4>Green LED (×1)</h4>
-    <p>Shows Mode 2 is selected.</p>
-</div>
+    <p>
+        Touch Sensor 2 selects
+        <strong>Mode 2</strong>.
+        The Raspberry Pi turns ON
+        the green LED and switches
+        OFF the red LED.
+    </p>
 
-<div class="component-card">
-    <img src="220 Ohm Resistor.png" alt="220Ω Resistor">
-    <h4>220Ω Resistor (×2)</h4>
-    <p>Limits current through both LEDs.</p>
-</div>
+    <p>
+        The selected mode is
+        printed in the terminal
+        for observation.
+    </p>
 
-<div class="component-card">
-    <img src="Breadboard.png" alt="Breadboard">
-    <h4>Breadboard (×1)</h4>
-    <p>Supports LED and resistor wiring.</p>
-</div>
+    <p>
+        The program waits for
+        the active touch sensor
+        to be released before
+        accepting another
+        selection from that sensor.
+    </p>
 
-<div class="component-card">
-    <img src="Jumper Wires.png" alt="Jumper Wires">
-    <h4>Jumper Wires (As required)</h4>
-    <p>Connect the GPIO, touch sensors and LEDs.</p>
-</div>
-</div>
+    <p>
+        The system maintains the
+        selected LED state after
+        the finger is removed.
+        A different mode is selected
+        only when its corresponding
+        sensor is touched.
+    </p>
 
-</section>
-
-<section
-    class="section"
-    id="connections">
-
-    <h2>
-        Circuit Connections
-    </h2>
+    <h3>Operating Modes</h3>
 
     <div class="table-wrap">
-
         <table>
-
             <thead>
                 <tr>
-                    <th>Component / Signal</th>
-                    <th>Physical Pin / Terminal</th>
+                    <th>Sensor Action</th>
+                    <th>Selected Mode</th>
+                    <th>Red LED</th>
+                    <th>Green LED</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sensor 1 touched</td>
+                    <td>Mode 1</td>
+                    <td>ON</td>
+                    <td>OFF</td>
+                </tr>
+                <tr>
+                    <td>Sensor 2 touched</td>
+                    <td>Mode 2</td>
+                    <td>OFF</td>
+                    <td>ON</td>
+                </tr>
+                <tr>
+                    <td>Finger released</td>
+                    <td>Previously selected mode</td>
+                    <td colspan="2">
+                        Selected LED remains ON
+                    </td>
+                </tr>
+                <tr>
+                    <td>Program stopped</td>
+                    <td>Stopped</td>
+                    <td>OFF</td>
+                    <td>OFF</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+                <tr>
+                    <td>Input Sensors</td>
+                    <td>TTP223 ×2</td>
+                </tr>
+                <tr>
+                    <td>Touch Sensor 1</td>
+                    <td>GPIO17</td>
+                </tr>
+                <tr>
+                    <td>Touch Sensor 2</td>
+                    <td>GPIO27</td>
+                </tr>
+                <tr>
+                    <td>Red LED</td>
+                    <td>GPIO22</td>
+                </tr>
+                <tr>
+                    <td>Green LED</td>
+                    <td>GPIO23</td>
+                </tr>
+                <tr>
+                    <td>LED Resistors</td>
+                    <td>220Ω ×2</td>
+                </tr>
+                <tr>
+                    <td>Touch Input Logic</td>
+                    <td>Active HIGH, pull-down</td>
+                </tr>
+                <tr>
+                    <td>Touch Debounce Delay</td>
+                    <td>0.3 seconds</td>
+                </tr>
+                <tr>
+                    <td>Main Polling Delay</td>
+                    <td>0.05 seconds</td>
+                </tr>
+                <tr>
+                    <td>Programming Language</td>
+                    <td>Python 3</td>
+                </tr>
+                <tr>
+                    <td>GPIO Library</td>
+                    <td>gpiozero</td>
+                </tr>
+                <tr>
+                    <td>Python Filename</td>
+                    <td>dual_touch_mode.py</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+        <strong>Input Logic:</strong>
+
+        <p>
+            This implementation assumes
+            standard TTP223 modules
+            configured for active-HIGH,
+            momentary output.
+        </p>
+
+        <p>
+            If the touch module is
+            configured for active-LOW
+            or toggle operation,
+            its input handling
+            must be adjusted.
+        </p>
+    </div>
+
+</section>
+
+<!-- COMPONENTS -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+            <img
+                src="Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
+            >
+            <h4>Raspberry Pi 4 Model B (×1)</h4>
+            <p>
+                Reads both touch inputs
+                and controls the LEDs.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Touch Sensor.png"
+                alt="TTP223 Touch Sensor Module"
+            >
+            <h4>TTP223 Touch Sensor Module (×2)</h4>
+            <p>
+                Provides touch-based
+                mode selection inputs.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Red LED.png"
+                alt="Red LED"
+            >
+            <h4>Red LED (×1)</h4>
+            <p>
+                Indicates that
+                Mode 1 is selected.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Green LED.png"
+                alt="Green LED"
+            >
+            <h4>Green LED (×1)</h4>
+            <p>
+                Indicates that
+                Mode 2 is selected.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="220 Ohm Resistor.png"
+                alt="220 Ohm Resistor"
+            >
+            <h4>220Ω Resistor (×2)</h4>
+            <p>
+                Limits the current
+                through each LED.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Breadboard.png"
+                alt="Breadboard"
+            >
+            <h4>Breadboard (×1)</h4>
+            <p>
+                Provides the prototype
+                circuit connections.
+            </p>
+        </div>
+
+        <div class="component-card">
+            <img
+                src="Jumper Wires.png"
+                alt="Jumper Wires"
+            >
+            <h4>Jumper Wires</h4>
+            <p>
+                Connect the touch modules,
+                LEDs and GPIO pins.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="note">
+        <strong>Software Requirements:</strong>
+        <ul>
+            <li>Raspberry Pi OS</li>
+            <li>Python 3</li>
+            <li>gpiozero</li>
+            <li>Compatible Raspberry Pi GPIO backend</li>
+        </ul>
+    </div>
+
+</section>
+
+<!-- CONNECTIONS -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <h3>Touch Sensor Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Sensor Pin</th>
                     <th>Raspberry Pi Connection</th>
                 </tr>
             </thead>
-
             <tbody>
-<tr><td>Touch Sensor 1 OUT</td><td>Pin 11</td><td>GPIO17</td></tr>
-<tr><td>Touch Sensor 2 OUT</td><td>Pin 13</td><td>GPIO27</td></tr>
-<tr><td>Red LED anode through 220Ω</td><td>Pin 15</td><td>GPIO22</td></tr>
-<tr><td>Green LED anode through 220Ω</td><td>Pin 16</td><td>GPIO23</td></tr>
-<tr><td>Touch Sensor 1 VCC</td><td>Pin 2</td><td>5V</td></tr>
-<tr><td>Touch Sensor 2 VCC</td><td>Pin 4</td><td>5V</td></tr>
-<tr><td>Touch Sensor 1 GND</td><td>Pin 6</td><td>GND</td></tr>
-<tr><td>Touch Sensor 2 GND</td><td>Pin 6</td><td>GND</td></tr>
-<tr><td>Both LED cathodes</td><td>Pin 6</td><td>GND</td></tr>
-</tbody>
-
+                <tr>
+                    <td>Touch Sensor 1</td>
+                    <td>OUT</td>
+                    <td>GPIO17 / Physical Pin 11</td>
+                </tr>
+                <tr>
+                    <td>Touch Sensor 2</td>
+                    <td>OUT</td>
+                    <td>GPIO27 / Physical Pin 13</td>
+                </tr>
+                <tr>
+                    <td>Touch Sensor 1</td>
+                    <td>VCC</td>
+                    <td>3.3V / Physical Pin 1</td>
+                </tr>
+                <tr>
+                    <td>Touch Sensor 2</td>
+                    <td>VCC</td>
+                    <td>3.3V / Physical Pin 17</td>
+                </tr>
+                <tr>
+                    <td>Both Sensors</td>
+                    <td>GND</td>
+                    <td>Raspberry Pi GND</td>
+                </tr>
+            </tbody>
         </table>
+    </div>
+
+    <h3>LED Connections</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Connection</th>
+                    <th>Raspberry Pi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Red LED</td>
+                    <td>Anode through 220Ω resistor</td>
+                    <td>GPIO22 / Physical Pin 15</td>
+                </tr>
+                <tr>
+                    <td>Green LED</td>
+                    <td>Anode through 220Ω resistor</td>
+                    <td>GPIO23 / Physical Pin 16</td>
+                </tr>
+                <tr>
+                    <td>Both LED Cathodes</td>
+                    <td>Negative terminals</td>
+                    <td>Raspberry Pi GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="note">
+
+        <strong>Electrical Safety:</strong>
+
+        <p>
+            Raspberry Pi GPIO inputs
+            are not 5V tolerant.
+            The uploaded circuit listed
+            5V power for the touch modules,
+            but this revised wiring
+            uses 3.3V with compatible
+            TTP223 modules.
+        </p>
+
+        <p>
+            Verify the actual sensor
+            board operates reliably
+            from 3.3V and produces
+            a 3.3V-compatible output.
+        </p>
+
+        <p>
+            The 220Ω resistors must
+            remain in series with
+            the individual LEDs.
+            Never connect an LED
+            directly between GPIO
+            and ground without
+            current limiting.
+        </p>
 
     </div>
 
 </section>
 
-<section
-    class="section"
-    id="circuit">
+<!-- CIRCUIT -->
+<section class="section" id="circuit">
 
-    <h2>
-        Circuit Diagram
-    </h2>
+    <h2>Circuit Diagram</h2>
 
     <img
         class="circuit-img"
         src="Dual-Touch Mode Selector Circuit.png"
-        alt="Dual-Touch Mode Selector Circuit">
+        alt="Dual-Touch Mode Selector Circuit Diagram"
+    >
 
-</section>
-
-<section
-    class="section"
-    id="working"><section class="section" id="working">
-<h2>Working Principle</h2>
-<div class="flow">Touch Sensor 1 → Mode 1 → Red LED ON<br>Touch Sensor 2 → Mode 2 → Green LED ON</div><p>The program checks both touch inputs continuously and changes the LED states when a touch is detected.</p>
-</section>
-<section class="section" id="procedure">
-<h2>Procedure</h2>
-<ol><li>Connect the first TTP223 OUT to GPIO17 and the second TTP223 OUT to GPIO27.</li><li>Connect their VCC pins to 5V and GND pins to a common ground.</li><li>Connect the red LED anode through a 220Ω resistor to GPIO22 and the green LED anode through a 220Ω resistor to GPIO23. Connect both cathodes to GND.</li><li>Ensure the TTP223 OUT voltage is safe for the Raspberry Pi 3.3V GPIO inputs; use suitable level shifting if necessary.</li><li>Install <code>python3-gpiozero</code> if needed, then save the program as <code>dual_touch_mode.py</code>.</li><li>Run <code>python3 dual_touch_mode.py</code>.</li><li>Touch the first sensor to select Mode 1 and the second sensor to select Mode 2.</li><li>Press Ctrl+C to stop and turn both LEDs OFF.</li></ol>
-</section>
-<section
-    class="section"
-    id="code">
-
-    <div class="code-lesson">
-
-        <p class="eyebrow">
-            Raspberry Pi Experiment · Code Review
-        </p>
-
-        <h2 class="lesson-title">
-            Explore the Code
-        </h2>
-
-        <p class="intro">
-            Dual-Touch Mode Selector · Select a step to see what each part of the Python program does.
-        </p>
-
-        <div class="code-layout">
-
-            <article class="code-panel">
-
-                <div class="code-top">
-
-                    <span class="filename">
-                        dual_touch_mode.py
-                    </span>
-
-                    <button
-                        class="copy-button"
-                        onclick="copyCode()">
-                        Copy Code
-                    </button>
-
-                </div>
-
-                <div
-                    class="code-body"
-                    id="code-body">
-
-                    <code id="code-lines"></code>
-
-                </div>
-
-            </article>
-
-            <article class="guide">
-
-                <h2>
-                    Understand it step by step
-                </h2>
-
-                <p>
-                    Choose a step. The matching code will light up on the left.
-                </p>
-
-                <div class="steps">
-
-<button class="step active" onclick="showStep(0)"><span class="step-number">01</span>Import libraries</button>
-<button class="step" onclick="showStep(1)"><span class="step-number">02</span>Configure touch inputs</button>
-<button class="step" onclick="showStep(2)"><span class="step-number">03</span>Configure LEDs</button>
-<button class="step" onclick="showStep(3)"><span class="step-number">04</span>Print instructions</button>
-<button class="step" onclick="showStep(4)"><span class="step-number">05</span>Mode 1</button>
-<button class="step" onclick="showStep(5)"><span class="step-number">06</span>Mode 2</button>
-<button class="step" onclick="showStep(6)"><span class="step-number">07</span>Poll inputs</button>
-<button class="step" onclick="showStep(7)"><span class="step-number">08</span>Stop and cleanup</button>
-</div>
-
-                <div
-                    class="explanation"
-                    id="explanation">
-
-                    <h3>
-                        1. Load libraries
-                    </h3>
-
-                    <p>
-                        Loads the GPIO and timing libraries.
-                    </p>
-
-                </div>
-
-                <details><summary>Explore more</summary><p>The program waits for a touch to be released before checking again. The touch modules must provide Raspberry Pi-safe logic levels.</p></details><details><summary>Check your understanding</summary><ul><li>Which GPIO reads Touch Sensor 1? <strong>GPIO17.</strong></li><li>Which LED indicates Mode 2? <strong>Green LED.</strong></li><li>What happens when the program stops? <strong>Both LEDs switch OFF.</strong></li></ul></details>
-
-            </article>
-
-        </div>
-
-        <p class="tip"><strong>Tip:</strong> Raspberry Pi GPIO inputs are not 5V tolerant. Verify the touch module output voltage before connecting its OUT pin.</p>
-
+    <div class="note">
+        If the existing circuit image
+        shows 5V connected directly
+        to the TTP223 modules,
+        update the diagram to match
+        the 3.3V wiring described above.
     </div>
 
 </section>
 
-<section class="section">
+<!-- WORKING -->
+<section class="section" id="working">
 
-    <h2>
-        Expected Output<section class="section" id="output">
-<h2>Expected Output</h2>
-<p>Touch Sensor 1 selects Mode 1, turning the red LED ON and green LED OFF. Touch Sensor 2 selects Mode 2, turning the green LED ON and red LED OFF. The terminal prints the selected mode.</p>
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            Raspberry Pi Initializes GPIO
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Monitor Both TTP223 Touch Sensors
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Touch Sensor 1 Activated
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Select Mode 1 — Red LED ON
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Touch Sensor 2 Activated
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Select Mode 2 — Green LED ON
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Display Selected Mode in Terminal
+        </div>
+
+    </div>
+
+    <h3>Capacitive Touch Detection</h3>
+
+    <p>
+        The TTP223 module detects
+        changes in capacitance
+        when a finger touches
+        its sensing surface.
+    </p>
+
+    <h3>Digital Input Reading</h3>
+
+    <p>
+        GPIO17 and GPIO27 read
+        digital signals from
+        Touch Sensor 1 and
+        Touch Sensor 2.
+    </p>
+
+    <h3>Mode 1 Operation</h3>
+
+    <p>
+        Touching Sensor 1
+        activates the red LED,
+        deactivates the green LED
+        and prints Mode 1 Selected
+        in the terminal.
+    </p>
+
+    <h3>Mode 2 Operation</h3>
+
+    <p>
+        Touching Sensor 2
+        activates the green LED,
+        deactivates the red LED
+        and prints Mode 2 Selected
+        in the terminal.
+    </p>
+
+    <h3>Mode Retention</h3>
+
+    <p>
+        After a touch is released,
+        the currently selected
+        LED remains ON until
+        another mode is selected
+        or the program stops.
+    </p>
+
+    <h3>Program Cleanup</h3>
+
+    <p>
+        When the program stops,
+        both LEDs are turned OFF
+        and GPIOZero device
+        resources are released.
+    </p>
+
 </section>
-<section
-    class="section"
-    id="result"><section class="section" id="result">
-<h2>Result</h2>
-<div class="result-box">The Raspberry Pi demonstrates touch-based mode selection with two sensors and two LED indicators.</div>
+
+<!-- PROCEDURE -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the Raspberry Pi, two TTP223 touch modules, red LED, green LED, two 220Ω resistors, breadboard and jumper wires.</li>
+        <li>Verify that the TTP223 modules support 3.3V operation and have active-HIGH momentary outputs.</li>
+        <li>Connect Touch Sensor 1 OUT to GPIO17, physical pin 11.</li>
+        <li>Connect Touch Sensor 2 OUT to GPIO27, physical pin 13.</li>
+        <li>Connect both sensor VCC terminals to Raspberry Pi 3.3V.</li>
+        <li>Connect both sensor GND terminals to a common ground.</li>
+        <li>Connect the red LED anode through a 220Ω resistor to GPIO22, physical pin 15.</li>
+        <li>Connect the green LED anode through a 220Ω resistor to GPIO23, physical pin 16.</li>
+        <li>Connect both LED cathodes to ground.</li>
+        <li>Verify the complete wiring before powering the system.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Open Terminal.</li>
+        <li>Install GPIOZero if not already available.</li>
+        <li>Create the Python file <code>dual_touch_mode.py</code>.</li>
+        <li>Copy the complete Python program from Explore the Code.</li>
+        <li>Run <code>python3 dual_touch_mode.py</code>.</li>
+        <li>Touch Sensor 1 and observe that the red LED turns ON.</li>
+        <li>Remove your finger and confirm that the selected mode remains active.</li>
+        <li>Touch Sensor 2 and observe that the green LED turns ON while the red LED turns OFF.</li>
+        <li>Repeat mode selection to verify both sensors.</li>
+        <li>Observe the selected mode messages in the terminal.</li>
+        <li>Press <code>Ctrl+C</code> to stop the program.</li>
+        <li>Verify that both LEDs turn OFF.</li>
+    </ol>
+
 </section>
+
+<!-- EXPLORE THE CODE -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        Raspberry Pi Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Select a step to highlight
+        its corresponding Python
+        code section. Copy Code
+        copies the complete script.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    dual_touch_mode.py
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Click a tab to see
+                the matching section
+                highlighted in blue.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+                <summary>Explore More: TTP223</summary>
+                <p>
+                    TTP223 is a capacitive
+                    touch-sensing IC.
+                    Its output changes
+                    when a touch is detected.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Pull-down Input</summary>
+                <p>
+                    GPIOZero Button with
+                    pull_up=False uses
+                    an active-HIGH
+                    input arrangement
+                    suitable for standard
+                    active-HIGH TTP223 modules.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: LED Control</summary>
+                <p>
+                    GPIOZero LED provides
+                    on() and off()
+                    functions to control
+                    the red and green LEDs.
+                </p>
+            </details>
+
+            <details>
+                <summary>Explore More: Touch Release</summary>
+                <p>
+                    The program waits
+                    for the active touch
+                    to be released before
+                    continuing, reducing
+                    repeated mode messages.
+                </p>
+            </details>
+
+            <details>
+                <summary>Check Your Understanding</summary>
+                <ol>
+                    <li>Which GPIO reads Touch Sensor 1?</li>
+                    <li>Which GPIO reads Touch Sensor 2?</li>
+                    <li>Which GPIO controls the red LED?</li>
+                    <li>Which GPIO controls the green LED?</li>
+                    <li>Which LED indicates Mode 1?</li>
+                    <li>What happens when the program stops?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    GPIO17; GPIO27;
+                    GPIO22; GPIO23;
+                    Red LED;
+                    both LEDs OFF.
+                </p>
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Touch both sensors separately
+        and observe the LEDs and
+        terminal messages. Notice
+        that the selected mode
+        remains active after
+        releasing the touch pad.
+    </p>
+
+</section>
+
+<!-- OUTPUT -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Terminal — Startup</h3>
+
+    <div class="output-box">
+<pre>====================================
+ DUAL-TOUCH MODE SELECTOR
+====================================
+Touch Sensor 1 -> Mode 1 -> RED LED
+Touch Sensor 2 -> Mode 2 -> GREEN LED
+====================================</pre>
+    </div>
+
+    <h3>Touch Sensor 1 Activated</h3>
+
+    <div class="output-box">
+<pre>Mode 1 Selected - RED LED ON</pre>
+    </div>
+
+    <h3>Touch Sensor 2 Activated</h3>
+
+    <div class="output-box">
+<pre>Mode 2 Selected - GREEN LED ON</pre>
+    </div>
+
+    <h3>Program Stopped</h3>
+
+    <div class="output-box">
+<pre>Program stopped.
+Both LEDs OFF</pre>
+    </div>
+
+    <h3>Functional Output</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Expected Response</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Program starts</td>
+                    <td>Both LEDs initially OFF</td>
+                </tr>
+                <tr>
+                    <td>Sensor 1 touched</td>
+                    <td>Red LED ON, Green LED OFF</td>
+                </tr>
+                <tr>
+                    <td>Sensor 2 touched</td>
+                    <td>Green LED ON, Red LED OFF</td>
+                </tr>
+                <tr>
+                    <td>Touch released</td>
+                    <td>Current mode retained</td>
+                </tr>
+                <tr>
+                    <td>Mode selected</td>
+                    <td>Corresponding terminal message printed</td>
+                </tr>
+                <tr>
+                    <td>Ctrl+C pressed</td>
+                    <td>Both LEDs OFF and devices closed</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<!-- DASHBOARD -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="Dual-Touch Mode Selector Dashboard.png"
+            alt="Dual-Touch Mode Selector Dashboard"
+        >
+
+    </div>
+
+    <p>
+        This section displays
+        the experiment's output
+        screenshot when the
+        matching PNG is uploaded.
+    </p>
+
+    <p>
+        The Python program uses
+        physical LED indicators
+        and terminal output.
+        It does not provide
+        a separate live
+        web dashboard.
+    </p>
+
+</section>
+
+<!-- RESULT -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Dual-Touch Mode Selector
+        demonstrates touch-based
+        operating-mode selection
+        using Raspberry Pi 4
+        Model B, two TTP223
+        capacitive touch sensors
+        and red and green LEDs.
+    </p>
+
+    <p>
+        Touch Sensor 1 selects
+        Mode 1 and activates
+        the red LED. Touch
+        Sensor 2 selects Mode 2
+        and activates the green LED.
+        The corresponding selection
+        is displayed in the terminal.
+    </p>
+
+</section>
+
+<!-- LEARN -->
 <section class="section" id="learn">
-<h2>What You Learn</h2>
-<ul><li>Reading touch sensor inputs using GPIO.</li><li>Controlling two LED outputs.</li><li>Implementing two selectable operating modes.</li><li>Handling repeated touch detection.</li><li>Using Python gpiozero on Raspberry Pi.</li></ul>
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using Raspberry Pi GPIO pins.</li>
+        <li>Interfacing TTP223 capacitive touch sensors.</li>
+        <li>Understanding active-HIGH digital inputs.</li>
+        <li>Using GPIO17 and GPIO27 for touch detection.</li>
+        <li>Using GPIO22 and GPIO23 for LED control.</li>
+        <li>Using 220Ω current-limiting resistors.</li>
+        <li>Implementing two operating modes.</li>
+        <li>Controlling mutually exclusive LED indicators.</li>
+        <li>Maintaining a selected mode after touch release.</li>
+        <li>Using GPIOZero Button and LED classes.</li>
+        <li>Handling repeated touch detection.</li>
+        <li>Displaying mode status in Terminal.</li>
+        <li>Handling KeyboardInterrupt.</li>
+        <li>Safely switching OFF outputs.</li>
+        <li>Understanding Raspberry Pi 3.3V GPIO safety.</li>
+    </ul>
+
 </section>
+
 </main>
 
+<!-- FOOTER -->
 <footer>
-    <strong>
-        Dual-Touch Mode Selector
-    </strong>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>Dual-Touch Mode Selector</div>
 </footer>
 
+<!-- =========================================
+     COMPLETE PYTHON PROGRAM
+     EIGHT CODE EXPLANATION SECTIONS
+========================================= -->
+<textarea id="python-program" hidden>
+# [01] IMPORT LIBRARIES
+
+from gpiozero import LED, Button
+from time import sleep
+
+# DUAL-TOUCH MODE SELECTOR
+# Raspberry Pi 4 Model B
+
+# [END 01]
+
+
+# [02] CONFIGURE TOUCH INPUTS
+
+# Standard active-HIGH TTP223 modules
+# connected to 3.3V.
+
+touch1 = Button(
+    17,
+    pull_up=False
+)
+
+touch2 = Button(
+    27,
+    pull_up=False
+)
+
+# [END 02]
+
+
+# [03] CONFIGURE LED OUTPUTS
+
+red_led = LED(22)
+green_led = LED(23)
+
+red_led.off()
+green_led.off()
+
+# [END 03]
+
+
+# [04] PRINT MODE INSTRUCTIONS
+
+print("====================================")
+print(" DUAL-TOUCH MODE SELECTOR")
+print("====================================")
+print("Touch Sensor 1 -&gt; Mode 1 -&gt; RED LED")
+print("Touch Sensor 2 -&gt; Mode 2 -&gt; GREEN LED")
+print("====================================")
+
+# [END 04]
+
+
+# [05] SELECT MODE 1
+
+def select_mode_1():
+
+    red_led.on()
+    green_led.off()
+
+    print(
+        "Mode 1 Selected - RED LED ON"
+    )
+
+    sleep(0.3)
+
+    while touch1.is_pressed:
+        sleep(0.05)
+
+# [END 05]
+
+
+# [06] SELECT MODE 2
+
+def select_mode_2():
+
+    red_led.off()
+    green_led.on()
+
+    print(
+        "Mode 2 Selected - GREEN LED ON"
+    )
+
+    sleep(0.3)
+
+    while touch2.is_pressed:
+        sleep(0.05)
+
+# [END 06]
+
+
+# [07] MONITOR TOUCH INPUTS
+
+def monitor_touch():
+
+    while True:
+
+        if touch1.is_pressed:
+            select_mode_1()
+
+        if touch2.is_pressed:
+            select_mode_2()
+
+        sleep(0.05)
+
+# [END 07]
+
+
+# [08] STOP AND CLEAN UP
+
+try:
+
+    monitor_touch()
+
+except KeyboardInterrupt:
+
+    print("\nProgram stopped.")
+
+finally:
+
+    red_led.off()
+    green_led.off()
+
+    touch1.close()
+    touch2.close()
+
+    red_led.close()
+    green_led.close()
+
+    print("Both LEDs OFF")
+
+# [END 08]
+</textarea>
+
+<!-- =========================================
+     INTERACTIVE CODE EXPLORER
+========================================= -->
 <script>
 
-const program="from gpiozero import LED, Button\nfrom time import sleep\n\n# DUAL-TOUCH MODE SELECTOR\n# Raspberry Pi 4B\n\n# Touch sensors\ntouch1 = Button(17, pull_up=True)\ntouch2 = Button(27, pull_up=True)\n\n# LEDs\nred_led = LED(22)\ngreen_led = LED(23)\n\nprint(\"====================================\")\nprint(\" DUAL-TOUCH MODE SELECTOR\")\nprint(\"====================================\")\nprint(\"Touch Sensor 1 -> Mode 1 -> RED LED\")\nprint(\"Touch Sensor 2 -> Mode 2 -> GREEN LED\")\nprint(\"====================================\")\n\ntry:\n    while True:\n        # Mode 1\n        if touch1.is_pressed:\n            red_led.on()\n            green_led.off()\n            print(\"Mode 1 Selected - RED LED ON\")\n            sleep(0.3)\n            while touch1.is_pressed:\n                sleep(0.05)\n\n        # Mode 2\n        if touch2.is_pressed:\n            red_led.off()\n            green_led.on()\n            print(\"Mode 2 Selected - GREEN LED ON\")\n            sleep(0.3)\n            while touch2.is_pressed:\n                sleep(0.05)\n\n        sleep(0.05)\n\nexcept KeyboardInterrupt:\n    print(\"\\nProgram stopped.\")\nfinally:\n    red_led.off()\n    green_led.off()\n    print(\"Both LEDs OFF\")";
+/* READ COMPLETE PYTHON PROGRAM */
 
-const lines=program.split("\n");
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
 
-const steps=[{"title":"Import libraries","start":"from gpiozero import LED, Button","end":"from time import sleep","text":"Loads gpiozero input/output devices and timing."},{"title":"Configure touch inputs","start":"touch1 = Button","end":"touch2 = Button","text":"Reads touch sensors on GPIO17 and GPIO27."},{"title":"Configure LEDs","start":"red_led = LED","end":"green_led = LED","text":"Uses GPIO22 for red and GPIO23 for green."},{"title":"Print instructions","start":"print(\"====================================\")","end":"try:","text":"Shows mode assignments in the terminal."},{"title":"Mode 1","start":"if touch1.is_pressed:","end":"while touch1.is_pressed:","text":"Turns the red LED on and green LED off."},{"title":"Mode 2","start":"if touch2.is_pressed:","end":"while touch2.is_pressed:","text":"Turns the green LED on and red LED off."},{"title":"Poll inputs","start":"sleep(0.05)","end":"except KeyboardInterrupt:","text":"Waits briefly between touch checks."},{"title":"Stop and cleanup","start":"except KeyboardInterrupt:","end":"print(\"Both LEDs OFF\")","text":"Handles Ctrl+C and switches both LEDs off."}];
+const lines = program.split("\n");
 
-function escapeHtml(text)
-{
-    return text
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;");
-}
+/* EIGHT EXPLANATION STEPS */
 
-function displayCode()
-{
-    document.getElementById("code-lines").innerHTML=
-        lines.map(function(line,index)
-        {
-            return '<span class="code-line" id="line-'+(index+1)+'">'+
-                '<span class="line-number">'+(index+1)+'</span>'+
-                '<span>'+escapeHtml(line)+'</span>'+
-                '</span>';
-        }).join("");
-}
-
-function findLine(searchText,startIndex)
-{
-    startIndex=startIndex||0;
-
-    for(let i=startIndex;i<lines.length;i++)
+const steps = [
     {
-        if(lines[i].includes(searchText))
-        {
-            return i;
-        }
+        number: "01",
+        label: "IMPORT LIBRARIES",
+        title: "Import Libraries",
+        text:
+            "Imports GPIOZero Button and LED " +
+            "classes along with the sleep " +
+            "function for timing."
+    },
+    {
+        number: "02",
+        label: "CONFIGURE TOUCH INPUTS",
+        title: "Configure Touch Inputs",
+        text:
+            "Configures Touch Sensor 1 on GPIO17 " +
+            "and Touch Sensor 2 on GPIO27 " +
+            "using active-HIGH input logic."
+    },
+    {
+        number: "03",
+        label: "CONFIGURE LED OUTPUTS",
+        title: "Configure LED Outputs",
+        text:
+            "Sets the red LED on GPIO22 " +
+            "and green LED on GPIO23, " +
+            "with both initially OFF."
+    },
+    {
+        number: "04",
+        label: "PRINT MODE INSTRUCTIONS",
+        title: "Print Instructions",
+        text:
+            "Shows the experiment heading " +
+            "and both mode assignments " +
+            "in the terminal."
+    },
+    {
+        number: "05",
+        label: "SELECT MODE 1",
+        title: "Select Mode 1",
+        text:
+            "Activates the red LED, turns " +
+            "the green LED OFF, prints the " +
+            "selection and waits for release."
+    },
+    {
+        number: "06",
+        label: "SELECT MODE 2",
+        title: "Select Mode 2",
+        text:
+            "Activates the green LED, turns " +
+            "the red LED OFF, prints the " +
+            "selection and waits for release."
+    },
+    {
+        number: "07",
+        label: "MONITOR TOUCH INPUTS",
+        title: "Monitor Touch Inputs",
+        text:
+            "Continuously checks the two " +
+            "touch sensors and calls the " +
+            "corresponding mode function."
+    },
+    {
+        number: "08",
+        label: "STOP AND CLEAN UP",
+        title: "Stop and Clean Up",
+        text:
+            "Handles Ctrl+C, switches both " +
+            "LEDs OFF and releases GPIOZero " +
+            "device resources."
     }
+];
 
-    return -1;
+/* ESCAPE SOURCE CODE FOR DISPLAY */
+
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 }
 
-function showStep(index)
-{
-    const step=steps[index];
+/* DISPLAY THE COMPLETE PYTHON SOURCE */
 
-    document
-        .querySelectorAll(".step")
-        .forEach(function(button)
-        {
-            button.classList.remove("active");
-        });
+function displayCode() {
 
-    const buttons=
-        document.querySelectorAll(".step");
-
-    if(buttons[index])
-    {
-        buttons[index]
-            .classList
-            .add("active");
-    }
-
-    document
-        .querySelectorAll(".code-line")
-        .forEach(function(line)
-        {
-            line.classList.remove("selected");
-        });
-
-    const startLine=
-        findLine(
-            step.start,
-            0
+    const container =
+        document.getElementById(
+            "code-lines"
         );
 
-    if(startLine===-1)
-    {
+    container.innerHTML = lines.map(
+        function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+
+                '</span>'
+            );
+        }
+    ).join("");
+}
+
+/* FIND EXACT SECTION MARKERS */
+
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+
+            return line.trim() === marker;
+        }
+    );
+}
+
+/* MAP CODE SECTIONS */
+
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "# [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "# [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid:
+                start >= 0 &&
+                end >= start
+        };
+    }
+);
+
+/* CREATE EXPLANATION TABS */
+
+function createSteps() {
+
+    const container =
+        document.getElementById(
+            "steps-list"
+        );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement(
+                    "span"
+                );
+
+            number.className = "step-number";
+            number.textContent = step.number;
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+            title.textContent = step.title;
+
+            button.append(
+                number,
+                title
+            );
+
+            button.addEventListener(
+                "click",
+                function() {
+                    showStep(index);
+                }
+            );
+
+            container.appendChild(button);
+        }
+    );
+}
+
+/* HIGHLIGHT EXACT MATCHING CODE */
+
+function showStep(index) {
+
+    document.querySelectorAll(
+        ".step"
+    ).forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+        }
+    );
+
+    document.querySelectorAll(
+        ".code-line"
+    ).forEach(
+        function(line) {
+
+            line.classList.remove(
+                "selected"
+            );
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById(
+            "explanation"
+        );
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement(
+            "h3"
+        );
+
+    heading.textContent =
+        (index + 1) +
+        ". " +
+        step.title;
+
+    const paragraph =
+        document.createElement(
+            "p"
+        );
+
+    paragraph.textContent = step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching code markers not found.";
+
         return;
     }
 
-    let endLine=
-        findLine(
-            step.end,
-            startLine
-        );
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
 
-    if(endLine===-1)
-    {
-        endLine=startLine;
-    }
-
-    for(let i=startLine;i<=endLine;i++)
-    {
-        const line=
+        const element =
             document.getElementById(
-                "line-"+(i+1)
+                "line-" + (i + 1)
             );
 
-        if(line)
-        {
-            line.classList.add(
+        if (element) {
+
+            element.classList.add(
                 "selected"
             );
         }
     }
 
-    const selected=
+    const firstLine =
         document.getElementById(
-            "line-"+(startLine+1)
+            "line-" + (range.start + 1)
         );
 
-    const body=
+    const codeBody =
         document.getElementById(
             "code-body"
         );
 
-    if(selected&&body)
-    {
-        body.scrollTo(
-        {
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
             top:
-                selected.offsetTop-
-                body.offsetTop-
+                codeBody.scrollTop +
+                offset -
                 20,
-            behavior:"smooth"
+            behavior: "smooth"
         });
     }
-
-    document.getElementById(
-        "explanation"
-    ).innerHTML=
-        "<h3>"+
-        (index+1)+
-        ". "+
-        step.title+
-        "</h3><p>"+
-        step.text+
-        "</p>";
 }
 
-function copyCode()
-{
-    navigator.clipboard
-        .writeText(program)
-        .then(function()
-        {
-            const button=
-                document.querySelector(
-                    ".copy-button"
-                );
+/* COPY THE FULL PYTHON PROGRAM */
 
-            button.innerText=
-                "Copied!";
+async function copyCode() {
 
-            setTimeout(
-                function()
-                {
-                    button.innerText=
-                        "Copy Code";
-                },
-                1500
+    const button =
+        document.querySelector(
+            ".copy-button"
+        );
+
+    function copied() {
+
+        button.textContent = "Copied!";
+
+        setTimeout(
+            function() {
+                button.textContent = "Copy Code";
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement(
+                "textarea"
             );
-        });
+
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand(
+                "copy"
+            );
+        } catch(error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch(error) {
+
+            fallback();
+        }
+
+    } else {
+
+        fallback();
+    }
 }
+
+/* INITIALIZE CODE EXPLORER */
 
 displayCode();
+createSteps();
 showStep(0);
 
 </script>
