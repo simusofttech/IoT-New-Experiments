@@ -1,42 +1,2042 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Raspberry Pi Time-Lapse Camera</title><style>*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;line-height:1.7}.header{background:#2563eb;color:white;text-align:center;padding:42px 20px}.header h1{margin:0 0 8px;font-size:34px}.header p{margin:0;font-size:17px}nav{display:flex;justify-content:center;flex-wrap:wrap;gap:15px;padding:13px 15px;background:white;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:20}nav a{text-decoration:none;color:#1e3a8a;font-size:14px;font-weight:bold}.container{width:90%;max-width:1050px;margin:35px auto}.section{background:white;margin-bottom:24px;padding:28px;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px #0001;scroll-margin-top:85px}.section h2{margin:0 0 18px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe;padding-bottom:8px}.section h3{color:#1e3a8a}.components-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}.component-card{border:1px solid #e2e8f0;border-radius:10px;padding:20px;text-align:center;background:white}.component-card img{width:100%;height:120px;object-fit:contain;margin-bottom:15px}.component-card h4{color:#1e3a8a;margin:0 0 8px}.component-card p{color:#475569;font-size:14px;margin:0}.table-wrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{padding:12px;border:1px solid #ddd;text-align:left}th{background:#2563eb;color:white}tr:nth-child(even){background:#f8fafc}.flow{text-align:center;font-weight:bold;color:#1e3a8a;font-size:18px;line-height:2}.circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.note{background:#eff6ff;border-left:4px solid #2563eb;border-radius:7px;padding:15px;margin:15px 0}.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}.code-panel{background:white;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;min-width:0}.code-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px;background:#2563eb;color:white;flex-wrap:wrap}.copy-button{border:1px solid #fff;background:white;color:#2563eb;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:bold}.code-body{height:600px;overflow:auto;padding:14px 0}.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:18px;white-space:pre;font:13px/24px Consolas,monospace;border-bottom:1px solid #f1f5f9}.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}.line-number{user-select:none;min-width:52px;text-align:right;padding-right:15px;color:#64748b}.guide{border:1px solid #dce6e9;border-radius:14px;padding:20px}.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}.step{border:1px solid #dce6e9;border-radius:8px;padding:9px;min-height:57px;background:white;text-align:left;font-weight:bold;font-size:12px;color:#1e3a8a;cursor:pointer}.step.active{background:#eff6ff;border-color:#60a5fa}.explanation{background:#eff6ff;padding:15px;border-radius:8px;min-height:105px}.explanation h3{margin:0 0 8px}.explanation p{margin:0}.guide details{border-top:1px solid #dce6e9;margin-top:14px;padding-top:10px}.guide summary{color:#2563eb;font-weight:bold;cursor:pointer}.tip{background:#eff6ff;padding:15px;border-radius:8px;margin-top:20px}.filename{font:14px Consolas,monospace}footer{text-align:center;padding:25px;background:#0f172a;color:white}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f8fafc;border:1px solid #dbeafe;border-radius:8px;padding:14px}@media(max-width:850px){.code-layout{grid-template-columns:1fr}.code-body{height:450px}}@media(max-width:600px){.container{width:94%}.section{padding:19px}.steps{grid-template-columns:1fr}.header h1{font-size:26px}}</style></head><body>
-<header class="header"><h1>SIMUDIY Exploration Kit</h1><p>Raspberry Pi Time-Lapse Camera</p></header><nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#output">Output</a><a href="#result">Result</a><a href="#learn">Learn</a></nav><main class="container">
-<section class="section" id="aim"><h2>Aim</h2><p>Build a time-lapse camera using Raspberry Pi 4 and a USB webcam. Capture JPEG images automatically at five-second intervals for approximately one minute and use FFmpeg to make an MP4 video.</p></section>
-<section class="section" id="about"><h2>About the Experiment</h2><p>The Python program calls fswebcam to capture images at 640×480 resolution into ~/timelapse_camera/photos. Each file has a sequence number and timestamp. After acquisition, an FFmpeg command reads the JPEG sequence in filename order and encodes H.264 MP4 at 4 frames per second. With 12 frames, the video lasts about three seconds. The camera must be accessible through a V4L2 device such as /dev/video0.</p><div class="note"><strong>Source verification note:</strong><p>The capture source reproduces the logic and settings in the SOP, with Python indentation normalized from its page layout. The FFmpeg conversion is a separate terminal command in the SOP, not part of timelapse.py.</p></div></section>
-<section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B (×1)"><h4>Raspberry Pi 4 Model B (×1)</h4><p>Runs fswebcam and the Python capture script.</p></div>
-<div class="component-card"><img src="../AI Object Detection System/USB Camera.png" alt="USB Webcam (×1)"><h4>USB Webcam (×1)</h4><p>Provides still-image captures.</p></div>
-<div class="component-card"><img src="../AI Object Detection System/Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply (×1)"><h4>Raspberry Pi Power Supply (×1)</h4><p>Powers the Raspberry Pi.</p></div></div><div class="note">The components shown follow the approved concise Raspberry Pi hardware list. Standard OS storage, network connection, HDMI display, keyboard and USB cables are setup requirements, not separate component cards.</div></section>
-<section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><tr><th>Component</th><th>Connection</th></tr><tr><td>USB Webcam</td><td>Connect directly to a Raspberry Pi USB port</td></tr><tr><td>Raspberry Pi Power Supply</td><td>Connect to the Raspberry Pi USB-C power input</td></tr><tr><td>GPIO pins</td><td>No GPIO connections or breadboard needed</td></tr></table></div></section>
-<section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Raspberry Pi Time-Lapse Camera Circuit.png" alt="Raspberry Pi Time-Lapse Camera circuit diagram" onerror="this.hidden=true;document.getElementById('pending-circuit').hidden=false"><p id="pending-circuit" hidden class="note">Circuit diagram image pending: Raspberry Pi Time-Lapse Camera Circuit.png. Supply a verified PNG for this section.</p></section>
-<section class="section" id="working"><h2>Working Principle</h2><div class="flow">USB webcam<br>↓<br>Raspberry Pi /dev/video0<br>↓<br>fswebcam photo capture<br>↓<br>5-second interval, 60-second duration<br>↓<br>Numbered JPEG files<br>↓<br>FFmpeg 4 fps H.264 encoding<br>↓<br>timelapse_video.mp4</div></section>
-<section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect USB webcam to Raspberry Pi and attach the rated Raspberry Pi supply.</li><li>Install tools: sudo apt update; sudo apt install -y fswebcam ffmpeg v4l-utils.</li><li>Identify the webcam using lsusb and v4l2-ctl --list-devices.</li><li>Capture a test JPEG with fswebcam -d /dev/video0 -r 640x480 --no-banner ~/test_photo.jpg.</li><li>Create ~/timelapse_camera/photos and save the code as ~/timelapse_camera/timelapse.py.</li><li>Run python3 ~/timelapse_camera/timelapse.py.</li><li>Verify approximately 12 numbered JPEG photos were saved.</li><li>Use ffmpeg -framerate 4 -pattern_type glob -i '/home/pi/timelapse_camera/photos/*.jpg' -c:v libx264 -pix_fmt yuv420p '/home/pi/timelapse_camera/timelapse_video.mp4'.</li><li>Check the file with ffprobe and play it using a suitable video player.</li><li>Use a clean photos directory for a new recording so old photos are not mixed into the output.</li></ol></section>
-<section class="section" id="code"><p class="eyebrow">Raspberry Pi Experiment · Code Review</p><h2 class="lesson-title">Explore the Code</h2><p class="intro">Capture JPEG photos with a USB webcam, then produce a short MP4 video. The code is presented with line numbers, ten verified explanation ranges, and a Copy Code button.</p>
-<div class="code-layout"><article class="code-panel"><div class="code-top"><span class="filename">timelapse.py</span><button type="button" class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article>
-<article class="guide"><h2>Understand it step by step</h2><p>Select a button to highlight exactly the relevant Python lines.</p><div class="steps"><button class="step active" type="button" onclick="showStep(0)">01 · Import modules</button><button class="step" type="button" onclick="showStep(1)">02 · Set camera and timing</button><button class="step" type="button" onclick="showStep(2)">03 · Prepare output directory</button><button class="step" type="button" onclick="showStep(3)">04 · Create capture function</button><button class="step" type="button" onclick="showStep(4)">05 · Build fswebcam command</button><button class="step" type="button" onclick="showStep(5)">06 · Run capture process</button><button class="step" type="button" onclick="showStep(6)">07 · Report capture success</button><button class="step" type="button" onclick="showStep(7)">08 · Initialize recording run</button><button class="step" type="button" onclick="showStep(8)">09 · Capture at timed intervals</button><button class="step" type="button" onclick="showStep(9)">10 · Handle stop and entry point</button></div><div id="explanation" class="explanation" aria-live="polite"></div>
-<details><summary>Explore more: program structure</summary><p>The code panel includes the complete displayed Python script. The explanation steps correspond to source markers checked when this page was generated.</p></details>
-<details><summary>Explore more: running the program</summary><p>Run python3 timelapse.py after installing fswebcam; use the SOP's FFmpeg command separately after capturing images.</p></details>
-<details><summary>Check Your Understanding</summary><ol><li>Explain: Using Linux V4L2 camera devices.</li><li>Explain: Capturing JPEG frames with fswebcam.</li><li>Explain: Running subprocess commands.</li><li>Explain: Python pathlib file paths.</li><li>Explain: Using monotonic time for scheduling.</li><li>Explain: Handling camera command failures.</li><li>Explain: Converting image sequences with FFmpeg.</li></ol></details></article></div><p class="tip"><strong>Try it:</strong> Use the reference SOP's verification commands and observe the console output before relying on the results.</p></section>
-<section class="section" id="output"><h2>Expected Output</h2><p>At five-second intervals for approximately 60 seconds, the script usually saves roughly 12 JPEG files named photo_0001_YYYYMMDD_HHMMSS.jpg etc. FFmpeg at 4 fps creates an H.264 MP4 of about three seconds with 12 frames. The SOP reports successful capture of 12 images and a 3.0-second output video.</p></section>
-<section class="section" id="result"><h2>Result</h2><p>When the camera and capture tools operate as described, JPEG images can be stored at scheduled intervals and converted into MP4 video. The referenced SOP documents a successful 12-image test and a 3-second video.</p></section>
-<section class="section" id="learn"><h2>What You Learn</h2><ul><li>Using Linux V4L2 camera devices</li><li>Capturing JPEG frames with fswebcam</li><li>Running subprocess commands</li><li>Python pathlib file paths</li><li>Using monotonic time for scheduling</li><li>Handling camera command failures</li><li>Converting image sequences with FFmpeg</li><li>Checking output using ffprobe</li></ul></section></main><footer><strong>SIMUDIY Exploration Kit</strong> · Raspberry Pi Time-Lapse Camera</footer>
-<script type="text/plain" id="python-program">#!/usr/bin/env python3
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Time-Lapse Camera</title>
+
+<style>
+/* =====================================
+   GENERAL
+===================================== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #222;
+    font: 16px/1.7 Arial, Helvetica, sans-serif;
+}
+
+/* =====================================
+   HEADER
+===================================== */
+.header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 230px;
+    padding: 25px 0 0;
+    background: #2563eb;
+    color: white;
+    text-align: center;
+}
+
+.header-logo {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    width: 135px;
+    max-height: 75px;
+    height: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 5px;
+    object-fit: contain;
+}
+
+.header-content {
+    margin: auto 0;
+    padding: 35px 165px;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: 34px;
+}
+
+.header p {
+    margin: 0;
+    font-size: 17px;
+}
+
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 25px;
+    background: rgba(0, 0, 0, .12);
+}
+
+.header-left-buttons,
+.header-right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 14px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dbeafe;
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.header-nav-btn:hover {
+    background: #dbeafe;
+}
+
+.home-icon-btn {
+    width: 40px;
+    height: 38px;
+    padding: 8px;
+}
+
+.home-icon-btn svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* =====================================
+   NAVIGATION
+===================================== */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 13px 15px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav a {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #2563eb;
+}
+
+/* =====================================
+   MAIN CONTENT
+===================================== */
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 35px auto;
+}
+
+.section {
+    margin-bottom: 24px;
+    padding: 28px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
+    scroll-margin-top: 100px;
+}
+
+.section h2 {
+    margin: 0 0 18px;
+    padding-bottom: 8px;
+    color: #1e3a8a;
+    font-size: 25px;
+    border-bottom: 2px solid #dbeafe;
+}
+
+.section h3 {
+    color: #1e3a8a;
+}
+
+ul, ol {
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+.section code {
+    overflow-wrap: anywhere;
+}
+
+/* =====================================
+   THUMBNAIL
+===================================== */
+.project-thumbnail {
+    padding: 20px;
+    text-align: center;
+}
+
+.project-thumbnail img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    max-height: 420px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* =====================================
+   COMPONENTS
+===================================== */
+.components-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.component-card {
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+}
+
+.component-card img {
+    display: block;
+    width: 100%;
+    max-width: 180px;
+    height: 140px;
+    margin: 0 auto 15px;
+    object-fit: contain;
+}
+
+.component-card h4 {
+    margin: 0 0 8px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.component-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* =====================================
+   TABLES
+===================================== */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #2563eb;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.note {
+    margin-top: 15px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 6px;
+}
+
+/* =====================================
+   CIRCUIT
+===================================== */
+.circuit-img {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+/* =====================================
+   WORKING FLOW
+===================================== */
+.flow {
+    color: #1e3a8a;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.flow-step {
+    padding: 5px 10px;
+}
+
+.flow-arrow {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+/* =====================================
+   CODE EXPLORER
+===================================== */
+.eyebrow {
+    margin: 0 0 4px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.lesson-title {
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #1e3a8a !important;
+    font-size: 32px !important;
+}
+
+.intro {
+    margin: 0 0 22px;
+    color: #526875;
+}
+
+.code-layout {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(300px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.code-panel {
+    min-width: 0;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, .10);
+}
+
+.code-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #2563eb;
+    color: white;
+}
+
+.filename {
+    font: bold 14px Consolas, Monaco, monospace;
+}
+
+.copy-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    background: white;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #eff6ff;
+}
+
+.code-body {
+    height: 600px;
+    padding: 16px 0;
+    overflow: auto;
+    background: white;
+}
+
+.code-line {
+    display: flex;
+    min-width: max-content;
+    min-height: 24px;
+    padding-right: 20px;
+    white-space: pre;
+    color: #1e293b;
+    font: 13px/24px Consolas, Monaco, monospace;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.code-line.selected {
+    background: #dbeafe;
+    box-shadow: inset 4px 0 #2563eb;
+}
+
+.line-number {
+    min-width: 52px;
+    padding-right: 15px;
+    color: #64748b;
+    text-align: right;
+    user-select: none;
+}
+
+/* =====================================
+   CODE GUIDE
+===================================== */
+.guide {
+    min-width: 0;
+    padding: 22px;
+    background: white;
+    border: 1px solid #dce6e9;
+    border-radius: 14px;
+}
+
+.guide h2 {
+    margin: 0 0 8px;
+    padding: 0;
+    border: 0;
+    font-size: 21px;
+}
+
+.guide > p {
+    color: #526875;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 65px;
+    padding: 10px;
+    background: white;
+    color: #1e3a8a;
+    border: 1px solid #dce6e9;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.step:hover {
+    border-color: #60a5fa;
+}
+
+.step.active {
+    background: #eff6ff;
+    border-color: #60a5fa;
+}
+
+.step-number {
+    flex-shrink: 0;
+    color: #2563eb;
+    font-size: 12px;
+}
+
+.explanation {
+    min-height: 130px;
+    padding: 16px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+.explanation h3 {
+    margin: 0 0 7px;
+    color: #1e3a8a;
+    font-size: 17px;
+}
+
+.explanation p {
+    margin: 0;
+    color: #526875;
+}
+
+.guide details {
+    margin-top: 15px;
+    border-top: 1px solid #dce6e9;
+}
+
+.guide summary {
+    padding: 13px 0;
+    color: #2563eb;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.tip {
+    margin-top: 20px;
+    padding: 14px 17px;
+    background: #eff6ff;
+    border-radius: 9px;
+}
+
+/* =====================================
+   OUTPUT
+===================================== */
+.output-box {
+    margin: 15px 0;
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #dbeafe;
+    border-radius: 9px;
+}
+
+.output-box pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 14px/1.8 Consolas, Monaco, monospace;
+}
+
+/* =====================================
+   DASHBOARD
+===================================== */
+.dashboard-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.dashboard-image img {
+    display: block;
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+footer {
+    padding: 25px 20px;
+    background: #0f172a;
+    color: #cbd5e1;
+    text-align: center;
+}
+
+footer strong {
+    color: white;
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+@media(max-width:900px) {
+    .header-content {
+        padding: 65px 20px 35px;
+    }
+}
+
+@media(max-width:850px) {
+    .code-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .code-body {
+        height: 450px;
+    }
+}
+
+@media(max-width:600px) {
+    .header {
+        padding: 15px 0 0;
+    }
+
+    .header-logo {
+        top: 12px;
+        left: 12px;
+        width: 95px;
+        max-height: 60px;
+    }
+
+    .header-content {
+        padding: 85px 12px 25px;
+    }
+
+    .header h1 {
+        font-size: 25px;
+    }
+
+    .header p {
+        font-size: 15px;
+    }
+
+    .header-buttons {
+        gap: 8px;
+        padding: 10px 8px;
+    }
+
+    .header-left-buttons,
+    .header-right-buttons {
+        gap: 5px;
+    }
+
+    .header-nav-btn {
+        min-height: 36px;
+        padding: 8px 7px;
+        font-size: 11px;
+    }
+
+    .home-icon-btn {
+        width: 36px;
+        height: 36px;
+        padding: 7px;
+    }
+
+    .container {
+        width: 92%;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        gap: 11px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================
+     HEADER
+===================================== -->
+<header class="header">
+
+    <img
+        src="../../Simusoft logo white background.jpeg"
+        alt="SimuSoft Company Logo"
+        class="header-logo"
+    >
+
+    <div class="header-content">
+
+        <h1>SIMUDIY Exploration Kit</h1>
+
+        <p>Time-Lapse Camera</p>
+
+    </div>
+
+    <div class="header-buttons">
+
+        <div class="header-left-buttons">
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >
+                &#8592; Back
+            </a>
+
+            <a
+                href="../../index.html"
+                class="header-nav-btn home-icon-btn"
+                title="Home"
+                aria-label="Home"
+            >
+
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"/>
+                    <path d="M5 9.5V21h14V9.5"/>
+                    <path d="M9 21v-7h6v7"/>
+                </svg>
+
+            </a>
+
+        </div>
+
+        <div class="header-right-buttons">
+
+            <a
+                href="../../Arduino Experiments/index.html"
+                class="header-nav-btn"
+            >Arduino</a>
+
+            <a
+                href="../../ESP32 CAM Experiments/index.html"
+                class="header-nav-btn"
+            >ESP</a>
+
+            <a
+                href="../index.html"
+                class="header-nav-btn"
+            >R-Pi</a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- =====================================
+     NAVIGATION
+===================================== -->
+<nav>
+    <a href="../index.html">&#8592; R-Pi Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
+
+<main class="container">
+
+<!-- =====================================
+     THUMBNAIL
+===================================== -->
+<section class="section project-thumbnail">
+
+    <img
+        src="../Raspberry Pi Time-Lapse Camera.png"
+        alt="Time-Lapse Camera Thumbnail"
+    >
+
+</section>
+
+<!-- =====================================
+     AIM
+===================================== -->
+<section class="section" id="aim">
+
+    <h2>Aim</h2>
+
+    <p>
+        To build a low-cost
+        time-lapse camera system
+        using Raspberry Pi 4
+        Model B and a USB webcam
+        that automatically captures
+        photographs at fixed
+        intervals and combines
+        the captured images
+        into an MP4 video
+        using FFmpeg.
+    </p>
+
+</section>
+
+<!-- =====================================
+     ABOUT
+===================================== -->
+<section class="section" id="about">
+
+    <h2>About the Experiment</h2>
+
+    <p>
+        The Raspberry Pi Time-Lapse
+        Camera demonstrates automatic
+        image capture, scheduled
+        photography and video
+        generation using
+        Raspberry Pi.
+    </p>
+
+    <p>
+        A USB webcam provides
+        still images through
+        the Linux Video4Linux2
+        interface.
+    </p>
+
+    <p>
+        A Python program calls
+        the <strong>fswebcam</strong>
+        command at predefined
+        intervals to save
+        JPEG photographs.
+    </p>
+
+    <p>
+        Each photograph receives
+        a sequential number
+        and timestamp in
+        its filename.
+    </p>
+
+    <p>
+        In the SOP's tested
+        configuration, the
+        webcam captures an
+        image every five seconds
+        over approximately
+        sixty seconds.
+    </p>
+
+    <p>
+        After image capture,
+        FFmpeg combines the
+        photographs in filename
+        order to create a
+        short H.264 MP4 video.
+    </p>
+
+    <p>
+        The resulting video
+        plays the captured
+        moments rapidly,
+        allowing slow changes
+        to be observed
+        over a shorter duration.
+    </p>
+
+    <h3>Applications</h3>
+
+    <ul>
+        <li>Plant growth and seed germination.</li>
+        <li>Greenhouse observation.</li>
+        <li>Construction or model progress recording.</li>
+        <li>Cloud movement and sky observation.</li>
+        <li>Sunrise and sunset recording.</li>
+        <li>Documenting science experiments.</li>
+        <li>Recording 3D-printing progress.</li>
+    </ul>
+
+    <h3>System Configuration</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Controller</td>
+                    <td>Raspberry Pi 4 Model B</td>
+                </tr>
+
+                <tr>
+                    <td>Camera</td>
+                    <td>USB Webcam</td>
+                </tr>
+
+                <tr>
+                    <td>Tested Webcam</td>
+                    <td>Microdia Webcam Vitade AF</td>
+                </tr>
+
+                <tr>
+                    <td>Camera Device</td>
+                    <td>/dev/video0</td>
+                </tr>
+
+                <tr>
+                    <td>Camera Interface</td>
+                    <td>V4L2</td>
+                </tr>
+
+                <tr>
+                    <td>Capture Tool</td>
+                    <td>fswebcam</td>
+                </tr>
+
+                <tr>
+                    <td>Image Resolution</td>
+                    <td>640 × 480</td>
+                </tr>
+
+                <tr>
+                    <td>Capture Interval</td>
+                    <td>5 seconds</td>
+                </tr>
+
+                <tr>
+                    <td>Total Duration</td>
+                    <td>60 seconds</td>
+                </tr>
+
+                <tr>
+                    <td>Expected Photos</td>
+                    <td>Approximately 12</td>
+                </tr>
+
+                <tr>
+                    <td>Photo Format</td>
+                    <td>JPEG</td>
+                </tr>
+
+                <tr>
+                    <td>Photo Directory</td>
+                    <td>~/timelapse_camera/photos</td>
+                </tr>
+
+                <tr>
+                    <td>Python Program</td>
+                    <td>timelapse.py</td>
+                </tr>
+
+                <tr>
+                    <td>Video Encoder</td>
+                    <td>FFmpeg / libx264</td>
+                </tr>
+
+                <tr>
+                    <td>Video Format</td>
+                    <td>MP4</td>
+                </tr>
+
+                <tr>
+                    <td>Video Frame Rate</td>
+                    <td>4 FPS</td>
+                </tr>
+
+                <tr>
+                    <td>Output Video</td>
+                    <td>timelapse_video.mp4</td>
+                </tr>
+
+                <tr>
+                    <td>Expected Video Duration</td>
+                    <td>Approximately 3 seconds</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Time-Lapse Calculation</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Calculation</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Expected Photos</td>
+                    <td>60 ÷ 5</td>
+                    <td>Approximately 12</td>
+                </tr>
+
+                <tr>
+                    <td>Video Duration</td>
+                    <td>12 ÷ 4</td>
+                    <td>3 seconds</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Important:</strong>
+
+        <p>
+            The Python script handles
+            automatic photo capture.
+            FFmpeg video conversion
+            is performed separately
+            after the images have
+            been captured.
+        </p>
+
+        <p>
+            The number of photographs
+            may vary if fswebcam
+            takes longer to capture
+            frames or the Raspberry Pi
+            is busy.
+        </p>
+
+        <p>
+            Use a new or empty
+            photos directory for
+            each recording to avoid
+            mixing old images
+            into the output video.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     COMPONENTS
+===================================== -->
+<section class="section" id="components">
+
+    <h2>Components Required</h2>
+
+    <div class="components-grid">
+
+        <div class="component-card">
+
+            <img
+                src="../AI Object Detection System/Raspberry Pi 4 Model B.png"
+                alt="Raspberry Pi 4 Model B"
+            >
+
+            <h4>Raspberry Pi 4 Model B (×1)</h4>
+
+            <p>
+                Runs the capture
+                program and converts
+                the saved images
+                into a video.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="../AI Object Detection System/USB Camera.png"
+                alt="USB Webcam"
+            >
+
+            <h4>USB Webcam (×1)</h4>
+
+            <p>
+                Captures still
+                photographs at
+                predefined intervals.
+            </p>
+
+        </div>
+
+        <div class="component-card">
+
+            <img
+                src="../AI Object Detection System/Raspberry Pi Power Supply.png"
+                alt="Raspberry Pi Power Supply"
+            >
+
+            <h4>Raspberry Pi Power Supply (×1)</h4>
+
+            <p>
+                Provides suitable
+                regulated power
+                to the Raspberry Pi.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="note">
+
+        <strong>Software Requirements:</strong>
+
+        <ul>
+            <li>Raspberry Pi OS</li>
+            <li>Python 3</li>
+            <li>fswebcam</li>
+            <li>FFmpeg</li>
+            <li>ffprobe</li>
+            <li>v4l-utils for camera diagnostics</li>
+        </ul>
+
+        <p>
+            The Python program
+            uses standard-library
+            modules only:
+            <code>time</code>,
+            <code>subprocess</code>,
+            <code>datetime</code>
+            and <code>pathlib</code>.
+        </p>
+
+        <p>
+            No additional pip-installed
+            Python libraries are
+            required by the
+            capture script.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     CONNECTIONS
+===================================== -->
+<section class="section" id="connections">
+
+    <h2>Circuit Connections</h2>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Interface</th>
+                    <th>Raspberry Pi Connection</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>USB Webcam</td>
+                    <td>USB</td>
+                    <td>Available Raspberry Pi USB Port</td>
+                </tr>
+
+                <tr>
+                    <td>Raspberry Pi Power Supply</td>
+                    <td>USB-C Power Input</td>
+                    <td>Raspberry Pi Power Connection</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Connection Procedure</h3>
+
+    <ol>
+        <li>Connect the USB webcam to an available Raspberry Pi USB port.</li>
+        <li>Connect the suitable Raspberry Pi power supply.</li>
+        <li>Boot Raspberry Pi OS.</li>
+        <li>Open Terminal.</li>
+        <li>Verify the USB webcam is detected.</li>
+        <li>Confirm that the selected camera device is <code>/dev/video0</code>.</li>
+    </ol>
+
+    <div class="note">
+
+        <strong>Connection Note:</strong>
+
+        <p>
+            The USB webcam
+            connects directly
+            to the Raspberry Pi.
+            This experiment does
+            not require GPIO
+            wiring or a breadboard.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     CIRCUIT
+===================================== -->
+<section class="section" id="circuit">
+
+    <h2>Circuit Diagram</h2>
+
+    <img
+        class="circuit-img"
+        src="Raspberry Pi Time-Lapse Camera Circuit.png"
+        alt="Raspberry Pi Time-Lapse Camera Circuit Diagram"
+    >
+
+    <p>
+        The circuit consists of
+        a USB webcam connected
+        to the Raspberry Pi
+        USB port.
+    </p>
+
+</section>
+
+<!-- =====================================
+     WORKING
+===================================== -->
+<section class="section" id="working">
+
+    <h2>Working Principle</h2>
+
+    <div class="flow">
+
+        <div class="flow-step">
+            USB Webcam Connects to Raspberry Pi
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Python Starts the Time-Lapse Program
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            fswebcam Captures a JPEG Image
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Save Numbered and Timestamped Photograph
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Wait Until the Next Capture Interval
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Repeat for Approximately 60 Seconds
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Store JPEG Images in Photos Folder
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Run FFmpeg Conversion Command
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Create H.264 MP4 Video
+        </div>
+
+        <div class="flow-arrow">↓</div>
+
+        <div class="flow-step">
+            Verify Output Using ffprobe
+        </div>
+
+    </div>
+
+    <h3>USB Camera Detection</h3>
+
+    <p>
+        The Raspberry Pi detects
+        the connected USB webcam
+        through the Linux
+        video-device interface.
+    </p>
+
+    <h3>Automatic Photo Capture</h3>
+
+    <p>
+        Python executes the
+        fswebcam command
+        every five seconds
+        during the capture period.
+    </p>
+
+    <h3>Timestamp-Based Filenames</h3>
+
+    <p>
+        Each image receives
+        a sequential image
+        number and timestamp.
+    </p>
+
+    <h3>Capture Scheduling</h3>
+
+    <p>
+        Python uses
+        <code>time.monotonic()</code>
+        to calculate elapsed
+        recording time and
+        schedule the next capture.
+    </p>
+
+    <h3>JPEG Storage</h3>
+
+    <p>
+        The captured photographs
+        are saved in the
+        <code>photos</code>
+        subdirectory.
+    </p>
+
+    <h3>Video Conversion</h3>
+
+    <p>
+        FFmpeg reads the
+        saved JPEG files
+        in filename order
+        and generates
+        an H.264 MP4 video.
+    </p>
+
+    <h3>Video Verification</h3>
+
+    <p>
+        ffprobe displays the
+        generated video's
+        duration and file size.
+    </p>
+
+</section>
+
+<!-- =====================================
+     PROCEDURE
+===================================== -->
+<section class="section" id="procedure">
+
+    <h2>Procedure</h2>
+
+    <ol>
+        <li>Arrange the Raspberry Pi 4 Model B and USB webcam.</li>
+        <li>Connect the USB webcam to Raspberry Pi.</li>
+        <li>Power on the Raspberry Pi and boot Raspberry Pi OS.</li>
+        <li>Open Terminal.</li>
+        <li>Update the package list:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>sudo apt update</pre>
+    </div>
+
+    <ol start="6">
+        <li>Install fswebcam, FFmpeg and V4L2 utilities:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>sudo apt install -y fswebcam ffmpeg v4l-utils</pre>
+    </div>
+
+    <ol start="7">
+        <li>Check the connected USB devices:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>lsusb
+ls -l /dev/video*
+v4l2-ctl --list-devices</pre>
+    </div>
+
+    <ol start="8">
+        <li>Confirm the webcam device path. The tested SOP uses <code>/dev/video0</code>.</li>
+        <li>Capture a single test photograph:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>fswebcam -d /dev/video0 -r 640x480 --no-banner ~/test_photo.jpg</pre>
+    </div>
+
+    <ol start="10">
+        <li>Check that the test photo was saved:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>ls -lh ~/test_photo.jpg
+file ~/test_photo.jpg</pre>
+    </div>
+
+    <ol start="11">
+        <li>Create the project directory and photos folder:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>mkdir -p ~/timelapse_camera/photos
+cd ~/timelapse_camera</pre>
+    </div>
+
+    <ol start="12">
+        <li>Create the Python program:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>nano ~/timelapse_camera/timelapse.py</pre>
+    </div>
+
+    <ol start="13">
+        <li>Copy the complete Python code from Explore the Code.</li>
+        <li>Paste it into the file and save using <code>Ctrl+O</code>, Enter, then <code>Ctrl+X</code>.</li>
+        <li>Run the time-lapse program:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>cd ~/timelapse_camera
+python3 timelapse.py</pre>
+    </div>
+
+    <ol start="16">
+        <li>Allow the program to capture photographs for approximately one minute.</li>
+        <li>Inspect the saved images:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>ls -lh ~/timelapse_camera/photos</pre>
+    </div>
+
+    <ol start="18">
+        <li>Count the JPEG files:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>find ~/timelapse_camera/photos -maxdepth 1 -type f -name '*.jpg' | wc -l</pre>
+    </div>
+
+    <ol start="19">
+        <li>Once capture is complete, convert the JPEG sequence into MP4:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>ffmpeg -framerate 4 \
+-pattern_type glob \
+-i '/home/pi/timelapse_camera/photos/*.jpg' \
+-c:v libx264 -pix_fmt yuv420p \
+'/home/pi/timelapse_camera/timelapse_video.mp4'</pre>
+    </div>
+
+    <div class="note">
+        <strong>Path Note:</strong>
+        The FFmpeg command above uses
+        the SOP's <code>/home/pi</code>
+        home directory. If your
+        Raspberry Pi username is
+        different, replace
+        <code>/home/pi</code>
+        with your actual home path.
+    </div>
+
+    <ol start="20">
+        <li>Check the generated MP4 file:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>ls -lh ~/timelapse_camera/timelapse_video.mp4</pre>
+    </div>
+
+    <ol start="21">
+        <li>Verify the video using ffprobe:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>ffprobe -v error \
+-show_entries format=duration,size \
+-of default=noprint_wrappers=1 \
+~/timelapse_camera/timelapse_video.mp4</pre>
+    </div>
+
+    <ol start="22">
+        <li>Play the video using an installed video player, such as VLC:</li>
+    </ol>
+
+    <div class="output-box">
+<pre>vlc ~/timelapse_camera/timelapse_video.mp4</pre>
+    </div>
+
+    <ol start="23">
+        <li>Verify that the time-lapse shows the captured scene progressing rapidly.</li>
+        <li>Move or archive old photos before starting a new recording.</li>
+    </ol>
+
+</section>
+
+<!-- =====================================
+     EXPLORE THE CODE
+===================================== -->
+<section class="section" id="code">
+
+    <p class="eyebrow">
+        Raspberry Pi Experiment · Code Review
+    </p>
+
+    <h2 class="lesson-title">
+        Explore the Code
+    </h2>
+
+    <p class="intro">
+        Select a step to highlight
+        the corresponding Python
+        section. Copy Code copies
+        the complete time-lapse
+        capture program.
+    </p>
+
+    <div class="code-layout">
+
+        <article class="code-panel">
+
+            <div class="code-top">
+
+                <span class="filename">
+                    timelapse.py
+                </span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode()"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <div class="code-body" id="code-body">
+                <code id="code-lines"></code>
+            </div>
+
+        </article>
+
+        <article class="guide">
+
+            <h2>Understand it step by step</h2>
+
+            <p>
+                Click any tab to
+                highlight its complete
+                matching code section.
+            </p>
+
+            <div class="steps" id="steps-list"></div>
+
+            <div
+                class="explanation"
+                id="explanation"
+                aria-live="polite"
+            ></div>
+
+            <details>
+
+                <summary>
+                    Explore More: fswebcam
+                </summary>
+
+                <p>
+                    fswebcam is a
+                    Linux command-line
+                    tool that captures
+                    still photographs
+                    from supported
+                    video devices.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: subprocess
+                </summary>
+
+                <p>
+                    Python subprocess.run()
+                    executes the external
+                    fswebcam command
+                    and captures its
+                    result and error output.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Monotonic Time
+                </summary>
+
+                <p>
+                    time.monotonic()
+                    provides a steadily
+                    increasing time value
+                    that is suitable for
+                    scheduling capture
+                    intervals.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: FFmpeg
+                </summary>
+
+                <p>
+                    FFmpeg combines
+                    the captured JPEG
+                    photographs into
+                    an H.264 MP4 video.
+                </p>
+
+                <p>
+                    The FFmpeg command
+                    is executed after
+                    the Python capture
+                    program finishes.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Explore More: Frame Rate
+                </summary>
+
+                <p>
+                    At four frames
+                    per second, twelve
+                    photographs create
+                    a video lasting
+                    approximately
+                    three seconds.
+                </p>
+
+            </details>
+
+            <details>
+
+                <summary>
+                    Check Your Understanding
+                </summary>
+
+                <ol>
+                    <li>Which camera device is used?</li>
+                    <li>Which tool captures JPEG photographs?</li>
+                    <li>What is the photo capture interval?</li>
+                    <li>How long does the program record?</li>
+                    <li>Which tool converts photos to MP4?</li>
+                    <li>What is the output video frame rate?</li>
+                    <li>How do you stop the capture early?</li>
+                </ol>
+
+                <p>
+                    <strong>Answers:</strong>
+                    /dev/video0; fswebcam;
+                    5 seconds; 60 seconds;
+                    FFmpeg; 4 FPS;
+                    Ctrl+C.
+                </p>
+
+            </details>
+
+        </article>
+
+    </div>
+
+    <p class="tip">
+        <strong>Try It:</strong>
+        Capture an object that
+        changes gradually, such
+        as a growing plant
+        or an ongoing model
+        assembly. Convert
+        the photographs into
+        MP4 and observe the
+        changes at a faster speed.
+    </p>
+
+</section>
+
+<!-- =====================================
+     OUTPUT
+===================================== -->
+<section class="section" id="output">
+
+    <h2>Expected Output</h2>
+
+    <h3>Terminal — Capture Started</h3>
+
+    <div class="output-box">
+<pre>Time-lapse capture starting...
+Interval: 5 seconds
+Duration: 60 seconds
+Saving photos to: /home/pi/timelapse_camera/photos
+Press Ctrl+C to stop early.</pre>
+    </div>
+
+    <h3>Photograph Capture Output</h3>
+
+    <div class="output-box">
+<pre>Photo 1 saved: /home/pi/timelapse_camera/photos/photo_0001_YYYYMMDD_HHMMSS.jpg
+
+Photo 2 saved: /home/pi/timelapse_camera/photos/photo_0002_YYYYMMDD_HHMMSS.jpg
+
+Photo 3 saved: /home/pi/timelapse_camera/photos/photo_0003_YYYYMMDD_HHMMSS.jpg
+
+...
+
+Time-lapse capture finished.</pre>
+    </div>
+
+    <h3>Saved Photo Directory</h3>
+
+    <div class="output-box">
+<pre>timelapse_camera/
+|
+|-- timelapse.py
+|
+|-- photos/
+|   |
+|   |-- photo_0001_YYYYMMDD_HHMMSS.jpg
+|   |-- photo_0002_YYYYMMDD_HHMMSS.jpg
+|   |-- photo_0003_YYYYMMDD_HHMMSS.jpg
+|   |
+|   |-- ... 
+|
+|-- timelapse_video.mp4</pre>
+    </div>
+
+    <h3>Expected MP4 Verification</h3>
+
+    <div class="output-box">
+<pre>duration=3.000000
+size=359424</pre>
+    </div>
+
+    <h3>Functional Output</h3>
+
+    <div class="table-wrap">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Expected Result</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>Run Python program</td>
+                    <td>Automatic capture starts</td>
+                </tr>
+
+                <tr>
+                    <td>Capture interval reached</td>
+                    <td>JPEG photograph saved</td>
+                </tr>
+
+                <tr>
+                    <td>After approximately 60 seconds</td>
+                    <td>Capture session finishes</td>
+                </tr>
+
+                <tr>
+                    <td>Inspect photos folder</td>
+                    <td>Approximately 12 JPEG files</td>
+                </tr>
+
+                <tr>
+                    <td>Run FFmpeg</td>
+                    <td>H.264 MP4 video generated</td>
+                </tr>
+
+                <tr>
+                    <td>Run ffprobe</td>
+                    <td>Video duration and size displayed</td>
+                </tr>
+
+                <tr>
+                    <td>Play MP4</td>
+                    <td>Time-lapse sequence displayed</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="note">
+
+        <strong>SOP Test Result:</strong>
+
+        <p>
+            The supplied SOP reports
+            successful capture of
+            twelve JPEG images
+            at five-second intervals.
+        </p>
+
+        <p>
+            FFmpeg produced an MP4
+            video with a verified
+            duration of 3.0 seconds
+            and a file size of
+            approximately 351 KB.
+        </p>
+
+        <p>
+            These are documented
+            reference test results,
+            not a new execution
+            performed by this page.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     DASHBOARD
+===================================== -->
+<section class="section" id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="dashboard-image">
+
+        <img
+            src="Raspberry Pi Time-Lapse Camera Dashboard.png"
+            alt="Raspberry Pi Time-Lapse Camera Dashboard"
+        >
+
+    </div>
+
+    <p>
+        This section displays
+        the experiment output
+        screenshot after the
+        corresponding PNG
+        is uploaded.
+    </p>
+
+    <p>
+        The experiment generates
+        JPEG photographs and
+        an MP4 video.
+        It does not provide
+        a browser-based
+        live dashboard.
+    </p>
+
+</section>
+
+<!-- =====================================
+     RESULT
+===================================== -->
+<section class="section" id="result">
+
+    <h2>Result</h2>
+
+    <p>
+        The Raspberry Pi Time-Lapse
+        Camera demonstrates
+        automatic photo capture
+        at regular intervals
+        using a USB webcam
+        and fswebcam.
+    </p>
+
+    <p>
+        The reference SOP
+        reports that twelve
+        JPEG images were captured
+        over approximately
+        one minute.
+    </p>
+
+    <p>
+        FFmpeg combined the
+        saved photographs
+        into an H.264 MP4
+        video with a verified
+        duration of
+        three seconds.
+    </p>
+
+    <p>
+        The experiment demonstrates
+        automated photography,
+        interval scheduling,
+        file organization
+        and video conversion
+        using Raspberry Pi.
+    </p>
+
+</section>
+
+<!-- =====================================
+     LEARN
+===================================== -->
+<section class="section" id="learn">
+
+    <h2>What You Learn</h2>
+
+    <ul>
+        <li>Using Raspberry Pi 4 for time-lapse photography.</li>
+        <li>Connecting and identifying a USB webcam.</li>
+        <li>Understanding the Linux V4L2 interface.</li>
+        <li>Capturing JPEG photographs using fswebcam.</li>
+        <li>Installing camera and video-processing tools.</li>
+        <li>Writing Python capture automation scripts.</li>
+        <li>Running external commands using subprocess.</li>
+        <li>Using pathlib for file and folder management.</li>
+        <li>Generating sequential photo filenames.</li>
+        <li>Adding timestamps to image filenames.</li>
+        <li>Creating directories automatically.</li>
+        <li>Using monotonic time for interval scheduling.</li>
+        <li>Controlling capture intervals and duration.</li>
+        <li>Handling camera command failures.</li>
+        <li>Handling Ctrl+C to stop capture.</li>
+        <li>Combining image sequences with FFmpeg.</li>
+        <li>Encoding video using H.264.</li>
+        <li>Understanding video frame rate and duration.</li>
+        <li>Using ffprobe to verify MP4 output.</li>
+        <li>Understanding time-lapse applications.</li>
+    </ul>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+<footer>
+
+    <strong>SIMUDIY Exploration Kit</strong>
+
+    <div>
+        Raspberry Pi Time-Lapse Camera
+    </div>
+
+</footer>
+
+<!-- =====================================
+     COMPLETE PYTHON PROGRAM
+     TEN INDEPENDENT CODE SECTIONS
+===================================== -->
+
+<textarea id="python-program" hidden>
+#!/usr/bin/env python3
+
+# [01] IMPORT LIBRARIES
+
 import time
 import subprocess
+
 from datetime import datetime
 from pathlib import Path
 
-# Project settings
+# [END 01]
+
+
+# [02] CONFIGURE CAMERA AND TIMING
+
 CAMERA = "/dev/video0"
-PHOTO_INTERVAL = 5         # Seconds between photos
-TOTAL_DURATION = 60        # Total capture time in seconds
+
+PHOTO_INTERVAL = 5
+TOTAL_DURATION = 60
+
 RESOLUTION = "640x480"
 
-# Folder where photos will be stored
-PHOTO_DIR = Path.home() / "timelapse_camera" / "photos"
-PHOTO_DIR.mkdir(parents=True, exist_ok=True)
+# [END 02]
+
+
+# [03] PREPARE PHOTO DIRECTORY
+
+PHOTO_DIR = (
+    Path.home()
+    / "timelapse_camera"
+    / "photos"
+)
+
+PHOTO_DIR.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+# [END 03]
+
+
+# [04] CREATE PHOTO CAPTURE FUNCTION
 
 def capture_photo(photo_number):
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = PHOTO_DIR / f"photo_{photo_number:04d}_{timestamp}.jpg"
+
+    timestamp = datetime.now().strftime(
+        "%Y%m%d_%H%M%S"
+    )
+
+    filename = PHOTO_DIR / (
+        f"photo_{photo_number:04d}_{timestamp}.jpg"
+    )
+
+    # [END 04]
+
+
+    # [05] BUILD FSWEBCAM COMMAND
 
     command = [
         "fswebcam",
@@ -46,53 +2046,620 @@ def capture_photo(photo_number):
         str(filename)
     ]
 
+    # [END 05]
+
+
+    # [06] EXECUTE CAPTURE COMMAND
+
     result = subprocess.run(
         command,
         capture_output=True,
         text=True
     )
 
-    if result.returncode == 0 and filename.exists():
-        print(f"Photo {photo_number} saved: {filename}")
+    # [END 06]
+
+
+    # [07] CHECK CAPTURE RESULT
+
+    if (
+        result.returncode == 0
+        and filename.exists()
+    ):
+
+        print(
+            f"Photo {photo_number} saved: {filename}"
+        )
+
     else:
-        print(f"ERROR capturing photo {photo_number}")
-        print(result.stderr)
+
+        print(
+            f"ERROR capturing photo {photo_number}"
+        )
+
+        print(
+            result.stderr
+        )
+
+# [END 07]
+
+
+# [08] INITIALIZE TIME-LAPSE SESSION
 
 def main():
-    print("Time-lapse capture starting...")
-    print(f"Interval: {PHOTO_INTERVAL} seconds")
-    print(f"Duration: {TOTAL_DURATION} seconds")
-    print(f"Saving photos to: {PHOTO_DIR}")
-    print("Press Ctrl+C to stop early.")
+
+    print(
+        "Time-lapse capture starting..."
+    )
+
+    print(
+        f"Interval: {PHOTO_INTERVAL} seconds"
+    )
+
+    print(
+        f"Duration: {TOTAL_DURATION} seconds"
+    )
+
+    print(
+        f"Saving photos to: {PHOTO_DIR}"
+    )
+
+    print(
+        "Press Ctrl+C to stop early."
+    )
 
     start_time = time.monotonic()
+
     photo_number = 1
 
+    # [END 08]
+
+
+    # [09] CAPTURE AT TIMED INTERVALS
+
     try:
-        while time.monotonic() - start_time < TOTAL_DURATION:
-            capture_photo(photo_number)
+
+        while (
+            time.monotonic() - start_time
+            &lt; TOTAL_DURATION
+        ):
+
+            capture_photo(
+                photo_number
+            )
+
             photo_number += 1
 
-            next_capture = start_time + (photo_number - 1) * PHOTO_INTERVAL
-            remaining = next_capture - time.monotonic()
+            next_capture = (
+                start_time
+                + (photo_number - 1)
+                * PHOTO_INTERVAL
+            )
 
-            if remaining > 0:
-                time.sleep(remaining)
+            remaining = (
+                next_capture
+                - time.monotonic()
+            )
 
-        print("Time-lapse capture finished.")
+            if remaining &gt; 0:
+
+                time.sleep(
+                    remaining
+                )
+
+        print(
+            "Time-lapse capture finished."
+        )
+
+    # [END 09]
+
+
+    # [10] HANDLE STOP AND START PROGRAM
 
     except KeyboardInterrupt:
-        print("\nCapture stopped by user.")
+
+        print(
+            "\nCapture stopped by user."
+        )
+
 
 if __name__ == "__main__":
-    main()</script><script>
-const program=document.getElementById("python-program").textContent.trim();const lines=program.split("\n");const steps=[{"label":"Import modules","start":"import time","end":"from pathlib import Path"},{"label":"Set camera and timing","start":"CAMERA =","end":"RESOLUTION ="},{"label":"Prepare output directory","start":"PHOTO_DIR =","end":"PHOTO_DIR.mkdir"},{"label":"Create capture function","start":"def capture_photo(","end":"filename = PHOTO_DIR"},{"label":"Build fswebcam command","start":"command = [","end":"str(filename)"},{"label":"Run capture process","start":"result = subprocess.run(","end":"text=True"},{"label":"Report capture success","start":"if result.returncode","end":"print(result.stderr)"},{"label":"Initialize recording run","start":"def main():","end":"photo_number = 1"},{"label":"Capture at timed intervals","start":"try:","end":"time.sleep(remaining)"},{"label":"Handle stop and entry point","start":"except KeyboardInterrupt:","end":"main()"}];
-function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-function renderCode(){document.getElementById("code-lines").innerHTML=lines.map((line,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeHtml(line)+'</span></span>').join("")}
-function findLine(marker,from){return lines.findIndex((line,i)=>i>=from&&line.trim().startsWith(marker))}
-function validateSteps(){return steps.map((s,i)=>{const start=findLine(s.start,0),end=start<0?-1:findLine(s.end,start);return {index:i,start,end,valid:start>=0&&end>=start}})}
-const ranges=validateSteps();
-function showStep(i){document.querySelectorAll(".step").forEach((b,j)=>b.classList.toggle("active",i===j));document.querySelectorAll(".code-line").forEach(x=>x.classList.remove("selected"));const r=ranges[i],out=document.getElementById("explanation");out.replaceChildren();const h=document.createElement("h3");h.textContent=(i+1)+". "+steps[i].label;const p=document.createElement("p");if(!r.valid){p.textContent="Highlight verification failed: source markers did not resolve.";out.append(h,p);return}for(let n=r.start;n<=r.end;n++)document.getElementById("line-"+(n+1)).classList.add("selected");p.textContent="Highlighted source lines "+(r.start+1)+"–"+(r.end+1)+". Review the selected statements, inputs, outputs and error handling.";out.append(h,p);const view=document.getElementById("code-body"),target=document.getElementById("line-"+(r.start+1));const offset=target.getBoundingClientRect().top-view.getBoundingClientRect().top;view.scrollTo({top:view.scrollTop+offset-20,behavior:"smooth"})}
-async function copyCode(){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(program)}else{const t=document.createElement("textarea");t.value=program;document.body.append(t);t.select();if(!document.execCommand("copy"))throw Error("Copy unavailable");t.remove()}const b=document.querySelector(".copy-button");b.textContent="Copied!";setTimeout(()=>b.textContent="Copy Code",1500)}catch(err){document.querySelector(".copy-button").textContent="Copy failed"}}
-renderCode();showStep(0);
-</script></body></html>
+
+    main()
+
+# [END 10]
+</textarea>
+
+<!-- =====================================
+     INTERACTIVE CODE EXPLORER
+===================================== -->
+
+<script>
+
+/* READ COMPLETE PYTHON PROGRAM */
+
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+/* TEN EXPLANATION STEPS */
+
+const steps = [
+
+    {
+        number: "01",
+        label: "IMPORT LIBRARIES",
+        title: "Import Libraries",
+        text:
+            "Imports the Python standard-library " +
+            "modules used for timing, external " +
+            "commands, timestamps and file paths."
+    },
+
+    {
+        number: "02",
+        label: "CONFIGURE CAMERA AND TIMING",
+        title: "Configure Camera and Timing",
+        text:
+            "Defines /dev/video0, the five-second " +
+            "capture interval, sixty-second " +
+            "duration and 640 by 480 resolution."
+    },
+
+    {
+        number: "03",
+        label: "PREPARE PHOTO DIRECTORY",
+        title: "Prepare Photo Directory",
+        text:
+            "Creates the photos directory " +
+            "inside the time-lapse project " +
+            "using Python pathlib."
+    },
+
+    {
+        number: "04",
+        label: "CREATE PHOTO CAPTURE FUNCTION",
+        title: "Create Capture Function",
+        text:
+            "Defines the capture function " +
+            "and generates sequential, " +
+            "timestamped JPEG filenames."
+    },
+
+    {
+        number: "05",
+        label: "BUILD FSWEBCAM COMMAND",
+        title: "Build fswebcam Command",
+        text:
+            "Creates the command arguments " +
+            "for capturing a JPEG photograph " +
+            "from the selected USB camera."
+    },
+
+    {
+        number: "06",
+        label: "EXECUTE CAPTURE COMMAND",
+        title: "Run Capture Process",
+        text:
+            "Uses subprocess.run() to execute " +
+            "fswebcam and collect its output " +
+            "and return status."
+    },
+
+    {
+        number: "07",
+        label: "CHECK CAPTURE RESULT",
+        title: "Check Capture Result",
+        text:
+            "Checks the command status " +
+            "and saved file, then prints " +
+            "a success or error message."
+    },
+
+    {
+        number: "08",
+        label: "INITIALIZE TIME-LAPSE SESSION",
+        title: "Initialize Time-Lapse",
+        text:
+            "Prints the capture settings, " +
+            "records the starting time " +
+            "and initializes the photo counter."
+    },
+
+    {
+        number: "09",
+        label: "CAPTURE AT TIMED INTERVALS",
+        title: "Timed Photo Capture",
+        text:
+            "Captures photos repeatedly " +
+            "and uses monotonic time to " +
+            "schedule the next photograph."
+    },
+
+    {
+        number: "10",
+        label: "HANDLE STOP AND START PROGRAM",
+        title: "Stop and Start Program",
+        text:
+            "Handles Ctrl+C and uses " +
+            "the Python main entry point " +
+            "to start the capture session."
+    }
+
+];
+
+/* ESCAPE PYTHON FOR DISPLAY */
+
+function escapeHtml(value) {
+
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+/* DISPLAY FULL PYTHON CODE */
+
+function displayCode() {
+
+    const container =
+        document.getElementById(
+            "code-lines"
+        );
+
+    container.innerHTML = lines.map(
+        function(line, index) {
+
+            return (
+                '<span class="code-line" id="line-' +
+                (index + 1) + '">' +
+
+                '<span class="line-number">' +
+                (index + 1) +
+                '</span>' +
+
+                '<span>' +
+                escapeHtml(line) +
+                '</span>' +
+
+                '</span>'
+            );
+
+        }
+    ).join("");
+}
+
+/* FIND EXACT SECTION MARKERS */
+
+function findMarker(marker) {
+
+    return lines.findIndex(
+        function(line) {
+
+            return line.trim() === marker;
+
+        }
+    );
+}
+
+/* DEFINE NON-OVERLAPPING CODE RANGES */
+
+const ranges = steps.map(
+    function(step) {
+
+        const start = findMarker(
+            "# [" +
+            step.number +
+            "] " +
+            step.label
+        );
+
+        const end = findMarker(
+            "# [END " +
+            step.number +
+            "]"
+        );
+
+        return {
+            start: start,
+            end: end,
+            valid:
+                start >= 0 &&
+                end >= start
+        };
+
+    }
+);
+
+/* CREATE CODE EXPLANATION BUTTONS */
+
+function createSteps() {
+
+    const container =
+        document.getElementById(
+            "steps-list"
+        );
+
+    steps.forEach(
+        function(step, index) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type = "button";
+            button.className = "step";
+
+            const number =
+                document.createElement(
+                    "span"
+                );
+
+            number.className =
+                "step-number";
+
+            number.textContent =
+                step.number;
+
+            const title =
+                document.createElement(
+                    "span"
+                );
+
+            title.textContent =
+                step.title;
+
+            button.append(
+                number,
+                title
+            );
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    showStep(index);
+
+                }
+            );
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+}
+
+/* HIGHLIGHT SELECTED CODE SECTION */
+
+function showStep(index) {
+
+    document.querySelectorAll(
+        ".step"
+    ).forEach(
+        function(button, i) {
+
+            button.classList.toggle(
+                "active",
+                i === index
+            );
+
+        }
+    );
+
+    document.querySelectorAll(
+        ".code-line"
+    ).forEach(
+        function(line) {
+
+            line.classList.remove(
+                "selected"
+            );
+
+        }
+    );
+
+    const step = steps[index];
+    const range = ranges[index];
+
+    const explanation =
+        document.getElementById(
+            "explanation"
+        );
+
+    explanation.replaceChildren();
+
+    const heading =
+        document.createElement(
+            "h3"
+        );
+
+    heading.textContent =
+        (index + 1) +
+        ". " +
+        step.title;
+
+    const paragraph =
+        document.createElement(
+            "p"
+        );
+
+    paragraph.textContent =
+        step.text;
+
+    explanation.append(
+        heading,
+        paragraph
+    );
+
+    if (!range.valid) {
+
+        paragraph.textContent =
+            "Matching code markers not found.";
+
+        return;
+    }
+
+    for (
+        let i = range.start;
+        i <= range.end;
+        i++
+    ) {
+
+        const element =
+            document.getElementById(
+                "line-" + (i + 1)
+            );
+
+        if (element) {
+
+            element.classList.add(
+                "selected"
+            );
+
+        }
+    }
+
+    const firstLine =
+        document.getElementById(
+            "line-" + (range.start + 1)
+        );
+
+    const codeBody =
+        document.getElementById(
+            "code-body"
+        );
+
+    if (firstLine && codeBody) {
+
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top:
+                codeBody.scrollTop +
+                offset -
+                20,
+            behavior: "smooth"
+        });
+
+    }
+}
+
+/* COPY COMPLETE PYTHON SCRIPT */
+
+async function copyCode() {
+
+    const button =
+        document.querySelector(
+            ".copy-button"
+        );
+
+    function copied() {
+
+        button.textContent =
+            "Copied!";
+
+        setTimeout(
+            function() {
+
+                button.textContent =
+                    "Copy Code";
+
+            },
+            1500
+        );
+    }
+
+    function fallback() {
+
+        const field =
+            document.createElement(
+                "textarea"
+            );
+
+        field.value = program;
+
+        field.style.position =
+            "fixed";
+
+        field.style.opacity =
+            "0";
+
+        document.body.appendChild(
+            field
+        );
+
+        field.select();
+
+        let success = false;
+
+        try {
+
+            success =
+                document.execCommand(
+                    "copy"
+                );
+
+        } catch(error) {
+
+            success = false;
+
+        }
+
+        field.remove();
+
+        if (success) {
+
+            copied();
+
+        } else {
+
+            button.textContent =
+                "Copy failed";
+
+        }
+    }
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                program
+            );
+
+            copied();
+
+        } catch(error) {
+
+            fallback();
+
+        }
+
+    } else {
+
+        fallback();
+
+    }
+}
+
+/* INITIALIZE INTERACTIVE CODE EXPLORER */
+
+displayCode();
+createSteps();
+showStep(0);
+
+</script>
+
+</body>
+</html>
