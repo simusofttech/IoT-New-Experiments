@@ -1,1204 +1,1177 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Smart Room Occupancy and Activity Logger Using Raspberry Pi 4</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Room Occupancy and Activity Logger</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f7fb;color:#222;font:16px/1.7 Arial,Helvetica,sans-serif}
+
+/* HEADER */
+.header{position:relative;display:flex;flex-direction:column;min-height:230px;padding:25px 0 0;background:#2563eb;color:white;text-align:center}
+.header-logo{position:absolute;top:15px;left:20px;width:135px;max-height:75px;height:auto;padding:5px;background:white;border-radius:5px;object-fit:contain}
+.header-content{margin:auto 0;padding:35px 165px}
+.header h1{margin:0 0 8px;font-size:34px}
+.header p{margin:0;font-size:17px}
+.header-buttons{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:12px 25px;background:rgba(0,0,0,.12)}
+.header-left-buttons,.header-right-buttons{display:flex;align-items:center;gap:10px}
+.header-nav-btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;background:white;color:#1e3a8a;border:1px solid #dbeafe;border-radius:7px;font-size:13px;font-weight:bold;text-decoration:none;white-space:nowrap}
+.header-nav-btn:hover{background:#dbeafe}
+.home-icon-btn{width:40px;height:38px;padding:8px}
+.home-icon-btn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* NAVIGATION */
+nav{position:sticky;top:0;z-index:20;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;padding:13px 15px;background:white;border-bottom:1px solid #ddd}
+nav a{color:#1e3a8a;text-decoration:none;font-size:14px;font-weight:bold}
+nav a:hover{color:#2563eb}
+
+/* MAIN CONTENT */
+.container{width:90%;max-width:1050px;margin:35px auto}
+.section{margin-bottom:24px;padding:28px;background:white;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.06);scroll-margin-top:100px}
+.section h2{margin:0 0 18px;padding-bottom:8px;color:#1e3a8a;font-size:25px;border-bottom:2px solid #dbeafe}
+.section h3{color:#1e3a8a}
+ul,ol{padding-left:24px}
+li{margin-bottom:8px}
+
+/* THUMBNAIL */
+.project-thumbnail{text-align:center;padding:20px}
+.project-thumbnail img{display:block;width:100%;max-width:760px;max-height:420px;height:auto;margin:0 auto;object-fit:contain;border-radius:10px}
+
+/* COMPONENT CARDS */
+.components-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.component-card{padding:20px;background:white;border:1px solid #e2e8f0;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.component-card img{display:block;width:100%;max-width:180px;height:140px;margin:0 auto 15px;object-fit:contain}
+.component-card h4{margin:0 0 8px;color:#1e3a8a;font-size:17px}
+.component-card p{margin:0;color:#475569;font-size:14px}
+
+/* TABLES */
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:600px;border-collapse:collapse}
+th,td{padding:12px;border:1px solid #ddd;text-align:left}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f8fafc}
+.note{margin-top:15px;padding:14px 16px;background:#eff6ff;border-left:5px solid #2563eb;border-radius:6px}
+
+/* CIRCUIT AND WORKING */
+.circuit-img{display:block;width:100%;max-width:760px;height:auto;margin:20px auto;padding:10px;border:1px solid #e2e8f0;border-radius:10px;object-fit:contain}
+.flow{text-align:center;color:#1e3a8a;font-size:18px;font-weight:bold;line-height:2}
+.flow-step{padding:5px 10px}
+.flow-arrow{color:#2563eb;font-size:22px}
+
+/* CODE EXPLORER */
+.eyebrow{margin:0 0 4px;color:#2563eb;font-size:13px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase}
+.lesson-title{margin:0 0 8px!important;padding:0!important;border:0!important;color:#1e3a8a!important;font-size:32px!important}
+.intro{margin:0 0 22px;color:#526875}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:20px;align-items:start}
+.code-panel{min-width:0;overflow:hidden;background:white;border:1px solid #bfdbfe;border-radius:14px;box-shadow:0 4px 14px rgba(37,99,235,.10)}
+.code-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:15px 20px;background:#2563eb;color:white}
+.filename{font:bold 14px Consolas,Monaco,monospace;overflow-wrap:anywhere}
+.copy-button{min-height:40px;padding:8px 14px;background:white;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;font-weight:bold;cursor:pointer}
+.copy-button:hover{background:#eff6ff}
+.code-body{height:600px;padding:16px 0;overflow:auto;background:white}
+.code-line{display:flex;min-width:max-content;min-height:24px;padding-right:20px;white-space:pre;font:13px/24px Consolas,Monaco,monospace;color:#1e293b;border-bottom:1px solid #f1f5f9}
+.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}
+.line-number{min-width:52px;padding-right:15px;color:#64748b;text-align:right;user-select:none}
+
+/* CODE EXPLANATION */
+.guide{min-width:0;padding:22px;background:white;border:1px solid #dce6e9;border-radius:14px}
+.guide h2{margin:0 0 8px;padding:0;border:0;font-size:21px}
+.guide>p{color:#526875}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:16px 0}
+.step{display:flex;align-items:center;gap:8px;min-height:65px;padding:10px;background:white;color:#1e3a8a;border:1px solid #dce6e9;border-radius:9px;font-size:13px;font-weight:bold;text-align:left;cursor:pointer}
+.step:hover{border-color:#60a5fa}
+.step.active{background:#eff6ff;border-color:#60a5fa}
+.step-number{color:#2563eb;font-size:12px;flex-shrink:0}
+.explanation{min-height:130px;padding:16px;background:#eff6ff;border-radius:9px}
+.explanation h3{margin:0 0 7px;color:#1e3a8a;font-size:17px}
+.explanation p{margin:0;color:#526875}
+.guide details{margin-top:15px;border-top:1px solid #dce6e9}
+.guide summary{padding:13px 0;color:#2563eb;font-weight:bold;cursor:pointer}
+.tip{margin-top:20px;padding:14px 17px;background:#eff6ff;border-radius:9px}
+
+/* EXPECTED OUTPUT */
+.output-box{margin:15px 0;padding:16px;background:#f8fafc;border:1px solid #dbeafe;border-radius:9px}
+.output-box pre{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.8 Consolas,Monaco,monospace}
+
+/* DASHBOARD IMAGE */
+.dashboard-image{display:flex;justify-content:center;align-items:center;width:100%;padding:20px}
+.dashboard-image img{display:block;width:100%;max-width:550px;height:auto;margin:0 auto;object-fit:contain;border-radius:10px}
 
-/* =========================
-   BASIC PAGE STYLE
-========================= */
+/* FOOTER */
+footer{text-align:center;padding:25px 20px;background:#0f172a;color:#cbd5e1}
+footer strong{color:white}
 
-*{
-    box-sizing:border-box;
+/* RESPONSIVE */
+@media(max-width:900px){
+    .header-content{padding:65px 20px 35px}
+    .components-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-
-    margin:0;
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    background:#f4f7fb;
-
-    color:#222;
-
-    line-height:1.7;
-}
-
-
-
-/* ===============================
-   UPDATED HEADER DESIGN
-================================ */
-
-.header {
-    background: #2563eb;
-    color: white;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 230px;
-    padding: 25px 0 0;
-    text-align: center;
-}
-
-/* COMPANY LOGO - TOP LEFT */
-
-.header-logo {
-    position: absolute;
-    top: 15px;
-    left: 20px;
-    width: 135px;
-    max-height: 75px;
-    height: auto;
-    object-fit: contain;
-    background: white;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-/* CENTER HEADING */
-
-.header-content {
-    text-align: center;
-    margin: auto 0;
-    padding: 35px 165px;
-}
-
-.header h1 {
-    margin: 0 0 8px;
-    font-size: 34px;
-}
-
-.header p {
-    margin: 0;
-    font-size: 17px;
-}
-
-/* BOTTOM BUTTON BAR */
-
-.header-buttons {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 12px 25px;
-    background: rgba(0,0,0,0.12);
-}
-
-/* BACK AND HOME - BOTTOM LEFT */
-
-.header-left-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ARDUINO, ESP, R-PI - BOTTOM RIGHT */
-
-.header-right-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* BUTTON STYLE */
-
-.header-nav-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 38px;
-    padding: 9px 14px;
-    background: white;
-    color: #1e3a8a;
-    border: 1px solid #dbeafe;
-    border-radius: 7px;
-    font-size: 13px;
-    font-weight: bold;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: 0.25s ease;
-}
-
-.header-nav-btn:hover {
-    background: #dbeafe;
-    transform: translateY(-2px);
-}
-
-/* HOME ICON ONLY */
-
-.home-icon-btn {
-    width: 40px;
-    height: 38px;
-    padding: 8px;
-}
-
-.home-icon-btn svg {
-    width: 21px;
-    height: 21px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-/* TABLET */
-
-@media (max-width: 900px) {
-    .header-content {
-        padding: 65px 20px 35px;
-    }
-}
-
-/* MOBILE */
-
-@media (max-width: 600px) {
-
-    .header {
-        padding: 15px 0 0;
-        min-height: 230px;
-    }
-
-    .header-logo {
-        width: 95px;
-        max-height: 60px;
-        top: 12px;
-        left: 12px;
-    }
-
-    .header-content {
-        padding: 85px 12px 25px;
-    }
-
-    .header h1 {
-        font-size: 25px;
-    }
-
-    .header p {
-        font-size: 15px;
-    }
-
-    .header-buttons {
-        padding: 10px 8px;
-        gap: 8px;
-    }
-
-    .header-left-buttons,
-    .header-right-buttons {
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 8px 7px;
-        font-size: 11px;
-        min-height: 36px;
-    }
-
-    .home-icon-btn {
-        width: 36px;
-        height: 36px;
-        padding: 7px;
-    }
-}
-
-@media (max-width: 360px) {
-    .header-buttons {
-        padding: 9px 5px;
-        gap: 5px;
-    }
-
-    .header-nav-btn {
-        padding: 7px 5px;
-        font-size: 10px;
-    }
-}
-
-
-/* PROJECT THUMBNAIL */
-
-.project-thumbnail {
-    text-align: center;
-    padding: 20px;
-}
-
-.project-thumbnail img {
-    display: block;
-    width: 100%;
-    max-width: 760px;
-    height: auto;
-    max-height: 420px;
-    object-fit: contain;
-    margin: 0 auto;
-    border-radius: 10px;
-}
-
-@media (max-width: 600px) {
-    .project-thumbnail {
-        padding: 12px;
-    }
-
-    .project-thumbnail img {
-        max-height: 280px;
-    }
-}
-
-
-/* =========================
-   NAVIGATION
-========================= */
-
-nav{
-
-    display:flex;
-
-    justify-content:center;
-
-    flex-wrap:wrap;
-
-    gap:18px;
-
-    padding:13px 15px;
-
-    background:white;
-
-    border-bottom:1px solid #ddd;
-
-    position:sticky;
-
-    top:0;
-
-    z-index:20;
-}
-
-
-nav a{
-
-    text-decoration:none;
-
-    color:#1e3a8a;
-
-    font-size:14px;
-
-    font-weight:bold;
-}
-
-
-nav a:hover{
-
-    color:#2563eb;
-}
-
-
-/* =========================
-   MAIN
-========================= */
-
-.container{
-
-    width:90%;
-
-    max-width:1050px;
-
-    margin:35px auto;
-}
-
-
-.section{
-
-    background:white;
-
-    margin-bottom:24px;
-
-    padding:28px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    box-shadow:
-    0 4px 12px
-    rgba(0,0,0,.06);
-}
-
-
-.section h2{
-
-    margin-top:0;
-
-    margin-bottom:18px;
-
-    color:#1e3a8a;
-
-    font-size:25px;
-
-    border-bottom:
-    2px solid #dbeafe;
-
-    padding-bottom:8px;
-}
-
-
-.section h3{
-
-    color:#1e3a8a;
-}
-
-
-ul,
-ol{
-
-    padding-left:24px;
-}
-
-
-li{
-
-    margin-bottom:8px;
-}
-
-
-/* =========================
-   COMPONENTS
-========================= */
-
-.components-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(
-        auto-fit,
-        minmax(220px,1fr)
-    );
-
-    gap:20px;
-}
-
-
-.component-card{
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    padding:20px;
-
-    text-align:center;
-
-    background:white;
-
-    box-shadow:
-    0 2px 8px
-    rgba(0,0,0,.04);
-}
-
-
-.component-card img{
-
-    width:100%;
-
-    height:120px;
-
-    object-fit:contain;
-
-    margin-bottom:15px;
-}
-
-
-.component-card h4{
-
-    color:#1e3a8a;
-
-    margin:0 0 8px;
-
-    font-size:18px;
-}
-
-
-.component-card p{
-
-    color:#475569;
-
-    font-size:14px;
-
-    margin:0;
-}
-
-
-/* =========================
-   TABLE
-========================= */
-
-.table-wrap{
-
-    overflow-x:auto;
-}
-
-
-table{
-
-    width:100%;
-
-    min-width:620px;
-
-    border-collapse:collapse;
-}
-
-
-th,
-td{
-
-    padding:12px;
-
-    border:1px solid #ddd;
-
-    text-align:left;
-}
-
-
-th{
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-tr:nth-child(even){
-
-    background:#f8fafc;
-}
-
-
-/* =========================
-   NOTE
-========================= */
-
-.note{
-
-    margin-top:15px;
-
-    padding:14px;
-
-    background:#eff6ff;
-
-    border-left:
-    5px solid #2563eb;
-
-    border-radius:6px;
-}
-
-
-/* =========================
-   CIRCUIT IMAGE
-========================= */
-
-.circuit-img{
-    display:block;
-
-    width:100%;
-    max-width:760px;
-
-    margin:20px auto 0;
-
-    border:1px solid #e2e8f0;
-
-    border-radius:10px;
-
-    background:white;
-
-    padding:10px;
-}
-
-
-/* =========================
-   FLOW
-========================= */
-
-.flow{
-
-    text-align:center;
-
-    color:#1e3a8a;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    line-height:2;
-}
-
-
-/* =========================
-   SENSOR CARDS
-========================= */
-
-.sensor-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(3,1fr);
-
-    gap:16px;
-}
-
-
-.sensor-box{
-
-    text-align:center;
-
-    padding:20px;
-
-    border-radius:12px;
-
-    border:1px solid #bfdbfe;
-
-    background:#f8fbff;
-}
-
-
-.sensor-box h3{
-
-    margin-top:0;
-
-    color:#1e3a8a;
-}
-
-
-.sensor-value{
-
-    font-size:26px;
-
-    color:#2563eb;
-
-    font-weight:bold;
-}
-
-
-/* =========================================
-   EXPLORE THE CODE
-========================================= */
-
-.code-lesson{
-
-    color:#142e3a;
-}
-
-
-.eyebrow{
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    font-size:13px;
-
-    letter-spacing:.08em;
-
-    text-transform:uppercase;
-
-    margin:0 0 4px;
-}
-
-
-.lesson-title{
-
-    font-size:32px !important;
-
-    margin:0 0 8px !important;
-
-    color:#1e3a8a !important;
-
-    border:0 !important;
-
-    padding:0 !important;
-}
-
-
-.intro{
-
-    color:#526875;
-
-    margin:0 0 22px;
-}
-
-
-/* CODE + EXPLANATION */
-
-.code-layout{
-
-    display:grid;
-
-    grid-template-columns:
-    minmax(0,1.45fr)
-    minmax(300px,1fr);
-
-    gap:20px;
-
-    align-items:start;
-}
-
-
-/* =========================
-   CODE PANEL
-========================= */
-
-.code-panel{
-
-    background:white;
-
-    border:1px solid #bfdbfe;
-
-    border-radius:14px;
-
-    overflow:hidden;
-
-    box-shadow:
-    0 4px 14px
-    rgba(37,99,235,.10);
-}
-
-
-.code-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    flex-wrap:wrap;
-
-    gap:12px;
-
-    padding:15px 20px;
-
-    background:#2563eb;
-
-    color:white;
-}
-
-
-.filename{
-
-    color:white;
-
-    font:
-    bold 14px/1.4
-    Consolas,
-    Monaco,
-    monospace;
-}
-
-
-.copy-button{
-
-    border:1px solid white;
-
-    background:white;
-
-    color:#2563eb;
-
-    border-radius:8px;
-
-    padding:8px 14px;
-
-    min-height:40px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-}
-
-
-.copy-button:hover{
-
-    background:#eff6ff;
-}
-
-
-.code-body{
-
-    height:600px;
-
-    overflow:auto;
-
-    background:white;
-
-    padding:16px 0;
-}
-
-
-.code-line{
-
-    display:flex;
-
-    min-width:max-content;
-
-    min-height:24px;
-
-    padding-right:22px;
-
-    white-space:pre;
-
-    font:
-    13px/24px
-    Consolas,
-    Monaco,
-    monospace;
-
-    color:#1e293b;
-
-    border-bottom:
-    1px solid #f1f5f9;
-}
-
-
-.code-line:hover{
-
-    background:#f8fbff;
-}
-
-
-.code-line.selected{
-
-    background:#dbeafe;
-
-    box-shadow:
-    inset 4px 0 #2563eb;
-}
-
-
-.line-number{
-
-    user-select:none;
-
-    min-width:52px;
-
-    text-align:right;
-
-    padding-right:15px;
-
-    color:#64748b;
-}
-
-
-/* =========================
-   GUIDE
-========================= */
-
-.guide{
-
-    background:white;
-
-    border:1px solid #dce6e9;
-
-    border-radius:14px;
-
-    padding:22px;
-}
-
-
-.guide h2{
-
-    border:0;
-
-    padding:0;
-
-    margin:0 0 8px;
-
-    font-size:21px;
-}
-
-
-.guide > p{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.steps{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,minmax(0,1fr));
-
-    gap:8px;
-
-    margin:16px 0;
-}
-
-
-.step{
-
-    border:1px solid #dce6e9;
-
-    border-radius:9px;
-
-    padding:10px;
-
-    min-height:65px;
-
-    background:white;
-
-    text-align:left;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    cursor:pointer;
-
-    color:#1e3a8a;
-}
-
-
-.step:hover{
-
-    border-color:#60a5fa;
-
-    background:#f8fbff;
-}
-
-
-.step.active{
-
-    background:#eff6ff;
-
-    border-color:#60a5fa;
-
-    color:#1e3a8a;
-}
-
-
-.step-number{
-
-    color:#2563eb;
-
-    font-size:12px;
-
-    flex-shrink:0;
-}
-
-
-.explanation{
-
-    background:#eff6ff;
-
-    border-radius:9px;
-
-    padding:16px;
-
-    min-height:130px;
-}
-
-
-.explanation h3{
-
-    font-size:17px;
-
-    margin:0 0 7px;
-
-    color:#1e3a8a;
-}
-
-
-.explanation p{
-
-    margin:0;
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide details{
-
-    border-top:
-    1px solid #dce6e9;
-
-    margin-top:15px;
-}
-
-
-.guide summary{
-
-    cursor:pointer;
-
-    color:#2563eb;
-
-    font-weight:bold;
-
-    padding:13px 0;
-}
-
-
-.guide details p,
-.guide details li{
-
-    color:#526875;
-
-    font-size:15px;
-}
-
-
-.guide code{
-
-    background:#e5ecf4;
-
-    padding:2px 4px;
-
-    border-radius:4px;
-}
-
-
-.tip{
-
-    background:#eff6ff;
-
-    color:#234e87;
-
-    padding:14px 17px;
-
-    border-radius:9px;
-
-    margin-top:20px;
-
-    font-size:14px;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-
-    text-align:center;
-
-    padding:25px 20px;
-
-    background:#0f172a;
-
-    color:#cbd5e1;
-
-    font-size:14px;
-}
-
-
-footer strong{
-
-    color:white;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
 
 @media(max-width:850px){
-
-    .code-layout{
-
-        grid-template-columns:1fr;
-    }
-
-    .code-body{
-
-        height:450px;
-    }
-
-    .sensor-grid{
-
-        grid-template-columns:1fr;
-    }
-
+    .code-layout{grid-template-columns:1fr}
+    .code-body{height:450px}
 }
-
 
 @media(max-width:600px){
-
-    .header{
-
-        padding:35px 15px;
-    }
-
-    .header h1{
-
-        font-size:28px;
-    }
-
-    .container{
-
-        width:92%;
-    }
-
-    .section{
-
-        padding:21px 18px;
-    }
-
-    .steps{
-
-        grid-template-columns:1fr;
-    }
-
+    .header{padding:15px 0 0}
+    .header-logo{top:12px;left:12px;width:95px;max-height:60px}
+    .header-content{padding:85px 12px 25px}
+    .header h1{font-size:25px}
+    .header p{font-size:15px}
+    .header-buttons{padding:10px 8px;gap:8px}
+    .header-left-buttons,.header-right-buttons{gap:5px}
+    .header-nav-btn{min-height:36px;padding:8px 7px;font-size:11px}
+    .home-icon-btn{width:36px;height:36px;padding:7px}
+    .container{width:92%}
+    .section{padding:20px}
+    .steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .components-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .component-card{padding:10px}
+    .component-card img{height:100px}
+    nav{gap:11px}
 }
+</style>
+</head>
+<body>
 
+<!-- HEADER -->
+<header class="header">
+    <img src="../../Simusoft logo white background.jpeg" alt="SimuSoft Company Logo" class="header-logo">
 
-.section .circuit-img{display:block;width:100%;max-width:760px;margin:20px auto 0;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:10px}.project-thumbnail img{display:block;max-width:760px;width:100%;max-height:400px;object-fit:contain;margin:auto}.code-line{display:flex;white-space:pre;min-width:max-content;min-height:24px;font:13px/24px Consolas,monospace}.code-line.selected{background:#dbeafe;box-shadow:inset 4px 0 #2563eb}.line-number{min-width:48px;text-align:right;padding-right:12px;color:#64748b}.code-body{overflow:auto;max-height:620px}.code-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:20px}.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.step{background:white;color:#1e3a8a;border:1px solid #bfdbfe;border-radius:8px;padding:10px;cursor:pointer}.step.active{background:#dbeafe;border-color:#2563eb}.code-top{background:#2563eb;color:white;display:flex;justify-content:space-between;padding:15px}.copy-button{padding:8px 15px;border-radius:6px;background:white;color:#2563eb;border:0;cursor:pointer}.guide{border:1px solid #dbeafe;padding:18px;border-radius:8px}.code-panel{border:1px solid #bfdbfe;min-width:0;overflow:hidden}.explanation{padding:15px;background:#eff6ff;border-radius:8px;margin-top:15px}@media(max-width:850px){.code-layout{grid-template-columns:1fr}}</style></head><body><header class="header"><h1>SIMUDIY Exploration Kit</h1><p>Smart Room Occupancy and Activity Logger Using Raspberry Pi 4</p></header><nav><a href="../index.html">← R-Pi Experiments</a><a href="#aim">Aim</a><a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#working">Working</a><a href="#procedure">Procedure</a><a href="#code">Code</a><a href="#output">Output</a><a href="#result">Result</a><a href="#learn">Learn</a></nav><main class="container"><section class="section project-thumbnail"><img src="../Smart Room Occupancy and Activity Logger Using Raspberry Pi 4.png" alt="Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 thumbnail" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Experiment thumbnail PNG pending.</p></section><section class="section" id="aim"><h2>Aim</h2><p>Detect room motion using a USB webcam, log session start/end and duration in CSV, and show status in a local dashboard without saving video.</p></section><section class="section" id="about"><h2>About the Experiment</h2><p>OpenCV detects changed pixels between camera frames. New motion logs ACTIVITY_START; after 60 seconds of inactivity it logs ACTIVITY_END. A Flask browser dashboard refreshes data every 3 seconds.</p><div class="note"><strong>Code source status:</strong> SOP-based reconstructed reference app.py. The source SOP uses multi-column formatting; verify reconstructed Python against the deployed tested script before replacing it.</div></section><section class="section" id="components"><h2>Components Required</h2><div class="components-grid"><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4 Model B ×1"><h4>Raspberry Pi 4 Model B ×1</h4><p>Main controller</p></div><div class="component-card"><img src="../AI Object Detection System/USB Camera.png" alt="USB Webcam ×1"><h4>USB Webcam ×1</h4><p>USB camera input</p></div><div class="component-card"><img src="../AI Object Detection System/Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply ×1"><h4>Raspberry Pi Power Supply ×1</h4><p>Rated USB-C supply</p></div></div></section><section class="section" id="connections"><h2>Circuit Connections</h2><div class="table-wrap"><table><tr><th>Device</th><th>Raspberry Pi connection</th></tr><tr><td>USB webcam</td><td>Connect to one USB port</td></tr><tr><td>Power</td><td>Connect USB-C power supply</td></tr><tr><td>GPIO</td><td>None; no breadboard or additional sensors required</td></tr></table></div></section><section class="section" id="circuit"><h2>Circuit Diagram</h2><img class="circuit-img" src="Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 Circuit.png" alt="Circuit diagram" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><p class="note" hidden>Verified circuit PNG pending: Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 Circuit.png</p></section><section class="section" id="working"><h2>Working Principle</h2><div class="flow">USB webcam captures frames<br>↓<br>Resize, grayscale and blur<br>↓<br>Pixel-difference motion threshold<br>↓<br>Log activity start<br>↓<br>After 60s stillness log activity end<br>↓<br>Flask status + recent CSV events</div></section><section class="section" id="procedure"><h2>Procedure</h2><ol><li>Connect the USB webcam and Raspberry Pi USB-C supply.</li><li>In terminal open ~/smart-room-logger.</li><li>Activate venv using source venv/bin/activate.</li><li>Verify imports of cv2 and Flask.</li><li>Run python app.py.</li><li>Open http://PI-IP:5000 from the trusted local network.</li><li>Move within camera view to trigger activity start.</li><li>Stop movement and wait approximately 65–70 seconds for activity end.</li><li>Stop using Ctrl+C.</li></ol></section><section class="section" id="code"><h2>Explore the Code</h2><p>Select an explanation to highlight its matching source block. Copy Code copies the complete displayed Python source.</p><div class="code-layout"><article class="code-panel"><div class="code-top"><strong>Python source — SOP-based</strong><button class="copy-button" onclick="copyCode()">Copy Code</button></div><div class="code-body" id="code-body"><code id="code-lines"></code></div></article><aside class="guide"><h3>Understand it step by step</h3><div class="steps"><button class="step" onclick="showStep(0)">1. Imports and configuration</button><button class="step" onclick="showStep(1)">2. Timestamp and CSV setup</button><button class="step" onclick="showStep(2)">3. Open USB camera</button><button class="step" onclick="showStep(3)">4. Prepare frame comparisons</button><button class="step" onclick="showStep(4)">5. Detect image changes</button><button class="step" onclick="showStep(5)">6. Log activity start</button><button class="step" onclick="showStep(6)">7. End inactive session</button><button class="step" onclick="showStep(7)">8. Dashboard HTML</button><button class="step" onclick="showStep(8)">9. Flask status and events</button><button class="step" onclick="showStep(9)">10. Start worker and web service</button></div><div class="explanation" id="explanation"></div><details><summary>Check Your Understanding</summary><p>Computer vision and frame differencing; Motion threshold; CSV start/end logging; 60-second inactivity threshold; Flask dashboard and 3-second refresh</p></details></aside></div></section><section class="section" id="output"><h2>Expected Output</h2><p>Terminal reports Camera started. Monitoring room activity. Dashboard shows motion status, session activity and recent events from activity_log.csv. Camera video is not saved.</p></section><section class="section" id="result"><h2>Result</h2><p>Terminal reports Camera started. Monitoring room activity. Dashboard shows motion status, session activity and recent events from activity_log.csv. Camera video is not saved.</p><p>Results require correctly configured hardware and software. SOP-based reconstructed reference app.py. The source SOP uses multi-column formatting; verify reconstructed Python against the deployed tested script before replacing it.</p></section><section class="section" id="learn"><h2>What You Learn</h2><ul><li>Computer vision and frame differencing</li><li>Motion threshold</li><li>CSV start/end logging</li><li>60-second inactivity threshold</li><li>Flask dashboard and 3-second refresh</li></ul></section></main><footer><strong>SIMUDIY Exploration Kit</strong> · Smart Room Occupancy and Activity Logger Using Raspberry Pi 4</footer><script type="text/plain" id="python-source">#!/usr/bin/env python3
+    <div class="header-content">
+        <h1>SIMUDIY Exploration Kit</h1>
+        <p>Smart Room Occupancy and Activity Logger</p>
+    </div>
+
+    <div class="header-buttons">
+        <div class="header-left-buttons">
+            <a href="../index.html" class="header-nav-btn">← Back</a>
+            <a href="../../index.html" class="header-nav-btn home-icon-btn" title="Home" aria-label="Home">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5"></path>
+                    <path d="M5 9.5V21h14V9.5"></path>
+                    <path d="M9 21v-7h6v7"></path>
+                </svg>
+            </a>
+        </div>
+
+        <div class="header-right-buttons">
+            <a href="../../Arduino Experiments/index.html" class="header-nav-btn">Arduino</a>
+            <a href="../../ESP32 CAM Experiments/index.html" class="header-nav-btn">ESP</a>
+            <a href="../index.html" class="header-nav-btn">R-Pi</a>
+        </div>
+    </div>
+</header>
+
+<!-- NAVIGATION -->
+<nav>
+    <a href="../index.html">← R-Pi Experiments</a>
+    <a href="#aim">Aim</a>
+    <a href="#about">About</a>
+    <a href="#components">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#procedure">Procedure</a>
+    <a href="#code">Code</a>
+    <a href="#output">Output</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#result">Result</a>
+    <a href="#learn">Learn</a>
+</nav>
+
+<main class="container">
+
+    <!-- EXPERIMENT THUMBNAIL -->
+    <section class="section project-thumbnail">
+        <img src="../Smart Room Occupancy.png" alt="Smart Room Occupancy and Activity Logger Thumbnail">
+    </section>
+
+    <!-- AIM -->
+    <section class="section" id="aim">
+        <h2>Aim</h2>
+        <p>To detect room movement using a USB webcam, record activity start and end times, calculate approximate session durations, and display recent events on a local web dashboard without saving continuous video.</p>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section" id="about">
+        <h2>About the Experiment</h2>
+        <p>Raspberry Pi 4 processes USB webcam frames using OpenCV. Consecutive frames are resized, converted to grayscale and blurred before their pixel differences are compared.</p>
+        <p>Motion starts an activity session and creates an ACTIVITY_START record in activity_log.csv. Further motion refreshes the inactivity timer. After 60 seconds without detected motion, an ACTIVITY_END record stores the end time and session duration.</p>
+        <p>Flask serves a local dashboard that refreshes every three seconds. Frames are processed in memory and discarded.</p>
+
+        <div class="note">
+            <strong>Detection:</strong>
+            This system detects movement rather than counting people. A stationary person may not produce motion, and lighting changes can trigger detection. Session duration includes the inactivity waiting period.
+        </div>
+    </section>
+
+    <!-- COMPONENTS -->
+    <section class="section" id="components">
+        <h2>Components Required</h2>
+
+        <div class="components-grid">
+            <div class="component-card">
+                <img src="../AI Object Detection System/Raspberry Pi 4 Model B.png" alt="Raspberry Pi 4B">
+                <h4>Raspberry Pi 4B (×1)</h4>
+                <p>Runs Python, OpenCV and Flask.</p>
+            </div>
+
+            <div class="component-card">
+                <img src="../AI Object Detection System/USB Camera.png" alt="USB Webcam">
+                <h4>USB Webcam (×1)</h4>
+                <p>Captures room frames for movement detection.</p>
+            </div>
+
+            <div class="component-card">
+                <img src="../AI Object Detection System/Raspberry Pi Power Supply.png" alt="Raspberry Pi Power Supply">
+                <h4>Suitable Raspberry Pi Power Supply (×1)</h4>
+                <p>Powers the Raspberry Pi 4B.</p>
+            </div>
+        </div>
+
+        <div class="note">
+            <strong>Software:</strong>
+            Raspberry Pi OS, Python 3, OpenCV and Flask. The csv, datetime, threading, pathlib and time modules are included with Python. Use the existing OS installation and a local network connection for dashboard access.
+        </div>
+    </section>
+
+    <!-- CONNECTIONS -->
+    <section class="section" id="connections">
+        <h2>Circuit Connections</h2>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>Connection</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>USB webcam</td>
+                        <td>Raspberry Pi USB port</td>
+                        <td>Camera input; default device index 0.</td>
+                    </tr>
+                    <tr>
+                        <td>Compatible power supply</td>
+                        <td>Raspberry Pi USB-C power input</td>
+                        <td>Powers the controller.</td>
+                    </tr>
+                    <tr>
+                        <td>Dashboard browser</td>
+                        <td>Same local network as the Pi</td>
+                        <td>Open http://PI-IP:5000.</td>
+                    </tr>
+                    <tr>
+                        <td>GPIO pins</td>
+                        <td>No connection required</td>
+                        <td>No external sensors or breadboard required.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- CIRCUIT -->
+    <section class="section" id="circuit">
+        <h2>Circuit Diagram</h2>
+        <img class="circuit-img" src="Smart Room Occupancy and Activity Logger Circuit.png" alt="Smart Room Occupancy and Activity Logger Circuit" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+        <div class="note" hidden>Circuit diagram PNG placeholder: Smart Room Occupancy and Activity Logger Using Raspberry Pi 4 Circuit.png</div>
+    </section>
+
+    <!-- WORKING -->
+    <section class="section" id="working">
+        <h2>Working Principle</h2>
+
+        <div class="flow">
+            <div class="flow-step">USB Webcam Captures Frames</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Resize to 320 × 240, Grayscale and Blur</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Compare Frames and Count Changed Pixels</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Motion Starts or Continues an Activity Session</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">60 Seconds Without Motion Ends the Session</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Save CSV Events and Update the Dashboard</div>
+        </div>
+
+        <p>The binary difference threshold is 25 and the motion threshold is 1500 changed pixels. The program uses time.monotonic() for the inactivity timer and local timestamps for CSV records.</p>
+    </section>
+
+    <!-- PROCEDURE -->
+    <section class="section" id="procedure">
+        <h2>Procedure</h2>
+
+        <ol>
+            <li>Connect the USB webcam and compatible Raspberry Pi power supply.</li>
+            <li>Open the terminal and run <code>mkdir -p ~/smart-room-logger</code>, then <code>cd ~/smart-room-logger</code>.</li>
+            <li>Create the environment if needed: <code>python3 -m venv --system-site-packages venv</code>.</li>
+            <li>Activate it using <code>source venv/bin/activate</code>.</li>
+            <li>Install Flask using <code>python -m pip install Flask</code>.</li>
+            <li>Verify OpenCV using <code>python -c "import cv2; print(cv2.__version__)"</code>. Resolve any import error before continuing.</li>
+            <li>Check the webcam using <code>ls -l /dev/video0</code>.</li>
+            <li>Save the complete program below as <code>app.py</code> in the experiment directory.</li>
+            <li>Run <code>python app.py</code>. The CSV file is created automatically.</li>
+            <li>Find the Pi address using <code>hostname -I</code> in another terminal.</li>
+            <li>Open <code>http://PI-IP:5000</code> in a browser, replacing PI-IP with the actual address.</li>
+            <li>Move in front of the webcam and observe the activity start event.</li>
+            <li>Stop movement and wait approximately 65–70 seconds for the activity end event.</li>
+            <li>Press Ctrl+C in the application terminal to stop.</li>
+        </ol>
+    </section>
+
+    <!-- EXPLORE THE CODE -->
+    <section class="section" id="code">
+        <p class="eyebrow">Raspberry Pi Experiment · Code Review</p>
+        <h2 class="lesson-title">Explore the Code</h2>
+        <p class="intro">Click an explanation tab to highlight its matching Python source block. Copy Code copies the complete <code>app.py</code> program from the supplied experiment document.</p>
+
+        <div class="code-layout">
+            <article class="code-panel">
+                <div class="code-top">
+                    <span class="filename">app.py</span>
+                    <button type="button" class="copy-button" onclick="copyCode()">Copy Code</button>
+                </div>
+                <div class="code-body" id="code-body">
+                    <code id="code-lines"></code>
+                </div>
+            </article>
+
+            <article class="guide">
+                <h2>Understand it step by step</h2>
+                <p>Select a tab to highlight the corresponding source section.</p>
+
+                <div class="steps" id="steps-list"></div>
+                <div class="explanation" id="explanation" aria-live="polite"></div>
+
+                <details>
+                    <summary>Check Your Understanding</summary>
+                    <p>What ends a session? Sixty seconds without detected motion. Where are events saved? activity_log.csv. How often does the dashboard refresh? Every three seconds.</p>
+                </details>
+            </article>
+        </div>
+
+        <p class="tip"><strong>Motion sensitivity:</strong> Keep the camera steady and adjust MOTION_PIXEL_THRESHOLD if the room conditions require it.</p>
+    </section>
+
+    <!-- EXPECTED OUTPUT -->
+    <section class="section" id="output">
+        <h2>Expected Output</h2>
+
+        <h3>Terminal</h3>
+        <div class="output-box">
+            <pre>Camera started. Monitoring room activity.
+Video recording is disabled.
+ * Running on http://127.0.0.1:5000</pre>
+        </div>
+
+        <h3>Dashboard and CSV Events</h3>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Condition</th>
+                        <th>Dashboard</th>
+                        <th>CSV event</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Camera ready</td>
+                        <td>Monitoring room</td>
+                        <td>CSV header created if needed.</td>
+                    </tr>
+                    <tr>
+                        <td>New motion session</td>
+                        <td>Motion detected; Activity ongoing</td>
+                        <td>ACTIVITY_START with start time.</td>
+                    </tr>
+                    <tr>
+                        <td>Brief stillness</td>
+                        <td>No motion detected; Activity ongoing</td>
+                        <td>No end event yet.</td>
+                    </tr>
+                    <tr>
+                        <td>60 seconds of inactivity</td>
+                        <td>No motion detected; Inactive</td>
+                        <td>ACTIVITY_END with start, end and duration.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>The dashboard shows system status, current motion, activity session, last detected motion and the most recent 20 events. Updates occur every three seconds.</p>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="section" id="dashboard">
+        <h2>Dashboard</h2>
+        <div class="dashboard-image">
+            <img src="Smart Room Occupancy and Activity Logger Dashboard.png" alt="Smart Room Occupancy and Activity Logger Dashboard">
+        </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="section" id="result">
+        <h2>Result</h2>
+        <p>The system demonstrates webcam motion detection, timestamped activity-session logging in CSV and a local Flask dashboard. It estimates session durations without continuously recording video.</p>
+    </section>
+
+    <!-- WHAT YOU LEARN -->
+    <section class="section" id="learn">
+        <h2>What You Learn</h2>
+
+        <ul>
+            <li>Capturing and preprocessing camera frames with OpenCV.</li>
+            <li>Detecting movement through frame differences and pixel thresholds.</li>
+            <li>Using monotonic timing for inactivity detection.</li>
+            <li>Writing timestamped start and end events to CSV.</li>
+            <li>Running camera processing in a background thread.</li>
+            <li>Serving Flask routes and JSON APIs.</li>
+            <li>Updating a browser dashboard with JavaScript.</li>
+            <li>Distinguishing movement detection from confirmed room occupancy.</li>
+        </ul>
+    </section>
+
+</main>
+
+<footer>
+    <strong>SIMUDIY Exploration Kit</strong>
+    <div>Smart Room Occupancy and Activity Logger Using Raspberry Pi 4</div>
+</footer>
+
+<textarea id="python-program" hidden>
+#!/usr/bin/env python3
+
 import csv
 import cv2
 import time
 import threading
+
 from datetime import datetime
 from pathlib import Path
 from flask import Flask, jsonify, render_template_string
 
+# ---------------- CONFIGURATION ----------------
+
 CAMERA_INDEX = 0
 FRAME_WIDTH = 320
 FRAME_HEIGHT = 240
+
 INACTIVITY_SECONDS = 60
 MOTION_PIXEL_THRESHOLD = 1500
-LOG_FILE = Path(__file__).resolve().parent / "activity_log.csv"
+
+PROJECT_DIR = Path(__file__).resolve().parent
+LOG_FILE = PROJECT_DIR / "activity_log.csv"
+
 app = Flask(__name__)
 lock = threading.Lock()
-state = {"motion": False, "session_active": False, "session_start": None, "last_motion": None, "status": "Starting camera...", "motion_pixels": 0}
+
+state = {
+    "motion": False,
+    "session_active": False,
+    "session_start": None,
+    "last_motion": None,
+    "status": "Starting camera...",
+    "motion_pixels": 0,
+}
+
 last_motion_time = [0.0]
 
+
+# ---------------- TIMESTAMP AND CSV ----------------
+
 def timestamp():
-    return datetime.now().astimezone().isoformat(timespec="seconds")
+    return datetime.now().astimezone().isoformat(
+        timespec="seconds"
+    )
+
 
 def prepare_log():
     if not LOG_FILE.exists() or LOG_FILE.stat().st_size == 0:
         with LOG_FILE.open("w", newline="") as file:
-            csv.writer(file).writerow(["event", "start_time", "end_time", "duration_seconds"])
+            writer = csv.writer(file)
+            writer.writerow([
+                "event",
+                "start_time",
+                "end_time",
+                "duration_seconds"
+            ])
+
 
 def write_event(event, start, end="", duration=""):
     with LOG_FILE.open("a", newline="") as file:
-        csv.writer(file).writerow([event, start, end, duration])
+        writer = csv.writer(file)
+        writer.writerow([
+            event,
+            start,
+            end,
+            duration
+        ])
+
+
+# ---------------- MOTION DETECTION ----------------
 
 def camera_worker():
-    camera = cv2.VideoCapture(CAMERA_INDEX, cv2.CAP_V4L2)
-    camera.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
-    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
+
+    camera = cv2.VideoCapture(
+        CAMERA_INDEX,
+        cv2.CAP_V4L2
+    )
+
+    camera.set(
+        cv2.CAP_PROP_FRAME_WIDTH,
+        FRAME_WIDTH
+    )
+    camera.set(
+        cv2.CAP_PROP_FRAME_HEIGHT,
+        FRAME_HEIGHT
+    )
     camera.set(cv2.CAP_PROP_FPS, 10)
+
     if not camera.isOpened():
         with lock:
-            state["status"] = "Camera error: cannot open webcam"
+            state["status"] = (
+                "Camera error: cannot open webcam"
+            )
+
+        print("ERROR: Could not open webcam.")
         return
+
     ok, frame = camera.read()
+
     if not ok:
+        with lock:
+            state["status"] = (
+                "Camera error: cannot read frames"
+            )
+
         camera.release()
         return
-    frame = cv2.resize(frame, (FRAME_WIDTH, FRAME_HEIGHT))
-    previous = cv2.GaussianBlur(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), (21,21), 0)
+
+    # Resize the initial frame as well as subsequent frames.
+    # This ensures that frame dimensions match during comparison.
+    frame = cv2.resize(
+        frame,
+        (FRAME_WIDTH, FRAME_HEIGHT)
+    )
+
+    previous = cv2.cvtColor(
+        frame,
+        cv2.COLOR_BGR2GRAY
+    )
+
+    previous = cv2.GaussianBlur(
+        previous,
+        (21, 21),
+        0
+    )
+
     with lock:
         state["status"] = "Monitoring room"
+
     print("Camera started. Monitoring room activity.")
     print("Video recording is disabled.")
+
     try:
         while True:
+
             ok, frame = camera.read()
+
             if not ok:
+                with lock:
+                    state["status"] = "Camera read error"
+
                 time.sleep(1)
                 continue
-            frame = cv2.resize(frame, (FRAME_WIDTH, FRAME_HEIGHT))
-            gray = cv2.GaussianBlur(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), (21,21), 0)
-            difference = cv2.absdiff(previous, gray)
-            threshold = cv2.threshold(difference, 25, 255, cv2.THRESH_BINARY)[1]
-            threshold = cv2.dilate(threshold, None, iterations=2)
-            motion_pixels = cv2.countNonZero(threshold)
-            detected = motion_pixels >= MOTION_PIXEL_THRESHOLD
+
+            frame = cv2.resize(
+                frame,
+                (FRAME_WIDTH, FRAME_HEIGHT)
+            )
+
+            gray = cv2.cvtColor(
+                frame,
+                cv2.COLOR_BGR2GRAY
+            )
+
+            gray = cv2.GaussianBlur(
+                gray,
+                (21, 21),
+                0
+            )
+
+            difference = cv2.absdiff(
+                previous,
+                gray
+            )
+
+            threshold = cv2.threshold(
+                difference,
+                25,
+                255,
+                cv2.THRESH_BINARY
+            )[1]
+
+            threshold = cv2.dilate(
+                threshold,
+                None,
+                iterations=2
+            )
+
+            motion_pixels = cv2.countNonZero(
+                threshold
+            )
+
+            detected = (
+                motion_pixels &gt;= MOTION_PIXEL_THRESHOLD
+            )
+
             now = time.monotonic()
             now_text = timestamp()
+
             with lock:
+
                 state["motion"] = detected
                 state["motion_pixels"] = motion_pixels
+
                 if detected:
+
                     state["last_motion"] = now_text
+
                     if not state["session_active"]:
+
                         state["session_active"] = True
                         state["session_start"] = now_text
-                        write_event("ACTIVITY_START", now_text)
-                        print("Activity started:", now_text)
+
+                        write_event(
+                            "ACTIVITY_START",
+                            now_text
+                        )
+
+                        print(
+                            "Activity started:",
+                            now_text
+                        )
+
                     last_motion_time[0] = now
-                elif state["session_active"] and now - last_motion_time[0] >= INACTIVITY_SECONDS:
+
+                elif (
+                    state["session_active"]
+                    and now - last_motion_time[0]
+                    &gt;= INACTIVITY_SECONDS
+                ):
+
                     start_text = state["session_start"]
-                    start_dt = datetime.fromisoformat(start_text)
+
+                    start_dt = datetime.fromisoformat(
+                        start_text
+                    )
+
                     end_dt = datetime.now().astimezone()
-                    duration = max(0, int((end_dt - start_dt).total_seconds()))
-                    end_text = end_dt.isoformat(timespec="seconds")
-                    write_event("ACTIVITY_END", start_text, end_text, duration)
-                    print("Activity ended:", end_text, "Duration:", duration)
+
+                    duration = max(
+                        0,
+                        int(
+                            (end_dt - start_dt).total_seconds()
+                        )
+                    )
+
+                    end_text = end_dt.isoformat(
+                        timespec="seconds"
+                    )
+
+                    write_event(
+                        "ACTIVITY_END",
+                        start_text,
+                        end_text,
+                        duration
+                    )
+
+                    print(
+                        "Activity ended:",
+                        end_text,
+                        "Duration:",
+                        duration,
+                        "seconds"
+                    )
+
                     state["session_active"] = False
                     state["session_start"] = None
+
             previous = gray
+
             time.sleep(0.05)
+
     finally:
         camera.release()
 
+
+# ---------------- WEB DASHBOARD ----------------
+
 PAGE = """
-&lt;!DOCTYPE html>
-&lt;html>&lt;head>&lt;title>Smart Room Activity Logger&lt;/title>&lt;/head>&lt;body>
-&lt;h1>Smart Room Occupancy &amp; Activity Logger&lt;/h1>
-&lt;p>Local motion monitoring. Video is not recorded or saved.&lt;/p>
-&lt;div id="status">Loading...&lt;/div>
-&lt;pre id="events">&lt;/pre>
-&lt;script>
-async function updateDashboard(){
-  const s=await (await fetch('/api/status')).json();
-  const e=await (await fetch('/api/events')).json();
-  document.getElementById('status').textContent=JSON.stringify(s,null,2);
-  document.getElementById('events').textContent=JSON.stringify(e,null,2);
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;meta name="viewport"
+      content="width=device-width, initial-scale=1"&gt;
+
+&lt;title&gt;Smart Room Activity Logger&lt;/title&gt;
+
+&lt;style&gt;
+body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px;
+    background: #f3f5f8;
+    color: #202938;
 }
+
+h1 {
+    font-size: 26px;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    margin: 14px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0001;
+}
+
+.value {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+small {
+    color: #596579;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px 6px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+&lt;h1&gt;Smart Room Occupancy &amp; Activity Logger&lt;/h1&gt;
+
+&lt;p&gt;
+Local motion monitoring.
+Video is not recorded or saved.
+&lt;/p&gt;
+
+&lt;div class="card"&gt;
+    &lt;small&gt;Camera / System Status&lt;/small&gt;
+    &lt;div class="value" id="system"&gt;Loading...&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+    &lt;small&gt;Current Motion&lt;/small&gt;
+    &lt;div class="value" id="motion"&gt;Loading...&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+    &lt;small&gt;Activity Session&lt;/small&gt;
+    &lt;div class="value" id="session"&gt;Loading...&lt;/div&gt;
+    &lt;p id="start"&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+    &lt;small&gt;Last Detected Motion&lt;/small&gt;
+    &lt;div id="last"&gt;None yet&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="card"&gt;
+    &lt;h3&gt;Recent Activity Events&lt;/h3&gt;
+
+    &lt;div style="overflow-x:auto"&gt;
+        &lt;table&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;Event&lt;/th&gt;
+                    &lt;th&gt;Start&lt;/th&gt;
+                    &lt;th&gt;End&lt;/th&gt;
+                    &lt;th&gt;Duration (s)&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody id="events"&gt;&lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+
+    &lt;p&gt;
+        &lt;small&gt;Refreshes every 3 seconds.&lt;/small&gt;
+    &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+async function updateDashboard() {
+
+    try {
+        const response = await fetch('/api/status');
+        const data = await response.json();
+
+        document.getElementById('system').textContent =
+            data.status;
+
+        document.getElementById('motion').textContent =
+            data.motion
+                ? 'Motion detected'
+                : 'No motion detected';
+
+        document.getElementById('session').textContent =
+            data.session_active
+                ? 'Activity ongoing'
+                : 'Inactive';
+
+        document.getElementById('start').textContent =
+            data.session_start
+                ? 'Started: ' + data.session_start
+                : '';
+
+        document.getElementById('last').textContent =
+            data.last_motion || 'None yet';
+
+        const eventResponse = await fetch('/api/events');
+        const events = await eventResponse.json();
+
+        const body = document.getElementById('events');
+
+        body.replaceChildren();
+
+        events.forEach(event =&gt; {
+
+            const row = document.createElement('tr');
+
+            [
+                event.event,
+                event.start_time,
+                event.end_time,
+                event.duration_seconds
+            ].forEach(value =&gt; {
+
+                const cell = document.createElement('td');
+
+                cell.textContent = value || '-';
+
+                row.appendChild(cell);
+            });
+
+            body.appendChild(row);
+        });
+
+    } catch (error) {
+
+        document.getElementById('system').textContent =
+            'Dashboard connection error';
+    }
+}
+
 updateDashboard();
-setInterval(updateDashboard,3000);
-&lt;/script>
-&lt;/body>&lt;/html>
+
+setInterval(updateDashboard, 3000);
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
 """
+
 
 @app.route("/")
 def dashboard():
     return render_template_string(PAGE)
 
+
 @app.route("/api/status")
 def api_status():
+
     with lock:
         return jsonify(dict(state))
 
+
 @app.route("/api/events")
 def api_events():
+
+    prepare_log()
+
     with LOG_FILE.open("r", newline="") as file:
         rows = list(csv.DictReader(file))
+
     return jsonify(rows[-20:][::-1])
 
+
+# ---------------- MAIN PROGRAM ----------------
+
 if __name__ == "__main__":
+
     prepare_log()
-    worker = threading.Thread(target=camera_worker, daemon=True)
+
+    worker = threading.Thread(
+        target=camera_worker,
+        daemon=True
+    )
+
     worker.start()
-    app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)</script><script>const program=document.getElementById("python-source").textContent.trim();const lines=program.split("\n");const steps=[{"label":"Imports and configuration","start":"#!/usr/bin/env python3","end":"last_motion_time ="},{"label":"Timestamp and CSV setup","start":"def timestamp():","end":"def camera_worker():"},{"label":"Open USB camera","start":"def camera_worker():","end":"if not camera.isOpened():"},{"label":"Prepare frame comparisons","start":"ok, frame = camera.read()","end":"previous = cv2.GaussianBlur"},{"label":"Detect image changes","start":"difference = cv2.absdiff","end":"detected = motion_pixels"},{"label":"Log activity start","start":"if detected:","end":"last_motion_time[0] = now"},{"label":"End inactive session","start":"elif state[\"session_active\"]","end":"state[\"session_start\"] = None"},{"label":"Dashboard HTML","start":"PAGE =","end":"@app.route(\"/\")"},{"label":"Flask status and events","start":"@app.route(\"/\")","end":"return jsonify(rows[-20:][::-1])"},{"label":"Start worker and web service","start":"if __name__ == \"__main__\":","end":"app.run("}];
-function escapeCode(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-document.getElementById("code-lines").innerHTML=lines.map((line,i)=>'<span class="code-line" id="line-'+(i+1)+'"><span class="line-number">'+(i+1)+'</span><span>'+escapeCode(line)+'</span></span>').join("");
-function findMarker(m,from=0){return lines.findIndex((line,i)=>i>=from&&line.trim().startsWith(m))}
-const ranges=steps.map(s=>{const a=findMarker(s.start),b=a<0?-1:findMarker(s.end,a);return {a,b,valid:a>=0&&b>=a}});
-function showStep(i){document.querySelectorAll(".step").forEach((x,j)=>x.classList.toggle("active",i===j));document.querySelectorAll(".code-line").forEach(x=>x.classList.remove("selected"));const r=ranges[i],target=document.getElementById("explanation");target.textContent=r.valid?steps[i].label+" — lines "+(r.a+1)+" to "+(r.b+1):"Source marker validation failed; review the source.";if(!r.valid)return;for(let j=r.a;j<=r.b;j++)document.getElementById("line-"+(j+1)).classList.add("selected");const panel=document.getElementById("code-body"),first=document.getElementById("line-"+(r.a+1));panel.scrollTo({top:panel.scrollTop+first.getBoundingClientRect().top-panel.getBoundingClientRect().top-15,behavior:"smooth"})}
-async function copyCode(){try{if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(program);else{const a=document.createElement("textarea");a.value=program;document.body.appendChild(a);a.select();if(!document.execCommand("copy"))throw Error("Clipboard unavailable");a.remove()}document.querySelector(".copy-button").textContent="Copied!"}catch(e){document.querySelector(".copy-button").textContent="Copy failed"}}
-showStep(0);</script></body></html>
+
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=False,
+        use_reloader=False
+    )
+</textarea>
+
+<script>
+const program = document
+    .getElementById("python-program")
+    .value
+    .trim();
+
+const lines = program.split("\n");
+
+const steps = [
+    {
+        number: "01",
+        title: "Libraries and Configuration",
+        marker: "#!/usr/bin/env python3",
+        text: "Imports libraries, sets camera resolution, motion threshold and inactivity timeout, and initializes shared state."
+    },
+    {
+        number: "02",
+        title: "Timestamps and CSV",
+        marker: "# ---------------- TIMESTAMP AND CSV ----------------",
+        text: "Creates timezone-aware timestamps, prepares the CSV header and appends activity records."
+    },
+    {
+        number: "03",
+        title: "Camera Setup",
+        marker: "# ---------------- MOTION DETECTION ----------------",
+        text: "Opens the USB webcam, configures frame size and prepares the initial grayscale comparison frame."
+    },
+    {
+        number: "04",
+        title: "Frame Processing",
+        marker: "    try:",
+        text: "Reads subsequent frames, resizes and blurs them, thresholds image differences and counts changed pixels."
+    },
+    {
+        number: "05",
+        title: "Activity Start",
+        marker: "                if detected:",
+        text: "Starts a session on motion, writes ACTIVITY_START and refreshes the last-motion timer."
+    },
+    {
+        number: "06",
+        title: "Activity End and Cleanup",
+        marker: "                elif (",
+        text: "Ends the session after 60 seconds without motion, logs duration, updates the reference frame and releases the camera on worker exit."
+    },
+    {
+        number: "07",
+        title: "Dashboard Page",
+        marker: "# ---------------- WEB DASHBOARD ----------------",
+        text: "Defines the dashboard HTML, CSS and JavaScript, including status cards, recent events and a three-second refresh."
+    },
+    {
+        number: "08",
+        title: "Flask Routes",
+        marker: '@app.route("/")',
+        text: "Serves the dashboard and JSON endpoints for shared status and the 20 most recent CSV events."
+    },
+    {
+        number: "09",
+        title: "Start the Application",
+        marker: "# ---------------- MAIN PROGRAM ----------------",
+        text: "Prepares the log, starts the camera worker and runs Flask on port 5000."
+    }
+];
+
+function escapeHtml(value) {
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function displayCode() {
+    const container = document.getElementById("code-lines");
+
+    container.innerHTML = lines.map(function(line, index) {
+        return (
+            '<span class="code-line" id="line-' + (index + 1) + '">' +
+                '<span class="line-number">' + (index + 1) + '</span>' +
+                '<span>' + escapeHtml(line) + '</span>' +
+            '</span>'
+        );
+    }).join("");
+}
+
+const ranges = steps.map(function(step, index) {
+    const start = lines.indexOf(step.marker);
+
+    const next = index + 1 < steps.length
+        ? lines.indexOf(steps[index + 1].marker)
+        : lines.length;
+
+    const end = next - 1;
+
+    return {
+        start: start,
+        end: end,
+        valid: start >= 0 && end >= start
+    };
+});
+
+function createSteps() {
+    const container = document.getElementById("steps-list");
+
+    steps.forEach(function(step, index) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "step";
+
+        const number = document.createElement("span");
+        number.className = "step-number";
+        number.textContent = step.number;
+
+        const title = document.createElement("span");
+        title.textContent = step.title;
+
+        button.append(number, title);
+
+        button.addEventListener("click", function() {
+            showStep(index);
+        });
+
+        container.appendChild(button);
+    });
+}
+
+function showStep(index) {
+    document.querySelectorAll(".step").forEach(function(button, i) {
+        button.classList.toggle("active", i === index);
+    });
+
+    document.querySelectorAll(".code-line").forEach(function(line) {
+        line.classList.remove("selected");
+    });
+
+    const step = steps[index];
+    const range = ranges[index];
+    const explanation = document.getElementById("explanation");
+
+    explanation.replaceChildren();
+
+    const heading = document.createElement("h3");
+    heading.textContent = (index + 1) + ". " + step.title;
+
+    const paragraph = document.createElement("p");
+    paragraph.textContent = step.text;
+
+    explanation.append(heading, paragraph);
+
+    if (!range.valid) {
+        paragraph.textContent = "Matching code markers not found.";
+        return;
+    }
+
+    for (let i = range.start; i <= range.end; i++) {
+        const element = document.getElementById("line-" + (i + 1));
+
+        if (element) {
+            element.classList.add("selected");
+        }
+    }
+
+    const firstLine = document.getElementById("line-" + (range.start + 1));
+    const codeBody = document.getElementById("code-body");
+
+    if (firstLine && codeBody) {
+        const offset =
+            firstLine.getBoundingClientRect().top -
+            codeBody.getBoundingClientRect().top;
+
+        codeBody.scrollTo({
+            top: codeBody.scrollTop + offset - 20,
+            behavior: "smooth"
+        });
+    }
+}
+
+async function copyCode() {
+    const button = document.querySelector(".copy-button");
+
+    function copied() {
+        button.textContent = "Copied!";
+
+        setTimeout(function() {
+            button.textContent = "Copy Code";
+        }, 1500);
+    }
+
+    function fallback() {
+        const field = document.createElement("textarea");
+        field.value = program;
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+
+        document.body.appendChild(field);
+        field.select();
+
+        let success = false;
+
+        try {
+            success = document.execCommand("copy");
+        } catch (error) {
+            success = false;
+        }
+
+        field.remove();
+
+        if (success) {
+            copied();
+        } else {
+            button.textContent = "Copy failed";
+        }
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(program);
+            copied();
+        } catch (error) {
+            fallback();
+        }
+    } else {
+        fallback();
+    }
+}
+
+displayCode();
+createSteps();
+showStep(0);
+</script>
+
+</body>
+</html>
